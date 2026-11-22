@@ -906,10 +906,17 @@
       document.getElementById('modal-pessoa').classList.add('hidden');
     }
 
-    // Fechar modal com tecla ESC
+    // Fechar modal com tecla ESC ou clique fora
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') fecharModalPessoa();
     });
+
+    const modalPessoaEl = document.getElementById('modal-pessoa');
+    if (modalPessoaEl) {
+      modalPessoaEl.addEventListener('click', (e) => {
+        if (e.target === modalPessoaEl) fecharModalPessoa();
+      });
+    }
 
     async function carregarRankings() {
       try {

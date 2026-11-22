@@ -573,3 +573,16 @@
   background-size: 200% 100%;
   animation: v2Shimmer 3s infinite;
 }
+
+/* ==============================================================================
+   8. HIERARQUIA DE MODAIS & SOBREPOSIÇÃO (Z-INDEX FORENSE UX)
+   ============================================================================== */
+#modal-pessoa,
+.modal-overlay,
+.modal-backdrop,
+.modal-dialog,
+.v2-modal-top,
+div[id^="modal-"] {
+  z-index: 100010 !important;
+}
+
