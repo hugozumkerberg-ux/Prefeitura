@@ -167,6 +167,23 @@ async function runTestSuite() {
     recordTest('Resolução de Entidades (pessoas_unificadas)', false, `Erro ao verificar pessoas_unificadas: ${err.message}`);
   }
 
+  // TESTE 6: Higiene do Repositório Git (Zero inclusão de dados/ e scripts *.bat)
+  try {
+    const porcelainStatus = execSync('git status --porcelain', { cwd: BASE_DIR }).toString();
+    const illegalFiles = porcelainStatus.split('\n')
+      .filter(line => /^[AM?]\s+/.test(line.trim()))
+      .map(line => line.trim().replace(/^[AM?]+\s+/, ''))
+      .filter(f => f.startsWith('dados/') || f.includes('/dados/') || f.endsWith('.bat'));
+
+    if (illegalFiles.length === 0) {
+      recordTest('Higiene Git (Exclusão de Dados e .BAT)', true, 'Repositório estritamente limpo: nenhum arquivo de dados/*.sqlite3, json ou scripts *.bat pendente de adição.');
+    } else {
+      recordTest('Higiene Git (Exclusão de Dados e .BAT)', false, `Arquivos restritos detectados para commit: ${illegalFiles.join(', ')}`);
+    }
+  } catch (err) {
+    recordTest('Higiene Git (Exclusão de Dados e .BAT)', false, `Erro ao validar higiene do repositório: ${err.message}`);
+  }
+
   // Avaliação Final da Bateria de Testes
   const totalTests = testResults.length;
   const passedTests = testResults.filter(t => t.passed).length;

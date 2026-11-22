@@ -2,20 +2,17 @@
 # GITIGNORE — PORTAL TRANSPARÊNCIA ARINOS / MG
 # ==============================================================================
 
-# Bancos de Dados SQLite Locais (preservados no sistema de backups forenses)
-dados/*.sqlite3
-dados/*.sqlite3-shm
-dados/*.sqlite3-wal
-dados/auditoria/*.sqlite3
-dados/auditoria/*.sqlite3-shm
-dados/auditoria/*.sqlite3-wal
+# Ignorar toda a pasta de dados (bancos SQLite, JSONs, fotos, etc.)
+dados/
+**/dados/
 
-# Acervo bruto de respostas HTTP de auditoria (>400 MB)
-dados/auditoria/raw/
+# Ignorar todos os scripts em lote (.bat)
+*.bat
+**/*.bat
 
 # Backups compactados ZIP e áreas temporárias de staging
-backups_forenses/*.zip
-backups_forenses/.temp_stage_*
+backups_forenses/
+relatorios_exportados/
 *.bak
 *.tmp
 *.log
