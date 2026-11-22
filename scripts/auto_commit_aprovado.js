@@ -60,7 +60,8 @@ async function runTestSuite() {
     'mandatos.html',
     'cidade.html',
     'eleicoes.html',
-    'tabelas.html'
+    'tabelas.html',
+    'mapa.html'
   ];
 
   let htmlsOk = true;

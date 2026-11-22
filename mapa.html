@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa do Site e Arquitetura de Navegação — Arinos / MG</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
+    .glass { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.06); }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-50 glass border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="text-2xl">🗺️</span>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-lg font-bold tracking-tight text-white">Transparência Arinos / MG</h1>
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Mapa do Site</span>
+          </div>
+          <p class="text-xs text-slate-400">Guia de Navegação Cidadã e Arquitetura de Informação</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-1 sm:space-x-2">
+        <a href="/" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          <span>📊 Painel Principal</span>
+        </a>
+        <a href="/tabelas.html?tab=pessoas" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 transition">
+          <span>👤 Pessoas & Dinheiro Público</span>
+        </a>
+        <a href="/empresas.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-600/30 hover:bg-blue-600/50 text-blue-300 border border-blue-500/40 transition">
+          <span>🏢 Empresas & Sócios</span>
+        </a>
+        <a href="/vereadores.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-sky-600/30 hover:bg-sky-600/50 text-sky-300 border border-sky-500/40 transition">
+          <span>👥 Vereadores</span>
+        </a>
+        <a href="/mandatos.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 border border-purple-500/40 transition">
+          <span>📜 Mandatos</span>
+        </a>
+        <a href="/cidade.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-500/40 transition">
+          <span>📍 Arinos</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
+
+    <!-- Hero / Apresentação -->
+    <div class="glass-card p-6 md:p-8 rounded-2xl border border-slate-800 text-center relative overflow-hidden">
+      <div class="max-w-3xl mx-auto space-y-3">
+        <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
+          <span>ARQUITETURA DE INFORMAÇÃO CIDADÃ</span>
+        </span>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+          Explore as 8 Páginas e Módulos do Portal em Menos de 2 Cliques
+        </h2>
+        <p class="text-slate-400 text-sm">
+          Acesse diretamente dados de contracheques, viagens oficiais, fornecedores, contratos, histórico eleitoral e atuação de prefeitos e vereadores de Arinos / MG.
+        </p>
+
+        <!-- Campo de Filtro do Mapa -->
+        <div class="pt-4 max-w-lg mx-auto">
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">🔍</span>
+            <input type="text" id="map-search" oninput="filtrarMapa()" placeholder="Filtrar páginas, módulos e informações..." class="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 shadow-inner">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jornadas Rápidas do Cidadão (Atalhos por Objetivo) -->
+    <div class="space-y-3">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono flex items-center space-x-2">
+        <span>🚀 Jornadas Rápidas: O Que Você Procura?</span>
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <a href="/tabelas.html?tab=pessoas&tipo=prefeitos" class="glass-card p-4 rounded-xl border border-rose-500/30 hover:border-rose-500/60 transition group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-rose-400 text-xs font-mono font-bold">
+              <span>👔 Prefeitos</span>
+              <span>4 gestores</span>
+            </div>
+            <p class="text-sm font-bold text-white mt-1 group-hover:text-rose-300 transition">Quanto os prefeitos receberam?</p>
+            <p class="text-xs text-slate-400 mt-1">Salários e diárias acumuladas de Marcilio Alisson, Roberto Sales, Carlos Recch e Lucas Mota.</p>
+          </div>
+          <span class="text-xs text-rose-400 font-semibold mt-3 inline-flex items-center space-x-1">
+            <span>Acessar ranking</span>
+            <span>→</span>
+          </span>
+        </a>
+
+        <a href="/tabelas.html?tab=pessoas&tipo=socios" class="glass-card p-4 rounded-xl border border-amber-500/30 hover:border-amber-500/60 transition group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-amber-400 text-xs font-mono font-bold">
+              <span>⚠️ Conflitos de Interesse</span>
+              <span>190 sócios</span>
+            </div>
+            <p class="text-sm font-bold text-white mt-1 group-hover:text-amber-300 transition">Servidores que são sócios de fornecedores</p>
+            <p class="text-xs text-slate-400 mt-1">Cruzamento de remuneração pública com o quadro QSA de empresas credoras da prefeitura.</p>
+          </div>
+          <span class="text-xs text-amber-400 font-semibold mt-3 inline-flex items-center space-x-1">
+            <span>Ver sócios mapeados</span>
+            <span>→</span>
+          </span>
+        </a>
+
+        <a href="/tabelas.html?tab=diarias" class="glass-card p-4 rounded-xl border border-cyan-500/30 hover:border-cyan-500/60 transition group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-cyan-400 text-xs font-mono font-bold">
+              <span>🚗 Diárias de Viagem</span>
+              <span>29.746 viagens</span>
+            </div>
+            <p class="text-sm font-bold text-white mt-1 group-hover:text-cyan-300 transition">Viagens e indenizações públicas</p>
+            <p class="text-xs text-slate-400 mt-1">Destinos como Brasília, BH e Unaí, justificativas oficiais e montantes pagos por viagem.</p>
+          </div>
+          <span class="text-xs text-cyan-400 font-semibold mt-3 inline-flex items-center space-x-1">
+            <span>Explorar diárias</span>
+            <span>→</span>
+          </span>
+        </a>
+
+        <a href="/eleicoes.html" class="glass-card p-4 rounded-xl border border-indigo-500/30 hover:border-indigo-500/60 transition group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-indigo-400 text-xs font-mono font-bold">
+              <span>🗳️ Eleições TSE</span>
+              <span>2012 a 2024</span>
+            </div>
+            <p class="text-sm font-bold text-white mt-1 group-hover:text-indigo-300 transition">Votos e patrimônio de candidatos</p>
+            <p class="text-xs text-slate-400 mt-1">Evolução de votos de prefeitos e vereadores e declarações oficiais de bens.</p>
+          </div>
+          <span class="text-xs text-indigo-400 font-semibold mt-3 inline-flex items-center space-x-1">
+            <span>Ver pleitos eleitorais</span>
+            <span>→</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Os 4 Grandes Eixos Cidadãos do Mapa -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="eixos-container">
+
+      <!-- EIXO 1: Recursos Humanos & Remuneração -->
+      <div class="glass-card rounded-2xl border border-slate-800 p-6 space-y-4 map-card" data-keywords="pessoas contracheques holerites salários diárias viagens servidores remuneração">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center space-x-2.5">
+            <span class="text-2xl">👥</span>
+            <div>
+              <h3 class="font-bold text-white text-base">Eixo 1: Recursos Humanos & Remuneração</h3>
+              <p class="text-xs text-slate-400">Quem recebe do erário municipal e evolução de gastos com pessoal</p>
+            </div>
+          </div>
+          <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold">183k Registros</span>
+        </div>
+
+        <ul class="space-y-3">
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-emerald-500/40 transition">
+            <a href="/tabelas.html?tab=pessoas" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-emerald-400 hover:underline">👤 Pessoas & Dinheiro Público (Dossiê 360°)</span>
+                <p class="text-xs text-slate-400 mt-1">2.865 indivíduos únicos. Trata inconsistências de múltiplas matrículas e soma Salários + Diárias.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">tabelas.html?tab=pessoas</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-emerald-500/40 transition">
+            <a href="/tabelas.html?tab=contracheques" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-white hover:underline">📑 Contracheques & Holerites Oficiais</span>
+                <p class="text-xs text-slate-400 mt-1">153.938 folhas mensais de 2013 a 2026. Prefeitura e Fundação de Saúde, cargos e vínculos.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">tab=contracheques</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-emerald-500/40 transition">
+            <a href="/tabelas.html?tab=diarias" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-amber-400 hover:underline">🚗 Diárias de Viagem & Ajuda de Custo</span>
+                <p class="text-xs text-slate-400 mt-1">29.746 viagens indenizadas. Cidades de destino, datas, motivos declarados e valores.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">tab=diarias</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-emerald-500/40 transition">
+            <a href="/tabelas.html?tab=rankings" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-white hover:underline">🏆 Rankings de Remuneração</span>
+                <p class="text-xs text-slate-400 mt-1">Top 10 maiores salários brutos e maiores recebedores de diárias na história de Arinos.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">tab=rankings</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- EIXO 2: Fornecedores & Gestão Orçamentária -->
+      <div class="glass-card rounded-2xl border border-slate-800 p-6 space-y-4 map-card" data-keywords="empresas fornecedores contratos licitações despesas empenhos receitas siap convênios sócios qsa">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center space-x-2.5">
+            <span class="text-2xl">🏢</span>
+            <div>
+              <h3 class="font-bold text-white text-base">Eixo 2: Fornecedores & Gestão Orçamentária</h3>
+              <p class="text-xs text-slate-400">Contratos, licitações, empenhos pagos e arrecadação tributária</p>
+            </div>
+          </div>
+          <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 font-bold">44k Registros</span>
+        </div>
+
+        <ul class="space-y-3">
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-blue-500/40 transition">
+            <a href="/empresas.html" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-blue-400 hover:underline">🏢 Painel de Empresas & Sócios (Receita Federal)</span>
+                <p class="text-xs text-slate-400 mt-1">Dossiê de credores, quadro societário (QSA), contratos celebrados e alertas de parentesco.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">empresas.html</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-blue-500/40 transition">
+            <a href="/tabelas.html?tab=contratos" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-white hover:underline">📑 Contratos Públicos & Termos Aditivos</span>
+                <p class="text-xs text-slate-400 mt-1">2.428 contratos com objeto, vigência, valores homologados e empresas vencedoras.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">tab=contratos</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-blue-500/40 transition">
+            <a href="/tabelas.html?tab=despesas" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-cyan-400 hover:underline">💸 Despesas & Empenhos Contábeis</span>
+                <p class="text-xs text-slate-400 mt-1">6.103 registros de despesas orçamentárias detalhadas por credor e natureza.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">tab=despesas</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-blue-500/40 transition">
+            <a href="/tabelas.html?tab=receitas" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-teal-400 hover:underline">💰 Receitas & Arrecadação SIAP</span>
+                <p class="text-xs text-slate-400 mt-1">35.887 lançamentos de receitas tributárias, FPM, ICMS e transferências constitucionais.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">tab=receitas</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-blue-500/40 transition">
+            <a href="/tabelas.html?tab=convenios" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-indigo-400 hover:underline">🤝 Convênios com Estado e União</span>
+                <p class="text-xs text-slate-400 mt-1">93 termos de repasse e contrapartida financeira do município.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">tab=convenios</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- EIXO 3: Poder Político & Representação -->
+      <div class="glass-card rounded-2xl border border-slate-800 p-6 space-y-4 map-card" data-keywords="política prefeitos mandatos câmara vereadores leis sapl eleições tse candidatos patrimônio">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center space-x-2.5">
+            <span class="text-2xl">🏛️</span>
+            <div>
+              <h3 class="font-bold text-white text-base">Eixo 3: Poder Político & Representação</h3>
+              <p class="text-xs text-slate-400">Prefeitos, vereadores, propostas de leis e histórico do TSE</p>
+            </div>
+          </div>
+          <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-400 font-bold">Histórico 2012-2026</span>
+        </div>
+
+        <ul class="space-y-3">
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-purple-500/40 transition">
+            <a href="/mandatos.html" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-purple-400 hover:underline">📜 Galeria Histórica de Mandatos & Prefeitos</span>
+                <p class="text-xs text-slate-400 mt-1">Linha do tempo de todas as administrações municipais, vice-prefeitos e transições políticas.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">mandatos.html</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-sky-500/40 transition">
+            <a href="/vereadores.html" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-sky-400 hover:underline">👥 Câmara Municipal de Arinos & Vereadores (SAPL)</span>
+                <p class="text-xs text-slate-400 mt-1">Perfil dos 111 vereadores, legislaturas, proposições de leis, indicações e matérias votadas.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">vereadores.html</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-indigo-500/40 transition">
+            <a href="/eleicoes.html" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-indigo-400 hover:underline">🗳️ Dados Eleitorais do TSE & Patrimônio</span>
+                <p class="text-xs text-slate-400 mt-1">Votação das eleições municipais (2012, 2016, 2020, 2024), coligações e bens declarados.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">eleicoes.html</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- EIXO 4: Cidadania, Território & Auditoria -->
+      <div class="glass-card rounded-2xl border border-slate-800 p-6 space-y-4 map-card" data-keywords="arinos história turismo notícias cachoeira boi preto urucuia auditoria forense código sha-256 csv api">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center space-x-2.5">
+            <span class="text-2xl">📍</span>
+            <div>
+              <h3 class="font-bold text-white text-base">Eixo 4: Cidadania, Território & Auditoria</h3>
+              <p class="text-xs text-slate-400">História local, patrimônio natural, integridade forense e dados abertos</p>
+            </div>
+          </div>
+          <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-bold">Cidadania Plena</span>
+        </div>
+
+        <ul class="space-y-3">
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-amber-500/40 transition">
+            <a href="/cidade.html" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-amber-400 hover:underline">📍 Arinos / MG (História, Notícias & Turismo)</span>
+                <p class="text-xs text-slate-400 mt-1">Indicadores do IBGE, Rio Urucuia, Cachoeira Boi Preto, veredas e notícias cidadãs.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">cidade.html</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-slate-600 transition">
+            <a href="/fluxo_arquitetura.html" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-slate-300 hover:underline">📐 Metodologia & Arquitetura Forense</span>
+                <p class="text-xs text-slate-400 mt-1">Cadeia de custódia, hashes SHA-256 de auditoria, concorrência WAL e integridade SQLite.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">fluxo_arquitetura.html</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-emerald-500/40 transition">
+            <a href="/relatorios_exportados/1_ranking_500_maiores_salarios.csv" download class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-emerald-400 hover:underline">📥 Download de Planilhas em Dados Abertos (CSV)</span>
+                <p class="text-xs text-slate-400 mt-1">Baixe arquivos tabulares para auditoria no Excel, PowerBI ou Python.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">/relatorios_exportados</span>
+            </a>
+          </li>
+
+          <li class="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:border-blue-500/40 transition">
+            <a href="/sitemap.xml" target="_blank" class="flex items-start justify-between">
+              <div>
+                <span class="font-bold text-sm text-blue-400 hover:underline">🌐 Sitemap XML Padrão Web</span>
+                <p class="text-xs text-slate-400 mt-1">Estrutura indexável para motores de busca e integradores externos.</p>
+              </div>
+              <span class="text-xs font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">sitemap.xml</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer Global com Mapa do Site Integrado -->
+  <footer class="border-t border-slate-800 bg-slate-950/80 py-10 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs text-slate-400">
+        <div>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2 font-mono">👥 Recursos Humanos</h4>
+          <ul class="space-y-1.5">
+            <li><a href="/tabelas.html?tab=pessoas" class="hover:text-emerald-400">Pessoas & Dinheiro Público</a></li>
+            <li><a href="/tabelas.html?tab=contracheques" class="hover:text-emerald-400">Contracheques & Folha</a></li>
+            <li><a href="/tabelas.html?tab=diarias" class="hover:text-emerald-400">Diárias de Viagem</a></li>
+            <li><a href="/tabelas.html?tab=rankings" class="hover:text-emerald-400">Rankings de Remuneração</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2 font-mono">🏢 Fornecedores</h4>
+          <ul class="space-y-1.5">
+            <li><a href="/empresas.html" class="hover:text-blue-400">Empresas & Sócios QSA</a></li>
+            <li><a href="/tabelas.html?tab=contratos" class="hover:text-blue-400">Contratos & Aditivos</a></li>
+            <li><a href="/tabelas.html?tab=despesas" class="hover:text-blue-400">Despesas & Empenhos</a></li>
+            <li><a href="/tabelas.html?tab=receitas" class="hover:text-blue-400">Receitas & Arrecadação</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2 font-mono">🏛️ Poder Político</h4>
+          <ul class="space-y-1.5">
+            <li><a href="/mandatos.html" class="hover:text-purple-400">Galeria de Mandatos</a></li>
+            <li><a href="/vereadores.html" class="hover:text-purple-400">Câmara Municipal</a></li>
+            <li><a href="/eleicoes.html" class="hover:text-purple-400">Eleições TSE & Bens</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2 font-mono">📍 Cidade & Dados</h4>
+          <ul class="space-y-1.5">
+            <li><a href="/cidade.html" class="hover:text-amber-400">História & Turismo</a></li>
+            <li><a href="/mapa.html" class="text-emerald-400 font-bold">Mapa do Site Completo</a></li>
+            <li><a href="/fluxo_arquitetura.html" class="hover:text-slate-300">Auditoria Forense</a></li>
+            <li><a href="/sitemap.xml" class="hover:text-slate-300">Sitemap XML</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-900 pt-6 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-4">
+        <div>
+          <span class="font-bold text-white">Portal da Transparência Independente de Arinos / MG</span> — IBGE 3104502
+          <p class="text-[11px] text-slate-600 mt-0.5">Auditoria Cívica Automatizada • 240.408 registros processados</p>
+        </div>
+        <div class="font-mono text-[11px] text-emerald-500/80">
+          ● Servidor Ativo: Porta 8088
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function filtrarMapa() {
+      const q = document.getElementById('map-search').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.map-card');
+      cards.forEach(card => {
+        const text = (card.innerText + ' ' + (card.getAttribute('data-keywords') || '')).toLowerCase();
+        if (!q || text.includes(q)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
