@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-22T00:55:48.520Z",
+  "gerado_em": "2026-11-22T03:38:23.883Z",
   "progresso_geral": 75,
   "metricas_globais": {
     "total_registros": 240408,
@@ -335,6 +335,14 @@
       "valor_diarias": 7097440.34,
       "total_geral_registros": 189787,
       "volume_financeiro_auditado": 371872801.16999996
+    },
+    "ultimo_backup": {
+      "arquivo": "backup_completo_arinos_2026-11-22T03-16-03-643Z.zip",
+      "gerado_em": "2026-11-22T03:16:03.643Z",
+      "tamanho_mb": 67.54,
+      "total_arquivos": 2859,
+      "hash_sha256": "577eee33ec440c1ccd507192d5f23d9a6e2ddfa05399711a79ee945ee41ca0a2",
+      "caminho_manifesto": "backups_forenses/backup_completo_arinos_2026-11-22T03-16-03-643Z.zip.sha256.txt"
     }
   }
 }
