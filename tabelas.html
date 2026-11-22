@@ -40,6 +40,7 @@
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #334155; }
   </style>
+  <link rel="stylesheet" href="/components/side_menu_v2.css">
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -609,6 +610,7 @@
               </td>
               <td class="py-3 px-4">
                 <span class="px-2 py-0.5 rounded-full text-xs font-medium border ${badgeTipo}">${r.perfil_tipo}</span>
+                <div class="mt-1">${window.gerarBadgesProfissionais ? window.gerarBadgesProfissionais(r) : ''}</div>
                 ${r.is_socio_empresa ? `<div class="text-[10px] text-amber-400 font-medium mt-1">⚠️ Sócio Empresa Fornecedora</div>` : ''}
               </td>
               <td class="py-3 px-4">${badgeMat}</td>
@@ -784,7 +786,11 @@
         document.getElementById('modal-subtitulo').innerText = subText;
 
         // Render KPI cards
+        
+        const painelProfissionalHtml = window.gerarPainelPerfilProfissional ? window.gerarPainelPerfilProfissional(p, data) : '';
         let htmlCorpo = `
+          ${painelProfissionalHtml}
+  
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div class="p-3 bg-slate-800/80 rounded-xl border border-emerald-500/30">
               <span class="text-[10px] text-slate-400 uppercase font-mono">Total Dinheiro Público</span>
@@ -976,5 +982,6 @@
       }
     });
   </script>
+  <script src="/components/side_menu_v2.js"></script>
 </body>
 </html>
