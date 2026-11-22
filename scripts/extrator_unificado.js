@@ -489,7 +489,7 @@ function atualizarStatusJson(moduloKey, status, extra = {}) {
 // MOTOR PRINCIPAL DE PROCESSAMENTO DO MÓDULO
 // -----------------------------------------------------------------------------
 
-async function executarColetaETratamento(moduloKey, limiteVazios = 30, maxConsultas = Infinity) {
+async function executarColetaETratamento(moduloKey, limiteVazios = 70, maxConsultas = Infinity) {
   const conf = CONFIG_MODULOS[moduloKey];
   if (!conf) throw new Error(`Módulo não configurado: ${moduloKey}`);
 
@@ -567,19 +567,28 @@ async function executarColetaETratamento(moduloKey, limiteVazios = 30, maxConsul
     let registrosExtraidos = [];
 
     try {
-      const res = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AuditoriaPublica/1.0',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-        }
-      });
+      if (fs.existsSync(arquivoCaminho) && fs.statSync(arquivoCaminho).size > 0) {
+        conteudo = fs.readFileSync(arquivoCaminho, 'utf-8');
+        statusHttp = 200;
+        bytes = Buffer.byteLength(conteudo, 'utf-8');
+        hashConteudo = sha256(conteudo);
+      } else {
+        const res = await fetch(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AuditoriaPublica/1.0',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+          }
+        });
 
-      statusHttp = res.status;
-      conteudo = await res.text();
-      bytes = Buffer.byteLength(conteudo, 'utf-8');
-      hashConteudo = sha256(conteudo);
+        statusHttp = res.status;
+        conteudo = await res.text();
+        bytes = Buffer.byteLength(conteudo, 'utf-8');
+        hashConteudo = sha256(conteudo);
 
-      fs.writeFileSync(arquivoCaminho, conteudo, 'utf-8');
+        fs.writeFileSync(arquivoCaminho, conteudo, 'utf-8');
+        // Cortesia ao servidor público
+        await new Promise(r => setTimeout(r, 120));
+      }
 
       // Verifica se a página é vazia
       const textoLimpo = conteudo.replace(/<[^>]+>/g, ' ').toLowerCase();
@@ -587,6 +596,8 @@ async function executarColetaETratamento(moduloKey, limiteVazios = 30, maxConsul
         textoLimpo.includes('nenhum registro encontrado') ||
         textoLimpo.includes('não existem registros') ||
         textoLimpo.includes('sem movimentação') ||
+        textoLimpo.includes('total de pessoas: 0') ||
+        textoLimpo.includes("doesn't exist") ||
         bytes < 1500
       );
 
@@ -653,12 +664,13 @@ async function executarColetaETratamento(moduloKey, limiteVazios = 30, maxConsul
       registrosExtraidos.length, arquivoCaminho, mensagem, agora, tempoResposta
     );
 
-    if (statusColeta === 'com_dados') {
+    if (statusColeta === 'com_dados' && registrosExtraidos.length > 0) {
       mesesComDados++;
       vaziosConsecutivos = 0;
       totalRegistrosTratados += registrosExtraidos.length;
       console.log(`[OK] ${registrosExtraidos.length} registros tratados | Total: R$ ${totalVolumeFinanceiro.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`);
     } else {
+      statusColeta = 'vazio';
       vaziosConsecutivos++;
       console.log(`[VAZIO] (${vaziosConsecutivos}/${limiteVazios} consecutivos)`);
     }
@@ -725,7 +737,7 @@ async function executarColetaETratamento(moduloKey, limiteVazios = 30, maxConsul
 async function main() {
   const args = process.argv.slice(2);
   let modulo = 'folha_prefeitura';
-  let vazios = 30;
+  let vazios = 70;
   let maxConsultas = Infinity;
 
   for (let i = 0; i < args.length; i++) {

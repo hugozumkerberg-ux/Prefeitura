@@ -248,7 +248,7 @@ async function requisitarEGuardarProva(entidadeKey, moduloKey, ano, mes) {
 /**
  * Executa a varredura contínua retroativa com critério estrito de parada de 30 vazios
  */
-async function executarVarredura(entidadeKey, moduloKey, anoInicio = 2026, mesInicio = 11, limiteVaziosConsecutivos = 30) {
+async function executarVarredura(entidadeKey, moduloKey, anoInicio = 2026, mesInicio = 11, limiteVaziosConsecutivos = 70) {
   console.log(`\n==============================================================================`);
   console.log(`INICIANDO VARREDURA: Entidade=[${ENTIDADES[entidadeKey].nome}] Módulo=[${moduloKey}]`);
   console.log(`Ponto de partida: ${anoInicio}/${String(mesInicio).padStart(2, '0')}`);

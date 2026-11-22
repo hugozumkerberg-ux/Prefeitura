@@ -10,7 +10,7 @@ const path = require('node:path');
 async function main() {
   console.log('╔════════════════════════════════════════════════════════════════════╗');
   console.log('║  SISTEMA DE AUDITORIA FORENSE E COLETA TOTAL — ARINOS / MG        ║');
-  console.log('║  Critério de Parada: 30 meses consecutivos vazios                  ║');
+  console.log('║  Critério de Parada: 70 meses consecutivos vazios                  ║');
   console.log('║  Cadeia de Custódia: SHA-256 + Arquivo Bruto + URL Probatória      ║');
   console.log('╚════════════════════════════════════════════════════════════════════╝\n');
 
@@ -30,8 +30,8 @@ async function main() {
     const item = fila[i];
     console.log(`\n>>> ETAPA [${i + 1}/${fila.length}]: ${item.descricao} <<<`);
     try {
-      // Inicia em 2026/11 e desce até 30 meses vazios consecutivos
-      await executarVarredura(item.entidade, item.modulo, 2026, 11, 30);
+      // Inicia em 2026/11 e desce até 70 meses vazios consecutivos
+      await executarVarredura(item.entidade, item.modulo, 2026, 11, 70);
     } catch (e) {
       console.error(`Erro na etapa ${item.descricao}:`, e.message);
     }

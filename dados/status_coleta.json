@@ -3,10 +3,10 @@
     "folha_saude": {
       "nome": "Folha de Pagamento — Fundação Municipal de Saúde",
       "status": "concluido",
-      "fim": "2026-11-21T21:36:37.879Z",
+      "fim": "2026-11-22T03:58:08.686Z",
       "progresso_pct": 100,
-      "coletados_raw": 365,
-      "meses_com_dados": 335,
+      "coletados_raw": 237,
+      "meses_com_dados": 165,
       "tratados_banco": 14240,
       "volume_reais": 35325980.30999967,
       "status_msg": "Auditado e Estruturado 100%"
@@ -14,10 +14,10 @@
     "folha_prefeitura": {
       "nome": "Folha de Pagamento — Prefeitura Municipal",
       "status": "concluido",
-      "fim": "2026-11-21T22:33:06.962Z",
+      "fim": "2026-11-22T03:51:55.883Z",
       "progresso_pct": 100,
-      "coletados_raw": 365,
-      "meses_com_dados": 335,
+      "coletados_raw": 237,
+      "meses_com_dados": 166,
       "tratados_banco": 142013,
       "volume_reais": 296442008.40001446,
       "status_msg": "Auditado e Estruturado 100%"
@@ -25,10 +25,10 @@
     "despesas_prefeitura": {
       "nome": "Despesas e Empenhos — Prefeitura Municipal",
       "status": "concluido",
-      "fim": "2026-11-21T21:32:50.520Z",
+      "fim": "2026-11-22T03:53:45.795Z",
       "progresso_pct": 100,
-      "coletados_raw": 257,
-      "meses_com_dados": 227,
+      "coletados_raw": 236,
+      "meses_com_dados": 152,
       "tratados_banco": 5293,
       "volume_reais": 31924424.27000003,
       "status_msg": "Auditado e Estruturado 100%"
@@ -36,10 +36,10 @@
     "despesas_saude": {
       "nome": "Despesas e Empenhos — Fundação Municipal de Saúde",
       "status": "concluido",
-      "fim": "2026-11-21T21:47:38.420Z",
+      "fim": "2026-11-22T03:56:16.092Z",
       "progresso_pct": 100,
-      "coletados_raw": 257,
-      "meses_com_dados": 227,
+      "coletados_raw": 235,
+      "meses_com_dados": 107,
       "tratados_banco": 816,
       "volume_reais": 6902023.269999997,
       "status_msg": "Auditado e Estruturado 100%"
@@ -47,10 +47,10 @@
     "diarias_prefeitura": {
       "nome": "Diárias de Viagem — Prefeitura Municipal",
       "status": "concluido",
-      "fim": "2026-11-21T21:50:14.918Z",
+      "fim": "2026-11-22T03:54:23.576Z",
       "progresso_pct": 100,
-      "coletados_raw": 257,
-      "meses_com_dados": 227,
+      "coletados_raw": 70,
+      "meses_com_dados": 0,
       "tratados_banco": 0,
       "volume_reais": 0,
       "status_msg": "Auditado e Estruturado 100%"
@@ -58,16 +58,16 @@
     "diarias_saude": {
       "nome": "Diárias de Viagem — Fundação Municipal de Saúde",
       "status": "concluido",
-      "fim": "2026-11-21T21:49:18.505Z",
+      "fim": "2026-11-22T03:58:50.579Z",
       "progresso_pct": 100,
-      "coletados_raw": 257,
-      "meses_com_dados": 227,
+      "coletados_raw": 70,
+      "meses_com_dados": 0,
       "tratados_banco": 0,
       "volume_reais": 0,
       "status_msg": "Auditado e Estruturado 100%"
     }
   },
-  "ultima_atualizacao": "2026-11-21T22:33:06.963Z",
+  "ultima_atualizacao": "2026-11-22T03:58:50.580Z",
   "totais_acumulados": {
     "consultas_http_realizadas": 1758,
     "competencias_com_dados": 1578,
