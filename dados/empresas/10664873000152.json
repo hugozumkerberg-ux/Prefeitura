@@ -1,0 +1,100 @@
+{
+  "uf": "MG",
+  "cep": "38770000",
+  "qsa": [
+    {
+      "pais": null,
+      "nome_socio": "ANA LAURA CARNEIRO GUIMARAES DE MELO",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 41 a 50 anos",
+      "cnpj_cpf_do_socio": "***440146**",
+      "qualificacao_socio": "Sócio",
+      "codigo_faixa_etaria": 5,
+      "data_entrada_sociedade": "2009-03-03",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 22,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    },
+    {
+      "pais": null,
+      "nome_socio": "LEONARDO HENRIQUE GOMES ALVES DE MELO",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 41 a 50 anos",
+      "cnpj_cpf_do_socio": "***969256**",
+      "qualificacao_socio": "Sócio-Administrador",
+      "codigo_faixa_etaria": 5,
+      "data_entrada_sociedade": "2009-03-03",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 49,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    }
+  ],
+  "cnpj": "10664873000152",
+  "pais": null,
+  "email": null,
+  "porte": "EMPRESA DE PEQUENO PORTE",
+  "bairro": "CENTRO",
+  "numero": "282",
+  "ddd_fax": "3835615204",
+  "municipio": "JOAO PINHEIRO",
+  "logradouro": "GERALDO RIOS",
+  "cnae_fiscal": 4644301,
+  "codigo_pais": null,
+  "complemento": "",
+  "codigo_porte": 3,
+  "razao_social": "LEONARDO HENRIQUE GOMES ALVES DE MELO E CIA LTDA",
+  "nome_fantasia": "DISTRIBUIDORA DE MEDICAMENTOS ALVES MELO",
+  "capital_social": 50000,
+  "ddd_telefone_1": "3835611494",
+  "ddd_telefone_2": "",
+  "opcao_pelo_mei": false,
+  "codigo_municipio": 4725,
+  "cnaes_secundarios": [
+    {
+      "codigo": 4645101,
+      "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+    },
+    {
+      "codigo": 4664800,
+      "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso odonto-médico-hospitalar; partes e peças"
+    },
+    {
+      "codigo": 4930202,
+      "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+    },
+    {
+      "codigo": 4644302,
+      "descricao": "Comércio atacadista de medicamentos e drogas de uso veterinário"
+    }
+  ],
+  "natureza_juridica": "Sociedade Empresária Limitada",
+  "regime_tributario": [],
+  "situacao_especial": "",
+  "opcao_pelo_simples": false,
+  "situacao_cadastral": 8,
+  "data_opcao_pelo_mei": null,
+  "data_exclusao_do_mei": null,
+  "cnae_fiscal_descricao": "Comércio atacadista de medicamentos e drogas de uso humano",
+  "codigo_municipio_ibge": 3136306,
+  "data_inicio_atividade": "2009-03-03",
+  "data_situacao_especial": null,
+  "data_opcao_pelo_simples": "2009-03-03",
+  "data_situacao_cadastral": "2023-05-31",
+  "nome_cidade_no_exterior": "",
+  "codigo_natureza_juridica": 2062,
+  "data_exclusao_do_simples": "2023-05-31",
+  "motivo_situacao_cadastral": 1,
+  "ente_federativo_responsavel": "",
+  "identificador_matriz_filial": 1,
+  "qualificacao_do_responsavel": 49,
+  "descricao_situacao_cadastral": "BAIXADA",
+  "descricao_tipo_de_logradouro": "RUA",
+  "descricao_motivo_situacao_cadastral": "EXTINCAO POR ENCERRAMENTO LIQUIDACAO VOLUNTARIA",
+  "descricao_identificador_matriz_filial": "MATRIZ"
+}

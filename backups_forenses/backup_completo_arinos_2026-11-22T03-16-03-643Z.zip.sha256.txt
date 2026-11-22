@@ -1,0 +1,63 @@
+================================================================================
+MANIFESTO FORENSE DE INTEGRIDADE E CUSTÓDIA — PORTAL TRANSPARÊNCIA ARINOS / MG
+================================================================================
+Identificação do Arquivo: backup_completo_arinos_2026-11-22T03-16-03-643Z.zip
+Data e Hora de Geração (UTC): 2026-11-22T03:16:03.643Z
+Data e Hora Local: 22/11/2026, 00:16:03
+Tamanho Compactado: 67.54 MB (70820221 bytes)
+Tamanho Original Descompactado: 616.42 MB (646366161 bytes)
+Taxa de Compressão: 89.0%
+Total de Arquivos Compactados: 2859
+
+HASH CRIPTOGRÁFICO SHA-256 (PROVA DE INVIOLABILIDADE FORENSE):
+577eee33ec440c1ccd507192d5f23d9a6e2ddfa05399711a79ee945ee41ca0a2
+
+================================================================================
+INVENTÁRIO FORENSE DOS DADOS COLETADOS:
+================================================================================
+1. BANCOS DE DADOS RELACIONAIS (SQLITE):
+   - arinos_transparencia_master.sqlite3 (Banco Master Consolidado)
+   - contracheques_detalhados_master.sqlite3 (Rubricas Analíticas)
+   - auditoria/arinos_auditoria_master.sqlite3 (Logs HTTP e Hashes de Resposta)
+
+2. VOLUMES DE REGISTROS PÚBLICOS AUDITADOS:
+   - Contracheques (Folha de Pagamento Municipal): 153.938 registros
+   - Contracheques Detalhados (Scraper Analítico): 0 holerites
+   - Rubricas Analíticas (Proventos e Descontos): 0 itens
+   - Despesas e Empenhos Públicos: 6.103 empenhos
+   - Diárias e Deslocamentos de Servidores: 29.746 diárias
+   - Contratos e Aditivos da Prefeitura: 2.428 contratos
+   - Receitas Arrecadadas: 35.887 lançamentos
+   - Convênios e Repasses de Recursos: 93 convênios
+   - Empresas Fornecedoras e Credoras: 120 pessoas jurídicas
+   - Quadro Societário e Sócios (QSA Receita Federal): 215 sócios auditados
+   - Matérias Legislativas da Câmara Municipal: 722 projetos e leis
+   - Vereadores e Histórico Legislativo: 111 parlamentares
+   - Atuação e Feitos de Vereadores: 0 registros
+   - Candidaturas e Histórico Eleitoral TSE: 111 candidaturas
+   - Pontos Turísticos, Distâncias e Localização: 8 atrativos catalogados
+
+3. RELATÓRIOS OFICIAIS EXPORTADOS (CSV):
+   - 1_ranking_500_maiores_salarios.csv
+   - 2_ranking_maiores_credores_despesas.csv
+   - 3_ranking_maiores_recebedores_diarias.csv
+   - 4_resumo_anual_consolidado.csv
+   - 5_ranking_maiores_contratos_arinos.csv
+   - 6_convenios_publicos_repasses_arinos.csv
+
+4. CONTEÚDO INVESTIGATIVO E DOSSIÊS:
+   - Dossiê Histórico e Turístico de Arinos
+   - Dossiê de Empresas, Sócios e Viagens
+   - Roteiros para Reels e Documentário
+
+================================================================================
+CERTIFICAÇÃO LEGAL DE CUSTÓDIA E CADEIA DE CUSTÓDIA:
+================================================================================
+Este pacote de backup constitui cópia fidedigna, integral e pericialmente 
+verificável de todas as bases de dados e arquivos brutos coletados nos portais
+oficiais da Prefeitura Municipal de Arinos/MG, Câmara Municipal de Arinos,
+Fundação Municipal de Saúde e Tribunal Superior Eleitoral (TSE).
+
+A correspondência do Hash SHA-256 acima atesta a imutabilidade absoluta deste 
+acervo, impedindo qualquer modificação, adição ou deleção posterior não autorizada.
+================================================================================

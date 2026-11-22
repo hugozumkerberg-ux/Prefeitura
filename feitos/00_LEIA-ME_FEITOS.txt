@@ -1,0 +1,10 @@
+==============================================================================
+PASTA: feitos/ — HISTÓRICO DE TAREFAS (.BAT) CONCLUÍDAS
+==============================================================================
+
+Esta pasta armazena automaticamente os arquivos .bat de extração que já foram
+executados e finalizados com sucesso (código 0).
+
+Se você precisar reexecutar algum script que já foi transferido para cá, basta
+movê-lo de volta para a pasta raiz de 'portal_transparencia_arinos/' e dar 2 cliques.
+==============================================================================

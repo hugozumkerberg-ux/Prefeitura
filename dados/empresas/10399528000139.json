@@ -1,0 +1,80 @@
+{
+  "uf": "MG",
+  "cep": "38680000",
+  "qsa": [
+    {
+      "pais": null,
+      "nome_socio": "BERGSON LISBOA PRATES",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 41 a 50 anos",
+      "cnpj_cpf_do_socio": "***044916**",
+      "qualificacao_socio": "Sócio-Administrador",
+      "codigo_faixa_etaria": 5,
+      "data_entrada_sociedade": "2009-12-21",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 49,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    }
+  ],
+  "cnpj": "10399528000139",
+  "pais": null,
+  "email": null,
+  "porte": "MICRO EMPRESA",
+  "bairro": "PRIMAVERA I",
+  "numero": "165",
+  "ddd_fax": "3836352007",
+  "municipio": "ARINOS",
+  "logradouro": "ALFREDO FONSECA MELO",
+  "cnae_fiscal": 4930202,
+  "codigo_pais": null,
+  "complemento": "",
+  "codigo_porte": 1,
+  "razao_social": "TRANSPORTES E LOCACOES BETA LTDA",
+  "nome_fantasia": "BETA TRANSPORTES E LOCACOES",
+  "capital_social": 110000,
+  "ddd_telefone_1": "3899359116",
+  "ddd_telefone_2": "3899595773",
+  "opcao_pelo_mei": false,
+  "codigo_municipio": 4089,
+  "cnaes_secundarios": [
+    {
+      "codigo": 4313400,
+      "descricao": "Obras de terraplenagem"
+    },
+    {
+      "codigo": 4924800,
+      "descricao": "Transporte escolar"
+    },
+    {
+      "codigo": 4930201,
+      "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, municipal."
+    }
+  ],
+  "natureza_juridica": "Sociedade Empresária Limitada",
+  "regime_tributario": [],
+  "situacao_especial": "",
+  "opcao_pelo_simples": true,
+  "situacao_cadastral": 2,
+  "data_opcao_pelo_mei": null,
+  "data_exclusao_do_mei": null,
+  "cnae_fiscal_descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional",
+  "codigo_municipio_ibge": 3104502,
+  "data_inicio_atividade": "2008-10-10",
+  "data_situacao_especial": null,
+  "data_opcao_pelo_simples": "2015-01-01",
+  "data_situacao_cadastral": "2008-10-10",
+  "nome_cidade_no_exterior": "",
+  "codigo_natureza_juridica": 2062,
+  "data_exclusao_do_simples": null,
+  "motivo_situacao_cadastral": 0,
+  "ente_federativo_responsavel": "",
+  "identificador_matriz_filial": 1,
+  "qualificacao_do_responsavel": 49,
+  "descricao_situacao_cadastral": "ATIVA",
+  "descricao_tipo_de_logradouro": "RUA",
+  "descricao_motivo_situacao_cadastral": "SEM MOTIVO",
+  "descricao_identificador_matriz_filial": "MATRIZ"
+}

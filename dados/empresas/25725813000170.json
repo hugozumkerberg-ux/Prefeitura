@@ -1,0 +1,209 @@
+{
+  "uf": "MG",
+  "cep": "36047040",
+  "qsa": [
+    {
+      "pais": null,
+      "nome_socio": "EDIMILSON JOSE CHAVES",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 41 a 50 anos",
+      "cnpj_cpf_do_socio": "***807666**",
+      "qualificacao_socio": "Sócio-Administrador",
+      "codigo_faixa_etaria": 5,
+      "data_entrada_sociedade": "2025-05-27",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 49,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    },
+    {
+      "pais": null,
+      "nome_socio": "LILIAN DE LIMA CHAVES",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 41 a 50 anos",
+      "cnpj_cpf_do_socio": "***783606**",
+      "qualificacao_socio": "Sócio",
+      "codigo_faixa_etaria": 5,
+      "data_entrada_sociedade": "2025-05-27",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 22,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    },
+    {
+      "pais": null,
+      "nome_socio": "PAULO ROBERTO CHAVES",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 61 a 70 anos",
+      "cnpj_cpf_do_socio": "***225796**",
+      "qualificacao_socio": "Sócio-Administrador",
+      "codigo_faixa_etaria": 7,
+      "data_entrada_sociedade": "2004-01-16",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 49,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    },
+    {
+      "pais": null,
+      "nome_socio": "TATIANI DE LIMA CHAVES ARAUJO",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 41 a 50 anos",
+      "cnpj_cpf_do_socio": "***770886**",
+      "qualificacao_socio": "Sócio",
+      "codigo_faixa_etaria": 5,
+      "data_entrada_sociedade": "2025-05-27",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 22,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    }
+  ],
+  "cnpj": "25725813000170",
+  "pais": null,
+  "email": null,
+  "porte": "DEMAIS",
+  "bairro": "BANDEIRANTES",
+  "numero": "1280",
+  "ddd_fax": "3232252051",
+  "municipio": "JUIZ DE FORA",
+  "logradouro": "PARACATU",
+  "cnae_fiscal": 4644301,
+  "codigo_pais": null,
+  "complemento": "",
+  "codigo_porte": 5,
+  "razao_social": "EQUIPAR MEDICO E HOSPITALAR LIMITADA",
+  "nome_fantasia": "",
+  "capital_social": 990000,
+  "ddd_telefone_1": "3232243158",
+  "ddd_telefone_2": "3232243474",
+  "opcao_pelo_mei": null,
+  "codigo_municipio": 4733,
+  "cnaes_secundarios": [
+    {
+      "codigo": 4110700,
+      "descricao": "Incorporação de empreendimentos imobiliários"
+    },
+    {
+      "codigo": 4637199,
+      "descricao": "Comércio atacadista especializado em outros produtos alimentícios não especificados anteriormente"
+    },
+    {
+      "codigo": 4645101,
+      "descricao": "Comércio atacadista de instrumentos e materiais para uso médico, cirúrgico, hospitalar e de laboratórios"
+    },
+    {
+      "codigo": 4645102,
+      "descricao": "Comércio atacadista de próteses e artigos de ortopedia"
+    },
+    {
+      "codigo": 4645103,
+      "descricao": "Comércio atacadista de produtos odontológicos"
+    },
+    {
+      "codigo": 4646001,
+      "descricao": "Comércio atacadista de cosméticos e produtos de perfumaria"
+    },
+    {
+      "codigo": 4646002,
+      "descricao": "Comércio atacadista de produtos de higiene pessoal"
+    },
+    {
+      "codigo": 4649408,
+      "descricao": "Comércio atacadista de produtos de higiene, limpeza e conservação domiciliar"
+    },
+    {
+      "codigo": 4649499,
+      "descricao": "Comércio atacadista de outros equipamentos e artigos de uso pessoal e doméstico não especificados anteriormente"
+    },
+    {
+      "codigo": 4664800,
+      "descricao": "Comércio atacadista de máquinas, aparelhos e equipamentos para uso odonto-médico-hospitalar; partes e peças"
+    },
+    {
+      "codigo": 4930201,
+      "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, municipal."
+    },
+    {
+      "codigo": 4930202,
+      "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+    },
+    {
+      "codigo": 6810201,
+      "descricao": "Compra e venda de imóveis próprios"
+    },
+    {
+      "codigo": 6810202,
+      "descricao": "Aluguel de imóveis próprios"
+    }
+  ],
+  "natureza_juridica": "Sociedade Empresária Limitada",
+  "regime_tributario": [
+    {
+      "ano": 2019,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2020,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2021,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2024,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    }
+  ],
+  "situacao_especial": "",
+  "opcao_pelo_simples": null,
+  "situacao_cadastral": 2,
+  "data_opcao_pelo_mei": null,
+  "data_exclusao_do_mei": null,
+  "cnae_fiscal_descricao": "Comércio atacadista de medicamentos e drogas de uso humano",
+  "codigo_municipio_ibge": 3136702,
+  "data_inicio_atividade": "1989-03-27",
+  "data_situacao_especial": null,
+  "data_opcao_pelo_simples": null,
+  "data_situacao_cadastral": "2005-11-03",
+  "nome_cidade_no_exterior": "",
+  "codigo_natureza_juridica": 2062,
+  "data_exclusao_do_simples": null,
+  "motivo_situacao_cadastral": 0,
+  "ente_federativo_responsavel": "",
+  "identificador_matriz_filial": 1,
+  "qualificacao_do_responsavel": 49,
+  "descricao_situacao_cadastral": "ATIVA",
+  "descricao_tipo_de_logradouro": "RUA",
+  "descricao_motivo_situacao_cadastral": "SEM MOTIVO",
+  "descricao_identificador_matriz_filial": "MATRIZ"
+}

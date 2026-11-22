@@ -1,0 +1,175 @@
+{
+  "uf": "MG",
+  "cep": "30170070",
+  "qsa": [
+    {
+      "pais": null,
+      "nome_socio": "MARCOS GERALDO MOREIRA DA SILVA",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 61 a 70 anos",
+      "cnpj_cpf_do_socio": "***904186**",
+      "qualificacao_socio": "Presidente",
+      "codigo_faixa_etaria": 7,
+      "data_entrada_sociedade": "2026-02-27",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 16,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    },
+    {
+      "pais": null,
+      "nome_socio": "MARGARETH APARECIDA GHERARDI",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 51 a 60 anos",
+      "cnpj_cpf_do_socio": "***863446**",
+      "qualificacao_socio": "Diretor",
+      "codigo_faixa_etaria": 6,
+      "data_entrada_sociedade": "2025-07-09",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 10,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    },
+    {
+      "pais": null,
+      "nome_socio": "RAFAEL RIBEIRO DOS SANTOS",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 31 a 40 anos",
+      "cnpj_cpf_do_socio": "***511456**",
+      "qualificacao_socio": "Diretor",
+      "codigo_faixa_etaria": 4,
+      "data_entrada_sociedade": "2026-02-27",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 10,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    }
+  ],
+  "cnpj": "54437117000166",
+  "pais": null,
+  "email": null,
+  "porte": "DEMAIS",
+  "bairro": "SANTO AGOSTINHO",
+  "numero": "58",
+  "ddd_fax": "",
+  "municipio": "BELO HORIZONTE",
+  "logradouro": "SANTOS BARRETO",
+  "cnae_fiscal": 4929902,
+  "codigo_pais": null,
+  "complemento": "SALA 901",
+  "codigo_porte": 5,
+  "razao_social": "UNIAO COOPERATIVA DE TRANSPORTES",
+  "nome_fantasia": "UNIAO TRANSPORTES",
+  "capital_social": 1250000,
+  "ddd_telefone_1": "3132227021",
+  "ddd_telefone_2": "",
+  "opcao_pelo_mei": null,
+  "codigo_municipio": 4123,
+  "cnaes_secundarios": [
+    {
+      "codigo": 3702900,
+      "descricao": "Atividades relacionadas a esgoto, exceto a gestão de redes"
+    },
+    {
+      "codigo": 3811400,
+      "descricao": "Coleta de resíduos não-perigosos"
+    },
+    {
+      "codigo": 3812200,
+      "descricao": "Coleta de resíduos perigosos"
+    },
+    {
+      "codigo": 4213800,
+      "descricao": "Obras de urbanização - ruas, praças e calçadas"
+    },
+    {
+      "codigo": 4399104,
+      "descricao": "Serviços de operação e fornecimento de equipamentos para transporte e elevação de cargas e pessoas para uso em obras"
+    },
+    {
+      "codigo": 4921301,
+      "descricao": "Transporte rodoviário coletivo de passageiros, com itinerário fixo, municipal"
+    },
+    {
+      "codigo": 4923002,
+      "descricao": "Serviço de transporte de passageiros - locação de automóveis com motorista"
+    },
+    {
+      "codigo": 4924800,
+      "descricao": "Transporte escolar"
+    },
+    {
+      "codigo": 4930201,
+      "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, municipal."
+    },
+    {
+      "codigo": 4930203,
+      "descricao": "Transporte rodoviário de produtos perigosos"
+    },
+    {
+      "codigo": 4930204,
+      "descricao": "Transporte rodoviário de mudanças"
+    },
+    {
+      "codigo": 5229002,
+      "descricao": "Serviços de reboque de veículos"
+    },
+    {
+      "codigo": 5250804,
+      "descricao": "Organização logística do transporte de carga"
+    },
+    {
+      "codigo": 7711000,
+      "descricao": "Locação de automóveis sem condutor"
+    },
+    {
+      "codigo": 7732201,
+      "descricao": "Aluguel de máquinas e equipamentos para construção sem operador, exceto andaimes"
+    },
+    {
+      "codigo": 7739099,
+      "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+    },
+    {
+      "codigo": 8020001,
+      "descricao": "Atividades de monitoramento de sistemas de segurança eletrônico"
+    }
+  ],
+  "natureza_juridica": "Cooperativa",
+  "regime_tributario": [
+    {
+      "ano": 2024,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    }
+  ],
+  "situacao_especial": "",
+  "opcao_pelo_simples": null,
+  "situacao_cadastral": 2,
+  "data_opcao_pelo_mei": null,
+  "data_exclusao_do_mei": null,
+  "cnae_fiscal_descricao": "Transporte rodoviário coletivo de passageiros, sob regime de fretamento, intermunicipal, interestadual e internacional",
+  "codigo_municipio_ibge": 3106200,
+  "data_inicio_atividade": "2024-03-22",
+  "data_situacao_especial": null,
+  "data_opcao_pelo_simples": null,
+  "data_situacao_cadastral": "2024-03-22",
+  "nome_cidade_no_exterior": "",
+  "codigo_natureza_juridica": 2143,
+  "data_exclusao_do_simples": null,
+  "motivo_situacao_cadastral": 0,
+  "ente_federativo_responsavel": "",
+  "identificador_matriz_filial": 1,
+  "qualificacao_do_responsavel": 16,
+  "descricao_situacao_cadastral": "ATIVA",
+  "descricao_tipo_de_logradouro": "RUA",
+  "descricao_motivo_situacao_cadastral": "SEM MOTIVO",
+  "descricao_identificador_matriz_filial": "MATRIZ"
+}

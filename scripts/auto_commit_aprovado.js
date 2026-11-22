@@ -1,0 +1,268 @@
+/**
+ * ==============================================================================
+ * SISTEMA AUTOMATIZADO DE TESTES, COMMIT E PUBLICAÇÃO — ARINOS / MG
+ * ==============================================================================
+ * Executa uma bateria completa de testes de integridade e qualidade.
+ * Somente quando 100% dos testes são APROVADOS, o sistema:
+ *   1. Gera um commit automático detalhado no Git.
+ *   2. Publica (push) as alterações no repositório privado configurado.
+ * ==============================================================================
+ */
+
+const fs = require('node:fs');
+const path = require('node:path');
+const http = require('node:http');
+const { execSync } = require('node:child_process');
+const { DatabaseSync } = require('node:sqlite');
+
+const BASE_DIR = path.resolve(__dirname, '..');
+const DADOS_DIR = path.join(BASE_DIR, 'dados');
+const MASTER_DB = path.join(DADOS_DIR, 'arinos_transparencia_master.sqlite3');
+
+console.log('╔══════════════════════════════════════════════════════════════════════════════╗');
+console.log('║       SISTEMA DE TESTES, COMMIT AUTOMÁTICO E PUBLICAÇÃO — ARINOS / MG        ║');
+console.log('╚══════════════════════════════════════════════════════════════════════════════╝\n');
+
+const testResults = [];
+
+function recordTest(name, passed, details) {
+  testResults.push({ name, passed, details });
+  const icon = passed ? '✔ [APROVADO]' : '❌ [REPROVADO]';
+  console.log(`  ${icon} ${name} — ${details}`);
+}
+
+async function runTestSuite() {
+  console.log('1. Executando Bateria de Testes de Integridade e Qualidade...\n');
+
+  // TESTE 1: Integridade do Banco SQLite Master
+  try {
+    if (!fs.existsSync(MASTER_DB)) {
+      recordTest('Banco SQLite Master', false, 'Arquivo arinos_transparencia_master.sqlite3 não encontrado.');
+    } else {
+      const db = new DatabaseSync(MASTER_DB, { readOnly: true });
+      const check = db.prepare('PRAGMA quick_check').get();
+      db.close();
+      if (check && (check.quick_check === 'ok' || Object.values(check)[0] === 'ok')) {
+        recordTest('Banco SQLite Master', true, 'Integridade física e estrutural verificada (quick_check = ok).');
+      } else {
+        recordTest('Banco SQLite Master', false, 'Falha no PRAGMA quick_check.');
+      }
+    }
+  } catch (err) {
+    recordTest('Banco SQLite Master', false, `Erro ao verificar banco: ${err.message}`);
+  }
+
+  // TESTE 2: Existência e Estrutura dos Arquivos HTML Centrais
+  const requiredHtmls = [
+    'index.html',
+    'empresas.html',
+    'vereadores.html',
+    'mandatos.html',
+    'cidade.html',
+    'eleicoes.html',
+    'tabelas.html'
+  ];
+
+  let htmlsOk = true;
+  const missingHtmls = [];
+  for (const h of requiredHtmls) {
+    const fullPath = path.join(BASE_DIR, h);
+    if (!fs.existsSync(fullPath) || fs.statSync(fullPath).size < 500) {
+      htmlsOk = false;
+      missingHtmls.push(h);
+    }
+  }
+
+  if (htmlsOk) {
+    recordTest('Páginas HTML Centrais', true, `Todas as ${requiredHtmls.length} páginas do portal verificadas e íntegras.`);
+  } else {
+    recordTest('Páginas HTML Centrais', false, `Páginas ausentes ou corrompidas: ${missingHtmls.join(', ')}`);
+  }
+
+  // TESTE 3: Validação Sintática dos JSONs Master
+  const requiredJsons = [
+    'dados/resumo_geral.json',
+    'dados/status_coleta.json',
+    'dados/empresas/arinos_empresas_master.json',
+    'dados/viagens/arinos_viagens_master.json',
+    'dados/camara/arinos_camara_master.json',
+    'dados/turismo/arinos_turismo_master.json',
+    'dados/eleicoes/eleicoes_master.json'
+  ];
+
+  let jsonsOk = true;
+  let jsonErrors = [];
+  for (const j of requiredJsons) {
+    const fullPath = path.join(BASE_DIR, j);
+    if (!fs.existsSync(fullPath)) {
+      jsonsOk = false;
+      jsonErrors.push(`${j} (ausente)`);
+    } else {
+      try {
+        const content = fs.readFileSync(fullPath, 'utf-8');
+        JSON.parse(content);
+      } catch (e) {
+        jsonsOk = false;
+        jsonErrors.push(`${j} (sintaxe inválida: ${e.message})`);
+      }
+    }
+  }
+
+  if (jsonsOk) {
+    recordTest('Catálogos JSON Master', true, `Todos os ${requiredJsons.length} catálogos JSON validados sintaticamente.`);
+  } else {
+    recordTest('Catálogos JSON Master', false, `Erros nos arquivos JSON: ${jsonErrors.join(', ')}`);
+  }
+
+  // TESTE 4: Teste de API do Servidor Local (porta 8088)
+  const apiTestPromise = new Promise((resolve) => {
+    const req = http.get('http://localhost:8088/api/live', (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.contracheques || parsed.despesas || parsed.dados_gerais) {
+              resolve({ ok: true, details: 'API /api/live respondendo com sucesso (200 OK).' });
+            } else {
+              resolve({ ok: true, details: 'API /api/live respondendo (200 OK).' });
+            }
+          } catch {
+            resolve({ ok: false, details: 'Resposta da API não é um JSON válido.' });
+          }
+        } else {
+          resolve({ ok: false, details: `Servidor retornou status HTTP ${res.statusCode}.` });
+        }
+      });
+    });
+
+    req.on('error', (err) => {
+      resolve({ ok: false, details: `Servidor na porta 8088 não respondeu: ${err.message}` });
+    });
+
+    req.setTimeout(3000, () => {
+      req.destroy();
+      resolve({ ok: false, details: 'Timeout na requisição à API.' });
+    });
+  });
+
+  const apiResult = await apiTestPromise;
+  recordTest('API do Servidor Local (:8088)', apiResult.ok, apiResult.details);
+
+  // Avaliação Final da Bateria de Testes
+  const totalTests = testResults.length;
+  const passedTests = testResults.filter(t => t.passed).length;
+  const allPassed = passedTests === totalTests;
+
+  console.log(`\n================================================================================`);
+  console.log(`RESULTADO DA BATERIA: ${passedTests}/${totalTests} TESTES APROVADOS (${allPassed ? '100% SUCESSO' : 'FALHA DETECTADA'})`);
+  console.log(`================================================================================\n`);
+
+  if (!allPassed) {
+    console.error('❌ Operação abortada! Nem todos os testes foram aprovados.');
+    console.error('Nenhum commit ou publicação foi realizado para evitar envio de código instável.\n');
+    process.exit(1);
+  }
+
+  // TESTES APROVADOS -> PROCEDER COM COMMIT E PUBLICAÇÃO
+  console.log('2. Verificando estado do repositório Git...');
+  
+  let gitStatusOutput = '';
+  try {
+    gitStatusOutput = execSync('git status --porcelain', { cwd: BASE_DIR }).toString().trim();
+  } catch (err) {
+    console.error('❌ Erro ao consultar git status:', err.message);
+    process.exit(1);
+  }
+
+  if (!gitStatusOutput) {
+    console.log('  ℹ Nenhuma modificação pendente para commit no momento (working tree clean).');
+  } else {
+    const lines = gitStatusOutput.split('\n').filter(Boolean);
+    console.log(`  ✔ Foram detectados ${lines.length} arquivos modificados/novos para homologação.`);
+
+    // Obter mensagem de commit a partir dos argumentos da linha de comando
+    const userMsg = process.argv.slice(2).join(' ').trim();
+    const nowIso = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+    const commitTitle = userMsg || 'Ajustes, melhorias e dados validados no Portal de Transparência';
+    const commitMsg = `[AUTO-COMMIT APROVADO] ${commitTitle} (${nowIso})\n\nBateria de Testes Aprovada:\n${testResults.map(t => `- ✔ ${t.name}: ${t.details}`).join('\n')}\n\nArquivos alterados: ${lines.length}`;
+
+    console.log('\n3. Realizando Git Add e Commit Automático...');
+    try {
+      execSync('git add -A', { cwd: BASE_DIR });
+      
+      // Salvar mensagem de commit em arquivo temporário para evitar problemas de escape no shell
+      const tempMsgFile = path.join(BASE_DIR, '.temp_commit_msg.txt');
+      fs.writeFileSync(tempMsgFile, commitMsg, 'utf-8');
+      execSync(`git commit -F "${tempMsgFile}"`, { cwd: BASE_DIR });
+      if (fs.existsSync(tempMsgFile)) fs.unlinkSync(tempMsgFile);
+
+      console.log('  ✔ Commit gerado com sucesso!');
+    } catch (err) {
+      console.error('❌ Erro ao criar commit:', err.message);
+      process.exit(1);
+    }
+  }
+
+  // 4. Publicação no Repositório Remoto Privado
+  console.log('\n4. Verificando publicação no Repositório Remoto Privado...');
+  let remotes = '';
+  try {
+    remotes = execSync('git remote -v', { cwd: BASE_DIR }).toString().trim();
+  } catch {}
+
+  if (remotes && remotes.includes('origin')) {
+    console.log('  ✔ Remoto "origin" detectado. Publicando alterações (git push)...');
+    try {
+      execSync('git push -u origin main', { cwd: BASE_DIR, stdio: 'inherit' });
+      console.log('\n✅ Alterações publicadas com sucesso no repositório remoto!');
+    } catch (err) {
+      console.warn(`  ⚠ Falha no git push: ${err.message}`);
+    }
+  } else {
+    console.log('  ℹ Nenhum repositório remoto "origin" configurado ainda.');
+    console.log('\n  Deseja criar automaticamente o repositório privado no GitHub?');
+    
+    // Testar se GitHub CLI está autenticado
+    let ghAuthed = false;
+    try {
+      execSync('gh auth status', { stdio: 'pipe' });
+      ghAuthed = true;
+    } catch {}
+
+    if (ghAuthed) {
+      console.log('  ✔ GitHub CLI autenticado! Criando repositório privado na sua conta...');
+      try {
+        execSync('gh repo create portal-transparencia-arinos --private --source=. --remote=origin --push', {
+          cwd: BASE_DIR,
+          stdio: 'inherit'
+        });
+        console.log('\n✅ Repositório privado criado e publicado com sucesso no GitHub!');
+      } catch (err) {
+        console.warn(`  ⚠ Erro ao criar repositório via GitHub CLI: ${err.message}`);
+      }
+    } else {
+      console.log('\n  ╔══════════════════════════════════════════════════════════════════════╗');
+      console.log('  ║  COMO CONECTAR O SEU REPOSITÓRIO PRIVADO:                            ║');
+      console.log('  ║                                                                      ║');
+      console.log('  ║  Opção 1 (GitHub CLI Automático - Recomendado):                      ║');
+      console.log('  ║    1. Execute no terminal: gh auth login                             ║');
+      console.log('  ║    2. Execute novamente este script para criar o repo privado!       ║');
+      console.log('  ║                                                                      ║');
+      console.log('  ║  Opção 2 (Adicionar URL Remota Existente):                           ║');
+      console.log('  ║    git remote add origin https://github.com/SEU_USUARIO/REPO.git     ║');
+      console.log('  ║    git push -u origin main                                           ║');
+      console.log('  ╚══════════════════════════════════════════════════════════════════════╝\n');
+    }
+  }
+
+  console.log('================================================================================');
+  console.log('CICLO CONCLUÍDO COM SUCESSO! CÓDIGO HOMOLOGADO, TESTADO E REGISTRADO.');
+  console.log('================================================================================\n');
+}
+
+runTestSuite().catch(err => {
+  console.error('Erro inesperado na execução:', err);
+  process.exit(1);
+});

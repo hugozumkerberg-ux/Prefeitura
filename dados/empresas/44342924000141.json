@@ -1,0 +1,125 @@
+{
+  "uf": "DF",
+  "cep": "70316102",
+  "qsa": [
+    {
+      "pais": null,
+      "nome_socio": "HELOISA MARIA OLIVEIRA NOVAES TEIXEIRA",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 61 a 70 anos",
+      "cnpj_cpf_do_socio": "***762635**",
+      "qualificacao_socio": "Sócio-Administrador",
+      "codigo_faixa_etaria": 7,
+      "data_entrada_sociedade": "2021-11-23",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 49,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    },
+    {
+      "pais": null,
+      "nome_socio": "WILSON ALVES TEIXEIRA",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 61 a 70 anos",
+      "cnpj_cpf_do_socio": "***513575**",
+      "qualificacao_socio": "Sócio",
+      "codigo_faixa_etaria": 7,
+      "data_entrada_sociedade": "2023-04-10",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 22,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    }
+  ],
+  "cnpj": "44342924000141",
+  "pais": null,
+  "email": null,
+  "porte": "EMPRESA DE PEQUENO PORTE",
+  "bairro": "ASA SUL",
+  "numero": "S/N",
+  "ddd_fax": "",
+  "municipio": "BRASILIA",
+  "logradouro": "SHS QUADRA 6 CONJUNTO A BLOCO A",
+  "cnae_fiscal": 8599699,
+  "codigo_pais": null,
+  "complemento": "SALA 501",
+  "codigo_porte": 3,
+  "razao_social": "INSTITUTO BRASILEIRO DE GESTAO POR RESULTADOS LTDA",
+  "nome_fantasia": "INSTITUTO BRASILEIRO DE GESTAO POR RESULTADOS",
+  "capital_social": 400000,
+  "ddd_telefone_1": "6132741216",
+  "ddd_telefone_2": "",
+  "opcao_pelo_mei": false,
+  "codigo_municipio": 9701,
+  "cnaes_secundarios": [
+    {
+      "codigo": 6201501,
+      "descricao": "Desenvolvimento de programas de computador sob encomenda"
+    },
+    {
+      "codigo": 6202300,
+      "descricao": "Desenvolvimento e licenciamento de programas de computador customizáveis"
+    },
+    {
+      "codigo": 6204000,
+      "descricao": "Consultoria em tecnologia da informação"
+    },
+    {
+      "codigo": 7020400,
+      "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+    },
+    {
+      "codigo": 8230001,
+      "descricao": "Serviços de organização de feiras, congressos, exposições e festas"
+    },
+    {
+      "codigo": 8550302,
+      "descricao": "Atividades de apoio à educação, exceto caixas escolares"
+    },
+    {
+      "codigo": 8660700,
+      "descricao": "Atividades de apoio à gestão de saúde"
+    }
+  ],
+  "natureza_juridica": "Sociedade Empresária Limitada",
+  "regime_tributario": [
+    {
+      "ano": 2023,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2024,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    }
+  ],
+  "situacao_especial": "",
+  "opcao_pelo_simples": false,
+  "situacao_cadastral": 2,
+  "data_opcao_pelo_mei": null,
+  "data_exclusao_do_mei": null,
+  "cnae_fiscal_descricao": "Outras atividades de ensino não especificadas anteriormente",
+  "codigo_municipio_ibge": 5300108,
+  "data_inicio_atividade": "2021-11-23",
+  "data_situacao_especial": null,
+  "data_opcao_pelo_simples": "2021-11-23",
+  "data_situacao_cadastral": "2021-11-23",
+  "nome_cidade_no_exterior": "",
+  "codigo_natureza_juridica": 2062,
+  "data_exclusao_do_simples": "2023-10-31",
+  "motivo_situacao_cadastral": 0,
+  "ente_federativo_responsavel": "",
+  "identificador_matriz_filial": 1,
+  "qualificacao_do_responsavel": 49,
+  "descricao_situacao_cadastral": "ATIVA",
+  "descricao_tipo_de_logradouro": "QUADRA",
+  "descricao_motivo_situacao_cadastral": "SEM MOTIVO",
+  "descricao_identificador_matriz_filial": "MATRIZ"
+}

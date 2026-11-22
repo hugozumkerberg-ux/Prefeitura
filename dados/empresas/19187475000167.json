@@ -1,0 +1,179 @@
+{
+  "uf": "MG",
+  "cep": "30494170",
+  "qsa": [
+    {
+      "pais": null,
+      "nome_socio": "MARCIO MOHALLEM",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 61 a 70 anos",
+      "cnpj_cpf_do_socio": "***780976**",
+      "qualificacao_socio": "Sócio-Administrador",
+      "codigo_faixa_etaria": 7,
+      "data_entrada_sociedade": "1993-05-25",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 49,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    },
+    {
+      "pais": null,
+      "nome_socio": "ROGERIO MOHALLEM",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 61 a 70 anos",
+      "cnpj_cpf_do_socio": "***694666**",
+      "qualificacao_socio": "Sócio-Administrador",
+      "codigo_faixa_etaria": 7,
+      "data_entrada_sociedade": "1993-05-25",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 49,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    }
+  ],
+  "cnpj": "19187475000167",
+  "pais": null,
+  "email": null,
+  "porte": "DEMAIS",
+  "bairro": "ESTORIL",
+  "numero": "2640",
+  "ddd_fax": "3135169009",
+  "municipio": "BELO HORIZONTE",
+  "logradouro": "RAJA GABAGLIA",
+  "cnae_fiscal": 4221902,
+  "codigo_pais": null,
+  "complemento": "ANDAR 3",
+  "codigo_porte": 5,
+  "razao_social": "SELT ENGENHARIA LTDA",
+  "nome_fantasia": "SELT",
+  "capital_social": 12000000,
+  "ddd_telefone_1": "3135169000",
+  "ddd_telefone_2": "",
+  "opcao_pelo_mei": null,
+  "codigo_municipio": 4123,
+  "cnaes_secundarios": [
+    {
+      "codigo": 4221903,
+      "descricao": "Manutenção de redes de distribuição de energia elétrica"
+    },
+    {
+      "codigo": 4292801,
+      "descricao": "Montagem de estruturas metálicas"
+    },
+    {
+      "codigo": 4292802,
+      "descricao": "Obras de montagem industrial"
+    },
+    {
+      "codigo": 4299599,
+      "descricao": "Outras obras de engenharia civil não especificadas anteriormente"
+    },
+    {
+      "codigo": 4321500,
+      "descricao": "Instalação e manutenção elétrica"
+    },
+    {
+      "codigo": 4329104,
+      "descricao": "Montagem e instalação de sistemas e equipamentos de iluminação e sinalização em vias públicas, portos e aeroportos"
+    },
+    {
+      "codigo": 6463800,
+      "descricao": "Outras sociedades de participação, exceto holdings"
+    },
+    {
+      "codigo": 7020400,
+      "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+    },
+    {
+      "codigo": 7112000,
+      "descricao": "Serviços de engenharia"
+    },
+    {
+      "codigo": 8292000,
+      "descricao": "Envasamento e empacotamento sob contrato"
+    }
+  ],
+  "natureza_juridica": "Sociedade Empresária Limitada",
+  "regime_tributario": [
+    {
+      "ano": 2016,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2017,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2018,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2019,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2020,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2021,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2024,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    }
+  ],
+  "situacao_especial": "",
+  "opcao_pelo_simples": null,
+  "situacao_cadastral": 2,
+  "data_opcao_pelo_mei": null,
+  "data_exclusao_do_mei": null,
+  "cnae_fiscal_descricao": "Construção de estações e redes de distribuição de energia elétrica",
+  "codigo_municipio_ibge": 3106200,
+  "data_inicio_atividade": "1976-09-01",
+  "data_situacao_especial": null,
+  "data_opcao_pelo_simples": null,
+  "data_situacao_cadastral": "2005-09-24",
+  "nome_cidade_no_exterior": "",
+  "codigo_natureza_juridica": 2062,
+  "data_exclusao_do_simples": null,
+  "motivo_situacao_cadastral": 0,
+  "ente_federativo_responsavel": "",
+  "identificador_matriz_filial": 1,
+  "qualificacao_do_responsavel": 49,
+  "descricao_situacao_cadastral": "ATIVA",
+  "descricao_tipo_de_logradouro": "AVENIDA",
+  "descricao_motivo_situacao_cadastral": "SEM MOTIVO",
+  "descricao_identificador_matriz_filial": "MATRIZ"
+}

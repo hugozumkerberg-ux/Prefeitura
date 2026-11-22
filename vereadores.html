@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vereadores de Arinos / MG — Atuação Legislativa & O Que Fizeram (SAPL)</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #030712;
+      color: #f3f4f6;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+    
+    .glass {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-card {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .glass-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(99, 102, 241, 0.35);
+      box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.2);
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      border-radius: 9999px;
+      overflow: hidden;
+      background: #0f172a;
+    }
+
+    .avatar-wrapper::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+
+    .avatar-img {
+      object-fit: cover;
+      object-position: top center;
+      transition: transform 0.3s ease;
+    }
+
+    .glass-card:hover .avatar-img {
+      transform: scale(1.05);
+    }
+
+    /* Modal Animation */
+    #modalContainer {
+      animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Header Superior Oficial -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Logo & Título -->
+      <div class="flex items-center space-x-3">
+        <a href="/" class="flex items-center space-x-3 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition">
+            <span class="text-xl">🏛️</span>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-extrabold text-base sm:text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+                Poder Legislativo • Arinos / MG
+              </span>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">SAPL</span>
+            </div>
+            <p class="text-xs text-slate-400 font-medium">Atuação dos Vereadores & Histórico de Projetos de Lei</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Links de Navegação Unificada -->
+      <div class="flex items-center space-x-1 sm:space-x-2">
+        <a href="/" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          <span>📊 Dashboard</span>
+        </a>
+        <a href="/empresas.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-blue-300 bg-blue-950/50 border border-blue-500/40 hover:bg-blue-900/50 transition">
+          <span>🏢 Empresas & Viagens</span>
+        </a>
+        <a href="/mandatos.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-purple-300 bg-purple-950/50 border border-purple-500/40 hover:bg-purple-900/50 transition">
+          <span>📜 Mandatos</span>
+        </a>
+        <a href="/eleicoes.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-indigo-300 bg-indigo-950/40 border border-indigo-500/30 hover:bg-indigo-900/40 transition">
+          <span>🗳️ Eleições TSE</span>
+        </a>
+        <a href="/cidade.html" class="hidden sm:flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-amber-300 bg-amber-950/40 border border-amber-500/30 hover:bg-amber-900/40 transition">
+          <span>🏛️ Arinos & Notícias</span>
+        </a>
+        <a href="/tabelas.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          <span>📋 Tabelas</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
+
+    <!-- Hero Banner Informativo -->
+    <div class="relative overflow-hidden rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-950/40 via-slate-900/60 to-slate-950 p-6 md:p-8">
+      <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none"></div>
+      
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2 max-w-3xl">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-semibold">
+            <span>🗳️ Sistema de Apoio ao Processo Legislativo (SAPL / Interlegis)</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+            O Que os Vereadores de Arinos Já Fizeram?
+          </h1>
+          <p class="text-sm md:text-base text-slate-300 leading-relaxed">
+            Consulte de forma transparente cada Projeto de Lei Ordinária, Indicação de obras públicas, Requerimentos de fiscalização e Moções apresentados pelos parlamentares da Câmara Municipal de Arinos.
+          </p>
+        </div>
+
+        <!-- Indicadores Rápidos -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 shrink-0">
+          <div class="glass p-3 rounded-xl border border-indigo-500/20 text-center">
+            <div class="text-2xl font-black text-indigo-400" id="stat-total-materias">722</div>
+            <div class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Matérias Catalogadas</div>
+          </div>
+          <div class="glass p-3 rounded-xl border border-purple-500/20 text-center">
+            <div class="text-2xl font-black text-purple-400" id="stat-total-parlamentares">111</div>
+            <div class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Vereadores na História</div>
+          </div>
+          <div class="glass p-3 rounded-xl border border-emerald-500/20 text-center col-span-2 sm:col-span-1">
+            <div class="text-2xl font-black text-emerald-400" id="stat-total-mandatos">165</div>
+            <div class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Mandatos Rastreáveis</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Filtros e Busca Rápida -->
+    <div class="space-y-4">
+      <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+        
+        <!-- Campo de Busca -->
+        <div class="relative flex-1">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </div>
+          <input 
+            type="text" 
+            id="buscaInput" 
+            placeholder="Buscar por nome do vereador ou tema (ex: Gilmar, asfalto, saúde, barqueata, terra, iluminação)..." 
+            class="w-full pl-11 pr-4 py-2.5 bg-slate-900/90 border border-slate-700/80 rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+            oninput="filtrarVereadores()"
+          >
+        </div>
+
+        <!-- Seletor de Tema -->
+        <div class="flex items-center space-x-2">
+          <select 
+            id="temaSelect" 
+            class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+            onchange="filtrarVereadores()"
+          >
+            <option value="">Todos os Temas de Atuação</option>
+            <option value="Saúde">🏥 Saúde & Hospitais</option>
+            <option value="Educação">🎓 Educação & Escolas</option>
+            <option value="Infraestrutura & Obras">🚧 Infraestrutura, Asfalto & Praças</option>
+            <option value="Zona Rural & Agricultura">🌾 Zona Rural & Produtores</option>
+            <option value="Água & Saneamento">💧 Água & Saneamento (COPASA)</option>
+            <option value="Esporte & Juventude">⚽ Esporte & Juventude</option>
+            <option value="Iluminação Pública">💡 Iluminação Pública</option>
+            <option value="Social & Comunidade">🤝 Social & Cidadania</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Abas de Categoria Rápida -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-800 text-xs sm:text-sm">
+        <button onclick="setCategoria('atual', this)" class="cat-btn px-4 py-2 rounded-lg font-semibold bg-indigo-600 text-white shadow-sm transition shrink-0">
+          ⭐ Bancada Atual (16ª Legislatura 2025-2028)
+        </button>
+        <button onclick="setCategoria('produtivos', this)" class="cat-btn px-4 py-2 rounded-lg font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition shrink-0">
+          🏆 Mais Produtivos (Com Proposições)
+        </button>
+        <button onclick="setCategoria('presidentes', this)" class="cat-btn px-4 py-2 rounded-lg font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition shrink-0">
+          👑 Presidentes da Câmara
+        </button>
+        <button onclick="setCategoria('todos', this)" class="cat-btn px-4 py-2 rounded-lg font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition shrink-0">
+          🏛️ Todos os Parlamentares da História (111)
+        </button>
+      </div>
+    </div>
+
+    <!-- Contador de Resultados -->
+    <div class="flex items-center justify-between text-xs text-slate-400">
+      <span id="contagemResultados">Carregando vereadores...</span>
+      <span class="flex items-center space-x-1.5 text-emerald-400">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Base Oficial SAPL Conectada</span>
+      </span>
+    </div>
+
+    <!-- Grid de Cards dos Vereadores -->
+    <div id="gridVereadores" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Inserido dinamicamente via JS -->
+    </div>
+
+  </main>
+
+  <!-- Modal Detalhado de Matérias do Vereador -->
+  <div id="modalMaterias" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden" id="modalContainer">
+      
+      <!-- Cabeçalho Modal -->
+      <div class="p-6 border-b border-slate-800 flex items-start justify-between bg-gradient-to-r from-slate-900 to-indigo-950/40">
+        <div class="flex items-center space-x-4">
+          <div class="w-14 h-14 rounded-full overflow-hidden bg-slate-800 border-2 border-indigo-500/40 shrink-0">
+            <img id="modalFoto" src="" alt="" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h2 id="modalNome" class="text-xl font-bold text-white tracking-tight">Nome do Vereador</h2>
+              <span id="modalBadgeStatus" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">ATIVO</span>
+            </div>
+            <p id="modalNomeCompleto" class="text-xs text-slate-400 mt-0.5">Nome completo</p>
+            <div id="modalCargos" class="flex flex-wrap gap-1 mt-1.5 text-[11px] text-amber-300"></div>
+          </div>
+        </div>
+
+        <button onclick="fecharModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center hover:bg-slate-700 transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Resumo Numérico no Topo do Modal -->
+      <div class="px-6 py-3 bg-slate-950/60 border-b border-slate-800 flex flex-wrap gap-4 text-xs font-medium text-slate-300">
+        <span>📜 Total: <strong id="modalTotal" class="text-white">0</strong> matérias</span>
+        <span>⚖️ Projetos de Lei: <strong id="modalPLs" class="text-indigo-400">0</strong></span>
+        <span>📝 Indicações: <strong id="modalInd" class="text-emerald-400">0</strong></span>
+        <span>📋 Requerimentos: <strong id="modalReq" class="text-amber-400">0</strong></span>
+      </div>
+
+      <!-- Lista Rolável de Matérias e Projetos -->
+      <div id="modalListaMaterias" class="p-6 overflow-y-auto flex-1 space-y-4">
+        <!-- Inserido dinamicamente -->
+      </div>
+
+      <!-- Rodapé Modal -->
+      <div class="p-4 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400">
+        <span>Fonte: Sistema de Apoio ao Processo Legislativo (Câmara Municipal de Arinos)</span>
+        <button onclick="fecharModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-medium transition">
+          Fechar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Script da Aplicação -->
+  <script>
+    let todosVereadores = [];
+    let categoriaAtual = 'atual';
+
+    // Relação dos vereadores eleitos na 16ª Legislatura (2025-2028)
+    const bancadaAtual2024 = [
+      'Dao Santana',
+      'Netim Ornelas',
+      'Gilmar Vendedor',
+      'Noraldino Durães',
+      'Fesson',
+      'Junior de Totim',
+      'Junior Valadares',
+      'Valdo Tora',
+      'Donizete Sagarana',
+      'Donizete Caldeira',
+      'Cleuber Michirra',
+      'Matheus Philipe',
+      'Ferreira',
+      'Sargento Ferreira'
+    ];
+
+    // Mapeamento de fotos locais das eleições
+    const fotosLocaisMap = {
+      'gilmar': '/dados/eleicoes/fotos/cand_2024_130002236940.jpg',
+      'dao': '/dados/eleicoes/fotos/cand_2024_130002237000.jpg',
+      'netim': '/dados/eleicoes/fotos/cand_2024_130002236979.jpg',
+      'noraldino': '/dados/eleicoes/fotos/cand_2024_130002236980.jpg',
+      'fesson': '/dados/eleicoes/fotos/cand_2024_130002236936.jpg',
+      'totim': '/dados/eleicoes/fotos/cand_2024_130002236952.jpg',
+      'tora': '/dados/eleicoes/fotos/cand_2024_130002237019.jpg',
+      'donizete': '/dados/eleicoes/fotos/cand_2024_130002236931.jpg',
+      'michirra': '/dados/eleicoes/fotos/cand_2024_130002236928.jpg',
+      'matheus': '/dados/eleicoes/fotos/cand_2024_130002236972.jpg',
+      'ferreira': '/dados/eleicoes/fotos/cand_2024_130002236935.jpg',
+      'fabio valadares': '/dados/eleicoes/fotos/cand_2020_130001099688.jpg',
+      'willian': '/dados/eleicoes/fotos/vice_2024_130002236872.jpg'
+    };
+
+    function obterFotoVereador(v) {
+      const nomeLow = (v.nome_parlamentar + ' ' + v.nome_completo).toLowerCase();
+      for (const [chave, caminho] of Object.entries(fotosLocaisMap)) {
+        if (nomeLow.includes(chave)) return caminho;
+      }
+      return v.fotografia || null;
+    }
+
+    async function carregarDados() {
+      try {
+        const res = await fetch('/api/dados/vereadores');
+        const json = await res.json();
+        todosVereadores = json.vereadores || [];
+        
+        // Atualizar estatísticas do banner
+        document.getElementById('stat-total-materias').innerText = 722;
+        document.getElementById('stat-total-parlamentares').innerText = todosVereadores.length;
+
+        filtrarVereadores();
+      } catch (err) {
+        console.error('Erro ao carregar vereadores:', err);
+        document.getElementById('contagemResultados').innerHTML = '<span class="text-rose-400">Erro ao carregar dados do SAPL</span>';
+      }
+    }
+
+    function setCategoria(cat, btn) {
+      categoriaAtual = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.className = 'cat-btn px-4 py-2 rounded-lg font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition shrink-0';
+      });
+      btn.className = 'cat-btn px-4 py-2 rounded-lg font-semibold bg-indigo-600 text-white shadow-sm transition shrink-0';
+      filtrarVereadores();
+    }
+
+    function isVereadorAtual(v) {
+      const nomeLow = (v.nome_parlamentar + ' ' + v.nome_completo).toLowerCase();
+      return bancadaAtual2024.some(b => nomeLow.includes(b.toLowerCase())) || v.ativo;
+    }
+
+    function isPresidente(v) {
+      return (v.cargos_mesa || []).some(c => (c.cargo || '').toLowerCase().includes('presidente') && !(c.cargo || '').toLowerCase().includes('vice'));
+    }
+
+    function filtrarVereadores() {
+      const q = (document.getElementById('buscaInput').value || '').toLowerCase().trim();
+      const temaFiltro = document.getElementById('temaSelect').value;
+
+      let lista = todosVereadores.slice();
+
+      // Filtro de Categoria
+      if (categoriaAtual === 'atual') {
+        lista = lista.filter(isVereadorAtual);
+      } else if (categoriaAtual === 'produtivos') {
+        lista = lista.filter(v => (v.total_materias || 0) > 0);
+      } else if (categoriaAtual === 'presidentes') {
+        lista = lista.filter(isPresidente);
+      }
+
+      // Filtro de Tema
+      if (temaFiltro) {
+        lista = lista.filter(v => (v.top_temas || []).some(t => t.tema === temaFiltro));
+      }
+
+      // Busca por Texto
+      if (q) {
+        lista = lista.filter(v => {
+          const matchNome = (v.nome_parlamentar || '').toLowerCase().includes(q) || 
+                            (v.nome_completo || '').toLowerCase().includes(q);
+          const matchMateria = (v.materias || []).some(m => 
+            (m.titulo || '').toLowerCase().includes(q) || 
+            (m.ementa || '').toLowerCase().includes(q) ||
+            (m.indexacao || '').toLowerCase().includes(q)
+          );
+          return matchNome || matchMateria;
+        });
+      }
+
+      renderizarCards(lista);
+    }
+
+    function renderizarCards(vereadores) {
+      const container = document.getElementById('gridVereadores');
+      const contagemEl = document.getElementById('contagemResultados');
+
+      contagemEl.innerText = `Exibindo ${vereadores.length} vereador(es) catalogado(s)`;
+
+      if (vereadores.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3">
+            <div class="text-4xl">🔍</div>
+            <h3 class="text-lg font-bold text-slate-300">Nenhum vereador ou projeto encontrado</h3>
+            <p class="text-xs text-slate-400">Tente buscar por termos mais genéricos como "saúde", "rua", "asfalto" ou limpe os filtros.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = vereadores.map(v => {
+        const foto = obterFotoVereador(v);
+        const ehAtual = isVereadorAtual(v);
+        const ehPres = isPresidente(v);
+
+        const badgeCargo = ehPres ? `
+          <span class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/30">
+            <span>👑 Ex-Presidente da Câmara</span>
+          </span>
+        ` : '';
+
+        const badgeAtual = ehAtual ? `
+          <span class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            <span>⭐ Mandato Atual</span>
+          </span>
+        ` : `
+          <span class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-700/50 text-slate-400 border border-slate-600/30">
+            <span>Legislatura Passada</span>
+          </span>
+        `;
+
+        const chipsTemas = (v.top_temas || []).slice(0, 3).map(t => `
+          <span class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700">
+            ${t.tema} (${t.count})
+          </span>
+        `).join('');
+
+        const avatarHtml = foto ? `
+          <img src="${foto}" alt="${v.nome_parlamentar}" class="w-full h-full avatar-img">
+        ` : `
+          <div class="w-full h-full flex items-center justify-center text-lg font-bold text-slate-400 bg-slate-800">
+            ${(v.nome_parlamentar || 'V').slice(0, 2).toUpperCase()}
+          </div>
+        `;
+
+        return `
+          <div class="glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+            
+            <!-- Topo do Card: Foto e Identificação -->
+            <div class="flex items-start space-x-4">
+              <div class="w-16 h-16 rounded-full avatar-wrapper border-2 border-indigo-500/30 shrink-0">
+                ${avatarHtml}
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1.5 flex-wrap mb-1">
+                  ${badgeAtual}
+                  ${badgeCargo}
+                </div>
+                <h3 class="text-base font-extrabold text-white truncate tracking-tight">${v.nome_parlamentar}</h3>
+                <p class="text-xs text-slate-400 truncate" title="${v.nome_completo}">${v.nome_completo}</p>
+              </div>
+            </div>
+
+            <!-- Resumo das Atividades / Contadores -->
+            <div class="grid grid-cols-3 gap-2 py-2 border-y border-slate-800/80 text-center">
+              <div>
+                <div class="text-xs text-slate-400">Total</div>
+                <div class="text-base font-black text-indigo-400">${v.total_materias || 0}</div>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400">Projetos Lei</div>
+                <div class="text-base font-black text-white">${v.projetos_lei || 0}</div>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400">Requer./Ind.</div>
+                <div class="text-base font-black text-emerald-400">${(v.indicacoes || 0) + (v.requerimentos || 0)}</div>
+              </div>
+            </div>
+
+            <!-- Temas Mais Atuados -->
+            <div class="space-y-1.5">
+              <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Principais Pautas</div>
+              <div class="flex flex-wrap gap-1.5">
+                ${chipsTemas || '<span class="text-xs text-slate-500">Sem proposições registradas</span>'}
+              </div>
+            </div>
+
+            <!-- Botão de Ação -->
+            <button 
+              onclick="abrirModalVereador(${v.id})" 
+              class="w-full mt-2 py-2.5 px-4 rounded-xl text-xs font-bold text-center bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 hover:border-indigo-500/50 transition flex items-center justify-center space-x-1.5"
+            >
+              <span>Ver Todas as ${v.total_materias || 0} Proposições</span>
+              <span>→</span>
+            </button>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    function abrirModalVereador(id) {
+      const v = todosVereadores.find(x => String(x.id) === String(id));
+      if (!v) return;
+
+      const foto = obterFotoVereador(v);
+      const fotoEl = document.getElementById('modalFoto');
+      if (foto) {
+        fotoEl.src = foto;
+        fotoEl.classList.remove('hidden');
+      } else {
+        fotoEl.classList.add('hidden');
+      }
+
+      document.getElementById('modalNome').innerText = v.nome_parlamentar;
+      document.getElementById('modalNomeCompleto').innerText = v.nome_completo;
+      document.getElementById('modalTotal').innerText = v.total_materias || 0;
+      document.getElementById('modalPLs').innerText = v.projetos_lei || 0;
+      document.getElementById('modalInd').innerText = v.indicacoes || 0;
+      document.getElementById('modalReq').innerText = v.requerimentos || 0;
+
+      // Cargos
+      const cargosEl = document.getElementById('modalCargos');
+      const cargosHtml = (v.cargos_mesa || []).map(c => `
+        <span class="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
+          👑 ${c.cargo} (${c.periodo})
+        </span>
+      `).join('');
+      cargosEl.innerHTML = cargosHtml;
+
+      // Lista de Matérias
+      const listaEl = document.getElementById('modalListaMaterias');
+      const mats = v.materias || [];
+
+      if (mats.length === 0) {
+        listaEl.innerHTML = `
+          <div class="py-12 text-center text-slate-400 space-y-2">
+            <div class="text-3xl">📄</div>
+            <p class="text-sm font-semibold text-slate-300">Nenhum projeto registrado diretamente no sistema eletrônico SAPL para este parlamentar.</p>
+            <p class="text-xs text-slate-500">Registros físicos ou anteriores à digitalização permanecem arquivados na secretaria da Câmara.</p>
+          </div>
+        `;
+      } else {
+        listaEl.innerHTML = mats.map((m, idx) => {
+          const anoBadge = m.ano ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">${m.ano}</span>` : '';
+          const tipoBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">${m.tipo}</span>`;
+          const pdfBtn = m.texto_original ? `
+            <a href="${m.texto_original}" target="_blank" class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 transition">
+              <span>📄 Ver PDF Oficial</span>
+              <span>↗</span>
+            </a>
+          ` : '';
+
+          return `
+            <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition space-y-2">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-bold text-slate-500 font-mono">#${idx+1}</span>
+                  <h4 class="text-sm font-bold text-white tracking-tight">${m.titulo}</h4>
+                </div>
+                <div class="flex items-center space-x-2">
+                  ${anoBadge}
+                  ${tipoBadge}
+                  ${pdfBtn}
+                </div>
+              </div>
+
+              <p class="text-xs text-slate-300 leading-relaxed">${m.ementa || 'Sem ementa cadastrada.'}</p>
+
+              ${m.indexacao ? `
+                <div class="text-[11px] text-slate-500 flex items-center space-x-1">
+                  <span>🏷️ Palavras-chave:</span>
+                  <span class="italic text-slate-400">${m.indexacao}</span>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('');
+      }
+
+      const modal = document.getElementById('modalMaterias');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function fecharModal() {
+      const modal = document.getElementById('modalMaterias');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Fechar com ESC ou clique fora
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModal(); });
+    document.getElementById('modalMaterias').addEventListener('click', e => {
+      if (e.target.id === 'modalMaterias') fecharModal();
+    });
+
+    carregarDados();
+  </script>
+</body>
+</html>

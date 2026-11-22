@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pt-br" lang="pt-br" >
+<head>
+  <script src="/templates/adpm_blue/js/jquery-3.1.1.min.js"></script>
+  <script src="/templates/adpm_blue/js/app.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="Administração Pública, Contabilidade Pública, Prefeituras, Câmaras, Minas Gerais, IPTU, Nota Fiscal, Concurso Público, adpm, adpmnet, Municípios" />
+	<meta name="description" content="ADPM - Administração Pública para Municípios" />
+	<meta name="generator" content="Joomla! - Open Source Content Management" />
+	<title>ADPM - Administração Pública para Municípios</title>
+	<link href="/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+	<link href="/media/plg_system_browserupdatewarning/css/BrowserUpdateWarning.css" rel="stylesheet" type="text/css" />
+	<link href="/media/system/css/modal.css?b602379b702015958b042bce70d7cd48" rel="stylesheet" type="text/css" />
+	<script type="application/json" class="joomla-script-options new">{"csrf.token":"c9f294a4a1d3ec435523be551b3a2c35","system.paths":{"root":"","base":""},"joomla.jtext":{"PLG_SYS_BROWSERUPDATEWARNING_JS_TIMETOUPGRADE":"O seu navegador est&aacute; desatualizado.","PLG_SYS_BROWSERUPDATEWARNING_JS_UPDATECURRENT":"Clique aqui para atualizar o seu navegador atual","PLG_SYS_BROWSERUPDATEWARNING_JS_IE":"Download Internet Explorer","PLG_SYS_BROWSERUPDATEWARNING_JS_SAFARI":"Download Safari","PLG_SYS_BROWSERUPDATEWARNING_JS_FIREFOX":"Download Firefox","PLG_SYS_BROWSERUPDATEWARNING_JS_CHROME":"Download Chrome","PLG_SYS_BROWSERUPDATEWARNING_JS_OPERA":"Download Opera","PLG_SYS_BROWSERUPDATEWARNING_JS_WHYSHOULDI":"Por que devo atualizar ?","PLG_SYS_BROWSERUPDATEWARNING_JS_WHYFASTER":"Os Websites ir&atilde;o carregar mais r&aacute;pido.","PLG_SYS_BROWSERUPDATEWARNING_JS_WHYSAFER":"Os novos navegadores s&atilde;o mais seguros.","PLG_SYS_BROWSERUPDATEWARNING_JS_WHYRENDER":"Os Websites ir&atilde;o processar corretamente.","PLG_SYS_BROWSERUPDATEWARNING_JS_WHYMORE":"Al&eacute;m de outras grandes vantagens.","PLG_SYS_BROWSERUPDATEWARNING_JS_CONTINUE":"Continuar"}}</script>
+	<script src="/media/system/js/mootools-core.js?b602379b702015958b042bce70d7cd48" type="text/javascript"></script>
+	<script src="/media/system/js/core.js?b602379b702015958b042bce70d7cd48" type="text/javascript"></script>
+	<script src="/media/system/js/mootools-more.js?b602379b702015958b042bce70d7cd48" type="text/javascript"></script>
+	<script src="/media/plg_system_browserupdatewarning/js/BrowserUpdateWarning.js" type="text/javascript"></script>
+	<script src="/media/system/js/modal.js?b602379b702015958b042bce70d7cd48" type="text/javascript"></script>
+	<script src="/media/jui/js/jquery.min.js?b602379b702015958b042bce70d7cd48" type="text/javascript"></script>
+	<script src="/media/jui/js/jquery-noconflict.js?b602379b702015958b042bce70d7cd48" type="text/javascript"></script>
+	<script src="/media/jui/js/jquery-migrate.min.js?b602379b702015958b042bce70d7cd48" type="text/javascript"></script>
+	<script type="text/javascript">
+window.addEvent('domready',function(){
+Joomla.JText.load();
+var plg_system_browserupdatewarning_cookie = Cookie.read('plg_system_browserupdatewarning');
+	if(!plg_system_browserupdatewarning_cookie) {
+		var plg_system_browserupdatewarning = new BrowserUpdateWarning({
+			'opacity': 30,
+			'imagesDirectory': '/media/plg_system_browserupdatewarning/images/',
+			'allowContinue':true,
+			'minVersion_ie':8,
+			'minVersion_opera':11,
+			'downloadOptions':["ie","safari","firefox","chrome","opera"]
+		});
+		plg_system_browserupdatewarning.check();
+	}
+});
+var plg_system_browserupdatewarning_language = []
+var plg_system_browserupdatewarning_cookiepath = '';
+		jQuery(function($) {
+			SqueezeBox.initialize({});
+			SqueezeBox.assign($('a.modal').get(), {
+				parse: 'rel'
+			});
+		});
+
+		window.jModalClose = function () {
+			SqueezeBox.close();
+		};
+		
+		// Add extra modal close functionality for tinyMCE-based editors
+		document.onreadystatechange = function () {
+			if (document.readyState == 'interactive' && typeof tinyMCE != 'undefined' && tinyMCE)
+			{
+				if (typeof window.jModalClose_no_tinyMCE === 'undefined')
+				{	
+					window.jModalClose_no_tinyMCE = typeof(jModalClose) == 'function'  ?  jModalClose  :  false;
+					
+					jModalClose = function () {
+						if (window.jModalClose_no_tinyMCE) window.jModalClose_no_tinyMCE.apply(this, arguments);
+						tinyMCE.activeEditor.windowManager.close();
+					};
+				}
+		
+				if (typeof window.SqueezeBoxClose_no_tinyMCE === 'undefined')
+				{
+					if (typeof(SqueezeBox) == 'undefined')  SqueezeBox = {};
+					window.SqueezeBoxClose_no_tinyMCE = typeof(SqueezeBox.close) == 'function'  ?  SqueezeBox.close  :  false;
+		
+					SqueezeBox.close = function () {
+						if (window.SqueezeBoxClose_no_tinyMCE)  window.SqueezeBoxClose_no_tinyMCE.apply(this, arguments);
+						tinyMCE.activeEditor.windowManager.close();
+					};
+				}
+			}
+		};
+		
+
+/*===  EASY GOOGLE ANALYTICS : START TRACKING CODE  ===*/
+
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-74402499-1']);
+	_gaq.push(['_setDomainName', '.adpmnet.com.br']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+
+/*===  EASY GOOGLE ANALYTICS : END TRACKING CODE  ===*/
+
+	</script>
+
+  <link rel="stylesheet" href="/templates/system/css/system.css" type="text/css" />
+  <link rel="stylesheet" href="/templates/system/css/general.css" type="text/css" />
+  <!--<link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700" rel="stylesheet">-->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+
+  <link rel="stylesheet" href="/templates/adpm_blue/css/reset.css" type="text/css" />
+  <link rel="stylesheet" href="/templates/adpm_blue/css/responsive.css" type="text/css" />
+  <link rel="stylesheet" href="/templates/adpm_blue/assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/templates/adpm_blue/assets/hovercss/hover.css">
+  <link rel="stylesheet" href="/templates/adpm_blue/assets/animatecss/animate.css">
+  <link rel="stylesheet" href="/templates/adpm_blue/css/font-awesome-4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/templates/adpm_blue/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="/templates/adpm_blue/css/screen.css" type="text/css" />
+  </head>
+<body class="body">
+<div class="container-fluid">
+<section class="row">
+  <header id="header-interno" class="col-md-12">
+  <div class="container">
+    <h1 class="logo col-md-3 col-sm-3 col-xs-12 hidden">ADPM</h1>
+
+    <!-- Static navbar -->
+    <nav id="menu" class="navbar navbar-default col-md-9 col-sm-9 col-xs-12 pull-right hidden">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Menu</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand hidden-lg hidden-md hidden-sm" href="#">ADPM</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav menunav navbar-nav navbar-right nav" id="menu-menu-principal">
+<li class="item-404"><a href="https://adpm.redemunicipal.com.br" >Home</a></li><li class="item-409 deeper parent"><a href="#" >Utilitários</a><ul class="nav-child unstyled small"><li class="item-408"><a href="/index.php?option=com_weblinks&amp;view=categories&amp;id=0&amp;Itemid=408" >Links Úteis</a></li><li class="item-410"><a href="/index.php?option=com_updownload&amp;view=com_updownload&amp;tpform=16&amp;Itemid=410" >Download / Upload</a></li><li class="item-411"><a href="http://www.mgcidades.com.br" target="_blank" rel="noopener noreferrer">Contas Públicas</a></li><li class="item-412"><a href="https://isslegal.redemunicipal.com.br" target="_blank" rel="noopener noreferrer">Nota Fiscal Eletrônica</a></li><li class="item-413"><a href="/index.php?option=com_lgchat&amp;view=com_lgchat&amp;tpform=0&amp;Itemid=413" target="_blank">Atendimento Online</a></li><li class="item-414"><a href="/index.php?option=com_cidade&amp;view=com_cidade&amp;tpform=1&amp;tpmenu=5&amp;Itemid=414" >IPTU Digital</a></li><li class="item-437"><a href="https://app.redemunicipal.com.br/site/adpm/atendimento" target="_blank" rel="noopener noreferrer">Autenticidade de Atendimento</a></li><li class="item-453"><a href="https://suporte.adpmnet.com.br/" >Suporte</a></li></ul></li><li class="item-407"><a href="http://email.adpmnet.com.br" target="_blank" rel="noopener noreferrer">Webmail</a></li></ul>
+
+      </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+    </nav><!-- fim navbar -->
+
+        <hgroup class="frase-banner titulo col-md-12 ol-sm-12 col-xs-12 hidden">
+            <h2></h2>
+      <h3></h3>
+    </hgroup>
+    </div>
+</header> <!-- fim header -->
+</section> <!-- fim row -->
+</div><!-- fim container fluid -->
+
+<section id="conteudo-pagina" class="container-fluid ">
+  <div class="container">
+    <div class="row">
+
+    
+    <div class="tabtopmenu2">
+          </div>
+
+        
+      <section class="col-xs-12 col-sm-12 col-md-12">
+                    <div id="system-message-container">
+	</div>
+
+                <div class="row">
+<div class="col-lg-12" style="text-align: right;">
+
+<style>
+	.loader {
+  border: 3px solid #f3f3f3; /* Light grey */
+  border-top: 3px solid #ddd; /* Blue */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+  display: inline-block;
+	position: relative;
+	top: 9px;
+	left: -50px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+<span id="loadingFolha" style="display: none; background: #f6f6f6; color: #666; border-radius: 3px; padding: 5px; position: relative; bottom: 22px;"> <div id="loaderFolha" class="loader"></div> Aguarde, gerando arquivo.</span>
+
+<button type="button" id="downloadCsvFolha" class="downloadRelFolha" style="background: none; border: none" onclick="downloadArquivoFolha('241', '2015', '4', '51', 'csv', 'Remuneração Mensal dos Servidores Públicos', 'Fundação Municipal de Saúde de Arinos')">
+  <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDMxOC4xODggMzE4LjE4OCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzE4LjE4OCAzMTguMTg4OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8cG9seWdvbiBzdHlsZT0iZmlsbDojRTRFNEU0OyIgcG9pbnRzPSIyMjcuMzIxLDcuNSA0MC4zNDIsNy41IDQwLjM0MiwzMTAuNjg4IDI3Ny44NDYsMzEwLjY4OCAyNzcuODQ2LDU4LjAyNSAJIi8+DQoJPHBvbHlnb24gc3R5bGU9ImZpbGw6IzAwNzkzNDsiIHBvaW50cz0iMjM1LjE0LDMyLjc2MyA0MC4zNDIsMzIuNzYzIDQwLjM0Miw3LjUgMjI3LjMyMSw3LjUgCSIvPg0KCTxwb2x5Z29uIHN0eWxlPSJmaWxsOiNEMUQzRDM7IiBwb2ludHM9IjIyNy4zMjEsNTguMDI1IDI3Ny44NDYsNTguMDI1IDIyNy4zMjEsNy41IAkiLz4NCgk8Zz4NCgkJPHJlY3QgeD0iMTQyLjQ1NyIgeT0iODcuODQ0IiBzdHlsZT0iZmlsbDojMDA3OTM0OyIgd2lkdGg9IjMzLjI3NCIgaGVpZ2h0PSIxNS40MTgiLz4NCgkJPHJlY3QgeD0iMTgzLjEwMiIgeT0iODcuODQ0IiBzdHlsZT0iZmlsbDojMDA3OTM0OyIgd2lkdGg9IjMzLjI3MyIgaGVpZ2h0PSIxNS40MTgiLz4NCgkJPHJlY3QgeD0iMTQyLjQ1NyIgeT0iMTEwLjE2MSIgc3R5bGU9ImZpbGw6IzAwNzkzNDsiIHdpZHRoPSIzMy4yNzQiIGhlaWdodD0iMTUuNDE5Ii8+DQoJCTxyZWN0IHg9IjE4My4xMDIiIHk9IjExMC4xNjEiIHN0eWxlPSJmaWxsOiMwMDc5MzQ7IiB3aWR0aD0iMzMuMjczIiBoZWlnaHQ9IjE1LjQxOSIvPg0KCQk8cmVjdCB4PSIxNDIuNDU3IiB5PSIxMzIuNDc5IiBzdHlsZT0iZmlsbDojMDA3OTM0OyIgd2lkdGg9IjMzLjI3NCIgaGVpZ2h0PSIxNS40MTgiLz4NCgkJPHJlY3QgeD0iMTgzLjEwMiIgeT0iMTMyLjQ3OSIgc3R5bGU9ImZpbGw6IzAwNzkzNDsiIHdpZHRoPSIzMy4yNzMiIGhlaWdodD0iMTUuNDE4Ii8+DQoJCTxyZWN0IHg9IjEwMS44MTIiIHk9IjEzMi40NzkiIHN0eWxlPSJmaWxsOiMwMDc5MzQ7IiB3aWR0aD0iMzMuMjczIiBoZWlnaHQ9IjE1LjQxOCIvPg0KCQk8cmVjdCB4PSIxNDIuNDU3IiB5PSIxNTQuNzk4IiBzdHlsZT0iZmlsbDojMDA3OTM0OyIgd2lkdGg9IjMzLjI3NCIgaGVpZ2h0PSIxNS40MTgiLz4NCgkJPHJlY3QgeD0iMTgzLjEwMiIgeT0iMTU0Ljc5OCIgc3R5bGU9ImZpbGw6IzAwNzkzNDsiIHdpZHRoPSIzMy4yNzMiIGhlaWdodD0iMTUuNDE4Ii8+DQoJCTxyZWN0IHg9IjEwMS44MTIiIHk9IjE1NC43OTgiIHN0eWxlPSJmaWxsOiMwMDc5MzQ7IiB3aWR0aD0iMzMuMjczIiBoZWlnaHQ9IjE1LjQxOCIvPg0KCQk8Zz4NCgkJCTxwYXRoIHN0eWxlPSJmaWxsOiMwMDc5MzQ7IiBkPSJNMTM0LjU4OCwxMjMuNjYyaC0xMC4wNDFsLTYuMjYyLTEwLjA0MWwtNi4xOTYsMTAuMDQxaC05LjgyMWwxMC42NTYtMTYuNDM1TDEwMi45MDYsOTEuNTRoOS42MjQNCgkJCQlsNS44LDkuOTMybDUuNTgxLTkuOTMyaDkuOTA5bC0xMC4xNzMsMTYuMzY5TDEzNC41ODgsMTIzLjY2MnoiLz4NCgkJPC9nPg0KCTwvZz4NCgk8cGF0aCBzdHlsZT0iZmlsbDojMzMzRTQ4OyIgZD0iTTI4My4xNDksNTIuNzIzTDIzMi42MjUsMi4xOTdDMjMxLjIxOCwwLjc5LDIyOS4zMTEsMCwyMjcuMzIxLDBINDAuMzQyYy00LjE0MiwwLTcuNSwzLjM1OC03LjUsNy41DQoJCXYzMDMuMTg4YzAsNC4xNDMsMy4zNTgsNy41LDcuNSw3LjVoMjM3LjUwNGM0LjE0MiwwLDcuNS0zLjM1Nyw3LjUtNy41VjU4LjAyNUMyODUuMzQ2LDU2LjAzNiwyODQuNTU2LDU0LjEyOSwyODMuMTQ5LDUyLjcyM3oNCgkJIE0yMzQuODIxLDI1LjYwNmwyNC45MTgsMjQuOTE5aC0yNC45MThMMjM0LjgyMSwyNS42MDZMMjM0LjgyMSwyNS42MDZ6IE00Ny44NDIsMTVoMTcxLjk3OXYxMC4yNjNINDcuODQyVjE1eiBNMjcwLjM0NiwzMDMuMTg4DQoJCUg0Ny44NDJWNDAuMjYzaDE3MS45Nzl2MTcuNzYzYzAsNC4xNDMsMy4zNTgsNy41LDcuNSw3LjVoNDMuMDI0djIzNy42NjJIMjcwLjM0NnogTTEyMi4zNzIsMjM1LjQ4NA0KCQljMS45NjksMCwzLjgwOSwwLjI3NSw1LjUyMywwLjgyNmMxLjcxMywwLjU1LDMuNDI4LDEuMjI3LDUuMTQxLDIuMDMxbDMuODQxLTkuODcxYy00LjU3LTIuMTgtOS4zNjItMy4yNy0xNC4zNzgtMy4yNw0KCQljLTQuNTkxLDAtOC41ODUsMC45NzktMTEuOTgsMi45MzdjLTMuMzk2LDEuOTU3LTUuOTk5LDQuNzU1LTcuODA4LDguMzk1Yy0xLjgxLDMuNjQtMi43MTQsNy44Ni0yLjcxNCwxMi42NjMNCgkJYzAsNy42ODIsMS44NjcsMTMuNTUzLDUuNjAyLDE3LjYxNXM5LjEwNCw2LjA5NCwxNi4xMDcsNi4wOTRjNC44ODgsMCw5LjI2OC0wLjg1NywxMy4xNC0yLjU3di0xMC42MDINCgkJYy0xLjk0NywwLjgwNS0zLjg4MywxLjQ5Mi01LjgwOCwyLjA2M2MtMS45MjYsMC41NzEtMy45MTUsMC44NTYtNS45NjcsMC44NTZjLTYuNzkzLDAtMTAuMTg4LTQuNDY0LTEwLjE4OC0xMy4zOTMNCgkJYzAtNC4yOTUsMC44MzYtNy42NjUsMi41MDctMTAuMTA5QzExNy4wNjIsMjM2LjcwNywxMTkuMzksMjM1LjQ4NCwxMjIuMzcyLDIzNS40ODR6IE0xNTUuNjAzLDIzNi4wODgNCgkJYzAuNzQtMC41NzEsMS45MjUtMC44NTcsMy41NTUtMC44NTdjMy4xNTIsMCw2Ljg5NywwLjk5NSwxMS4yMzQsMi45ODRsMy44NDEtOS42ODFjLTQuOTk0LTIuMjIyLTkuODkyLTMuMzMzLTE0LjY5NC0zLjMzMw0KCQljLTUuNDM4LDAtOS43MTMsMS4xOTYtMTIuODIyLDMuNTg3Yy0zLjExMSwyLjM5Mi00LjY2Niw1LjcyNC00LjY2Niw5Ljk5N2MwLDIuMjg1LDAuMzY1LDQuMjY0LDEuMDk1LDUuOTM2DQoJCXMxLjg1MiwzLjE1MiwzLjM2NCw0LjQ0M3MzLjc4MiwyLjYyNCw2LjgwOSwzLjk5OWMzLjM0MywxLjUwMyw1LjQsMi40OTcsNi4xNzMsMi45ODNjMC43NzEsMC40ODYsMS4zMzMsMC45NjgsMS42ODIsMS40NDQNCgkJYzAuMzUsMC40NzYsMC41MjQsMS4wMzEsMC41MjQsMS42NjZjMCwxLjAxNi0wLjQzNSwxLjg0Ny0xLjMwMiwyLjQ5MWMtMC44NjgsMC42NDYtMi4yMzIsMC45NjktNC4wOTUsMC45NjkNCgkJYy0yLjE1OCwwLTQuNTI3LTAuMzQ0LTcuMTA5LTEuMDMyYy0yLjU4MS0wLjY4Ny01LjA2Ny0xLjY0NS03LjQ1OC0yLjg3MnYxMS4xNzJjMi4yNjQsMS4wNzksNC40NDMsMS44MzYsNi41MzgsMi4yNw0KCQlzNC42ODcsMC42NSw3Ljc3NSwwLjY1YzMuNzAzLDAsNi45My0wLjYxOSw5LjY4MS0xLjg1NmMyLjc1LTEuMjM4LDQuODU2LTIuOTczLDYuMzE1LTUuMjA1YzEuNDYxLTIuMjMyLDIuMTktNC43ODcsMi4xOS03LjY2NQ0KCQljMC0zLjEzMS0wLjc3Ny01LjcyOS0yLjMzMy03Ljc5MmMtMS41NTUtMi4wNjMtNC4zMzItMy45OTMtOC4zMzEtNS43OTJjLTQuMTY5LTEuOTA0LTYuNzI0LTMuMjE2LTcuNjY1LTMuOTM2DQoJCWMtMC45NDEtMC43MTktMS40MTItMS41MzMtMS40MTItMi40NDNDMTU0LjQ5MSwyMzcuMzY4LDE1NC44NjEsMjM2LjY1OSwxNTUuNjAzLDIzNi4wODh6IE0yMDEuMDIxLDI0OS41MTQNCgkJYy0wLjMzOSwxLjI3LTAuNzMsMy4wMTUtMS4xNzQsNS4yMzZjLTAuNDQ1LDIuMjIyLTAuNzQxLDQuMDczLTAuODg5LDUuNTU1Yy0wLjEyNy0yLjA1My0wLjg0Ny01LjY5MS0yLjE1OC0xMC45MThsLTYuMzE2LTIzLjUxOQ0KCQloLTE0LjA5MmwxNS4xMzksNDYuNDAxaDE0Ljc1OWwxNS4yMDItNDYuNDAxaC0xNC4wMjdMMjAxLjAyMSwyNDkuNTE0eiIvPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPC9zdmc+DQo=" style="width: 40px; display: block;" alt="Download em CSV" title="Download em CSV" />
+  CSV
+</button>
+
+<button type="button" id="downloadTxtFolha" class="downloadRelFolha" style="background: none; border: none" onclick="downloadArquivoFolha('241', '2015', '4', '51', 'txt', 'Remuneração Mensal dos Servidores Públicos', 'Fundação Municipal de Saúde de Arinos')">
+  <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDMxOC4xODggMzE4LjE4OCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzE4LjE4OCAzMTguMTg4OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8cG9seWdvbiBzdHlsZT0iZmlsbDojRThFOEU4OyIgcG9pbnRzPSIyMjcuMzIxLDcuNSA0MC4zNDIsNy41IDQwLjM0MiwzMTAuNjg4IDI3Ny44NDYsMzEwLjY4OCAyNzcuODQ2LDU4LjAyNSAJIi8+DQoJPGc+DQoJCTxyZWN0IHg9IjEwMC4zMTciIHk9IjE3My44NyIgc3R5bGU9ImZpbGw6I0QxRDNEMzsiIHdpZHRoPSI0OS41NDMiIGhlaWdodD0iMTIuODY1Ii8+DQoJCTxyZWN0IHg9IjEwMC4zMTciIHk9IjE0OS4yMjkiIHN0eWxlPSJmaWxsOiNEMUQzRDM7IiB3aWR0aD0iMTA3LjU0MyIgaGVpZ2h0PSIxMi44NjUiLz4NCgkJPHJlY3QgeD0iMTAwLjMxNyIgeT0iMTI0LjU4NyIgc3R5bGU9ImZpbGw6I0QxRDNEMzsiIHdpZHRoPSIxMTcuNTUxIiBoZWlnaHQ9IjEyLjg2NSIvPg0KCQk8cmVjdCB4PSIxMDAuMzE3IiB5PSI5OS45NDUiIHN0eWxlPSJmaWxsOiNEMUQzRDM7IiB3aWR0aD0iODIuMjA5IiBoZWlnaHQ9IjEyLjg2NSIvPg0KCQk8cmVjdCB4PSIxMDAuMzE3IiB5PSI3NS4zMDQiIHN0eWxlPSJmaWxsOiNEMUQzRDM7IiB3aWR0aD0iMTE3LjU1MSIgaGVpZ2h0PSIxMi44NjUiLz4NCgk8L2c+DQoJPHBvbHlnb24gc3R5bGU9ImZpbGw6I0E0QTlBRDsiIHBvaW50cz0iMjM1LjE0LDMyLjc2MyA0MC4zNDIsMzIuNzYzIDQwLjM0Miw3LjUgMjI3LjMyMSw3LjUgCSIvPg0KCTxwb2x5Z29uIHN0eWxlPSJmaWxsOiNEMUQzRDM7IiBwb2ludHM9IjIyNy4zMjEsNTguMDI1IDI3Ny44NDYsNTguMDI1IDIyNy4zMjEsNy41IAkiLz4NCgk8cGF0aCBzdHlsZT0iZmlsbDojMzMzRTQ4OyIgZD0iTTk2LjAxMSwyNDMuOTkyaDExLjcxNnYzNy4zNzloMTIuOTYzdi0zNy4zNzloMTEuNjgzdi0xMC42MDFIOTYuMDExVjI0My45OTJ6IE0yODMuMTQ5LDUyLjcyMw0KCQlMMjMyLjYyNSwyLjE5N0MyMzEuMjE4LDAuNzksMjI5LjMxMSwwLDIyNy4zMjEsMEg0MC4zNDJjLTQuMTQzLDAtNy41LDMuMzU4LTcuNSw3LjV2MzAzLjE4OGMwLDQuMTQzLDMuMzU3LDcuNSw3LjUsNy41aDIzNy41MDQNCgkJYzQuMTQzLDAsNy41LTMuMzU3LDcuNS03LjVWNTguMDI1QzI4NS4zNDYsNTYuMDM2LDI4NC41NTYsNTQuMTI5LDI4My4xNDksNTIuNzIzeiBNMjM0LjgyMSwyNS42MDZsMjQuOTE4LDI0LjkxOWgtMjQuOTE4DQoJCUwyMzQuODIxLDI1LjYwNkwyMzQuODIxLDI1LjYwNnogTTQ3Ljg0MiwxNWgxNzEuOTc5djEwLjI2M0g0Ny44NDJWMTV6IE0yNzAuMzQ2LDMwMy4xODhINDcuODQyVjQwLjI2M2gxNzEuOTc5djE3Ljc2Mw0KCQljMCw0LjE0MywzLjM1Nyw3LjUsNy41LDcuNWg0My4wMjR2MjM3LjY2MkgyNzAuMzQ2eiBNMTg0LjMyMywyNDMuOTkyaDExLjcxNnYzNy4zNzloMTIuOTYzdi0zNy4zNzloMTEuNjgzdi0xMC42MDFoLTM2LjM2MXYxMC42MDENCgkJSDE4NC4zMjN6IE0xODEuMzA0LDIzMy4zOTJoLTE0LjgwMWwtOC4zMzYsMTQuODM0bC04LjY2NC0xNC44MzRIMTM1LjEzbDE0Ljk2NSwyMy40MzNsLTE1LjkxNywyNC41NDdoMTQuNjY5bDkuMjU2LTE0Ljk5OA0KCQlsOS4zNTIsMTQuOTk4aDE0Ljk5OGwtMTYuMzQ0LTIzLjUzTDE4MS4zMDQsMjMzLjM5MnoiLz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K" style="width: 40px; display: block;" alt="Download em TXT" title="Download em TXT"/>
+  TXT
+</button>
+</div>
+</div><script language="JavaScript" type="text/javascript" src="http://www.adpmnet.com.br/includes/adpm/js/contpubl.js" charset="ISO-8859-1"></script>
+          <table class="table-fill" width="100%"><header class='header-pagina'><img src="http://www.adpmnet.com.br/images/brasao/P310450.GIF" border="0" style="height: 78px !important" alt="Fundação Municipal de Saúde de Arinos"/><div><h2>Fundação Municipal de Saúde de Arinos</h2><h3>Estado de Minas Gerais</h3><h3>Remuneração Mensal dos Servidores Públicos</h3></div></header><div class='clear'></div></table>
+
+    
+<form method="POST" id="form-filtro-pessoal" style="margin-bottom: 15px;">
+  <input type="hidden" name="ano" value="2015">
+  <input type="hidden" name="mes" value="4">
+  <input type="hidden" name="idorg" value="241">
+  <input type="hidden" name="nome_mat" value="1">
+  <input type="hidden" name="nao_proventos" value="0">
+  <input type="hidden" name="nao_descontos" value="0">
+  <input type="hidden" name="orderby" value="0">
+
+  <div class="row" style="padding: 20px 0;">
+    <div class="col-lg-6">
+      <div class="form-group">
+        <label for="nomeServidor">Nome</label>
+        <input type="text" name="nomeServidor" id="nomeServidor" class="form-control">
+      </div>
+    </div>    
+   
+    <div class="col-lg-3">
+      <div class="form-group">
+        <label for="ordem">Vinculo</label> <br>
+        <select class="form-control" name="vinculo" id="vinculo">
+          <option></option>
+                      <option value="Comissionado Recrutamento Amplo    ">Comissionado Recrutamento Amplo    </option>  
+                      <option value="Comissionado Recrutamento Limitado ">Comissionado Recrutamento Limitado </option>  
+                      <option value="Contratos Administrativos          ">Contratos Administrativos          </option>  
+                      <option value="Regime Jurídico Único - Estatutário">Regime Jurídico Único - Estatutário</option>  
+                  </select>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="form-group">
+        <label for="ordem">Cargo / Função</label> <br>
+        <select class="form-control" name="cargoFuncao" id="cargoFuncao">
+          <option></option>
+                      <option value="AJUDANTE DE SERVIÇO PUBLICO">AJUDANTE DE SERVIÇO PUBLICO</option>  
+                      <option value="AJUDANTE DE SERVIÇOS PUBLICOS">AJUDANTE DE SERVIÇOS PUBLICOS</option>  
+                      <option value="AUXILIAR DE ENFERMAGEM">AUXILIAR DE ENFERMAGEM</option>  
+                      <option value="AUXILIAR OPERACIONAL">AUXILIAR OPERACIONAL</option>  
+                      <option value="BIOQUIMICO/FARMACEUTICO (A)">BIOQUIMICO/FARMACEUTICO (A)</option>  
+                      <option value="DIRETOR CLINICO">DIRETOR CLINICO</option>  
+                      <option value="DIRETOR EXECUTIVO">DIRETOR EXECUTIVO</option>  
+                      <option value="ENFERMEIRO(A)">ENFERMEIRO(A)</option>  
+                      <option value="FUNÇAO AUXILIAR ENFERMAGEM">FUNÇAO AUXILIAR ENFERMAGEM</option>  
+                      <option value="MOTORISTA">MOTORISTA</option>  
+                      <option value="Presidente">Presidente</option>  
+                      <option value="TECNICO EM ENFERMAGEM">TECNICO EM ENFERMAGEM</option>  
+                      <option value="TECNICO EM ENFERMAGEM(A)">TECNICO EM ENFERMAGEM(A)</option>  
+                      <option value="TÉCNICO EM RADIOLOGIA">TÉCNICO EM RADIOLOGIA</option>  
+                  </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12" style="text-align: right">
+      <button type="submit" class="btn btn-primary btn">FILTRAR</button>
+    </div>
+  </div>
+</form>
+    <section id="container-geral">
+
+    <table class="table-fill" width="100%">
+        <tr>
+            <th colspan="6"><strong>Abril de 2015</strong></th>
+        </tr>
+        <tr>
+            <th class="tdcenter" width="20%"><strong>Vinculo</strong></th>
+            <th class="tdcenter" width="35%"><strong>Matr&iacute;cula - Nome</strong></th>
+            <th class="tdcenter" width="25%"><strong>Cargo/Fun&ccedil;&atilde;o</strong></th>
+            <th class="tdcenter" width="10%"><strong>Tipo</strong></th>
+            <th class="tdcenter" width="5%"><strong>Total de Proventos</strong></th>
+            <th class="tdcenter" width="5%"><strong>Detalhe</strong></th>
+        </tr>
+            <tr>
+            <td class="even" style="font-size:8pt;">Comissionado Recrutamento Amplo    </td>
+            <td class="even" style="font-size:8pt;">000128.0 - Kamila Marques Moraes                                                           </td>
+            <td class="even" style="font-size:8pt;">Bioquimico/farmaceutico (a)                                                                                                                                                                                                                                   </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">2.968,93</td>-->
+            <td class="even tdrigth">2.968,93</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=133&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Comissionado Recrutamento Amplo    </td>
+            <td class="odd" style="font-size:8pt;">000137.1 - Renato Carlos Cesar De Lima                                                     </td>
+            <td class="odd" style="font-size:8pt;">Presidente                                                                                                                                                                                                                                                    </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">4.005,58</td>-->
+            <td class="odd tdrigth">4.005,58</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=169&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Comissionado Recrutamento Limitado </td>
+            <td class="even" style="font-size:8pt;">000024.0 - Maria Aparecida Pereira Gonçalves                                               </td>
+            <td class="even" style="font-size:8pt;">Diretor Executivo                                                                                                                                                                                                                                             </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">2.730,48</td>-->
+            <td class="even tdrigth">2.730,48</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=156&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Contratos Administrativos          </td>
+            <td class="odd" style="font-size:8pt;">000140.4 - Ailton Gonçalves Da Rocha                                                       </td>
+            <td class="odd" style="font-size:8pt;">Motorista                                                                                                                                                                                                                                                     </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.105,02</td>-->
+            <td class="odd tdrigth">1.105,02</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=158&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Contratos Administrativos          </td>
+            <td class="even" style="font-size:8pt;">000135.5 - Ednaldo Pereira Dos Santos                                                      </td>
+            <td class="even" style="font-size:8pt;">Tecnico Em Enfermagem(a)                                                                                                                                                                                                                                      </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.218,47</td>-->
+            <td class="even tdrigth">1.218,47</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=172&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Contratos Administrativos          </td>
+            <td class="odd" style="font-size:8pt;">000054.7 - Irenice Ribeiro Dos Santos                                                      </td>
+            <td class="odd" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.282,33</td>-->
+            <td class="odd tdrigth">1.282,33</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=159&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Contratos Administrativos          </td>
+            <td class="even" style="font-size:8pt;">000056.3 - Manoel Brito Guimaraes                                                          </td>
+            <td class="even" style="font-size:8pt;">Ajudante De Serviços Publicos                                                                                                                                                                                                                                 </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">945,60</td>-->
+            <td class="even tdrigth">945,60</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=150&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Contratos Administrativos          </td>
+            <td class="odd" style="font-size:8pt;">000143.8 - Maria Areuza Martins Santana                                                    </td>
+            <td class="odd" style="font-size:8pt;">Enfermeiro(a)                                                                                                                                                                                                                                                 </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">5.088,75</td>-->
+            <td class="odd tdrigth">5.088,75</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=161&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Contratos Administrativos          </td>
+            <td class="even" style="font-size:8pt;">000142.0 - Maria Pereira Dos Santos                                                        </td>
+            <td class="even" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.024,40</td>-->
+            <td class="even tdrigth">1.024,40</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=153&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Contratos Administrativos          </td>
+            <td class="odd" style="font-size:8pt;">000134.7 - Rosivane Da Conceiçao Ferreira De Araújo                                        </td>
+            <td class="odd" style="font-size:8pt;">Tecnico Em Enfermagem(a)                                                                                                                                                                                                                                      </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.135,22</td>-->
+            <td class="odd tdrigth">1.135,22</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=167&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000002.6 - Adailza Carneiro Dos Santos                                                     </td>
+            <td class="even" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.505,45</td>-->
+            <td class="even tdrigth">1.505,45</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=89&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000003.4 - Adelson Rodrigues De Brito                                                      </td>
+            <td class="odd" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.292,05</td>-->
+            <td class="odd tdrigth">1.292,05</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=2&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000145.4 - Adilson Rodrigues Lima                                                          </td>
+            <td class="even" style="font-size:8pt;">Diretor Clinico                                                                                                                                                                                                                                               </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">2.968,93</td>-->
+            <td class="even tdrigth">2.968,93</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=170&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000099.3 - Adoraci Pereira Alves                                                           </td>
+            <td class="odd" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.050,60</td>-->
+            <td class="odd tdrigth">1.050,60</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=77&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000001.8 - Alnir Antonio Da Silva Ramos                                                    </td>
+            <td class="even" style="font-size:8pt;">Motorista                                                                                                                                                                                                                                                     </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">2.022,93</td>-->
+            <td class="even tdrigth">2.022,93</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=1&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000109.0 - Andreia Lopes De Souza                                                          </td>
+            <td class="odd" style="font-size:8pt;">Enfermeiro(a)                                                                                                                                                                                                                                                 </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">5.351,39</td>-->
+            <td class="odd tdrigth">5.351,39</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=87&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000112.3 - Ariuza Rodrigues Dos Santos Brito                                               </td>
+            <td class="even" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.765,43</td>-->
+            <td class="even tdrigth">1.765,43</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=98&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000117.3 - Aseny Francisca Da Costa                                                        </td>
+            <td class="odd" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.192,67</td>-->
+            <td class="odd tdrigth">1.192,67</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=105&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000085.2 - Bartolomeu Marque Andrade                                                       </td>
+            <td class="even" style="font-size:8pt;">Técnico Em Radiologia                                                                                                                                                                                                                                         </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.555,62</td>-->
+            <td class="even tdrigth">1.555,62</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=88&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000113.1 - Camila Lopes Mota                                                               </td>
+            <td class="odd" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.204,36</td>-->
+            <td class="odd tdrigth">1.204,36</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=99&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000005.0 - Cirila Francisca Almeida                                                        </td>
+            <td class="even" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.359,72</td>-->
+            <td class="even tdrigth">1.359,72</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=4&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000060.4 - Domingos Jose Da Silva Araújo                                                   </td>
+            <td class="odd" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.753,51</td>-->
+            <td class="odd tdrigth">1.753,51</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=100&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000006.8 - Edivanda De Oliveira Barbosa                                                    </td>
+            <td class="even" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.288,83</td>-->
+            <td class="even tdrigth">1.288,83</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=5&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000007.6 - Eleida Moreira De Souza                                                         </td>
+            <td class="odd" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.208,28</td>-->
+            <td class="odd tdrigth">1.208,28</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=6&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000098.5 - Elisangela Alves Soares                                                         </td>
+            <td class="even" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.284,65</td>-->
+            <td class="even tdrigth">1.284,65</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=76&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000104.0 - Elizabete Ribeiro Carvalho                                                      </td>
+            <td class="odd" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.252,53</td>-->
+            <td class="odd tdrigth">1.252,53</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=82&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000009.2 - Idalina Gomes Dos Santos                                                        </td>
+            <td class="even" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.208,28</td>-->
+            <td class="even tdrigth">1.208,28</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=8&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000010.9 - Isaura Antonio De Resende                                                       </td>
+            <td class="odd" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">805,52</td>-->
+            <td class="odd tdrigth">805,52</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=9&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000122.2 - Ivanete Rodrigues Dos Santos                                                    </td>
+            <td class="even" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">980,98</td>-->
+            <td class="even tdrigth">980,98</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=112&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000011.7 - Ivani Maria Borges                                                              </td>
+            <td class="odd" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.570,76</td>-->
+            <td class="odd tdrigth">1.570,76</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=10&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000012.5 - Joana De Oliveira Barbosa                                                       </td>
+            <td class="even" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.369,38</td>-->
+            <td class="even tdrigth">1.369,38</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=11&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000013.3 - Joana De Souza Brito                                                            </td>
+            <td class="odd" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.409,66</td>-->
+            <td class="odd tdrigth">1.409,66</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=12&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000129.8 - Jose Divan Silva                                                                </td>
+            <td class="even" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">998,00</td>-->
+            <td class="even tdrigth">998,00</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=127&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000015.9 - Jose Geraldo Barbosa                                                            </td>
+            <td class="odd" style="font-size:8pt;">Motorista                                                                                                                                                                                                                                                     </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">2.030,67</td>-->
+            <td class="odd tdrigth">2.030,67</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=14&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000016.7 - Josefina Ferreira Dos Santos                                                    </td>
+            <td class="even" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.825,84</td>-->
+            <td class="even tdrigth">1.825,84</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=15&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000102.4 - Manoel Nilton Cordeiro Almeida                                                  </td>
+            <td class="odd" style="font-size:8pt;">Motorista                                                                                                                                                                                                                                                     </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.541,85</td>-->
+            <td class="odd tdrigth">1.541,85</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=80&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000097.7 - Maria Amelia Carneiro Estrela                                                   </td>
+            <td class="even" style="font-size:8pt;">Enfermeiro(a)                                                                                                                                                                                                                                                 </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">5.423,84</td>-->
+            <td class="even tdrigth">5.423,84</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=75&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000021.6 - Maria Angela Ribeiro Carvalho                                                   </td>
+            <td class="odd" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.446,72</td>-->
+            <td class="odd tdrigth">1.446,72</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=18&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000022.4 - Maria Aparecida Ferreira De Souza                                               </td>
+            <td class="even" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.369,38</td>-->
+            <td class="even tdrigth">1.369,38</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=19&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000023.2 - Maria Aparecida Marins                                                          </td>
+            <td class="odd" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.272,72</td>-->
+            <td class="odd tdrigth">1.272,72</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=20&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000025.8 - Maria Aparecida Souza Ribas                                                     </td>
+            <td class="even" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.786,47</td>-->
+            <td class="even tdrigth">1.786,47</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=92&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000027.4 - Maria Das Dores Durães álvaro                                                   </td>
+            <td class="odd" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.990,99</td>-->
+            <td class="odd tdrigth">1.990,99</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=54&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000115.7 - Maria De Lourdes Fonseca Dos Santos                                             </td>
+            <td class="even" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.276,62</td>-->
+            <td class="even tdrigth">1.276,62</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=103&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000029.0 - Maria Do Carmo De Souza                                                         </td>
+            <td class="odd" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.047,18</td>-->
+            <td class="odd tdrigth">1.047,18</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=26&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000030.7 - Maria Do Carmo Gomes Damacena                                                   </td>
+            <td class="even" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.208,28</td>-->
+            <td class="even tdrigth">1.208,28</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=27&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000031.5 - Maria Dos Santos Pereira                                                        </td>
+            <td class="odd" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.288,83</td>-->
+            <td class="odd tdrigth">1.288,83</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=28&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000032.3 - Maria Gonçalves De Resende                                                      </td>
+            <td class="even" style="font-size:8pt;">Funçao Auxiliar Enfermagem                                                                                                                                                                                                                                    </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.547,97</td>-->
+            <td class="even tdrigth">1.547,97</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=29&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000033.1 - Maria Gorete Da Silva Santos                                                    </td>
+            <td class="odd" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.308,16</td>-->
+            <td class="odd tdrigth">1.308,16</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=74&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000034.9 - Maria Idelfonsa Marques Andrade                                                 </td>
+            <td class="even" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.369,39</td>-->
+            <td class="even tdrigth">1.369,39</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=30&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000047.2 - Maria Jose Rocha Da Mata                                                        </td>
+            <td class="odd" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.204,36</td>-->
+            <td class="odd tdrigth">1.204,36</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=101&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000037.3 - Maricélia Lisboa De Souza                                                       </td>
+            <td class="even" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.288,83</td>-->
+            <td class="even tdrigth">1.288,83</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=33&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000081.0 - Marinalva Lisboa                                                                </td>
+            <td class="odd" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">945,60</td>-->
+            <td class="odd tdrigth">945,60</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=106&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000039.9 - Marlene Martins Ramos De Abreu                                                  </td>
+            <td class="even" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.545,60</td>-->
+            <td class="even tdrigth">1.545,60</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=91&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000106.6 - Milton Jose Carneiro Dos Santos                                                 </td>
+            <td class="odd" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.204,36</td>-->
+            <td class="odd tdrigth">1.204,36</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=84&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000067.0 - Miriam Elias Teixeira                                                           </td>
+            <td class="even" style="font-size:8pt;">Auxiliar Operacional                                                                                                                                                                                                                                          </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.277,33</td>-->
+            <td class="even tdrigth">1.277,33</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=114&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000108.2 - Nely Soares De Souza                                                            </td>
+            <td class="odd" style="font-size:8pt;">Ajudante De Serviço Publico                                                                                                                                                                                                                                   </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.024,40</td>-->
+            <td class="odd tdrigth">1.024,40</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=86&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000107.4 - Nilza Cipriano De Rezende                                                       </td>
+            <td class="even" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.308,74</td>-->
+            <td class="even tdrigth">1.308,74</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=85&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000100.8 - Noraldino Carlos Duraes Filho                                                   </td>
+            <td class="odd" style="font-size:8pt;">Auxiliar De Enfermagem                                                                                                                                                                                                                                        </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">964,74</td>-->
+            <td class="odd tdrigth">964,74</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=78&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000111.5 - Rosimari Jose Dos Reis                                                          </td>
+            <td class="even" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.405,09</td>-->
+            <td class="even tdrigth">1.405,09</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=97&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000101.6 - Tassio Lindson Mendes Dos Santos                                                </td>
+            <td class="odd" style="font-size:8pt;">Técnico Em Radiologia                                                                                                                                                                                                                                         </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.405,08</td>-->
+            <td class="odd tdrigth">1.405,08</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=79&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="even" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="even" style="font-size:8pt;">000078.7 - Valdetino Rodrigues De Oliveira                                                 </td>
+            <td class="even" style="font-size:8pt;">Motorista                                                                                                                                                                                                                                                     </td>
+            <td class="even" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="even tdrigth">1.504,06</td>-->
+            <td class="even tdrigth">1.504,06</td>
+            <td class="even">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=109&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+                <tr>
+            <td class="odd" style="font-size:8pt;">Regime Jurídico Único - Estatutário</td>
+            <td class="odd" style="font-size:8pt;">000049.8 - Wilmar Alves Dos Santos                                                         </td>
+            <td class="odd" style="font-size:8pt;">Tecnico Em Enfermagem                                                                                                                                                                                                                                         </td>
+            <td class="odd" style="font-size:8pt;">Pagamentos                                                                                                                                                                                                                                                    </td>
+            <!--<td class="odd tdrigth">1.639,44</td>-->
+            <td class="odd tdrigth">1.639,44</td>
+            <td class="odd">
+                <a class="botao modal botao-detalhes" rel="{closable: true, handler: 'iframe', size: {x: 850, y: 525}}" href="/index2.php?option=com_contpubl&brasao=P310450.GIF&dsorg=Funda%C3%A7%C3%A3o+Municipal+de+Sa%C3%BAde+de+Arinos&titulo=Remunera%C3%A7%C3%A3o+Mensal+dos+Servidores+P%C3%BAblicos&idorg=241&dsufe=Estado de Minas Gerais&cnpj=18650424000167&tpformpdf=52&ano=2015&mes=4&idfun=94&idpcl=1&nome_mat=1&nao_proventos=0&nao_descontos=0&idgca=0">Detalhe</a>
+            </td>
+        </tr>
+            <tr>
+        <td colspan="10"><br></td>
+    </tr>
+        <tr>
+      <td>Total de Pessoas:</td>
+      <td colspan="2">62</td>
+      <td>Total de Proventos: </td>
+      <!--<td style="text-align: right;">102.356,85</td>-->
+      <td style="text-align: right;">102.356,85</td>
+      <td></td>
+    </tr>
+    </table>
+    
+    </section><!-- container geral -->
+    
+      </section>
+
+            
+    </div><!-- fim row -->
+  </div><!-- fim container -->
+</section> <!-- fim container fluid -->
+
+<footer class="container-fluid">
+<div class="row">
+  <div class="container">
+  <div class="frase-footer">
+    <p>Resiliência é a capacidade que temos em persistir na superação das adversidades e nos momentos difíceis que passamos em nossas vidas. Quando desenvolvemos resiliência, nos tornamos mais estruturados e fortes para enfrentarmos os obstáculos.</p>
+  </div>
+  <p class="copyright">
+    <small>2017 - © Todos os direitos reservados - Desenvolvido por ADPM.</small>
+  </p>
+  </div><!-- fim container -->
+</div><!-- fim row -->
+</footer><!-- fim footer/container-fluid -->
+</body>
+</html>

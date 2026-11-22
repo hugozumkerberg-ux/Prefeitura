@@ -1,0 +1,221 @@
+{
+  "uf": "MG",
+  "cep": "38680000",
+  "qsa": [
+    {
+      "pais": null,
+      "nome_socio": "MARIA APARECIDA RODRIGUES DA ROCHA",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 21 a 30 anos",
+      "cnpj_cpf_do_socio": "***207976**",
+      "qualificacao_socio": "Diretor",
+      "codigo_faixa_etaria": 3,
+      "data_entrada_sociedade": "2026-07-15",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 10,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    },
+    {
+      "pais": null,
+      "nome_socio": "MARIA CLEIDE NASCIMENTO GOMES ASSIS",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 51 a 60 anos",
+      "cnpj_cpf_do_socio": "***139232**",
+      "qualificacao_socio": "Presidente",
+      "codigo_faixa_etaria": 6,
+      "data_entrada_sociedade": "2026-07-15",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 16,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    }
+  ],
+  "cnpj": "10502010000189",
+  "pais": null,
+  "email": null,
+  "porte": "DEMAIS",
+  "bairro": "FAZENDA MANGUES",
+  "numero": "S/N",
+  "ddd_fax": "",
+  "municipio": "ARINOS",
+  "logradouro": "MG 202 KM 406 GLEBA 21D",
+  "cnae_fiscal": 1031700,
+  "codigo_pais": null,
+  "complemento": "",
+  "codigo_porte": 5,
+  "razao_social": "COOPERATIVA REGIONAL DE BASE NA AGRICULTURA FAMILIAR E EXTRATIVISMO LTDA",
+  "nome_fantasia": "COPABASE",
+  "capital_social": 25800,
+  "ddd_telefone_1": "3836352007",
+  "ddd_telefone_2": "3836352575",
+  "opcao_pelo_mei": false,
+  "codigo_municipio": 4089,
+  "cnaes_secundarios": [
+    {
+      "codigo": 159801,
+      "descricao": "Apicultura"
+    },
+    {
+      "codigo": 161099,
+      "descricao": "Atividades de apoio à agricultura não especificadas anteriormente"
+    },
+    {
+      "codigo": 1033301,
+      "descricao": "Fabricação de sucos concentrados de frutas, hortaliças e legumes"
+    },
+    {
+      "codigo": 4631100,
+      "descricao": "Comércio atacadista de leite e laticínios"
+    },
+    {
+      "codigo": 4633801,
+      "descricao": "Comércio atacadista de frutas, verduras, raízes, tubérculos, hortaliças e legumes frescos"
+    },
+    {
+      "codigo": 4635499,
+      "descricao": "Comércio atacadista de bebidas não especificadas anteriormente"
+    },
+    {
+      "codigo": 4637199,
+      "descricao": "Comércio atacadista especializado em outros produtos alimentícios não especificados anteriormente"
+    },
+    {
+      "codigo": 4639701,
+      "descricao": "Comércio atacadista de produtos alimentícios em geral"
+    },
+    {
+      "codigo": 4693100,
+      "descricao": "Comércio atacadista de mercadorias em geral, sem predominância de alimentos ou de insumos agropecuários"
+    },
+    {
+      "codigo": 4712100,
+      "descricao": "Comércio varejista de mercadorias em geral, com predominância de produtos alimentícios - minimercados, mercearias e armazéns"
+    },
+    {
+      "codigo": 4724500,
+      "descricao": "Comércio varejista de hortifrutigranjeiros"
+    },
+    {
+      "codigo": 4729699,
+      "descricao": "Comércio varejista de produtos alimentícios em geral ou especializado em produtos alimentícios não especificados anteriormente"
+    },
+    {
+      "codigo": 4789001,
+      "descricao": "Comércio varejista de suvenires, bijuterias e artesanatos"
+    },
+    {
+      "codigo": 4789002,
+      "descricao": "Comércio varejista de plantas e flores naturais"
+    },
+    {
+      "codigo": 4789099,
+      "descricao": "Comércio varejista de outros produtos não especificados anteriormente"
+    },
+    {
+      "codigo": 4930201,
+      "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, municipal."
+    },
+    {
+      "codigo": 4930202,
+      "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+    },
+    {
+      "codigo": 5211701,
+      "descricao": "Armazéns gerais - emissão de warrant"
+    },
+    {
+      "codigo": 7020400,
+      "descricao": "Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica"
+    },
+    {
+      "codigo": 7490103,
+      "descricao": "Serviços de agronomia e de consultoria às atividades agrícolas e pecuárias"
+    },
+    {
+      "codigo": 7490199,
+      "descricao": "Outras atividades profissionais, científicas e técnicas não especificadas anteriormente"
+    },
+    {
+      "codigo": 8219999,
+      "descricao": "Preparação de documentos e serviços especializados de apoio administrativo não especificados anteriormente"
+    },
+    {
+      "codigo": 8550302,
+      "descricao": "Atividades de apoio à educação, exceto caixas escolares"
+    },
+    {
+      "codigo": 9493600,
+      "descricao": "Atividades de organizações associativas ligadas à cultura e à arte"
+    },
+    {
+      "codigo": 9499500,
+      "descricao": "Atividades associativas não especificadas anteriormente"
+    }
+  ],
+  "natureza_juridica": "Cooperativa",
+  "regime_tributario": [
+    {
+      "ano": 2019,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "ISENTO DO IRPJ",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2020,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "ISENTO DO IRPJ",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2021,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "ISENTO DO IRPJ",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "ISENTO DO IRPJ",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "ISENTO DO IRPJ",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2024,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "ISENTO DO IRPJ",
+      "quantidade_de_escrituracoes": 1
+    }
+  ],
+  "situacao_especial": "",
+  "opcao_pelo_simples": false,
+  "situacao_cadastral": 2,
+  "data_opcao_pelo_mei": null,
+  "data_exclusao_do_mei": null,
+  "cnae_fiscal_descricao": "Fabricação de conservas de frutas",
+  "codigo_municipio_ibge": 3104502,
+  "data_inicio_atividade": "2008-11-26",
+  "data_situacao_especial": null,
+  "data_opcao_pelo_simples": "2013-01-01",
+  "data_situacao_cadastral": "2008-11-26",
+  "nome_cidade_no_exterior": "",
+  "codigo_natureza_juridica": 2143,
+  "data_exclusao_do_simples": "2017-12-31",
+  "motivo_situacao_cadastral": 0,
+  "ente_federativo_responsavel": "",
+  "identificador_matriz_filial": 1,
+  "qualificacao_do_responsavel": 16,
+  "descricao_situacao_cadastral": "ATIVA",
+  "descricao_tipo_de_logradouro": "RODOVIA",
+  "descricao_motivo_situacao_cadastral": "SEM MOTIVO",
+  "descricao_identificador_matriz_filial": "MATRIZ"
+}

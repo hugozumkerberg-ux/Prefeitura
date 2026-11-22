@@ -1,0 +1,33 @@
+{
+  "arquivo": "backup_completo_arinos_2026-11-22T03-16-03-643Z.zip",
+  "caminho_relativo": "backups_forenses/backup_completo_arinos_2026-11-22T03-16-03-643Z.zip",
+  "gerado_em": "2026-11-22T03:16:03.643Z",
+  "data_formatada": "22/11/2026, 00:16:03",
+  "tamanho_bytes": 70820221,
+  "tamanho_mb": 67.54,
+  "tamanho_original_mb": 616.42,
+  "taxa_compressao_pct": 89,
+  "total_arquivos": 2859,
+  "hash_sha256": "577eee33ec440c1ccd507192d5f23d9a6e2ddfa05399711a79ee945ee41ca0a2",
+  "tabelas_registros": {
+    "contracheques": 153938,
+    "despesas": 6103,
+    "diarias": 29746,
+    "contratos": 2428,
+    "receitas": 35887,
+    "convenios": 93,
+    "empresas": 0,
+    "socios": 0,
+    "turismo_pontos": 8,
+    "noticias": 0,
+    "camara_materias": 722,
+    "camara_vereadores": 111,
+    "eleicoes_candidatos": 111,
+    "eleicoes_mandatos": 0,
+    "vereadores_feitos": 0,
+    "auditoria_consultas": 1758,
+    "empresas_auditadas_receita": 120,
+    "socios_auditados_receita": 215
+  },
+  "manifesto_texto_arquivo": "backup_completo_arinos_2026-11-22T03-16-03-643Z.zip.sha256.txt"
+}

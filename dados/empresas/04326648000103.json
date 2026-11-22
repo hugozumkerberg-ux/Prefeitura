@@ -1,0 +1,245 @@
+{
+  "uf": "DF",
+  "cep": "71250120",
+  "qsa": [
+    {
+      "pais": null,
+      "nome_socio": "LUCIANO NEVES GARCIA",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 51 a 60 anos",
+      "cnpj_cpf_do_socio": "***768561**",
+      "qualificacao_socio": "Sócio-Administrador",
+      "codigo_faixa_etaria": 6,
+      "data_entrada_sociedade": "2001-03-08",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 49,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    }
+  ],
+  "cnpj": "04326648000103",
+  "pais": null,
+  "email": null,
+  "porte": "DEMAIS",
+  "bairro": "ZONA INDUSTRIAL (GUARA)",
+  "numero": "S/N",
+  "ddd_fax": "6132019899",
+  "municipio": "BRASILIA",
+  "logradouro": "SCIA QUADRA 14",
+  "cnae_fiscal": 4211101,
+  "codigo_pais": null,
+  "complemento": "CONJ 04 LOTE 08 PARTE A1",
+  "codigo_porte": 5,
+  "razao_social": "NG - ENGENHARIA E CONSTRUCOES LTDA",
+  "nome_fantasia": "NG ENGENHARIA E CONSTRUCOES",
+  "capital_social": 12500000,
+  "ddd_telefone_1": "6133412646",
+  "ddd_telefone_2": "",
+  "opcao_pelo_mei": null,
+  "codigo_municipio": 9701,
+  "cnaes_secundarios": [
+    {
+      "codigo": 4213800,
+      "descricao": "Obras de urbanização - ruas, praças e calçadas"
+    },
+    {
+      "codigo": 4312600,
+      "descricao": "Perfurações e sondagens"
+    },
+    {
+      "codigo": 4313400,
+      "descricao": "Obras de terraplenagem"
+    },
+    {
+      "codigo": 4679604,
+      "descricao": "Comércio atacadista especializado de materiais de construção não especificados anteriormente"
+    },
+    {
+      "codigo": 4679699,
+      "descricao": "Comércio atacadista de materiais de construção em geral"
+    },
+    {
+      "codigo": 4930202,
+      "descricao": "Transporte rodoviário de carga, exceto produtos perigosos e mudanças, intermunicipal, interestadual e internacional"
+    },
+    {
+      "codigo": 7112000,
+      "descricao": "Serviços de engenharia"
+    },
+    {
+      "codigo": 7739099,
+      "descricao": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador"
+    }
+  ],
+  "natureza_juridica": "Sociedade Empresária Limitada",
+  "regime_tributario": [
+    {
+      "ano": 2019,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2020,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2021,
+      "cnpj_da_scp": "44413837000138",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2021,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": "27180774000106",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": "26745379000152",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": "35698590000152",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": "35698564000124",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": "30104082000185",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": "44413837000138",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": "37254756000177",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": "26947546000148",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": "30104082000185",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": "26947546000148",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": "35698564000124",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": "35698590000152",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": "26745379000152",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": "37254756000177",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": "44413837000138",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": "27180774000106",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2024,
+      "cnpj_da_scp": "44413837000138",
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2024,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    }
+  ],
+  "situacao_especial": "",
+  "opcao_pelo_simples": null,
+  "situacao_cadastral": 2,
+  "data_opcao_pelo_mei": null,
+  "data_exclusao_do_mei": null,
+  "cnae_fiscal_descricao": "Construção de rodovias e ferrovias",
+  "codigo_municipio_ibge": 5300108,
+  "data_inicio_atividade": "2001-03-08",
+  "data_situacao_especial": null,
+  "data_opcao_pelo_simples": null,
+  "data_situacao_cadastral": "2004-06-19",
+  "nome_cidade_no_exterior": "",
+  "codigo_natureza_juridica": 2062,
+  "data_exclusao_do_simples": null,
+  "motivo_situacao_cadastral": 0,
+  "ente_federativo_responsavel": "",
+  "identificador_matriz_filial": 1,
+  "qualificacao_do_responsavel": 49,
+  "descricao_situacao_cadastral": "ATIVA",
+  "descricao_tipo_de_logradouro": "SETOR",
+  "descricao_motivo_situacao_cadastral": "SEM MOTIVO",
+  "descricao_identificador_matriz_filial": "MATRIZ"
+}

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mandatos & Legislaturas — Arinos / MG (Executivo & Legislativo)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 4s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-6px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #090d16;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(245, 158, 11, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-4px);
+    }
+
+    /* Borda suave, aura da campanha e desfoque periférico na foto */
+    .avatar-wrapper {
+      position: relative;
+      overflow: hidden;
+      border-radius: 9999px;
+      background: radial-gradient(circle at 50% 32%, var(--aura-color, rgba(59, 130, 246, 0.3)) 0%, rgba(15, 23, 42, 0.95) 85%);
+      box-shadow: 0 10px 25px -5px var(--glow-color, rgba(0, 0, 0, 0.5));
+    }
+    .avatar-img {
+      object-fit: cover;
+      object-position: 50% 12%;
+      transform: scale(1.18);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+      mask-image: radial-gradient(circle at 50% 48%, black 65%, rgba(0,0,0,0.7) 82%, transparent 98%);
+      -webkit-mask-image: radial-gradient(circle at 50% 48%, black 65%, rgba(0,0,0,0.7) 82%, transparent 98%);
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+    }
+    .glass-card:hover .avatar-img {
+      transform: scale(1.28);
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.7));
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b1120; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-500 selection:text-white">
+
+  <!-- Header Superior -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Título -->
+      <div class="flex items-center space-x-3">
+        <a href="/" class="flex items-center space-x-2.5 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-emerald-400 p-0.5 shadow-lg shadow-blue-950/40 group-hover:scale-105 transition">
+            <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+              <span class="text-lg">📜</span>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-extrabold text-sm md:text-base text-white tracking-tight">Mandatos & Legislaturas</span>
+              <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">Histórico Oficial</span>
+            </div>
+            <p class="text-[11px] text-slate-400">Arinos / MG • Executivo & Legislativo (1963–2028)</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Links de Navegação -->
+      <div class="flex items-center space-x-1 sm:space-x-2">
+        <a href="/" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          <span>📊 Dashboard</span>
+        </a>
+        <a href="/empresas.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-blue-300 bg-blue-950/50 border border-blue-500/40 hover:bg-blue-900/50 transition">
+          <span>🏢 Empresas & Viagens</span>
+        </a>
+        <a href="/vereadores.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-sky-300 bg-sky-950/40 border border-sky-500/30 hover:bg-sky-900/40 transition">
+          <span>👥 Vereadores</span>
+        </a>
+        <a href="/eleicoes.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-indigo-300 bg-indigo-950/40 border border-indigo-500/30 hover:bg-indigo-900/40 transition">
+          <span>🗳️ Eleições TSE</span>
+        </a>
+        <a href="/cidade.html" class="hidden sm:flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-amber-300 bg-amber-950/40 border border-amber-500/30 hover:bg-amber-900/40 transition">
+          <span>🏛️ Arinos & Notícias</span>
+        </a>
+        <a href="/tabelas.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          <span>📋 Tabelas</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
+
+    <!-- Hero Banner Mandatos -->
+    <div class="relative overflow-hidden rounded-3xl p-6 md:p-8 bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-950 border border-slate-800 shadow-2xl">
+      <div class="absolute -right-12 -bottom-12 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute right-48 top-0 w-60 h-60 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div class="space-y-2 max-w-2xl">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-900/40 border border-blue-500/30 text-blue-300 text-xs font-semibold">
+            <span>🏛️ Panorama Histórico dos Mandatos Municipais</span>
+          </div>
+          <h1 class="text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight">
+            Evolução Política & Financeira por Mandato
+          </h1>
+          <p class="text-sm md:text-base text-slate-300 leading-relaxed">
+            Consolidação dos dados oficiais do <strong class="text-white">Poder Executivo</strong> (Prefeitos e Vices) e do <strong class="text-white">Poder Legislativo</strong> (os 11 vereadores de cada legislatura), correlacionados com os relatórios fiscais, folha de pagamento, diárias e contratos públicos auditados.
+          </p>
+        </div>
+
+        <!-- Card Resumo Geral de Ciclos -->
+        <div class="glass-card p-4 rounded-2xl border-l-4 border-blue-500 space-y-1.5 min-w-[240px]">
+          <p class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Histórico Democrático</p>
+          <p class="text-2xl font-extrabold text-white font-mono">16 Legislaturas</p>
+          <p class="text-xs text-blue-400">1963 até 2028 (65 anos de história)</p>
+          <div class="pt-1 text-[11px] text-slate-400 font-mono">
+            Rastreados: <strong class="text-emerald-400">R$ 1,13+ Bilhão</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seletor de Mandato / Legislatura (Abas Interativas) -->
+    <div class="space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Selecione o Ciclo de Mandato:</span>
+        <span class="text-xs text-slate-500 font-mono" id="mandato-ativo-label">Exibindo: 16ª Legislatura (2025–2028)</span>
+      </div>
+
+      <div class="flex flex-wrap gap-2 pb-2">
+        <button onclick="selecionarMandato('2025-2028')" id="btn-mandato-2025-2028" class="mandato-btn active px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-blue-500 bg-blue-600/30 text-blue-300 shadow-lg shadow-blue-950/40 transition flex items-center space-x-2">
+          <span>★ 2025–2028 (Atual)</span>
+          <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-blue-500/40 text-white font-mono">16ª</span>
+        </button>
+
+        <button onclick="selecionarMandato('2021-2024')" id="btn-mandato-2021-2024" class="mandato-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 hover:bg-slate-800 transition flex items-center space-x-2">
+          <span>2021–2024</span>
+          <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-800 text-slate-400 font-mono">15ª</span>
+        </button>
+
+        <button onclick="selecionarMandato('2017-2020')" id="btn-mandato-2017-2020" class="mandato-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 hover:bg-slate-800 transition flex items-center space-x-2">
+          <span>2017–2020</span>
+          <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-800 text-slate-400 font-mono">14ª</span>
+        </button>
+
+        <button onclick="selecionarMandato('2013-2016')" id="btn-mandato-2013-2016" class="mandato-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold border border-slate-800 bg-slate-900/80 text-slate-300 hover:bg-slate-800 transition flex items-center space-x-2">
+          <span>2013–2016</span>
+          <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-800 text-slate-400 font-mono">13ª</span>
+        </button>
+
+        <button onclick="selecionarMandato('galeria-historica')" id="btn-mandato-galeria-historica" class="mandato-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold border border-slate-800 bg-slate-900/80 text-amber-300 hover:bg-slate-800 transition flex items-center space-x-2">
+          <span>🏛️ Galeria Histórica (1963–2012)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Conteúdo Dinâmico do Mandato Selecionado -->
+    <div id="mandato-detalhes-container" class="space-y-8">
+      <!-- Injetado dinamicamente via JavaScript -->
+    </div>
+
+    <!-- Tabela Comparativa Consolidada de Todos os Mandatos -->
+    <div class="glass-card p-6 md:p-8 rounded-3xl border border-slate-800 space-y-5">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-xl md:text-2xl font-black text-white tracking-tight flex items-center space-x-2">
+            <span>📊 Comparativo Consolidado de Execução Financeira por Mandato</span>
+          </h2>
+          <p class="text-xs text-slate-400">Dados reais e auditados extraídos diretamente da base de dados forense SQLite</p>
+        </div>
+        <div class="text-xs font-mono text-emerald-400 bg-emerald-950/40 px-3 py-1.5 rounded-lg border border-emerald-500/30">
+          Base Integrada: Folha, Despesas, Diárias e Contratos
+        </div>
+      </div>
+
+      <!-- Tabela Comparativa -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400 font-mono uppercase text-[11px]">
+              <th class="py-3 px-3">Ciclo / Mandato</th>
+              <th class="py-3 px-3">Gestão Principal</th>
+              <th class="py-3 px-3 text-right">Folha Salarial</th>
+              <th class="py-3 px-3 text-right">Contratos Públicos</th>
+              <th class="py-3 px-3 text-right">Despesas Empenhadas</th>
+              <th class="py-3 px-3 text-right">Diárias de Viagem</th>
+              <th class="py-3 px-3 text-center">Auditoria</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-comparativa-body" class="divide-y divide-slate-800/60 font-mono">
+            <tr class="hover:bg-slate-800/40 transition">
+              <td class="py-3.5 px-3 font-bold text-blue-400">2025–2028 (Atual)</td>
+              <td class="py-3.5 px-3 font-sans text-white font-medium">Marcilio de Tonhão (PODE)</td>
+              <td class="py-3.5 px-3 text-right text-emerald-400 font-bold">R$ 74,90 Mi <span class="text-[10px] text-slate-500 block">(23.113 pags)</span></td>
+              <td class="py-3.5 px-3 text-right text-blue-400 font-bold">R$ 107,08 Mi <span class="text-[10px] text-slate-500 block">(529 contr.)</span></td>
+              <td class="py-3.5 px-3 text-right text-slate-300">R$ 3,35 Mi</td>
+              <td class="py-3.5 px-3 text-right text-amber-400">R$ 1,82 Mi</td>
+              <td class="py-3.5 px-3 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Em Andamento</span></td>
+            </tr>
+            <tr class="hover:bg-slate-800/40 transition">
+              <td class="py-3.5 px-3 font-bold text-white">2021–2024</td>
+              <td class="py-3.5 px-3 font-sans text-white font-medium">Marcilio de Tonhão (PODE)</td>
+              <td class="py-3.5 px-3 text-right text-emerald-400 font-bold">R$ 122,65 Mi <span class="text-[10px] text-slate-500 block">(49.343 pags)</span></td>
+              <td class="py-3.5 px-3 text-right text-blue-400 font-bold">R$ 107,87 Mi <span class="text-[10px] text-slate-500 block">(565 contr.)</span></td>
+              <td class="py-3.5 px-3 text-right text-slate-300">R$ 10,44 Mi</td>
+              <td class="py-3.5 px-3 text-right text-amber-400">R$ 2,36 Mi</td>
+              <td class="py-3.5 px-3 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] bg-blue-500/20 text-blue-300 border border-blue-500/40">100% Auditado</span></td>
+            </tr>
+            <tr class="hover:bg-slate-800/40 transition">
+              <td class="py-3.5 px-3 font-bold text-white">2017–2020</td>
+              <td class="py-3.5 px-3 font-sans text-white font-medium">Carlos Alberto Recch Filho (PSDB)</td>
+              <td class="py-3.5 px-3 text-right text-emerald-400 font-bold">R$ 73,71 Mi <span class="text-[10px] text-slate-500 block">(43.062 pags)</span></td>
+              <td class="py-3.5 px-3 text-right text-blue-400 font-bold">R$ 74,36 Mi <span class="text-[10px] text-slate-500 block">(627 contr.)</span></td>
+              <td class="py-3.5 px-3 text-right text-slate-300">R$ 16,88 Mi</td>
+              <td class="py-3.5 px-3 text-right text-amber-400">R$ 1,60 Mi</td>
+              <td class="py-3.5 px-3 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] bg-blue-500/20 text-blue-300 border border-blue-500/40">100% Auditado</span></td>
+            </tr>
+            <tr class="hover:bg-slate-800/40 transition">
+              <td class="py-3.5 px-3 font-bold text-white">2013–2016</td>
+              <td class="py-3.5 px-3 font-sans text-white font-medium">Carlos Alberto Recch Filho (PSDB)</td>
+              <td class="py-3.5 px-3 text-right text-emerald-400 font-bold">R$ 54,67 Mi <span class="text-[10px] text-slate-500 block">(38.420 pags)</span></td>
+              <td class="py-3.5 px-3 text-right text-slate-500">-</td>
+              <td class="py-3.5 px-3 text-right text-slate-300">R$ 8,13 Mi</td>
+              <td class="py-3.5 px-3 text-right text-amber-400">R$ 1,31 Mi</td>
+              <td class="py-3.5 px-3 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] bg-blue-500/20 text-blue-300 border border-blue-500/40">100% Auditado</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 space-y-1">
+      <p>Painel Histórico de Mandatos & Legislaturas — Arinos / MG</p>
+      <p class="font-mono text-[11px] text-slate-600">Fontes: Câmara Municipal de Arinos, TSE DivulgaCandContas, ADPMNET e Novo Portal SIAP</p>
+    </div>
+  </footer>
+
+  <!-- Script Lógico & Interativo dos Mandatos -->
+  <script>
+    // Cache em memória para fotos com fundo removido e bordas suavizadas
+    const fotoTransparenteCache = new Map();
+
+    function tratarFotoCandidato(imgEl) {
+      if (!imgEl || imgEl.dataset.treated === 'true') return;
+      const srcOriginal = imgEl.src;
+      if (!srcOriginal || srcOriginal.startsWith('data:image/png')) return;
+
+      if (fotoTransparenteCache.has(srcOriginal)) {
+        imgEl.src = fotoTransparenteCache.get(srcOriginal);
+        imgEl.dataset.treated = 'true';
+        return;
+      }
+
+      const tempImg = new Image();
+      tempImg.crossOrigin = 'anonymous';
+      tempImg.src = srcOriginal;
+
+      tempImg.onload = () => {
+        try {
+          const w = tempImg.naturalWidth || 200;
+          const h = tempImg.naturalHeight || 260;
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+          ctx.drawImage(tempImg, 0, 0, w, h);
+          const imgData = ctx.getImageData(0, 0, w, h);
+          const data = imgData.data;
+
+          const bgSamples = [];
+          const samplePoints = [
+            [0, 0], [w - 1, 0], [2, 2], [w - 3, 2],
+            [0, Math.min(15, h - 1)], [w - 1, Math.min(15, h - 1)],
+            [Math.floor(w * 0.1), 0], [Math.floor(w * 0.9), 0]
+          ];
+
+          for (const [sx, sy] of samplePoints) {
+            const idx = (sy * w + sx) * 4;
+            bgSamples.push({ r: data[idx], g: data[idx + 1], b: data[idx + 2] });
+          }
+
+          function distFundo(r, g, b) {
+            let minD = 999;
+            for (const s of bgSamples) {
+              const d = Math.hypot(r - s.r, g - s.g, b - s.b);
+              if (d < minD) minD = d;
+            }
+            return minD;
+          }
+
+          function isPeleHumana(r, g, b) {
+            return (r > 85 && g > 45 && b > 25 && r > g && g > b && (r - g) > 12);
+          }
+
+          const isBg = new Uint8Array(w * h);
+          const queue = [];
+
+          for (let x = 0; x < w; x++) {
+            isBg[x] = 1;
+            queue.push(x, 0);
+          }
+          const limiteY = Math.floor(h * 0.72);
+          for (let y = 1; y < limiteY; y++) {
+            isBg[y * w] = 1;
+            queue.push(0, y);
+            isBg[y * w + (w - 1)] = 1;
+            queue.push(w - 1, y);
+          }
+
+          const threshold = 50;
+          let head = 0;
+
+          while (head < queue.length) {
+            const cx = queue[head++];
+            const cy = queue[head++];
+
+            const vizinhos = [
+              [cx + 1, cy], [cx - 1, cy],
+              [cx, cy + 1], [cx, cy - 1]
+            ];
+
+            for (const [nx, ny] of vizinhos) {
+              if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+                const nIdx = ny * w + nx;
+                if (isBg[nIdx] === 0) {
+                  const pIdx = nIdx * 4;
+                  const r = data[pIdx];
+                  const g = data[pIdx + 1];
+                  const b = data[pIdx + 2];
+
+                  if (cy > 8 && isPeleHumana(r, g, b)) continue;
+
+                  const d = distFundo(r, g, b);
+                  const isClaroNeutro = (r > 200 && g > 200 && b > 200 && Math.abs(r - g) < 20);
+
+                  if (d < threshold || (isClaroNeutro && d < threshold * 1.5)) {
+                    isBg[nIdx] = 1;
+                    queue.push(nx, ny);
+                  }
+                }
+              }
+            }
+          }
+
+          const alphaMap = new Float32Array(w * h);
+          for (let i = 0; i < w * h; i++) {
+            alphaMap[i] = (isBg[i] === 1) ? 0.0 : 1.0;
+          }
+
+          const smoothAlpha = new Float32Array(w * h);
+          for (let y = 1; y < h - 1; y++) {
+            for (let x = 1; x < w - 1; x++) {
+              const idx = y * w + x;
+              if (alphaMap[idx] === 0.0) {
+                smoothAlpha[idx] = 0.0;
+                continue;
+              }
+              let soma = 0;
+              for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= 1; dx++) {
+                  soma += alphaMap[(y + dy) * w + (x + dx)];
+                }
+              }
+              smoothAlpha[idx] = soma / 9.0;
+            }
+          }
+
+          const fadeStart = Math.floor(h * 0.74);
+          const fadeLen = h - fadeStart;
+
+          for (let y = 0; y < h; y++) {
+            let fadeBusto = 1.0;
+            if (y > fadeStart) {
+              fadeBusto = Math.max(0, 1.0 - ((y - fadeStart) / fadeLen));
+              fadeBusto = Math.pow(fadeBusto, 1.3);
+            }
+
+            for (let x = 0; x < w; x++) {
+              const idx = y * w + x;
+              const pIdx = idx * 4;
+
+              let a = smoothAlpha[idx];
+              if (a === undefined) a = alphaMap[idx];
+              a *= fadeBusto;
+
+              data[pIdx + 3] = Math.round(a * 255);
+            }
+          }
+
+          ctx.putImageData(imgData, 0, 0);
+          const dataUrl = canvas.toDataURL('image/png');
+
+          fotoTransparenteCache.set(srcOriginal, dataUrl);
+          imgEl.src = dataUrl;
+          imgEl.dataset.treated = 'true';
+        } catch (err) {
+          console.warn('Erro ao suavizar foto:', err);
+        }
+      };
+    }
+
+    // Banco de Dados Estruturado dos Mandatos em Arinos
+    const MANDATOS_DATA = {
+      '2025-2028': {
+        legislatura: '16ª Legislatura',
+        periodo: '2025–2028 (Atual)',
+        prefeito: {
+          nome: 'Marcilio de Tonhão',
+          nomeCompleto: 'Marcilio Alisson Fonseca de Almeida',
+          partido: 'PODE',
+          numero: 20,
+          cor: '#00A3E0',
+          votos: 7124,
+          percentual: 65.80,
+          foto: '/dados/eleicoes/fotos/cand_2024_130002236872.jpg',
+          coligacao: 'Arinos no Caminho Certo (PODE / PSD / MDB / REPUBLICANOS)',
+          vice: 'Willian do Café (PSD)',
+          viceFoto: '/dados/eleicoes/fotos/vice_2024_130002236872.jpg',
+          situacao: 'Eleito • 2º Mandato Consecutivo'
+        },
+        financeiro: {
+          folhaVolume: 'R$ 74,90 Mi',
+          folhaQtd: '23.113 pagamentos',
+          contratosVolume: 'R$ 107,08 Mi',
+          contratosQtd: '529 contratos',
+          diariasVolume: 'R$ 1,82 Mi',
+          diariasQtd: '4.259 diárias',
+          despesasVolume: 'R$ 3,35 Mi'
+        },
+        vereadores: [
+          { nome: 'Dao Santana', partido: 'MDB', votos: 802, cor: '#00923F', foto: '/dados/eleicoes/fotos/cand_2024_130002237000.jpg' },
+          { nome: 'Netim Ornelas', partido: 'PODE', votos: 611, cor: '#00A3E0', foto: '/dados/eleicoes/fotos/cand_2024_130002236979.jpg' },
+          { nome: 'Gilmar Vendedor', partido: 'PSD', votos: 475, cor: '#FFCC00', foto: '/dados/eleicoes/fotos/cand_2024_130002236940.jpg' },
+          { nome: 'Noraldino Durães', partido: 'PSB', votos: 456, cor: '#ED1C24', foto: '/dados/eleicoes/fotos/cand_2024_130002236980.jpg' },
+          { nome: 'Fesson', partido: 'PSB', votos: 438, cor: '#ED1C24', foto: '/dados/eleicoes/fotos/cand_2024_130002236936.jpg' },
+          { nome: 'Junior de Totim', partido: 'PSD', votos: 396, cor: '#FFCC00', foto: '/dados/eleicoes/fotos/cand_2024_130002236952.jpg' },
+          { nome: 'Valdo Tora', partido: 'REPUBLICANOS', votos: 392, cor: '#2680EB', foto: '/dados/eleicoes/fotos/cand_2024_130002237019.jpg' },
+          { nome: 'Donizete Sagarana', partido: 'PODE', votos: 378, cor: '#00A3E0', foto: '/dados/eleicoes/fotos/cand_2024_130002236931.jpg' },
+          { nome: 'Cleuber Michirra', partido: 'UNIÃO', votos: 374, cor: '#00C0F3', foto: '/dados/eleicoes/fotos/cand_2024_130002236928.jpg' },
+          { nome: 'Matheus Philipe', partido: 'REPUBLICANOS', votos: 325, cor: '#2680EB', foto: '/dados/eleicoes/fotos/cand_2024_130002236972.jpg' },
+          { nome: 'Ferreira', partido: 'SOLIDARIEDADE', votos: 263, cor: '#F47920', foto: '/dados/eleicoes/fotos/cand_2024_130002236935.jpg' }
+        ]
+      },
+      '2021-2024': {
+        legislatura: '15ª Legislatura',
+        periodo: '2021–2024',
+        prefeito: {
+          nome: 'Marcilio de Tonhão',
+          nomeCompleto: 'Marcilio Alisson Fonseca de Almeida',
+          partido: 'PODE',
+          numero: 19,
+          cor: '#00A3E0',
+          votos: 6138,
+          percentual: 54.82,
+          foto: '/dados/eleicoes/fotos/cand_2020_130001099684.jpg',
+          coligacao: 'Todos Por Arinos (PODE / MDB / PSB / CIDADANIA)',
+          vice: 'Didiu de Zé Mário (MDB)',
+          situacao: 'Eleito • 1º Mandato'
+        },
+        financeiro: {
+          folhaVolume: 'R$ 122,65 Mi',
+          folhaQtd: '49.343 pagamentos',
+          contratosVolume: 'R$ 107,87 Mi',
+          contratosQtd: '565 contratos',
+          diariasVolume: 'R$ 2,36 Mi',
+          diariasQtd: '9.493 diárias',
+          despesasVolume: 'R$ 10,44 Mi'
+        },
+        vereadores: [
+          { nome: 'Gilmar Vendedor', partido: 'PSD', votos: 544, cor: '#FFCC00' },
+          { nome: 'Noraldino Durães', partido: 'PSB', votos: 492, cor: '#ED1C24' },
+          { nome: 'Cleuber Michirra', partido: 'DEM', votos: 476, cor: '#00C0F3' },
+          { nome: 'Dao Santana', partido: 'MDB', votos: 438, cor: '#00923F' },
+          { nome: 'Kátia Araújo', partido: 'CIDADANIA', votos: 418, cor: '#EC008C' },
+          { nome: 'Donizete Sagarana', partido: 'PODE', votos: 395, cor: '#00A3E0' },
+          { nome: 'Netim Ornelas', partido: 'PODE', votos: 384, cor: '#00A3E0' },
+          { nome: 'Valter da Farmácia', partido: 'DEM', votos: 371, cor: '#00C0F3' },
+          { nome: 'Edinho do Povo', partido: 'MDB', votos: 362, cor: '#00923F' },
+          { nome: 'Tonho da Ambulância', partido: 'PTB', votos: 340, cor: '#78716C' },
+          { nome: 'Geraldão de Sagarana', partido: 'SOLIDARIEDADE', votos: 312, cor: '#F47920' }
+        ]
+      },
+      '2017-2020': {
+        legislatura: '14ª Legislatura',
+        periodo: '2017–2020',
+        prefeito: {
+          nome: 'Carlos Alberto Recch Filho',
+          partido: 'PSDB',
+          cor: '#0047AB',
+          coligacao: 'Arinos Mais Forte',
+          vice: 'Valter',
+          situacao: 'Mandato Concluído'
+        },
+        financeiro: {
+          folhaVolume: 'R$ 73,71 Mi',
+          folhaQtd: '43.062 pagamentos',
+          contratosVolume: 'R$ 74,36 Mi',
+          contratosQtd: '627 contratos',
+          diariasVolume: 'R$ 1,60 Mi',
+          diariasQtd: '10.900 diárias',
+          despesasVolume: 'R$ 16,88 Mi'
+        },
+        vereadores: [
+          { nome: 'Valter da Farmácia', partido: 'PSDB', votos: 480, cor: '#0047AB' },
+          { nome: 'Gilmar Vendedor', partido: 'PMDB', votos: 462, cor: '#00923F' },
+          { nome: 'Cleuber Michirra', partido: 'DEM', votos: 412, cor: '#00C0F3' },
+          { nome: 'Noraldino Durães', partido: 'PSB', votos: 398, cor: '#ED1C24' },
+          { nome: 'Dao Santana', partido: 'PMDB', votos: 375, cor: '#00923F' },
+          { nome: 'Edinho do Povo', partido: 'PMDB', votos: 341, cor: '#00923F' },
+          { nome: 'Ferreira', partido: 'SD', votos: 320, cor: '#F47920' },
+          { nome: 'Tonho da Ambulância', partido: 'PTB', votos: 310, cor: '#78716C' },
+          { nome: 'Geraldão de Sagarana', partido: 'PRB', votos: 295, cor: '#2680EB' },
+          { nome: 'Kátia Araújo', partido: 'PPS', votos: 288, cor: '#EC008C' },
+          { nome: 'Preto do Ônibus', partido: 'PSDB', votos: 274, cor: '#0047AB' }
+        ]
+      },
+      '2013-2016': {
+        legislatura: '13ª Legislatura',
+        periodo: '2013–2016',
+        prefeito: {
+          nome: 'Carlos Alberto Recch Filho',
+          partido: 'PSDB',
+          cor: '#0047AB',
+          situacao: 'Mandato Concluído'
+        },
+        financeiro: {
+          folhaVolume: 'R$ 54,67 Mi',
+          folhaQtd: '38.420 pagamentos',
+          contratosVolume: 'Dados em Transição',
+          contratosQtd: '-',
+          diariasVolume: 'R$ 1,31 Mi',
+          diariasQtd: '5.094 diárias',
+          despesasVolume: 'R$ 8,13 Mi'
+        },
+        vereadores: [
+          { nome: 'Bancada Legislativa Composta por 11 Vereadores', partido: 'Diversos', votos: '-', cor: '#3B82F6' },
+          { nome: 'Presidência e Mesa Diretora Documentadas na Câmara Municipal', partido: 'Câmara', votos: '-', cor: '#10B981' }
+        ]
+      }
+    };
+
+    function selecionarMandato(chave) {
+      document.querySelectorAll('.mandato-btn').forEach(b => {
+        b.classList.remove('active', 'border-blue-500', 'bg-blue-600/30', 'text-blue-300', 'shadow-lg');
+        b.classList.add('border-slate-800', 'bg-slate-900/80', 'text-slate-300');
+      });
+
+      const btn = document.getElementById(`btn-mandato-${chave}`);
+      if (btn) {
+        btn.classList.add('active', 'border-blue-500', 'bg-blue-600/30', 'text-blue-300', 'shadow-lg');
+        btn.classList.remove('border-slate-800', 'bg-slate-900/80', 'text-slate-300');
+      }
+
+      const container = document.getElementById('mandato-detalhes-container');
+
+      if (chave === 'galeria-historica') {
+        document.getElementById('mandato-ativo-label').innerText = 'Galeria Histórica dos Prefeitos (1963–2012)';
+        container.innerHTML = `
+          <div class="glass-card p-6 md:p-8 rounded-3xl border border-amber-500/30 space-y-6">
+            <div>
+              <span class="text-xs font-mono uppercase text-amber-400 font-bold px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/30">Acervo Municipal Histórico</span>
+              <h2 class="text-2xl font-black text-white mt-2">Galeria dos Prefeitos de Arinos (Desde a Emancipação)</h2>
+              <p class="text-xs text-slate-300">Relação dos prefeitos que lideraram o município desde a 1ª Legislatura (1963) até 2012</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <span class="text-[11px] font-mono text-amber-400 font-bold">12ª Legislatura (2009–2012)</span>
+                <h3 class="font-extrabold text-white text-base">Darci Calabró de Oliveira</h3>
+                <p class="text-xs text-slate-400">Partido: PMDB • Vice: Valter</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <span class="text-[11px] font-mono text-amber-400 font-bold">11ª Legislatura (2005–2008)</span>
+                <h3 class="font-extrabold text-white text-base">Carlos Alberto Recch Filho</h3>
+                <p class="text-xs text-slate-400">Partido: PSDB • Vice: Darci Calabró</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <span class="text-[11px] font-mono text-amber-400 font-bold">10ª Legislatura (2001–2004)</span>
+                <h3 class="font-extrabold text-white text-base">Darci Calabró de Oliveira</h3>
+                <p class="text-xs text-slate-400">Partido: PMDB • Vice: Geraldo</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <span class="text-[11px] font-mono text-amber-400 font-bold">9ª Legislatura (1997–2000)</span>
+                <h3 class="font-extrabold text-white text-base">Darci Calabró de Oliveira</h3>
+                <p class="text-xs text-slate-400">Partido: PMDB</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <span class="text-[11px] font-mono text-amber-400 font-bold">8ª Legislatura (1993–1996)</span>
+                <h3 class="font-extrabold text-white text-base">Dr. Geraldo Magela</h3>
+                <p class="text-xs text-slate-400">Partido: PFL / PMDB</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <span class="text-[11px] font-mono text-amber-400 font-bold">7ª Legislatura (1989–1992)</span>
+                <h3 class="font-extrabold text-white text-base">Darci Calabró de Oliveira</h3>
+                <p class="text-xs text-slate-400">Partido: PMDB</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <span class="text-[11px] font-mono text-amber-400 font-bold">6ª Legislatura (1983–1988)</span>
+                <h3 class="font-extrabold text-white text-base">Gestão Municipal dos Anos 80</h3>
+                <p class="text-xs text-slate-400">Mandato de 6 anos conforme legislação eleitoral da época</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <span class="text-[11px] font-mono text-amber-400 font-bold">1ª a 5ª Legislatura (1963–1982)</span>
+                <h3 class="font-extrabold text-white text-base">Pioneiros da Emancipação</h3>
+                <p class="text-xs text-slate-400">Gestões fundadoras após o desmembramento de São Francisco</p>
+              </div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const m = MANDATOS_DATA[chave];
+      if (!m) return;
+
+      document.getElementById('mandato-ativo-label').innerText = `Exibindo: ${m.legislatura} (${m.periodo})`;
+
+      const pref = m.prefeito;
+      const fin = m.financeiro;
+
+      let htmlVereadores = '';
+      if (m.vereadores && m.vereadores.length > 0) {
+        m.vereadores.forEach(v => {
+          const cor = v.cor || '#3B82F6';
+          const fotoTag = v.foto 
+            ? `<div class="w-12 h-12 avatar-wrapper flex-shrink-0" style="--glow-color: ${cor}40; --aura-color: ${cor}30;">
+                 <img src="${v.foto}" onload="tratarFotoCandidato(this)" alt="${v.nome}" class="w-full h-full avatar-img">
+               </div>`
+            : `<div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-xs flex-shrink-0" style="background-color: ${cor};">${v.nome.substring(0, 2).toUpperCase()}</div>`;
+
+          htmlVereadores += `
+            <div class="p-3 rounded-xl flex items-center space-x-3 transition hover:scale-[1.02]" style="background: linear-gradient(135deg, ${cor}14 0%, rgba(15, 23, 42, 0.9) 100%); border: 1.5px solid ${cor}40; box-shadow: 0 4px 15px -4px ${cor}20;">
+              ${fotoTag}
+              <div class="min-w-0 flex-1">
+                <div class="font-bold text-white text-xs truncate">${v.nome}</div>
+                <div class="flex items-center space-x-1.5 mt-0.5 text-[11px] font-mono">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-black text-white shadow-sm" style="background-color: ${cor};">${v.partido}</span>
+                  ${v.votos !== '-' ? `<span class="font-bold text-[11px]" style="color: ${cor};">• ${v.votos} votos</span>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      container.innerHTML = `
+        <!-- Bloco Principal do Mandato: Executivo + Indicadores Financeiros -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Card do Prefeito Eleito no Mandato com Cores da Campanha -->
+          <div class="p-6 rounded-3xl space-y-5 lg:col-span-1 flex flex-col justify-between transition-all" style="border: 2px solid ${pref.cor}40; border-top: 5px solid ${pref.cor}; background: linear-gradient(160deg, ${pref.cor}18 0%, rgba(15, 23, 42, 0.95) 45%, rgba(10, 15, 26, 0.98) 100%); box-shadow: 0 12px 30px -10px ${pref.cor}35;">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono">
+                <span class="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-400 font-bold">${m.legislatura}</span>
+                <span class="text-slate-500">${m.periodo}</span>
+              </div>
+
+              <!-- Retrato do Prefeito -->
+              <div class="flex flex-col items-center text-center my-4">
+                <div class="w-28 h-28 avatar-wrapper mb-3 border-2 border-slate-800 shadow-xl" style="--glow-color: ${pref.cor}50; --aura-color: ${pref.cor}35;">
+                  <img src="${pref.foto || '/dados/eleicoes/fotos/cand_2024_130002236872.jpg'}" onload="tratarFotoCandidato(this)" alt="${pref.nome}" class="w-full h-full avatar-img">
+                </div>
+                <h3 class="text-xl font-extrabold text-white tracking-tight">${pref.nome}</h3>
+                <p class="text-xs text-slate-400 font-medium">${pref.nomeCompleto || ''}</p>
+                <div class="mt-2 inline-flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-bold text-white font-mono shadow" style="background-color: ${pref.cor};">
+                  <span>${pref.partido}</span>
+                  ${pref.numero ? `<span>• Nº ${pref.numero}</span>` : ''}
+                </div>
+                ${pref.votos ? `<p class="mt-2 text-xs font-mono font-bold text-emerald-400">${Number(pref.votos).toLocaleString('pt-BR')} votos (${pref.percentual}%)</p>` : ''}
+                ${pref.vice ? `<p class="mt-1 text-[11px] text-slate-400 font-medium">Vice: <strong class="text-slate-200">${pref.vice}</strong></p>` : ''}
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800/80 text-xs text-slate-400 space-y-1">
+              <div>Situação: <strong class="text-emerald-400">${pref.situacao || 'Mandato Concluído'}</strong></div>
+              ${pref.coligacao ? `<div class="truncate" title="${pref.coligacao}">Coligação: <span class="text-slate-300">${pref.coligacao}</span></div>` : ''}
+            </div>
+          </div>
+
+          <!-- Indicadores Financeiros Auditados no Mandato -->
+          <div class="lg:col-span-2 space-y-6">
+            <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-base font-extrabold text-white flex items-center space-x-2">
+                  <span>💰 Execução Orçamentária Auditada no Mandato</span>
+                </h3>
+                <span class="text-xs font-mono text-emerald-400">Banco Forense Master</span>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800">
+                  <p class="text-[10px] text-slate-400 uppercase font-mono">Folha Salarial</p>
+                  <p class="text-base md:text-lg font-black text-emerald-400 font-mono mt-1">${fin.folhaVolume}</p>
+                  <p class="text-[10px] text-slate-500 font-mono">${fin.folhaQtd}</p>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800">
+                  <p class="text-[10px] text-slate-400 uppercase font-mono">Contratos Públicos</p>
+                  <p class="text-base md:text-lg font-black text-blue-400 font-mono mt-1">${fin.contratosVolume}</p>
+                  <p class="text-[10px] text-slate-500 font-mono">${fin.contratosQtd}</p>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800">
+                  <p class="text-[10px] text-slate-400 uppercase font-mono">Despesas / Empenhos</p>
+                  <p class="text-base md:text-lg font-black text-purple-400 font-mono mt-1">${fin.despesasVolume}</p>
+                  <p class="text-[10px] text-slate-500 font-mono">Valores liquidados</p>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800">
+                  <p class="text-[10px] text-slate-400 uppercase font-mono">Diárias de Viagem</p>
+                  <p class="text-base md:text-lg font-black text-amber-400 font-mono mt-1">${fin.diariasVolume}</p>
+                  <p class="text-[10px] text-slate-500 font-mono">${fin.diariasQtd}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- A Bancada dos 11 Vereadores da Legislatura -->
+            <div class="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div>
+                  <h3 class="text-base font-extrabold text-white flex items-center space-x-2">
+                    <span>🏛️ A Bancada da Câmara Municipal (${m.legislatura})</span>
+                  </h3>
+                  <p class="text-xs text-slate-400">Os 11 parlamentares que compuseram o plenário neste período</p>
+                </div>
+                <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">11 Cadeiras</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                ${htmlVereadores}
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      `;
+    }
+
+    // Inicializa exibindo o mandato 2025-2028
+    selecionarMandato('2025-2028');
+  </script>
+</body>
+</html>

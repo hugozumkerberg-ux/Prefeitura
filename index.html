@@ -1,0 +1,2621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Executivo de Dados Públicos — Arinos / MG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.2);
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1380px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, rgba(31, 41, 55, 0.6) 0%, rgba(17, 24, 39, 0.8) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px 32px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .brand-text h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
+
+    .brand-text p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    /* Overall Progress Banner */
+    .progress-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .progress-banner { grid-template-columns: 1fr; }
+    }
+
+    .progress-info h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-bar-container {
+      height: 14px;
+      background: #1f2937;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 14px 0 10px 0;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #3b82f6);
+      border-radius: 8px;
+      transition: width 1s ease-in-out;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+    }
+
+    .progress-legend {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .summary-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: rgba(17, 24, 39, 0.7);
+      padding: 18px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+
+    .pill-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .pill-item strong {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .card-green::before { background: var(--accent); }
+    .card-blue::before { background: var(--accent-blue); }
+    .card-purple::before { background: var(--accent-purple); }
+    .card-amber::before { background: var(--warning); }
+
+    .kpi-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .kpi-value {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #fff;
+      margin-bottom: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Modules Table */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 14px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.6px;
+      background: rgba(31, 41, 55, 0.3);
+    }
+
+    td {
+      padding: 14px;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    tr:hover td {
+      background: rgba(31, 41, 55, 0.4);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .status-success { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-warning { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .status-secondary { background: rgba(107, 114, 128, 0.15); color: #9ca3af; border: 1px solid rgba(107, 114, 128, 0.3); }
+    .status-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    /* Log Explorer Styles */
+    .log-filter-btn {
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #9ca3af;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .log-filter-btn:hover {
+      background: #374151;
+      color: #fff;
+    }
+
+    .log-filter-btn.active {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: #3b82f6;
+      color: #60a5fa;
+    }
+
+    .log-filter-btn.active-success {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      color: #34d399;
+    }
+
+    .log-filter-btn.active-warning {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: #f59e0b;
+      color: #fbbf24;
+    }
+
+    .log-filter-btn.active-danger {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #f87171;
+    }
+
+    .log-search-bar {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      width: 100%;
+      max-width: 380px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .log-search-bar:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+
+    .log-table-wrap {
+      max-height: 480px;
+      overflow-y: auto;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      margin-top: 14px;
+      background: rgba(11, 15, 25, 0.6);
+    }
+
+    .log-table-wrap table {
+      margin-bottom: 0;
+    }
+
+    .log-table-wrap thead th {
+      position: sticky;
+      top: 0;
+      background: #111827;
+      z-index: 2;
+    }
+
+    .btn-hash {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #93c5fd;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-hash:hover {
+      background: #334155;
+      color: #fff;
+    }
+
+    .path-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #93c5fd;
+      background: rgba(30, 58, 138, 0.2);
+      padding: 3px 8px;
+      border-radius: 4px;
+      word-break: break-all;
+    }
+
+    /* 2 Columns Section */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .ranking-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.8);
+      font-size: 13px;
+    }
+
+    .ranking-item:last-child {
+      border-bottom: none;
+    }
+
+    .ranking-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: #1f2937;
+      border-radius: 3px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+
+    .ranking-bar {
+      height: 100%;
+      border-radius: 3px;
+    }
+
+    /* Roadmap Sprints */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .roadmap-card {
+      background: rgba(17, 24, 39, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px;
+      position: relative;
+    }
+
+    .roadmap-card.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+    }
+
+    .roadmap-step {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .roadmap-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .roadmap-list {
+      list-style: none;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .roadmap-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .roadmap-list li::before {
+      content: '✔';
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .roadmap-list.pending li::before {
+      content: '○';
+      color: var(--text-dim);
+    }
+
+    /* Terminal action box */
+    .terminal-box {
+      background: #030712;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      padding: 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #a7f3d0;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-copy {
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.2s;
+    }
+
+    .btn-copy:hover {
+      background: #374151;
+    }
+
+    /* ============================================================
+       BUSCADOR AVANÇADO GLOBAL (TRATAMENTO SEM ACENTOS & MULTI-MÓDULO)
+       ============================================================ */
+    .search-hero-card {
+      background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(13, 20, 36, 0.98) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 30px rgba(59, 130, 246, 0.15);
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(16px);
+    }
+
+    .search-hero-card::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .search-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .search-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .search-badge-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      color: #93c5fd;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      margin-top: 18px;
+      margin-bottom: 12px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 16px 54px 16px 52px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      background: rgba(11, 15, 25, 0.9);
+      border: 1.5px solid rgba(75, 85, 99, 0.6);
+      border-radius: 14px;
+      color: #ffffff;
+      outline: none;
+      transition: all 0.25s ease;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+    }
+
+    .search-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.35);
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    .search-icon-inside {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #9ca3af;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .search-clear-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    /* Pílulas de Atalhos Rápidos */
+    .quick-chips-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .quick-chips-label {
+      color: var(--text-dim);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-right: 4px;
+    }
+
+    .quick-chip {
+      background: rgba(31, 41, 55, 0.7);
+      border: 1px solid rgba(75, 85, 99, 0.5);
+      color: #e5e7eb;
+      padding: 4px 11px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .quick-chip:hover {
+      background: rgba(59, 130, 246, 0.25);
+      border-color: rgba(59, 130, 246, 0.5);
+      color: #93c5fd;
+      transform: translateY(-1px);
+    }
+
+    /* Painel de Resultados do Buscador */
+    .search-results-panel {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(55, 65, 81, 0.8);
+      display: none;
+      animation: fadeIn 0.25s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .search-cat-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .search-cat-tab {
+      background: rgba(31, 41, 55, 0.5);
+      border: 1px solid rgba(55, 65, 81, 0.6);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .search-cat-tab.active {
+      background: #2563eb;
+      border-color: #3b82f6;
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+    }
+
+    .search-cat-tab:hover:not(.active) {
+      background: rgba(55, 65, 81, 0.8);
+      color: #ffffff;
+    }
+
+    .search-cat-tab .tab-badge {
+      padding: 1px 6px;
+      border-radius: 10px;
+      font-size: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .search-results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 14px;
+    }
+
+    .search-item-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      border-radius: 14px;
+      padding: 16px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-col: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .search-item-card:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(59, 130, 246, 0.2);
+    }
+
+    .search-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .search-item-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .search-item-badge.warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .search-item-badge.success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .search-item-badge.info {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .search-item-badge.default {
+      background: rgba(55, 65, 81, 0.6);
+      color: #d1d5db;
+      border: 1px solid rgba(75, 85, 99, 0.6);
+    }
+
+    .search-item-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+
+    .search-item-title mark {
+      background: rgba(234, 179, 8, 0.3);
+      color: #fef08a;
+      padding: 0 3px;
+      border-radius: 3px;
+    }
+
+    .search-item-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .search-item-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(55, 65, 81, 0.5);
+      padding-top: 10px;
+      margin-top: 8px;
+    }
+
+    .search-item-valor {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: #34d399;
+    }
+
+    .search-item-action {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      color: #93c5fd;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .search-item-action:hover {
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    .search-empty-state {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+
+    /* ============================================================
+       TOOLTIPS ELEGANTES PARA O ELEITOR / CIDADÃO
+       ============================================================ */
+    .has-tooltip {
+      position: relative;
+      cursor: help;
+    }
+
+    .tooltip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      color: #93c5fd;
+      font-size: 10px;
+      font-weight: 700;
+      margin-left: 6px;
+      transition: all 0.2s;
+    }
+
+    .tooltip-icon:hover {
+      background: #2563eb;
+      color: #ffffff;
+      transform: scale(1.15);
+    }
+
+    .has-tooltip .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: #0f172a;
+      color: #f1f5f9;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.4;
+      white-space: normal;
+      width: max-content;
+      max-width: 280px;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      text-align: center;
+    }
+
+    .has-tooltip .tooltip-box::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: #0f172a transparent transparent transparent;
+    }
+
+    .has-tooltip:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ============================================================
+       CARDS DO ELEITOR (CLEAN & ALTO IMPACTO)
+       ============================================================ */
+    .citizen-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .citizen-kpi-card {
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .citizen-kpi-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .citizen-kpi-card.highlight-warning {
+      border-color: rgba(245, 158, 11, 0.4);
+      background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(30, 20, 10, 0.8) 100%);
+    }
+
+    .citizen-kpi-card.highlight-warning:hover {
+      border-color: #f59e0b;
+      box-shadow: 0 12px 30px rgba(245, 158, 11, 0.2);
+    }
+
+    .citizen-kpi-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .citizen-kpi-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+    }
+
+    .citizen-kpi-val {
+      font-size: 26px;
+      font-weight: 800;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      margin: 4px 0;
+      letter-spacing: -0.5px;
+    }
+
+    .citizen-kpi-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 14px;
+    }
+
+    .btn-citizen-popup {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      color: #93c5fd;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-citizen-popup:hover {
+      background: #2563eb;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* ============================================================
+       ESTRUTURA DE MODAIS / POPUPS
+       ============================================================ */
+    .voter-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .voter-modal-overlay.active {
+      display: flex;
+    }
+
+    .voter-modal-box {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+      animation: modalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      overflow: hidden;
+    }
+
+    @keyframes modalScaleIn {
+      from { opacity: 0; transform: scale(0.96) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .voter-modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .voter-modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .voter-modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #9ca3af;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <!-- Header Oficial do Cidadão -->
+    <header>
+      <div class="brand">
+        <div class="brand-icon">🏛️</div>
+        <div class="brand-text">
+          <h1>Painel do Eleitor • Arinos / MG</h1>
+          <p>Inteligência Cívica, Salários, Grandes Fornecedores, Conflitos de Interesse & Viagens</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="empresas.html" class="nav-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 9999px; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #ffffff; box-shadow: 0 0 20px rgba(37, 99, 235, 0.4); border: 1px solid #60a5fa; transition: all 0.2s;">
+          🏢 Empresas & Sócios ↗
+        </a>
+        <a href="vereadores.html" class="nav-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 9999px; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; box-shadow: 0 0 20px rgba(14, 165, 233, 0.4); border: 1px solid #38bdf8; transition: all 0.2s;">
+          👥 Vereadores (SAPL) ↗
+        </a>
+        <a href="eleicoes.html" class="nav-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 9999px; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); border: 1px solid #818cf8; transition: all 0.2s;">
+          🗳️ Eleições TSE ↗
+        </a>
+        <a href="mandatos.html" class="nav-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 9999px; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: #ffffff; border: 1px solid #a78bfa; transition: all 0.2s;">
+          📜 Mandatos ↗
+        </a>
+        <a href="cidade.html" class="nav-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 9999px; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; border: 1px solid #fbbf24; transition: all 0.2s;">
+          📍 Turismo & História ↗
+        </a>
+        <a href="tabelas.html" class="nav-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 9999px; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: 1px solid #34d399; transition: all 0.2s;">
+          📊 Tabelas (240k) ↗
+        </a>
+        <button onclick="openVoterModal('modalAuditoriaTecnica')" class="nav-btn" style="padding: 6px 14px; font-size: 12px; font-weight: 700; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; border-radius: 9999px; cursor: pointer; transition: all 0.2s;">
+          ⚙️ Auditoria & Logs (Pop-up)
+        </button>
+      </div>
+    </header>
+
+    <!-- ============================================================
+         BUSCADOR AVANÇADO GLOBAL (TRATAMENTO SEM ACENTOS & MULTI-MÓDULO)
+         ============================================================ -->
+    <section class="search-hero-card" id="buscador-global-hero">
+      <div class="search-header-flex">
+        <div>
+          <div class="search-title">
+            <span>🔎 O Que Você Quer Saber Sobre Arinos?</span>
+          </div>
+          <p class="search-subtitle">
+            Digite nomes de servidores, políticos, secretários, empresas contratadas, obras, leis ou pontos turísticos.
+          </p>
+        </div>
+        <div class="search-badge-tip has-tooltip">
+          <span>✨ Busca inteligente sem acento</span>
+          <span class="tooltip-icon">?</span>
+          <div class="tooltip-box">
+            Você não precisa digitar acentos. Busque por "saude", "unai", "duraes", "roberto" e o sistema encontrará tudo instantaneamente.
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Input -->
+      <div class="search-input-wrapper">
+        <span class="search-icon-inside">🔍</span>
+        <input 
+          type="text" 
+          id="global-search-input" 
+          class="search-input" 
+          placeholder="Digite qualquer termo (ex: saude, unai, roberto sales, duraes, motorista, vieira, boi preto)..." 
+          autocomplete="off"
+          oninput="handleGlobalSearch(this.value)"
+        >
+        <button id="global-search-clear" class="search-clear-btn" onclick="clearGlobalSearch()" title="Limpar busca (Esc)">
+          ✕
+        </button>
+      </div>
+
+      <!-- Pílulas de Atalhos Rápidos -->
+      <div class="quick-chips-wrapper">
+        <span class="quick-chips-label">Atalhos do Eleitor:</span>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('saude')">
+          <span>🏥 Saúde & Hospital</span>
+          <div class="tooltip-box">Contratos, servidores da saúde e nova maternidade municipal.</div>
+        </button>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('unai')">
+          <span>📍 Unaí & Regional</span>
+          <div class="tooltip-box">Cooperativa Unaí (R$ 19 Mi) e 29 viagens oficiais para a GRS Unaí.</div>
+        </button>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('duraes')">
+          <span>🏢 Durães e Azevedo</span>
+          <div class="tooltip-box">Empresa contratada por R$ 12,8 Mi e vereadores de Arinos.</div>
+        </button>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('soraya')">
+          <span>⚠️ Soraya (Vínculo)</span>
+          <div class="tooltip-box">Secretária Municipal de Saúde e sócia de clínica contratada pelo município.</div>
+        </button>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('roberto sales')">
+          <span>👔 Roberto Sales</span>
+          <div class="tooltip-box">Ex-prefeito municipal: holerites e 286 viagens oficiais a Brasília e BH.</div>
+        </button>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('motorista')">
+          <span>🚗 Motoristas</span>
+          <div class="tooltip-box">Cargos operacionais com grande volume de viagens de apoio e ambulâncias.</div>
+        </button>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('boi preto')">
+          <span>🌊 Cachoeira Boi Preto</span>
+          <div class="tooltip-box">Ponto turístico a 74,3 km do centro com 65m de queda livre.</div>
+        </button>
+      </div>
+
+      <!-- Painel de Resultados Dinâmicos -->
+      <div id="search-results-panel" class="search-results-panel">
+        <div class="search-cat-tabs" id="search-cat-tabs"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 12px; color: var(--text-muted);">
+          <span>Encontrados <strong id="search-total-count" style="color: #ffffff;">0</strong> registros para "<span id="search-query-display" style="color: #60a5fa;"></span>"</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px;">Tempo de busca: <span id="search-time-display" style="color: #34d399;">0ms</span></span>
+        </div>
+        <div id="search-results-grid" class="search-results-grid"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         OS 5 CARDS ESSENCIAIS DO ELEITOR (CLEAN, TOOLTIPS & POPUPS)
+         ============================================================ -->
+    <div style="margin-bottom: 14px;">
+      <h2 style="font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.3px; display: flex; align-items: center; gap: 8px;">
+        <span>🎯 O Que Todo Eleitor e Cidadão de Arinos Deve Saber</span>
+        <span class="has-tooltip">
+          <span class="tooltip-icon">?</span>
+          <div class="tooltip-box">
+            Resumo dos 5 grandes pilares de dinheiro público e poder político municipal. Clique em "Ver Detalhes" para abrir a explicação em pop-up.
+          </div>
+        </span>
+      </h2>
+      <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+        Informações consolidadas com base no Portal da Transparência, Receita Federal, TSE e Câmara Municipal.
+      </p>
+    </div>
+
+    <div class="citizen-kpi-grid">
+      
+      <!-- Card 1: Salários & Folha -->
+      <div class="citizen-kpi-card">
+        <div>
+          <div class="citizen-kpi-top">
+            <span class="citizen-kpi-label has-tooltip">
+              💰 Salários da Prefeitura
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-box">Total acumulado pago a servidores, secretários e prefeitos. O maior salário registrado passa de R$ 23.500/mês.</div>
+            </span>
+            <span style="font-size: 18px;">💵</span>
+          </div>
+          <div class="citizen-kpi-val" style="color: #34d399;">R$ 279,7 Mi</div>
+          <p class="citizen-kpi-sub">
+            Prefeito ganha <strong>R$ 14.424/mês</strong>. Secretários: <strong>R$ 7.144/mês</strong>. 5.357 servidores rastreados.
+          </p>
+        </div>
+        <button onclick="openVoterModal('modalSalarios')" class="btn-citizen-popup">
+          👁️ Ver Detalhes dos Salários (Pop-up)
+        </button>
+      </div>
+
+      <!-- Card 2: Empresas & Fornecedores -->
+      <div class="citizen-kpi-card">
+        <div>
+          <div class="citizen-kpi-top">
+            <span class="citizen-kpi-label has-tooltip">
+              🏢 Grandes Fornecedores
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-box">As empresas que mais faturam prestando serviços e vendendo produtos para a Prefeitura de Arinos.</div>
+            </span>
+            <span style="font-size: 18px;">🏗️</span>
+          </div>
+          <div class="citizen-kpi-val" style="color: #60a5fa;">R$ 321,8 Mi</div>
+          <p class="citizen-kpi-sub">
+            120 grandes contratados auditados. A maior contratada recebeu mais de <strong>R$ 19,08 Milhões</strong>.
+          </p>
+        </div>
+        <button onclick="openVoterModal('modalEmpresas')" class="btn-citizen-popup">
+          👁️ Ver Top Empresas (Pop-up)
+        </button>
+      </div>
+
+      <!-- Card 3: Alertas de Vínculos / Conflitos -->
+      <div class="citizen-kpi-card highlight-warning">
+        <div>
+          <div class="citizen-kpi-top">
+            <span class="citizen-kpi-label has-tooltip" style="color: #fbbf24;">
+              ⚠️ Vínculos de Sócios
+              <span class="tooltip-icon" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">?</span>
+              <div class="tooltip-box">Cruzamento da Receita Federal: identificamos sócios de empresas contratadas que são Secretários, Diretores ou Candidatos.</div>
+            </span>
+            <span style="font-size: 18px;">🚨</span>
+          </div>
+          <div class="citizen-kpi-val" style="color: #fbbf24;">11 Casos</div>
+          <p class="citizen-kpi-sub">
+            Inclui a Secretária de Saúde, Chefe de Estradas e Diretores Clínicos sócios de firmas fornecedoras.
+          </p>
+        </div>
+        <button onclick="openVoterModal('modalAlertas')" class="btn-citizen-popup" style="background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.5); color: #fbbf24;">
+          👁️ Ver Casos de Vínculo (Pop-up)
+        </button>
+      </div>
+
+      <!-- Card 4: Viagens & Diárias -->
+      <div class="citizen-kpi-card">
+        <div>
+          <div class="citizen-kpi-top">
+            <span class="citizen-kpi-label has-tooltip">
+              ✈️ Gastos com Diárias
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-box">Valores pagos para custear transporte, alimentação e estada em viagens oficiais fora de Arinos.</div>
+            </span>
+            <span style="font-size: 18px;">🗺️</span>
+          </div>
+          <div class="citizen-kpi-val" style="color: #a78bfa;">R$ 7,10 Mi</div>
+          <p class="citizen-kpi-sub">
+            29.746 viagens oficiais. O Prefeito utilizou <strong>R$ 433.704</strong> em 604 viagens (ticket médio de R$ 718).
+          </p>
+        </div>
+        <button onclick="openVoterModal('modalViagens')" class="btn-citizen-popup">
+          👁️ Ver Quem Mais Viajou (Pop-up)
+        </button>
+      </div>
+
+      <!-- Card 5: Vereadores & Câmara -->
+      <div class="citizen-kpi-card">
+        <div>
+          <div class="citizen-kpi-top">
+            <span class="citizen-kpi-label has-tooltip">
+              🏛️ Atuação da Câmara
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-box">Produção legislativa oficial de Arinos extraída do sistema SAPL / Interlegis do Senado.</div>
+            </span>
+            <span style="font-size: 18px;">📜</span>
+          </div>
+          <div class="citizen-kpi-val" style="color: #38bdf8;">722 Leis</div>
+          <p class="citizen-kpi-sub">
+            11 vereadores em exercício. Saiba quantos projetos de lei e indicações cada parlamentar apresentou.
+          </p>
+        </div>
+        <button onclick="openVoterModal('modalVereadores')" class="btn-citizen-popup">
+          👁️ Ver Atuação dos Vereadores (Pop-up)
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ============================================================
+         PAINÉIS VISUAIS LIMPOS: FOLHA & FORNECEDORES (SEM POLUIÇÃO)
+         ============================================================ -->
+    <div class="grid-2col" style="margin-bottom: 24px;">
+      
+      <!-- Top Cargos Salários -->
+      <div class="section-card" style="margin-bottom: 0;">
+        <div class="section-title">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span>💼 Maiores Categorias de Salários</span>
+            <span class="has-tooltip">
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-box">Categorias profissionais com maior volume financeiro acumulado na folha de pagamento municipal.</div>
+            </span>
+          </div>
+          <span style="font-size: 12px; color: #34d399; font-weight: 700;">R$ 279,7 Mi</span>
+        </div>
+        <div id="listaCargos"></div>
+        <div style="margin-top: 14px; text-align: right;">
+          <a href="/tabelas.html" target="_blank" class="nav-btn" style="text-decoration: none; font-size: 11px; padding: 4px 12px;">Abrir Tabela Completa de Servidores ↗</a>
+        </div>
+      </div>
+
+      <!-- Top Credores Despesas -->
+      <div class="section-card" style="margin-bottom: 0;">
+        <div class="section-title">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span>🏢 Maiores Empresas Contratadas</span>
+            <span class="has-tooltip">
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-box">Empresas que mais receberam recursos públicos por meio de contratos e empenhos de despesas.</div>
+            </span>
+          </div>
+          <span style="font-size: 12px; color: #60a5fa; font-weight: 700;">R$ 321,8 Mi</span>
+        </div>
+        <div id="listaCredores"></div>
+        <div style="margin-top: 14px; text-align: right;">
+          <a href="/empresas.html" target="_blank" class="nav-btn" style="text-decoration: none; font-size: 11px; padding: 4px 12px;">Abrir Dossiê Completo de Empresas ↗</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Top Diárias Limpo -->
+    <div class="section-card" style="margin-bottom: 24px;">
+      <div class="section-title">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span>✈️ Quem Mais Recebeu Diárias de Viagem em Arinos</span>
+          <span class="has-tooltip">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">Servidores públicos que mais viajaram com verba de diária paga pela prefeitura municipal.</div>
+          </span>
+        </div>
+        <span style="font-size: 12px; color: #fbbf24; font-weight: 700;">29.746 Viagens Oficiais</span>
+      </div>
+      <div id="listaDiarias" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;"></div>
+      <div style="margin-top: 14px; text-align: right;">
+        <button onclick="openVoterModal('modalViagens')" class="btn-citizen-popup" style="width: auto;">
+          👁️ Ver Análise Completa de Viagens (Pop-up)
+        </button>
+      </div>
+    </div>
+
+    <!-- Destaque de Integridade e Fiscalização -->
+    <div class="section-card" style="border: 1px solid rgba(245, 158, 11, 0.4); background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(30, 20, 10, 0.9) 100%); margin-bottom: 24px;">
+      <div class="section-title">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #fbbf24;">⚖️ Fiscalização do Eleitor: Conflitos de Interesse Detectados</span>
+          <span class="has-tooltip">
+            <span class="tooltip-icon" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">?</span>
+            <div class="tooltip-box">A Lei de Licitações (Lei 14.133/21) veda a participação de servidores públicos e dirigentes do órgão em contratos do município.</div>
+          </span>
+        </div>
+        <span class="status-badge status-warning">11 EMPRESAS ENCONTRADAS</span>
+      </div>
+
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+        O cruzamento dos dados do CNPJ na <strong>Receita Federal</strong> com a folha de servidores municipais revelou empresas contratadas por Arinos cujos sócios são autoridades locais:
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+        
+        <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 14px;">
+          <span style="font-size: 10px; font-weight: 700; color: #fbbf24; text-transform: uppercase;">Saúde Pública • R$ 592k</span>
+          <h4 style="font-size: 14px; font-weight: 700; color: #fff; margin: 4px 0;">Clínica Vieira Magalhães LTDA</h4>
+          <p style="font-size: 12px; color: var(--text-muted); line-height: 1.4;">
+            Sócia: <strong>Soraya Almeida Magalhães Vieira</strong> (Secretária Municipal de Saúde de Arinos) e <strong>Vicente Vieira Neto</strong> (Diretor Clínico).
+          </p>
+        </div>
+
+        <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 14px;">
+          <span style="font-size: 10px; font-weight: 700; color: #fbbf24; text-transform: uppercase;">Peças & Mecânica • R$ 2,96 Mi</span>
+          <h4 style="font-size: 14px; font-weight: 700; color: #fff; margin: 4px 0;">Santos e Marins Auto Peças</h4>
+          <p style="font-size: 12px; color: var(--text-muted); line-height: 1.4;">
+            Sócia: <strong>Silésia Moreira dos Santos</strong> (Chefe de Setor de Administração e Desenvolvimento de Pessoal da Prefeitura).
+          </p>
+        </div>
+
+        <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 14px;">
+          <span style="font-size: 10px; font-weight: 700; color: #fbbf24; text-transform: uppercase;">Eventos & Estradas • R$ 601k</span>
+          <h4 style="font-size: 14px; font-weight: 700; color: #fff; margin: 4px 0;">M & S Produções e Eventos</h4>
+          <p style="font-size: 12px; color: var(--text-muted); line-height: 1.4;">
+            Sócio: <strong>Manoel Lopes da Rocha</strong> (Chefe do Setor de Estradas Municipais da Prefeitura de Arinos).
+          </p>
+        </div>
+
+      </div>
+
+      <div style="margin-top: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <span style="font-size: 11px; color: var(--text-dim);">Fontes Oficiais: Receita Federal do Brasil / SIAP ADPMNET</span>
+        <button onclick="openVoterModal('modalAlertas')" class="btn-citizen-popup" style="background: #f59e0b; color: #000; font-weight: 700; width: auto; border: none;">
+          Ver Todos os 11 Casos no Pop-up ↗
+        </button>
+      </div>
+    </div>
+
+    <!-- Rodapé Limpo do Cidadão -->
+    <footer style="margin-top: 30px; padding: 24px 0; border-top: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <p style="font-size: 13px; font-weight: 700; color: #fff;">Portal da Transparência & Controle Social — Arinos / MG</p>
+        <p style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">
+          Dados públicos coletados e auditados de fontes governamentais abertas (IBGE 3104502).
+        </p>
+      </div>
+      <button onclick="openVoterModal('modalAuditoriaTecnica')" class="nav-btn" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; font-weight: 700; font-size: 12px; padding: 8px 16px; border-radius: 9999px; cursor: pointer;">
+        🛡️ Central de Auditoria Pericial & Logs de Rede (Pop-up)
+      </button>
+    </footer>
+
+    <!-- ============================================================
+         MODAIS / POPUPS INTERATIVOS DO CIDADÃO & AUDITORIA TÉCNICA
+         ============================================================ -->
+
+    <!-- Modal 1: Salários & Folha -->
+    <div id="modalSalarios" class="voter-modal-overlay" onclick="if(event.target===this) closeVoterModal('modalSalarios')">
+      <div class="voter-modal-box">
+        <div class="voter-modal-header">
+          <div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #fff;">💰 Dossiê da Folha de Pagamento & Salários</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">Série histórica 2013 a 2026 • 153.938 contracheques auditados</p>
+          </div>
+          <button class="modal-close-btn" onclick="closeVoterModal('modalSalarios')">✕</button>
+        </div>
+        <div class="voter-modal-body" style="font-size: 13px; color: #cbd5e1; space-y: 14px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px;">
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 10px;">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Total Gasto c/ Pessoal</span>
+              <strong style="font-size: 18px; color: #34d399; font-family: 'JetBrains Mono', monospace;">R$ 279,7 Mi</strong>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 10px;">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Salário do Prefeito</span>
+              <strong style="font-size: 18px; color: #fff; font-family: 'JetBrains Mono', monospace;">R$ 14.424,32</strong>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 10px;">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Salário de Secretários</span>
+              <strong style="font-size: 18px; color: #fff; font-family: 'JetBrains Mono', monospace;">R$ 7.144,92</strong>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 10px;">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Maior Salário Rastreado</span>
+              <strong style="font-size: 18px; color: #fbbf24; font-family: 'JetBrains Mono', monospace;">R$ 23.500,00</strong>
+            </div>
+          </div>
+          <p style="margin-bottom: 12px; line-height: 1.5;">
+            Os maiores volumes da folha são alocados em <strong>Professores (PI e PII)</strong>, <strong>Ajudantes de Serviços Públicos</strong>, <strong>Agentes de Saúde</strong> e <strong>Serventes Escolares</strong>, que sustentam as escolas e unidades básicas de atendimento no município.
+          </p>
+          <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px;">
+            <h4 style="font-size: 13px; font-weight: 700; color: #60a5fa; margin-bottom: 6px;">🔍 Como consultar qualquer servidor?</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Você pode usar o buscador no topo digitando o nome do servidor, ou abrir o <strong>Explorador de Tabelas Master</strong> para filtrar salários mês a mês.
+            </p>
+          </div>
+        </div>
+        <div class="voter-modal-footer">
+          <span style="font-size: 11px; color: var(--text-dim);">Fonte: Folha de Pagamento Oficial ADPMNET</span>
+          <a href="/tabelas.html" target="_blank" class="btn-citizen-popup" style="width: auto;">Abrir Explorador de Tabelas ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 2: Empresas & Fornecedores -->
+    <div id="modalEmpresas" class="voter-modal-overlay" onclick="if(event.target===this) closeVoterModal('modalEmpresas')">
+      <div class="voter-modal-box">
+        <div class="voter-modal-header">
+          <div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #fff;">🏢 Maiores Fornecedores & Contratos Públicos</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">Auditoria com dados do CNPJ na Receita Federal do Brasil</p>
+          </div>
+          <button class="modal-close-btn" onclick="closeVoterModal('modalEmpresas')">✕</button>
+        </div>
+        <div class="voter-modal-body" style="font-size: 13px; color: #cbd5e1;">
+          <p style="margin-bottom: 14px; line-height: 1.5;">
+            Foram identificadas <strong>120 grandes empresas</strong> contratadas pelo município, totalizando mais de <strong>R$ 321,8 Milhões</strong> em compras públicas, obras de infraestrutura, locação de veículos, merenda escolar e assessoria.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 10px 14px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <span><strong>1. Cooperativa Agropecuária de Unaí (CAPUL)</strong> — Combustíveis e insumos</span>
+              <strong style="color: #60a5fa; font-family: 'JetBrains Mono', monospace;">R$ 19,08 Mi</strong>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 10px 14px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <span><strong>2. Sudeste Brasil Cooperativa de Transportes</strong> — Transporte escolar</span>
+              <strong style="color: #60a5fa; font-family: 'JetBrains Mono', monospace;">R$ 19,05 Mi</strong>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 10px 14px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <span><strong>3. Prime Consultoria e Assessoria Empresarial</strong> — Gestão e terceirização</span>
+              <strong style="color: #60a5fa; font-family: 'JetBrains Mono', monospace;">R$ 17,93 Mi</strong>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 10px 14px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <span><strong>4. União Cooperativa de Transportes</strong> — Linhas escolares e locação</span>
+              <strong style="color: #60a5fa; font-family: 'JetBrains Mono', monospace;">R$ 16,38 Mi</strong>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 10px 14px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <span><strong>5. Durães e Azevedo LTDA</strong> — Comércio varejista e fornecimento geral</span>
+              <strong style="color: #60a5fa; font-family: 'JetBrains Mono', monospace;">R$ 12,83 Mi</strong>
+            </div>
+          </div>
+        </div>
+        <div class="voter-modal-footer">
+          <span style="font-size: 11px; color: var(--text-dim);">Para consultar sócios e contratos de cada empresa:</span>
+          <a href="/empresas.html" target="_blank" class="btn-citizen-popup" style="width: auto;">Abrir Painel de Empresas & Sócios ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 3: Alertas de Conflito de Interesses -->
+    <div id="modalAlertas" class="voter-modal-overlay" onclick="if(event.target===this) closeVoterModal('modalAlertas')">
+      <div class="voter-modal-box">
+        <div class="voter-modal-header" style="border-bottom-color: rgba(245, 158, 11, 0.3);">
+          <div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #fbbf24;">⚠️ 11 Alertas de Vínculos Societários Identificados</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">Sócios de fornecedores públicos que ocupam ou disputaram cargos municipais</p>
+          </div>
+          <button class="modal-close-btn" onclick="closeVoterModal('modalAlertas')">✕</button>
+        </div>
+        <div class="voter-modal-body" style="font-size: 13px; color: #cbd5e1; space-y: 12px;">
+          <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 12px; margin-bottom: 14px;">
+            <p style="font-size: 12px; color: #fbbf24; line-height: 1.4;">
+              <strong>Importante para o Eleitor:</strong> A auditoria cruzou os nomes do Quadro Societário (QSA da Receita Federal) com a folha de pagamento e a lista do TSE de Arinos.
+            </p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 8px;">
+              <strong style="color: #fff;">1. Clínica Vieira Magalhães LTDA (R$ 592.963,50)</strong>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                Sócia: <strong>Soraya Almeida Magalhães Vieira</strong> (Secretária Municipal de Saúde) e <strong>Vicente Vieira Neto</strong> (Diretor Clínico).
+              </div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 8px;">
+              <strong style="color: #fff;">2. Santos e Marins Auto Peças LTDA (R$ 2.965.681,16)</strong>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                Sócia: <strong>Silésia Moreira dos Santos</strong> (Chefe de Setor de Administração e Desenvolvimento de Pessoal).
+              </div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 8px;">
+              <strong style="color: #fff;">3. HWS Empreendimentos LTDA (R$ 1.746.568,62)</strong>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                Sócio: <strong>Helio Soares Lima</strong> (Candidato a Vereador em 2024 e servidor municipal).
+              </div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 8px;">
+              <strong style="color: #fff;">4. M & S Produções e Eventos LTDA (R$ 601.000,00)</strong>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                Sócio: <strong>Manoel Lopes da Rocha</strong> (Chefe do Setor de Estradas Municipais).
+              </div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 8px;">
+              <strong style="color: #fff;">5. Med Center Arinos LTDA (R$ 1.418.722,17)</strong>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                Sócios: <strong>Melanie Malek Madureira</strong> e <strong>Vicente Vieira Neto</strong> (Diretores Clínicos).
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="voter-modal-footer">
+          <span style="font-size: 11px; color: var(--text-dim);">Auditoria com base em dados públicos do CNPJ</span>
+          <a href="/empresas.html" target="_blank" class="btn-citizen-popup" style="background: #f59e0b; color: #000; font-weight: 700; width: auto; border: none;">Examinar Dossiê Completo de Alertas ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 4: Viagens & Diárias -->
+    <div id="modalViagens" class="voter-modal-overlay" onclick="if(event.target===this) closeVoterModal('modalViagens')">
+      <div class="voter-modal-box">
+        <div class="voter-modal-header">
+          <div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #fff;">✈️ Gastos com Diárias & Viagens Oficiais</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">29.746 viagens registradas de 2013 a 2026 (Total: R$ 7.097.440,34)</p>
+          </div>
+          <button class="modal-close-btn" onclick="closeVoterModal('modalViagens')">✕</button>
+        </div>
+        <div class="voter-modal-body" style="font-size: 13px; color: #cbd5e1;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px;">
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 10px;">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Diárias do Prefeito</span>
+              <strong style="font-size: 18px; color: #38bdf8; font-family: 'JetBrains Mono', monospace;">R$ 433.704,90</strong>
+              <small style="color: var(--text-dim); display: block; font-size: 10px;">604 viagens (Média R$ 718)</small>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 10px;">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Diárias de Secretários</span>
+              <strong style="font-size: 18px; color: #a78bfa; font-family: 'JetBrains Mono', monospace;">R$ 454.927,34</strong>
+              <small style="color: var(--text-dim); display: block; font-size: 10px;">1.103 viagens (Média R$ 412)</small>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 10px;">
+              <span style="font-size: 11px; color: var(--text-muted); display: block;">Demais Servidores</span>
+              <strong style="font-size: 18px; color: #34d399; font-family: 'JetBrains Mono', monospace;">R$ 6.200.905,39</strong>
+              <small style="color: var(--text-dim); display: block; font-size: 10px;">28.013 viagens (Média R$ 221)</small>
+            </div>
+          </div>
+          <p style="margin-bottom: 12px; line-height: 1.5;">
+            Os destinos mais frequentes são <strong>Belo Horizonte</strong> (para convênios estaduais), <strong>Brasília</strong> (ministérios federais) e <strong>Unaí</strong> (Gerência Regional de Saúde).
+          </p>
+        </div>
+        <div class="voter-modal-footer">
+          <span style="font-size: 11px; color: var(--text-dim);">Consulte qualquer uma das 29.746 viagens:</span>
+          <a href="/empresas.html" target="_blank" class="btn-citizen-popup" style="width: auto;">Abrir Painel de Viagens ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 5: Vereadores & Câmara -->
+    <div id="modalVereadores" class="voter-modal-overlay" onclick="if(event.target===this) closeVoterModal('modalVereadores')">
+      <div class="voter-modal-box">
+        <div class="voter-modal-header">
+          <div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #fff;">🏛️ O Que os Vereadores de Arinos Fizeram?</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">Dados extraídos diretamente do sistema SAPL / Interlegis da Câmara</p>
+          </div>
+          <button class="modal-close-btn" onclick="closeVoterModal('modalVereadores')">✕</button>
+        </div>
+        <div class="voter-modal-body" style="font-size: 13px; color: #cbd5e1;">
+          <p style="margin-bottom: 14px; line-height: 1.5;">
+            Foram catalogadas <strong>722 matérias legislativas</strong> (projetos de lei, indicações de obras e requerimentos) e o histórico de <strong>111 vereadores</strong> que já passaram pela Câmara Municipal de Arinos ao longo de 16 legislaturas.
+          </p>
+          <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 14px; border-radius: 10px;">
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Você pode ver a lista dos 11 vereadores em exercício, suas fotos oficiais, contato telefônico, e-mail institucional e a relação completa de todas as leis que cada um propôs.
+            </p>
+          </div>
+        </div>
+        <div class="voter-modal-footer">
+          <span style="font-size: 11px; color: var(--text-dim);">Poder Legislativo de Arinos / MG</span>
+          <a href="/vereadores.html" target="_blank" class="btn-citizen-popup" style="width: auto;">Ver Painel de Atuação dos Vereadores ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 6: Central de Auditoria Técnica Forense & Logs de Rede (TUDO PRESERVADO AQUI) -->
+    <div id="modalAuditoriaTecnica" class="voter-modal-overlay" onclick="if(event.target===this) closeVoterModal('modalAuditoriaTecnica')">
+      <div class="voter-modal-box" style="max-width: 1100px; max-height: 92vh;">
+        <div class="voter-modal-header">
+          <div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #60a5fa; display: flex; align-items: center; gap: 8px;">
+              <span>🛡️ Central de Engenharia de Dados & Auditoria Forense</span>
+              <span class="status-badge status-success" style="font-size: 10px;">PROVA TÉCNICA RFC 6234</span>
+            </h3>
+            <p style="font-size: 12px; color: var(--text-muted);">Cadeia de custódia, hashes criptográficos SHA-256 e logs de requisições de rede HTTP</p>
+          </div>
+          <button class="modal-close-btn" onclick="closeVoterModal('modalAuditoriaTecnica')">✕</button>
+        </div>
+
+        <div class="voter-modal-body" style="font-size: 12px;">
+          
+          <!-- Overall Progress Banner -->
+          <div class="progress-banner" style="margin-bottom: 20px;">
+            <div class="progress-info">
+              <h2>
+                <span>Status da Pipeline de Coleta:</span>
+                <span style="color: #10b981;" id="txtProgressoGeral">50% CONCLUÍDO</span>
+              </h2>
+              <p style="font-size: 12px; color: var(--text-muted);">
+                Prefeitura Municipal estruturada. Fundação de Saúde em fila de execução.
+              </p>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="barProgressoGeral" style="width: 50%;"></div>
+              </div>
+            </div>
+            <div class="summary-pills">
+              <div class="pill-item">
+                <span>Status Prefeitura:</span>
+                <strong style="color: #34d399;">100% ESTRUTURADO</strong>
+              </div>
+              <div class="pill-item">
+                <span>Série Coberta:</span>
+                <strong>2013 a 2026</strong>
+              </div>
+              <div class="pill-item">
+                <span>Atualizado em:</span>
+                <strong id="lblAtualizado">Hoje</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mini KPIs de Rede -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 16px;">
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 8px;">
+              <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Consultas de Auditoria</div>
+              <div style="font-size: 20px; font-weight: 800; color: #60a5fa; font-family: 'JetBrains Mono', monospace;" id="liveConsultasTotal">627+</div>
+              <div style="font-size: 10px; color: #34d399;" id="liveConsultasSucesso">✔ Gravadas c/ SHA-256</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 8px;">
+              <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Meses em Disco</div>
+              <div style="font-size: 20px; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace;" id="liveMesesBaixados">165 meses</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Série completa</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 8px;">
+              <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Holerites Detalhados</div>
+              <div style="font-size: 20px; font-weight: 800; color: #fbbf24; font-family: 'JetBrains Mono', monospace;" id="liveHoleritesDet">133.441+</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Rubricas salariais</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 8px;">
+              <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Última Resposta</div>
+              <div style="font-size: 16px; font-weight: 800; color: #a7f3d0;" id="liveUltimaResposta">HTTP 200 OK</div>
+              <div style="font-size: 10px; color: var(--text-dim);" id="liveUltimoTempo">Portal ADPMNET</div>
+            </div>
+          </div>
+
+          <!-- Hidden elements for dynamic script bindings -->
+          <div style="display: none;">
+            <div id="kpiValorTotal"></div>
+            <div id="kpiTotalRegistros"></div>
+            <div id="kpiTotalServidores"></div>
+            <div id="kpiTotalCredores"></div>
+            <div id="liveBadgeStatus"></div>
+            <button id="btnToggleSync"></button>
+          </div>
+
+          <!-- Feed de Eventos Recentes -->
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--text-dim); margin-bottom: 6px;">
+              Fluxo Recente de Rede (Live Activity Feed):
+            </div>
+            <div id="liveActivityFeed" style="display: flex; flex-direction: column; gap: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10px; max-height: 110px; overflow-y: auto;"></div>
+          </div>
+
+          <!-- Matriz de Coleta (Pipeline) -->
+          <div style="margin-bottom: 18px;">
+            <h4 style="font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 8px;">Matriz de Coleta & Armazenamento Local (SQLite Master):</h4>
+            <div style="max-height: 140px; overflow-y: auto;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Módulo</th>
+                    <th>Entidade</th>
+                    <th>Status</th>
+                    <th>Progresso</th>
+                    <th>Coletado</th>
+                    <th>Tratado</th>
+                    <th>Volume</th>
+                  </tr>
+                </thead>
+                <tbody id="tabelaModulos"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Logs de Auditoria HTTP -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h4 style="font-size: 12px; font-weight: 700; color: #fff;">Logs de Requisições HTTP em Tempo Real:</h4>
+              <div style="display: flex; gap: 6px;">
+                <button class="log-filter-btn active" id="btnFiltroTodos" onclick="aplicarFiltroTipo('todos')">Todos (<span id="badgeFiltroTodos">0</span>)</button>
+                <button class="log-filter-btn" id="btnFiltroSucesso" onclick="aplicarFiltroTipo('sucesso')">Sucessos (<span id="badgeFiltroSucesso">0</span>)</button>
+                <button class="log-filter-btn" id="btnFiltroVazio" onclick="aplicarFiltroTipo('vazio')">Vazios (<span id="badgeFiltroVazio">0</span>)</button>
+                <button class="log-filter-btn" id="btnFiltroFalha" onclick="aplicarFiltroTipo('falha')">Falhas (<span id="badgeFiltroFalha">0</span>)</button>
+              </div>
+            </div>
+
+            <!-- KPIs de Logs -->
+            <div style="display: none;">
+              <span id="logKpiTotal">0</span>
+              <span id="logKpiSucesso">0</span>
+              <span id="logKpiVazio">0</span>
+              <span id="logKpiFalha">0</span>
+            </div>
+
+            <div style="margin-bottom: 8px;">
+              <input type="text" id="inputFiltroLog" class="log-search-bar" placeholder="🔍 Filtrar logs por órgão, competência, módulo..." oninput="filtrarLogsTexto()">
+            </div>
+
+            <div class="log-table-wrap" style="max-height: 240px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th width="120">Hora / Data</th>
+                    <th>Órgão</th>
+                    <th width="90">Competência</th>
+                    <th>Módulo</th>
+                    <th width="120">Status</th>
+                    <th width="70">HTTP</th>
+                    <th width="80">Tamanho</th>
+                    <th width="90">Registros</th>
+                    <th width="120">Hash Forense</th>
+                    <th width="80">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="tabelaLogsAuditoria">
+                  <tr>
+                    <td colspan="10" style="text-align: center; color: var(--text-dim); padding: 18px;">
+                      Carregando logs da cadeia de custódia...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 10px; color: var(--text-dim);">
+              <span id="lblQtdLogsExibidos">Registros assinados digitalmente</span>
+              <span>Padrão Forense RFC 6234</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="voter-modal-footer">
+          <span style="font-size: 11px; color: var(--text-dim);">Painel de Engenharia & Perícia de Dados Públicos</span>
+          <button class="modal-close-btn" style="width: auto; padding: 6px 14px; font-size: 12px; font-weight: 600;" onclick="closeVoterModal('modalAuditoriaTecnica')">
+            Fechar Janela
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+
+    // ==========================================
+    // FUNÇÕES DE CONTROLE DE MODAIS DO ELEITOR
+    // ==========================================
+    function openVoterModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeVoterModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Fecha modal ativo com ESC
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const activeModals = document.querySelectorAll('.voter-modal-overlay.active');
+        activeModals.forEach(m => m.classList.remove('active'));
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Dados injetados diretamente para garantir abertura imediata com duplo-clique via file://
+    const INITIAL_DATA = {
+      "gerado_em": new Date().toISOString(),
+      "progresso_geral": 50,
+      "metricas_globais": {
+        "total_registros": 180464,
+        "total_financeiro_reais": 316465606.77,
+        "total_servidores_rastreados": 5357,
+        "total_credores_rastreados": 542,
+        "periodo_historico": "2013 a 2026"
+      },
+      "detalhes": {
+        "contracheques": {
+          "total": 133441,
+          "servidores": 5357,
+          "bruto": 279783467.37,
+          "liquido": 229743388.2,
+          "periodo": "2013 a 2026",
+          "topCargos": [
+            { "cargo": "Professor Pi Efetivo", "qtd": 17696, "total_pago": 45419199.56 },
+            { "cargo": "Ajudante De Serviços Públicos", "qtd": 27564, "total_pago": 41950083.06 },
+            { "cargo": "Professor Pii Efetivo", "qtd": 7886, "total_pago": 18924574.52 },
+            { "cargo": "Agente Comunitário De Saude", "qtd": 8403, "total_pago": 13753581.62 },
+            { "cargo": "Servente Escolar", "qtd": 10273, "total_pago": 13432631.62 }
+          ]
+        },
+        "despesas": {
+          "total": 5064,
+          "credores": 542,
+          "valor": 31496075.31,
+          "periodo": "2014 a 2026",
+          "topCredores": [
+            { "credor": "FOLHA DE PAGAMENTO", "empenhos": 1268, "total": 14498056.87 },
+            { "credor": "COOPERATIVA AGROPECUARIA DE UNAI LTDA", "empenhos": 1339, "total": 4008789.08 },
+            { "credor": "PRIME CONSULTORIA E ASSESSORIA EMPRESARIAL LTDA", "empenhos": 503, "total": 3930671.19 },
+            { "credor": "INSS - INSTITUTO NACIONAL DE SEGURO SOCIAL", "empenhos": 68, "total": 2027595.53 },
+            { "credor": "TRIBUNAL DE JUSTIÇA DO ESTADO DE MINAS GERAIS", "empenhos": 13, "total": 614237.58 }
+          ]
+        },
+        "diarias": {
+          "total": 41959,
+          "servidores": 501,
+          "valor": 5186064.09,
+          "periodo": "2014 a 2026",
+          "topServidores": [
+            { "nome": "LUCIEL FRANCARENCIO DA COSTA", "viagens": 2851, "total": 437276.5 },
+            { "nome": "JOSE WELLITON FERREIRA DE OLIVEIRA", "viagens": 2842, "total": 265112.73 },
+            { "nome": "TOMAZ CLOVES DA CONCEIÇAO VIANA", "viagens": 2254, "total": 249552.41 },
+            { "nome": "DHIEGO BRUNO BATISTA RAMOS", "viagens": 1080, "total": 249268.11 },
+            { "nome": "LOURIVAL BORGES BARBOSA", "viagens": 1946, "total": 244428.18 }
+          ]
+        }
+      },
+      "modulos": [
+        {
+          "modulo": "Folha de Pagamento - Prefeitura",
+          "entidade": "Prefeitura Municipal de Arinos (idorg 236)",
+          "status": "Concluído",
+          "badge": "success",
+          "progresso": 100,
+          "registros": 133441,
+          "valor": 279783467.37,
+          "local": "aaaa/contracheques.db",
+          "tamanho": "246.05 MB"
+        },
+        {
+          "modulo": "Despesas e Empenhos - Prefeitura",
+          "entidade": "Prefeitura Municipal de Arinos (idorg 236)",
+          "status": "Concluído (Local)",
+          "badge": "success",
+          "progresso": 100,
+          "registros": 5064,
+          "valor": 31496075.31,
+          "local": "coletor_despesas_arinos/dados/despesas_arinos_validado.sqlite3",
+          "tamanho": "7.82 MB"
+        },
+        {
+          "modulo": "Diárias e Viagens - Prefeitura",
+          "entidade": "Prefeitura Municipal de Arinos (idorg 236)",
+          "status": "Concluído",
+          "badge": "success",
+          "progresso": 100,
+          "registros": 41959,
+          "valor": 5186064.09,
+          "local": "coletor_diarias_arinos/diarias_arinos.sqlite3",
+          "tamanho": "85.83 MB"
+        },
+        {
+          "modulo": "Fundação Municipal de Saúde (Folha)",
+          "entidade": "Fundação Municipal de Saúde (idorg 241)",
+          "status": "Pronto p/ Iniciar",
+          "badge": "warning",
+          "progresso": 0,
+          "registros": 0,
+          "valor": 0,
+          "local": "portal_transparencia_arinos/dados/fundacao_saude.sqlite3",
+          "tamanho": "A iniciar"
+        },
+        {
+          "modulo": "Receitas Municipais",
+          "entidade": "Prefeitura Municipal de Arinos (idorg 236)",
+          "status": "Em Fila",
+          "badge": "secondary",
+          "progresso": 0,
+          "registros": 0,
+          "valor": 0,
+          "local": "portal_transparencia_arinos/dados/receitas_arinos.sqlite3",
+          "tamanho": "Pendente"
+        },
+        {
+          "modulo": "Licitações e Contratos",
+          "entidade": "Prefeitura Municipal de Arinos (idorg 236)",
+          "status": "Em Fila",
+          "badge": "secondary",
+          "progresso": 0,
+          "registros": 0,
+          "valor": 0,
+          "local": "portal_transparencia_arinos/dados/licitacoes_arinos.sqlite3",
+          "tamanho": "Pendente"
+        }
+      ]
+    };
+
+    function render(data) {
+      // KPIs
+      document.getElementById('kpiValorTotal').textContent = 'R$ ' + data.metricas_globais.total_financeiro_reais.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      document.getElementById('kpiTotalRegistros').textContent = data.metricas_globais.total_registros.toLocaleString('pt-BR');
+      document.getElementById('kpiTotalServidores').textContent = data.metricas_globais.total_servidores_rastreados.toLocaleString('pt-BR');
+      document.getElementById('kpiTotalCredores').textContent = data.metricas_globais.total_credores_rastreados.toLocaleString('pt-BR');
+      
+      const dt = new Date(data.gerado_em);
+      document.getElementById('lblAtualizado').textContent = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR');
+
+      // Tabela de Módulos
+      const tbody = document.getElementById('tabelaModulos');
+      tbody.innerHTML = '';
+      data.modulos.forEach(m => {
+        const tr = document.createElement('tr');
+        const valorFormatado = m.valor > 0 ? 'R$ ' + m.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—';
+        const coletadoFormatado = m.coletado_raw ? `${m.coletado_raw} competências` : (m.registros ? '156 consultas' : '—');
+        const tratadosFormatado = (m.tratados !== undefined && m.tratados !== null) ? `${m.tratados.toLocaleString('pt-BR')} registros` : (m.registros ? `${m.registros.toLocaleString('pt-BR')} registros` : '—');
+        
+        tr.innerHTML = `
+          <td><strong>${m.modulo}</strong></td>
+          <td style="color: var(--text-muted);">${m.entidade}</td>
+          <td><span class="status-badge status-${m.badge}">${m.status}</span></td>
+          <td>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="flex: 1; height: 6px; background: #1f2937; border-radius: 3px; overflow: hidden; width: 60px;">
+                <div style="width: ${m.progresso}%; height: 100%; background: ${m.progresso === 100 ? '#10b981' : (m.progresso > 0 ? '#3b82f6' : '#4b5563')};"></div>
+              </div>
+              <span style="font-size: 11px; font-weight: 600;">${m.progresso}%</span>
+            </div>
+          </td>
+          <td><span style="color: #60a5fa; font-weight: 600;">📦 ${coletadoFormatado}</span></td>
+          <td><span style="color: #34d399; font-weight: 700;">⚙️ ${tratadosFormatado}</span></td>
+          <td style="font-weight: 600; color: #fff;">${valorFormatado}</td>
+          <td><span class="path-code" title="${m.local}">${m.local.split(/[\/\\]/).slice(-2).join('/')}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Top Cargos
+      const listaCargos = document.getElementById('listaCargos');
+      listaCargos.innerHTML = '';
+      const maxCargoValor = data.detalhes.contracheques.topCargos[0].total_pago;
+      data.detalhes.contracheques.topCargos.forEach((c, idx) => {
+        const pct = Math.round((c.total_pago / maxCargoValor) * 100);
+        const item = document.createElement('div');
+        item.className = 'ranking-item';
+        item.innerHTML = `
+          <div style="flex: 1; padding-right: 16px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span><strong>${idx + 1}. ${c.cargo}</strong> <small style="color: var(--text-dim);">(${c.qtd.toLocaleString('pt-BR')} holerites)</small></span>
+              <strong style="color: #34d399;">R$ ${c.total_pago.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
+            </div>
+            <div class="ranking-bar-bg">
+              <div class="ranking-bar" style="width: ${pct}%; background: linear-gradient(90deg, #10b981, #059669);"></div>
+            </div>
+          </div>
+        `;
+        listaCargos.appendChild(item);
+      });
+
+      // Top Credores
+      const listaCredores = document.getElementById('listaCredores');
+      listaCredores.innerHTML = '';
+      const maxCredorValor = data.detalhes.despesas.topCredores[0].total;
+      data.detalhes.despesas.topCredores.forEach((c, idx) => {
+        const pct = Math.round((c.total / maxCredorValor) * 100);
+        const item = document.createElement('div');
+        item.className = 'ranking-item';
+        item.innerHTML = `
+          <div style="flex: 1; padding-right: 16px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span><strong>${idx + 1}. ${c.credor}</strong> <small style="color: var(--text-dim);">(${c.empenhos} empenhos)</small></span>
+              <strong style="color: #60a5fa;">R$ ${c.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
+            </div>
+            <div class="ranking-bar-bg">
+              <div class="ranking-bar" style="width: ${pct}%; background: linear-gradient(90deg, #3b82f6, #2563eb);"></div>
+            </div>
+          </div>
+        `;
+        listaCredores.appendChild(item);
+      });
+
+      // Top Diárias
+      const listaDiarias = document.getElementById('listaDiarias');
+      listaDiarias.innerHTML = '';
+      data.detalhes.diarias.topServidores.forEach((s, idx) => {
+        const card = document.createElement('div');
+        card.style.background = 'rgba(17, 24, 39, 0.7)';
+        card.style.border = '1px solid var(--card-border)';
+        card.style.borderRadius = '10px';
+        card.style.padding = '14px';
+        card.innerHTML = `
+          <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">#${idx + 1} MAIS DIÁRIAS</div>
+          <div style="font-weight: 700; color: #fff; font-size: 14px; margin: 4px 0;">${s.nome}</div>
+          <div style="font-size: 12px; color: var(--text-muted);">${s.viagens.toLocaleString('pt-BR')} viagens registradas</div>
+          <div style="font-size: 16px; font-weight: 800; color: #fbbf24; margin-top: 8px;">R$ ${s.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+        `;
+        listaDiarias.appendChild(card);
+      });
+    }
+
+    // Tenta carregar resumo dinâmico via fetch (se estiver em servidor local) ou usa o inicial
+    fetch('./dados/resumo_geral.json')
+      .then(res => res.json())
+      .then(data => render(data))
+      .catch(() => render(INITIAL_DATA));
+
+    // ==========================================
+    // SISTEMA DE SINCRONIZAÇÃO E CONTADOR AO VIVO
+    // ==========================================
+    let autoSyncEnabled = true;
+    let syncTimer = null;
+
+    function toggleAutoSync() {
+      autoSyncEnabled = !autoSyncEnabled;
+      const btn = document.getElementById('btnToggleSync');
+      const badge = document.getElementById('liveBadgeStatus');
+      if (autoSyncEnabled) {
+        btn.textContent = '⏸ Pausar Sync';
+        badge.textContent = 'SINCRONIZAÇÃO EM TEMPO REAL ATIVA (2s)';
+        badge.className = 'status-badge status-success';
+        startPolling();
+      } else {
+        btn.textContent = '▶ Ativar Sync';
+        badge.textContent = 'SINCRONIZAÇÃO EM PAUSA';
+        badge.className = 'status-badge status-warning';
+        if (syncTimer) clearInterval(syncTimer);
+      }
+    }
+
+    async function atualizarAoVivo() {
+      try {
+        const url = window.location.origin.includes('localhost') ? '/api/live' : 'http://localhost:8088/api/live';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('offline');
+        const data = await res.json();
+        
+        if (data.resumo && data.resumo.metricas_globais) {
+          render(data.resumo);
+        }
+
+        // Atualiza contadores ao vivo
+        if (data.auditoria) {
+          document.getElementById('liveConsultasTotal').textContent = data.auditoria.total.toLocaleString('pt-BR');
+          document.getElementById('liveConsultasSucesso').textContent = `✔ ${data.auditoria.com_dados} com dados | ${data.auditoria.vazios} vazios`;
+          
+          if (data.auditoria.ultimas && data.auditoria.ultimas.length > 0) {
+            const u = data.auditoria.ultimas[0];
+            document.getElementById('liveUltimaResposta').textContent = `HTTP ${u.status_http || 200} OK`;
+            document.getElementById('liveUltimoTempo').textContent = `[${u.entidade}] ${u.ano}/${u.mes} (${(u.bytes_recebidos/1024).toFixed(1)} KB)`;
+
+            // Atualiza Feed
+            const feed = document.getElementById('liveActivityFeed');
+            feed.innerHTML = '';
+            data.auditoria.ultimas.forEach(item => {
+              const row = document.createElement('div');
+              row.style = 'padding: 6px 10px; background: rgba(15, 23, 42, 0.6); border-radius: 6px; display: flex; justify-content: space-between; border-left: 3px solid #10b981;';
+              const dt = new Date(item.coletado_em).toLocaleTimeString('pt-BR');
+              row.innerHTML = `
+                <span><strong>[${item.entidade}]</strong> ${item.modulo} ${item.ano}/${item.mes} — HTTP ${item.status_http}</span>
+                <span style="color: #60a5fa;">${(item.bytes_recebidos/1024).toFixed(1)} KB <small style="color: #6b7280;">(${dt})</small></span>
+              `;
+              feed.appendChild(row);
+            });
+          }
+        }
+
+        if (data.saudeMeses) {
+          document.getElementById('liveMesesBaixados').textContent = `${data.saudeMeses} meses`;
+        }
+
+        if (data.contrachequesDetalhados !== undefined) {
+          document.getElementById('liveHoleritesDet').textContent = (133441 + data.contrachequesDetalhados).toLocaleString('pt-BR');
+        }
+
+        // ==========================================
+        // ATUALIZAÇÃO DO PAINEL DE AUDITORIA & LOGS
+        // ==========================================
+        if (data.estatisticas_auditoria) {
+          const ea = data.estatisticas_auditoria;
+          document.getElementById('logKpiTotal').textContent = ea.total_consultas.toLocaleString('pt-BR');
+          document.getElementById('logKpiSucesso').textContent = ea.sucesso_com_dados.toLocaleString('pt-BR');
+          document.getElementById('logKpiVazio').textContent = ea.vazio_sem_movimentacao.toLocaleString('pt-BR');
+          document.getElementById('logKpiFalha').textContent = ea.falhas_erros.toLocaleString('pt-BR');
+
+          document.getElementById('badgeFiltroTodos').textContent = ea.total_consultas.toLocaleString('pt-BR');
+          document.getElementById('badgeFiltroSucesso').textContent = ea.sucesso_com_dados.toLocaleString('pt-BR');
+          document.getElementById('badgeFiltroVazio').textContent = ea.vazio_sem_movimentacao.toLocaleString('pt-BR');
+          document.getElementById('badgeFiltroFalha').textContent = ea.falhas_erros.toLocaleString('pt-BR');
+        }
+
+        if (data.logs_recentes && Array.isArray(data.logs_recentes)) {
+          cachedLogs = data.logs_recentes;
+          aplicarFiltrosEExibir();
+        }
+
+      } catch (err) {
+        // Se o servidor local não estiver rodando no momento, mantém os valores da tela
+      }
+    }
+
+    // ==========================================
+    // SISTEMA DE AUDITORIA & TABELA DE LOGS AO VIVO
+    // ==========================================
+    let cachedLogs = [];
+    let filtroTipoAtual = 'todos';
+
+    function aplicarFiltroTipo(tipo) {
+      filtroTipoAtual = tipo;
+      document.querySelectorAll('.log-filter-btn').forEach(btn => btn.className = 'log-filter-btn');
+      
+      const btn = document.getElementById(`btnFiltro${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
+      if (btn) {
+        if (tipo === 'sucesso') btn.className = 'log-filter-btn active-success';
+        else if (tipo === 'vazio') btn.className = 'log-filter-btn active-warning';
+        else if (tipo === 'falha') btn.className = 'log-filter-btn active-danger';
+        else btn.className = 'log-filter-btn active';
+      }
+
+      aplicarFiltrosEExibir();
+    }
+
+    function filtrarLogsTexto() {
+      aplicarFiltrosEExibir();
+    }
+
+    function aplicarFiltrosEExibir() {
+      const termo = (document.getElementById('inputFiltroLog').value || '').toLowerCase().trim();
+      
+      const filtrados = cachedLogs.filter(item => {
+        // Filtro por tipo
+        if (filtroTipoAtual === 'sucesso' && item.status_coleta !== 'com_dados') return false;
+        if (filtroTipoAtual === 'vazio' && item.status_coleta !== 'vazio') return false;
+        if (filtroTipoAtual === 'falha' && !item.status_coleta.startsWith('erro') && item.status_http < 400) return false;
+
+        // Filtro por texto
+        if (termo) {
+          const linha = `${item.entidade} ${item.modulo} ${item.ano}/${item.mes} ${item.status_coleta} ${item.hash_sha256} ${item.mensagem || ''}`.toLowerCase();
+          return linha.includes(termo);
+        }
+
+        return true;
+      });
+
+      renderizarTabelaLogs(filtrados);
+    }
+
+    function renderizarTabelaLogs(logs) {
+      const tbody = document.getElementById('tabelaLogsAuditoria');
+      const lblQtd = document.getElementById('lblQtdLogsExibidos');
+      
+      lblQtd.textContent = `Exibindo ${logs.length} de ${cachedLogs.length} requisições recentes registradas`;
+
+      if (logs.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="10" style="text-align: center; color: var(--text-dim); padding: 28px;">
+              Nenhum log encontrado para o filtro selecionado.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = '';
+      logs.forEach(l => {
+        const tr = document.createElement('tr');
+        
+        // Status Badge
+        let badgeHtml = '';
+        if (l.status_coleta === 'com_dados') {
+          badgeHtml = '<span class="status-badge status-success">✔ Com Dados</span>';
+        } else if (l.status_coleta === 'vazio') {
+          badgeHtml = '<span class="status-badge status-warning">○ Vazio</span>';
+        } else {
+          badgeHtml = `<span class="status-badge status-danger">✖ Falha (${l.status_coleta})</span>`;
+        }
+
+        // HTTP Status Color
+        const httpStatus = l.status_http || 200;
+        const httpColor = httpStatus === 200 ? '#34d399' : (httpStatus >= 400 ? '#f87171' : '#fbbf24');
+
+        // Formatação de Tamanho
+        const tamanhoKb = l.bytes_recebidos ? (l.bytes_recebidos / 1024).toFixed(1) + ' KB' : '0 KB';
+        
+        // Data/Hora
+        const dt = l.coletado_em ? new Date(l.coletado_em).toLocaleTimeString('pt-BR') : '—';
+        const dataDia = l.coletado_em ? new Date(l.coletado_em).toLocaleDateString('pt-BR') : '';
+
+        // Hash truncado
+        const hashDisplay = l.hash_sha256 ? `${l.hash_sha256.substring(0, 8)}...` : '—';
+        const hashFull = l.hash_sha256 || '';
+
+        // Órgão formatado
+        const entidadeNome = l.entidade === 'fundacao_saude' ? 'Fundação Saúde (241)' : 'Prefeitura (236)';
+
+        // Módulo formatado
+        const moduloNome = (l.modulo || '').replace('_', ' ').toUpperCase();
+
+        tr.innerHTML = `
+          <td>
+            <div style="font-weight: 600; color: #f8fafc;">${dt}</div>
+            <div style="font-size: 10px; color: var(--text-dim);">${dataDia}</div>
+          </td>
+          <td><strong>${entidadeNome}</strong></td>
+          <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #60a5fa;">${l.ano}/${String(l.mes).padStart(2, '0')}</span></td>
+          <td><span style="font-size: 11px; color: var(--text-muted);">${moduloNome}</span></td>
+          <td>${badgeHtml}</td>
+          <td><span style="color: ${httpColor}; font-weight: 700; font-family: 'JetBrains Mono', monospace;">${httpStatus}</span></td>
+          <td style="color: var(--text-dim); font-size: 11px;">${tamanhoKb}</td>
+          <td><strong style="color: ${l.qtd_registros > 0 ? '#34d399' : 'var(--text-dim)'};">${l.qtd_registros || 0}</strong></td>
+          <td>
+            ${hashFull ? `<button class="btn-hash" onclick="copiarTexto('${hashFull}', 'Hash SHA-256 copiado!')" title="Clique para copiar: ${hashFull}">🔑 ${hashDisplay}</button>` : '—'}
+          </td>
+          <td>
+            ${l.url_completa ? `<a href="${l.url_completa}" target="_blank" class="nav-btn" style="padding: 2px 8px; font-size: 11px; text-decoration: none; display: inline-block;">Abrir ↗</a>` : '—'}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function copiarTexto(texto, msg) {
+      navigator.clipboard.writeText(texto).then(() => {
+        alert(msg);
+      });
+    }
+
+    /* ============================================================
+       LÓGICA DO BUSCADOR AVANÇADO GLOBAL (TRATA SEM ACENTOS)
+       ============================================================ */
+    let searchDebounceTimer = null;
+    let currentSearchCategory = 'todas';
+    let lastSearchData = null;
+
+    function normalizeClient(str) {
+      if (!str) return '';
+      return str
+        .toString()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function formatVal(val) {
+      if (val === null || val === undefined) return '';
+      if (typeof val === 'number') {
+        return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      }
+      return val;
+    }
+
+    function highlightTerms(text, query) {
+      if (!text || !query) return text || '';
+      const tokens = normalizeClient(query).split(' ').filter(Boolean);
+      if (tokens.length === 0) return text;
+
+      let safeText = text;
+      tokens.forEach(tok => {
+        const regex = new RegExp(`(${tok})`, 'gi');
+        safeText = safeText.replace(regex, '<mark>$1</mark>');
+      });
+      return safeText;
+    }
+
+    function handleGlobalSearch(val) {
+      const clearBtn = document.getElementById('global-search-clear');
+      if (val.trim()) {
+        clearBtn.style.display = 'flex';
+      } else {
+        clearBtn.style.display = 'none';
+        clearGlobalSearch();
+        return;
+      }
+
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        execGlobalSearch(val);
+      }, 150);
+    }
+
+    function quickGlobalSearch(term) {
+      const input = document.getElementById('global-search-input');
+      input.value = term;
+      input.focus();
+      handleGlobalSearch(term);
+    }
+
+    function clearGlobalSearch() {
+      const input = document.getElementById('global-search-input');
+      input.value = '';
+      document.getElementById('global-search-clear').style.display = 'none';
+      document.getElementById('search-results-panel').style.display = 'none';
+      lastSearchData = null;
+    }
+
+    async function execGlobalSearch(query) {
+      const q = query.trim();
+      if (!q) return;
+
+      const panel = document.getElementById('search-results-panel');
+      panel.style.display = 'block';
+
+      document.getElementById('search-query-display').textContent = q;
+      document.getElementById('search-results-grid').innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 24px; color: var(--text-muted);">
+          <span>Buscando em tempo real no banco mestre...</span>
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`/api/dados/busca-global?q=${encodeURIComponent(q)}&limit=12`);
+        if (!res.ok) throw new Error('Erro na requisição');
+        const data = await res.json();
+        lastSearchData = data;
+
+        document.getElementById('search-total-count').textContent = data.total_geral.toLocaleString('pt-BR');
+        document.getElementById('search-time-display').textContent = `${data.tempo_execucao_ms}ms`;
+
+        renderSearchCategoryTabs(data);
+        renderSearchGridItems(data, currentSearchCategory);
+      } catch (err) {
+        document.getElementById('search-results-grid').innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 24px; color: var(--danger);">
+            <span>Erro ao conectar ao motor de busca: ${err.message}</span>
+          </div>
+        `;
+      }
+    }
+
+    function renderSearchCategoryTabs(data) {
+      const tabsDiv = document.getElementById('search-cat-tabs');
+      const cats = data.categorias || {};
+
+      let html = `
+        <button class="search-cat-tab ${currentSearchCategory === 'todas' ? 'active' : ''}" onclick="switchSearchCategory('todas')">
+          <span>🌟 Todos os Módulos</span>
+          <span class="tab-badge">${data.total_geral}</span>
+        </button>
+      `;
+
+      for (const [key, cat] of Object.entries(cats)) {
+        if (cat.total > 0) {
+          html += `
+            <button class="search-cat-tab ${currentSearchCategory === key ? 'active' : ''}" onclick="switchSearchCategory('${key}')">
+              <span>${cat.icone} ${cat.nome}</span>
+              <span class="tab-badge">${cat.total}</span>
+            </button>
+          `;
+        }
+      }
+
+      tabsDiv.innerHTML = html;
+    }
+
+    function switchSearchCategory(cat) {
+      currentSearchCategory = cat;
+      if (lastSearchData) {
+        renderSearchCategoryTabs(lastSearchData);
+        renderSearchGridItems(lastSearchData, cat);
+      }
+    }
+
+    function renderSearchGridItems(data, selectedCat) {
+      const grid = document.getElementById('search-results-grid');
+      const cats = data.categorias || {};
+      const query = data.query || '';
+
+      let itemsToRender = [];
+
+      if (selectedCat === 'todas') {
+        for (const [k, cat] of Object.entries(cats)) {
+          if (cat.itens && cat.itens.length > 0) {
+            cat.itens.forEach(it => {
+              itemsToRender.push({ ...it, catNome: cat.nome, catIcone: cat.icone });
+            });
+          }
+        }
+      } else if (cats[selectedCat]) {
+        const cat = cats[selectedCat];
+        itemsToRender = (cat.itens || []).map(it => ({ ...it, catNome: cat.nome, catIcone: cat.icone }));
+      }
+
+      if (itemsToRender.length === 0) {
+        grid.innerHTML = `
+          <div class="search-empty-state">
+            <span style="font-size: 28px; display: block; margin-bottom: 8px;">🔍</span>
+            <p style="font-weight: 600; color: #fff;">Nenhum resultado encontrado para esta categoria</p>
+            <p style="font-size: 12px; margin-top: 4px;">Dica: Experimente usar apenas parte do nome ou termos sem acento (ex: "saude", "unai", "duraes").</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = itemsToRender.map(it => {
+        const valorDisplay = formatVal(it.valor);
+        const badgeClass = it.badge_tipo || 'default';
+
+        return `
+          <div class="search-item-card">
+            <div>
+              <div class="search-item-top">
+                <span style="font-size: 11px; color: var(--text-dim); display: flex; align-items: center; gap: 4px;">
+                  <span>${it.catIcone || '📋'}</span>
+                  <span>${it.catNome || 'Geral'}</span>
+                </span>
+                <span class="search-item-badge ${badgeClass}">${it.badge || 'Registro'}</span>
+              </div>
+              <h4 class="search-item-title">${highlightTerms(it.titulo, query)}</h4>
+              <p class="search-item-sub">${highlightTerms(it.subtitulo, query)}</p>
+            </div>
+            <div class="search-item-footer">
+              <span class="search-item-valor">${valorDisplay}</span>
+              ${it.url ? `<a href="${it.url}" target="_blank" class="search-item-action">Acessar Dossiê ↗</a>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Atalho global do teclado: ESC limpa busca; "/" foca na barra de pesquisa
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        clearGlobalSearch();
+      } else if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+        e.preventDefault();
+        const inp = document.getElementById('global-search-input');
+        if (inp) inp.focus();
+      }
+    });
+
+    function startPolling() {
+      if (syncTimer) clearInterval(syncTimer);
+      syncTimer = setInterval(atualizarAoVivo, 2500);
+      atualizarAoVivo();
+    }
+
+    startPolling();
+  </script>
+</body>
+</html>

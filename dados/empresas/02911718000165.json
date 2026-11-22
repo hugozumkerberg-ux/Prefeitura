@@ -1,0 +1,88 @@
+{
+  "uf": "MG",
+  "cep": "38680000",
+  "qsa": [],
+  "cnpj": "02911718000165",
+  "pais": null,
+  "email": null,
+  "porte": "EMPRESA DE PEQUENO PORTE",
+  "bairro": "PRIMAVERA I",
+  "numero": "",
+  "ddd_fax": "",
+  "municipio": "ARINOS",
+  "logradouro": "",
+  "cnae_fiscal": 4711302,
+  "codigo_pais": null,
+  "complemento": "",
+  "codigo_porte": 3,
+  "razao_social": "JOAO GUALBERTO SOARES DA SILVA",
+  "nome_fantasia": "SUPER LARA",
+  "capital_social": 20000,
+  "ddd_telefone_1": "",
+  "ddd_telefone_2": "",
+  "opcao_pelo_mei": false,
+  "codigo_municipio": 4089,
+  "cnaes_secundarios": [
+    {
+      "codigo": 4722901,
+      "descricao": "Comércio varejista de carnes - açougues"
+    },
+    {
+      "codigo": 4724500,
+      "descricao": "Comércio varejista de hortifrutigranjeiros"
+    },
+    {
+      "codigo": 4744001,
+      "descricao": "Comércio varejista de ferragens e ferramentas"
+    },
+    {
+      "codigo": 4761003,
+      "descricao": "Comércio varejista de artigos de papelaria"
+    },
+    {
+      "codigo": 4784900,
+      "descricao": "Comércio varejista de gás liqüefeito de petróleo (GLP)"
+    },
+    {
+      "codigo": 4930203,
+      "descricao": "Transporte rodoviário de produtos perigosos"
+    }
+  ],
+  "natureza_juridica": "Empresário (Individual)",
+  "regime_tributario": [
+    {
+      "ano": 2023,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2024,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    }
+  ],
+  "situacao_especial": "",
+  "opcao_pelo_simples": false,
+  "situacao_cadastral": 2,
+  "data_opcao_pelo_mei": null,
+  "data_exclusao_do_mei": null,
+  "cnae_fiscal_descricao": "Comércio varejista de mercadorias em geral, com predominância de produtos alimentícios - supermercados",
+  "codigo_municipio_ibge": 3104502,
+  "data_inicio_atividade": "1998-12-15",
+  "data_situacao_especial": null,
+  "data_opcao_pelo_simples": "2007-07-01",
+  "data_situacao_cadastral": "2002-09-07",
+  "nome_cidade_no_exterior": "",
+  "codigo_natureza_juridica": 2135,
+  "data_exclusao_do_simples": "2023-01-31",
+  "motivo_situacao_cadastral": 0,
+  "ente_federativo_responsavel": "",
+  "identificador_matriz_filial": 1,
+  "qualificacao_do_responsavel": 50,
+  "descricao_situacao_cadastral": "ATIVA",
+  "descricao_tipo_de_logradouro": "",
+  "descricao_motivo_situacao_cadastral": "SEM MOTIVO",
+  "descricao_identificador_matriz_filial": "MATRIZ"
+}

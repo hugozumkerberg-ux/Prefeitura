@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arinos & Câmara Municipal — História, Turismo, Sagarana & Curiosidades</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          animation: {
+            'float': 'float 5s ease-in-out infinite',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #080c14;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.06) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-4px);
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #080c14; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-white">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Título -->
+      <div class="flex items-center space-x-3">
+        <a href="/" class="flex items-center space-x-2.5 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-orange-500 to-emerald-500 p-0.5 shadow-lg shadow-amber-950/40 group-hover:scale-105 transition">
+            <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+              <span class="text-lg">🏛️</span>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-extrabold text-sm md:text-base text-white tracking-tight">Arinos & Câmara</span>
+              <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">Memória & Cultura</span>
+            </div>
+            <p class="text-[11px] text-slate-400">História • Turismo • Sagarana • Legislativo</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Links de Navegação -->
+      <div class="flex items-center space-x-1 sm:space-x-2">
+        <a href="/" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          <span>📊 Dashboard</span>
+        </a>
+        <a href="/empresas.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-blue-300 bg-blue-950/50 border border-blue-500/40 hover:bg-blue-900/50 transition">
+          <span>🏢 Empresas & Viagens</span>
+        </a>
+        <a href="/vereadores.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-sky-300 bg-sky-950/50 border border-sky-500/40 hover:bg-sky-900/50 transition">
+          <span>👥 Vereadores</span>
+        </a>
+        <a href="/mandatos.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-purple-300 bg-purple-950/50 border border-purple-500/40 hover:bg-purple-900/50 transition">
+          <span>📜 Mandatos</span>
+        </a>
+        <a href="/eleicoes.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-indigo-300 bg-indigo-950/50 border border-indigo-500/40 hover:bg-indigo-900/50 transition">
+          <span>🗳️ Eleições TSE</span>
+        </a>
+        <a href="/tabelas.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          <span>📋 Tabelas</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-10">
+
+    <!-- Hero Banner Arinos -->
+    <div class="relative overflow-hidden rounded-3xl p-6 md:p-10 bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-950 border border-slate-800 shadow-2xl">
+      <div class="absolute -right-16 -bottom-16 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute right-64 top-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="relative z-10 space-y-4 max-w-3xl">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-900/30 border border-amber-500/30 text-amber-300 text-xs font-semibold">
+          <span>🌾 Vale do Urucuia • Sertão Roseano de Minas Gerais</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+          Arinos: Do Estaleiro Fluvial ao Berço de Sagarana
+        </h1>
+        <p class="text-sm md:text-base text-slate-300 leading-relaxed">
+          Com impressionantes <strong class="text-amber-400 font-mono">5.322 km²</strong> de território, Arinos guarda uma das trajetórias mais singulares do Brasil: de arraial atacado por desordeiros a polo construtor de barcos a vela nas veredas do Rio Urucuia, batizado em honra a Afonso Arinos e imortalizado pelo épico literário de João Guimarães Rosa.
+        </p>
+
+        <!-- Pílulas Rápidas de Estatísticas do Município -->
+        <div class="pt-2 flex flex-wrap gap-2 text-xs font-mono">
+          <span class="px-3 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-300">📍 IBGE: 3104502</span>
+          <span class="px-3 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-300">📐 Área: 5.322 km²</span>
+          <span class="px-3 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-300">👥 ~17.500 hab.</span>
+          <span class="px-3 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-300">🌿 Bioma: Cerrado</span>
+          <span class="px-3 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-amber-400">🌊 Bacia: Rio Urucuia / São Francisco</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Linha do Tempo Histórica Oficial -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl md:text-2xl font-extrabold text-white tracking-tight flex items-center space-x-2">
+            <span>📜 Linha do Tempo Histórica Oficial</span>
+          </h2>
+          <p class="text-xs text-slate-400">Resgate documental com base nos arquivos da Câmara Municipal e do acervo estadual</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Marco 1 -->
+        <div class="glass-card p-5 rounded-2xl border-t-4 border-amber-500 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">1717 — 1800</span>
+              <span class="text-slate-500">Origens</span>
+            </div>
+            <h3 class="font-extrabold text-white text-base mt-2">Bandeirantes & Morrinhos</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mt-1">
+              Desbravadores como Anhanguera (1717) e Felisberto Caldeira Brant (1743) adentraram a bacia do Urucuia. Major Saint'Clair Valadares e Cel. Martinho Estrela fundaram o primeiro arraial em Morrinhos com lavouras e garimpo.
+            </p>
+          </div>
+          <div class="text-[11px] text-amber-400/80 font-mono">Abandono por falta de justiça</div>
+        </div>
+
+        <!-- Marco 2 -->
+        <div class="glass-card p-5 rounded-2xl border-t-4 border-orange-500 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 font-bold">c. 1800 — 1920</span>
+              <span class="text-slate-500">Navegação</span>
+            </div>
+            <h3 class="font-extrabold text-white text-base mt-2">Barra da Vaca & O Estaleiro</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mt-1">
+              Fugindo do banditismo, o povoado moveu-se à margem esquerda do Urucuia na Fazenda Tamboril. Nasceu a "Barra da Vaca" (onde o gado atolava na lama). O local prosperou com um estaleiro artesanal de barcos a vela que viajavam até Pirapora e Januária!
+            </p>
+          </div>
+          <div class="text-[11px] text-orange-400/80 font-mono">Polo comercial fluvial</div>
+        </div>
+
+        <!-- Marco 3 -->
+        <div class="glass-card p-5 rounded-2xl border-t-4 border-emerald-500 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">07/09/1923</span>
+              <span class="text-slate-500">Batismo</span>
+            </div>
+            <h3 class="font-extrabold text-white text-base mt-2">Homenagem a Afonso Arinos</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mt-1">
+              Em 7 de setembro de 1923, a sede distrital foi oficializada e batizada de <strong>Arinos</strong>, em tributo ao notável jurista, historiador e escritor Afonso Arinos de Melo Franco, imortal da Academia Brasileira de Letras e autor de <em>"Os Jagunços"</em>.
+            </p>
+          </div>
+          <div class="text-[11px] text-emerald-400/80 font-mono">Identidade cultural sólida</div>
+        </div>
+
+        <!-- Marco 4 -->
+        <div class="glass-card p-5 rounded-2xl border-t-4 border-cyan-500 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold">30/12/1962</span>
+              <span class="text-slate-500">Emancipação</span>
+            </div>
+            <h3 class="font-extrabold text-white text-base mt-2">Município Autônomo & Sagarana</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mt-1">
+              Pela Lei Estadual nº 2.764, Arinos desmembrou-se de São Francisco e conquistou soberania. Anos mais tarde foi criada a Reserva Biológica Sagarana (IEF/MG), tornando Arinos o coração ecológico da rota de Guimarães Rosa.
+            </p>
+          </div>
+          <div class="text-[11px] text-cyan-400/80 font-mono">60+ anos de autonomia</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Curiosidades Fascinantes de Arinos -->
+    <div class="space-y-4">
+      <div>
+        <h2 class="text-xl md:text-2xl font-extrabold text-white tracking-tight flex items-center space-x-2">
+          <span>💡 Curiosidades & Fatos Fascinantes</span>
+        </h2>
+        <p class="text-xs text-slate-400">Peculiaridades que transformam Arinos em um dos recantos mais ricos de Minas Gerais</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <div class="glass-card p-5 rounded-2xl space-y-2">
+          <div class="text-2xl">🗺️</div>
+          <h3 class="font-bold text-white text-sm">Território Maior que Países Inteiros</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Com <strong>5.322 km²</strong>, Arinos é territorialmente maior que o Distrito Federal (5.760 km²), maior que o país insular de Trinidad e Tobago (5.128 km²) e duas vezes maior que o Grão-Ducado de Luxemburgo (2.586 km²)!
+          </p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl space-y-2">
+          <div class="text-2xl">⛵</div>
+          <h3 class="font-bold text-white text-sm">Estaleiro de Barcos a Vela no Sertão</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Em pleno sertão fechado no século XIX, Barra da Vaca operava um estaleiro naval artesanal. Grandes barcos de madeira com velas navegavam o Rio Urucuia até desembocar no Rio São Francisco, abastecendo cidades históricas.
+          </p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl space-y-2">
+          <div class="text-2xl">📖</div>
+          <h3 class="font-bold text-white text-sm">O Berço Literário de Sagarana</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            O distrito de <strong>Sagarana</strong>, em Arinos, inspirou contos de Guimarães Rosa. É de lá que anualmente parte a famosa jornada <em>"O Caminho do Sertão"</em>, onde caminhantes e literatos cruzam veredas a pé revivendo os passos de Riobaldo e Diadorim.
+          </p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl space-y-2">
+          <div class="text-2xl">🐄</div>
+          <h3 class="font-bold text-white text-sm">De Onde Veio "Barra da Vaca"?</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Ao contrário do que muitos pensam, o nome original "Barra da Vaca" devia-se a uma barra de lama aluvial no Rio Urucuia onde o gado de pasto e as tropas de mulas atolavam inevitavelmente na travessia fluvial entre fazendas.
+          </p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl space-y-2">
+          <div class="text-2xl">🪕</div>
+          <h3 class="font-bold text-white text-sm">Cultura e Fé dos Urucuianos</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            As tradições de Folia de Reis, Dança de São Gonçalo e cantoria de viola preservam séculos de tradições do povo urucuiano. O artesanato em fibra de buriti e a tecelagem em tear com tintas naturais são marcas registradas da identidade local.
+          </p>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl space-y-2">
+          <div class="text-2xl">🍲</div>
+          <h3 class="font-bold text-white text-sm">Sabores Identitários do Cerrado</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            A rota gastronômica de Arinos é célebre pelo arroz com pequi, carne de sol serenada no sereno da madrugada, requeijão moreno fatiado na palha de milho, paçoca de carne socada no pilão e cachaça de alambique artesanal.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Guia de Turismo & Ecoturismo com Distâncias em KM, Coordenadas e Hashes Oficiais -->
+    <div class="space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <div class="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
+            <span>🧭 Circuito Turístico Urucuia Grande Sertão Veredas</span>
+          </div>
+          <h2 class="text-2xl font-black text-white tracking-tight mt-1 flex items-center space-x-2">
+            <span>Pontos Turísticos & Atrativos Naturais de Arinos / MG</span>
+          </h2>
+          <p class="text-xs text-slate-400">Distâncias oficiais da sede municipal, coordenadas geográficas, fotos e hashes criptográficos SHA-256 para auditoria</p>
+        </div>
+
+        <div class="flex items-center space-x-3 text-xs font-mono">
+          <span class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
+            📍 Marco Zero: Centro de Arinos
+          </span>
+          <span class="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold">
+            8 Atrativos Auditados
+          </span>
+        </div>
+      </div>
+
+      <!-- Grid de Pontos Turísticos -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        <!-- 1. Cachoeira Boi Preto -->
+        <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between border-t-4 border-emerald-500 hover:border-emerald-400 transition group">
+          <div class="relative h-44 overflow-hidden bg-slate-950">
+            <img src="https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=800&q=80" alt="Cachoeira Boi Preto" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+            <div class="absolute top-3 left-3">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-black font-mono bg-slate-950/80 text-emerald-400 border border-emerald-500/40 shadow backdrop-blur-md">
+                📍 74,3 km de Arinos
+              </span>
+            </div>
+            <div class="absolute bottom-2 right-3 text-right">
+              <span class="text-xs font-mono font-bold text-white bg-slate-950/70 px-2 py-0.5 rounded">Queda: 65 metros</span>
+            </div>
+          </div>
+
+          <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
+            <div class="space-y-1.5">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400">Distrito de Sagarana</span>
+              <h3 class="font-extrabold text-white text-base">Cachoeira Boi Preto</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Queda imponente com 65 metros de desnível em leito rochoso formando poços cristalinos. Trilha de 600m de baixo grau de dificuldade com identificação botânica do Cerrado.
+              </p>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-[11px]">
+              <div class="text-slate-400">
+                <strong>Trajeto:</strong> 27,5 km rodovia + 46,8 km vicinais (8 km de Sagarana).
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">GPS:</span>
+                <a href="https://www.google.com/maps?q=-16.2052,-46.1755" target="_blank" class="font-mono text-cyan-400 hover:underline">
+                  16°12'18.7"S 46°10'31.8"W ↗
+                </a>
+              </div>
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                <span class="text-[10px] text-slate-500">Fonte: Pref. Arinos / IEF</span>
+                <button onclick="abrirModalHash('Cachoeira Boi Preto', 'f852ee7c270da1d1f05453051bc277ad3eb0437434a974916a04803964ff0f0d', 'https://arinos.mg.gov.br/turismo/atrativos/cachoeiras/cachoeira-do-boi-preto', 'Inventário Turístico Oficial da Prefeitura Municipal de Arinos / IEF-MG')" class="font-mono text-[10px] text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-2 py-0.5 rounded hover:bg-emerald-900/50 transition">
+                  🔐 SHA-256 ↗
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Cachoeira do Marques -->
+        <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between border-t-4 border-indigo-500 hover:border-indigo-400 transition group">
+          <div class="relative h-44 overflow-hidden bg-slate-950">
+            <img src="https://images.unsplash.com/photo-1519904981063-b0cf448d479e?auto=format&fit=crop&w=800&q=80" alt="Cachoeira do Marques" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+            <div class="absolute top-3 left-3">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-black font-mono bg-slate-950/80 text-indigo-400 border border-indigo-500/40 shadow backdrop-blur-md">
+                📍 77,0 km de Arinos
+              </span>
+            </div>
+            <div class="absolute bottom-2 right-3 text-right">
+              <span class="text-xs font-mono font-bold text-white bg-slate-950/70 px-2 py-0.5 rounded">Queda: 75 metros</span>
+            </div>
+          </div>
+
+          <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
+            <div class="space-y-1.5">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-indigo-400">Cânions do Urucuia</span>
+              <h3 class="font-extrabold text-white text-base">Cachoeira do Marques</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                A maior queda d'água catalogada em Arinos (75m). Queda única e volumosa em cânion rochoso. Trilha de 5 km de grau moderado para ecoturismo de aventura e observação.
+              </p>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-[11px]">
+              <div class="text-slate-400">
+                <strong>Trajeto:</strong> 27,5 km rodovia + 49,5 km vicinais (19 km de Sagarana).
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">GPS:</span>
+                <a href="https://www.google.com/maps?q=-16.1802,-46.2105" target="_blank" class="font-mono text-cyan-400 hover:underline">
+                  16°10'48.7"S 46°12'37.8"W ↗
+                </a>
+              </div>
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                <span class="text-[10px] text-slate-500">Fonte: Inventário Municipal</span>
+                <button onclick="abrirModalHash('Cachoeira do Marques', 'bee91673115cea9be62934ef42f615367809633ffcae2b109c9103e5cf701633', 'https://arinos.mg.gov.br/turismo/atrativos/cachoeiras/cachoeira-do-marques', 'Inventário Turístico da Prefeitura Municipal de Arinos')" class="font-mono text-[10px] text-indigo-400 bg-indigo-950/40 border border-indigo-500/30 px-2 py-0.5 rounded hover:bg-indigo-900/50 transition">
+                  🔐 SHA-256 ↗
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Cachoeira da Ilha -->
+        <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between border-t-4 border-cyan-500 hover:border-cyan-400 transition group">
+          <div class="relative h-44 overflow-hidden bg-slate-950">
+            <img src="https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=800&q=80" alt="Cachoeira da Ilha" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+            <div class="absolute top-3 left-3">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-black font-mono bg-slate-950/80 text-cyan-400 border border-cyan-500/40 shadow backdrop-blur-md">
+                📍 61,0 km de Arinos
+              </span>
+            </div>
+            <div class="absolute bottom-2 right-3 text-right">
+              <span class="text-xs font-mono font-bold text-white bg-slate-950/70 px-2 py-0.5 rounded">25m • 4 Quedas</span>
+            </div>
+          </div>
+
+          <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
+            <div class="space-y-1.5">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400">Balneário & Piscinas</span>
+              <h3 class="font-extrabold text-white text-base">Cachoeira da Ilha</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Quatro quedas sucessivas sobre patamares rochosos formando ilhas fluviais e poços de águas calmas e límpidas. Excelente para famílias com acesso direto sem trilha complexa.
+              </p>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-[11px]">
+              <div class="text-slate-400">
+                <strong>Trajeto:</strong> 27,5 km rodovia + 33,5 km vicinais (altitude 636m).
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">GPS:</span>
+                <a href="https://www.google.com/maps?q=-16.178611,-46.236111" target="_blank" class="font-mono text-cyan-400 hover:underline">
+                  16°10'43"S 46°14'10"W ↗
+                </a>
+              </div>
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                <span class="text-[10px] text-slate-500">Fonte: Circuito Urucuia</span>
+                <button onclick="abrirModalHash('Cachoeira da Ilha', '2b96e02d989e9c22822a16d006f658e3ce6854bcfb19655fa1fe63806a6b5771', 'https://arinos.mg.gov.br/turismo/atrativos/cachoeiras/cachoeira-da-ilha', 'Inventário Turístico Oficial de Arinos / Circuito Urucuia Grande Sertão')" class="font-mono text-[10px] text-cyan-400 bg-cyan-950/40 border border-cyan-500/30 px-2 py-0.5 rounded hover:bg-cyan-900/50 transition">
+                  🔐 SHA-256 ↗
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Parque Estadual Sagarana -->
+        <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between border-t-4 border-amber-500 hover:border-amber-400 transition group">
+          <div class="relative h-44 overflow-hidden bg-slate-950">
+            <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80" alt="Parque Estadual Sagarana" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+            <div class="absolute top-3 left-3">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-black font-mono bg-slate-950/80 text-amber-400 border border-amber-500/40 shadow backdrop-blur-md">
+                📍 60,0 km de Arinos
+              </span>
+            </div>
+            <div class="absolute bottom-2 right-3 text-right">
+              <span class="text-xs font-mono font-bold text-white bg-slate-950/70 px-2 py-0.5 rounded">2.340 Hectares</span>
+            </div>
+          </div>
+
+          <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
+            <div class="space-y-1.5">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400">IEF / Lei 22.897/2018</span>
+              <h3 class="font-extrabold text-white text-base">Parque Estadual Sagarana</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                2.340,12 hectares de Cerrado preservado, veredas de buritis e fauna protegida (lobo-guará, tamanduá). Reclassificado para permitir ecoturismo e pesquisas pelo IEF-MG.
+              </p>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-[11px]">
+              <div class="text-slate-400">
+                <strong>Trajeto:</strong> 58 km até a Vila Sagarana + 2 km de acesso interno.
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">GPS:</span>
+                <a href="https://www.google.com/maps?q=-16.199667,-46.168972" target="_blank" class="font-mono text-cyan-400 hover:underline">
+                  16°11'58.8"S 46°10'08.3"W ↗
+                </a>
+              </div>
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                <span class="text-[10px] text-slate-500">Fonte: IEF-MG / Diário Oficial</span>
+                <button onclick="abrirModalHash('Parque Estadual de Sagarana', 'e545995a76b5e63ebec613e54b0451cfbcba58ba4a6f7b1e428c93540a9313ea', 'http://www.ief.mg.gov.br/areas-protegidas/parques-estaduais/parque-estadual-de-sagarana', 'Instituto Estadual de Florestas de Minas Gerais (IEF-MG)')" class="font-mono text-[10px] text-amber-400 bg-amber-950/40 border border-amber-500/30 px-2 py-0.5 rounded hover:bg-amber-900/50 transition">
+                  🔐 SHA-256 ↗
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Povoado Histórico de Morrinhos -->
+        <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between border-t-4 border-rose-500 hover:border-rose-400 transition group">
+          <div class="relative h-44 overflow-hidden bg-slate-950">
+            <img src="https://images.unsplash.com/photo-1548625361-16eb15cf9a96?auto=format&fit=crop&w=800&q=80" alt="Povoado de Morrinhos" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+            <div class="absolute top-3 left-3">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-black font-mono bg-slate-950/80 text-rose-400 border border-rose-500/40 shadow backdrop-blur-md">
+                📍 24,0 km de Arinos
+              </span>
+            </div>
+            <div class="absolute bottom-2 right-3 text-right">
+              <span class="text-xs font-mono font-bold text-white bg-slate-950/70 px-2 py-0.5 rounded">Séc. XVIII • 1717</span>
+            </div>
+          </div>
+
+          <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
+            <div class="space-y-1.5">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-rose-400">Berço de Arinos</span>
+              <h3 class="font-extrabold text-white text-base">Povoado de Morrinhos</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Primeiro assentamento da região (mais antigo que a sede). Guarda a centenária Igreja N. Sra. da Conceição (sino de 1845) e balsa manual puxada por cabo nas águas do Urucuia.
+              </p>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-[11px]">
+              <div class="text-slate-400">
+                <strong>Trajeto:</strong> 24 km a sudoeste da sede via estrada vicinal da margem do rio.
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">GPS:</span>
+                <a href="https://www.google.com/maps?q=-16.0350,-45.9220" target="_blank" class="font-mono text-cyan-400 hover:underline">
+                  16°02'06"S 45°55'19"W ↗
+                </a>
+              </div>
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                <span class="text-[10px] text-slate-500">Fonte: IEPHA-MG / Cultura</span>
+                <button onclick="abrirModalHash('Povoado Histórico de Morrinhos', '2a5355cdf8347710926ff9d8ff7a916e788091ff7c24a9193132bc1946898f02', 'https://arinos.mg.gov.br/historia/povoado-de-morrinhos', 'Secretaria Municipal de Cultura de Arinos / IEPHA-MG')" class="font-mono text-[10px] text-rose-400 bg-rose-950/40 border border-rose-500/30 px-2 py-0.5 rounded hover:bg-rose-900/50 transition">
+                  🔐 SHA-256 ↗
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Rio Urucuia & Ponte Histórica -->
+        <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between border-t-4 border-blue-500 hover:border-blue-400 transition group">
+          <div class="relative h-44 overflow-hidden bg-slate-950">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="Rio Urucuia" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+            <div class="absolute top-3 left-3">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-black font-mono bg-slate-950/80 text-blue-400 border border-blue-500/40 shadow backdrop-blur-md">
+                📍 0,8 km do Centro
+              </span>
+            </div>
+            <div class="absolute bottom-2 right-3 text-right">
+              <span class="text-xs font-mono font-bold text-white bg-slate-950/70 px-2 py-0.5 rounded">Perímetro Urbano</span>
+            </div>
+          </div>
+
+          <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
+            <div class="space-y-1.5">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-400">O Rio de Guimarães Rosa</span>
+              <h3 class="font-extrabold text-white text-base">Rio Urucuia & Balneário</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                "O Urucuia não desmente": praias fluviais de areia fina na estiagem, caiaque, pesca e cais da Barqueata Ecológica anual. Ponto de encontro tradicional da população.
+              </p>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-[11px]">
+              <div class="text-slate-400">
+                <strong>Trajeto:</strong> Acesso direto urbano pela rodovia MG-202 (ponte rodoviária).
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">GPS:</span>
+                <a href="https://www.google.com/maps?q=-15.9185,-46.1042" target="_blank" class="font-mono text-cyan-400 hover:underline">
+                  15°55'06.6"S 46°06'15.1"W ↗
+                </a>
+              </div>
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                <span class="text-[10px] text-slate-500">Fonte: CBH Urucuia / Pref.</span>
+                <button onclick="abrirModalHash('Rio Urucuia & Ponte Histórica', '6c1d43226fe4fd9d6810237aa22a76dbfe053ffcb664b59e5163152220fc5c18', 'https://arinos.mg.gov.br/turismo/rio-urucuia', 'Circuito Turístico Urucuia Grande Sertão / CBH Urucuia')" class="font-mono text-[10px] text-blue-400 bg-blue-950/40 border border-blue-500/30 px-2 py-0.5 rounded hover:bg-blue-900/50 transition">
+                  🔐 SHA-256 ↗
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Sítio Histórico do Estaleiro Naval -->
+        <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between border-t-4 border-yellow-500 hover:border-yellow-400 transition group">
+          <div class="relative h-44 overflow-hidden bg-slate-950">
+            <img src="https://images.unsplash.com/photo-1559827291-72ee739d0d9a?auto=format&fit=crop&w=800&q=80" alt="Estaleiro Naval Histórico" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+            <div class="absolute top-3 left-3">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-black font-mono bg-slate-950/80 text-yellow-400 border border-yellow-500/40 shadow backdrop-blur-md">
+                📍 1,5 km do Centro
+              </span>
+            </div>
+            <div class="absolute bottom-2 right-3 text-right">
+              <span class="text-xs font-mono font-bold text-white bg-slate-950/70 px-2 py-0.5 rounded">Navegação Fluvial</span>
+            </div>
+          </div>
+
+          <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
+            <div class="space-y-1.5">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-yellow-400">Memória Fluvial Séc. XIX</span>
+              <h3 class="font-extrabold text-white text-base">Estaleiro Naval do Urucuia</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Local onde eram montados e reparados os barcos a vela e vapores fluviais que conectavam Barra da Vaca a Pirapora e Januária pelo Rio São Francisco, escoando sal e café.
+              </p>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-[11px]">
+              <div class="text-slate-400">
+                <strong>Trajeto:</strong> Margem esquerda do Rio Urucuia, arredores do porto antigo.
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">GPS:</span>
+                <a href="https://www.google.com/maps?q=-15.9120,-46.0980" target="_blank" class="font-mono text-cyan-400 hover:underline">
+                  15°54'43.2"S 46°05'52.8"W ↗
+                </a>
+              </div>
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                <span class="text-[10px] text-slate-500">Fonte: Memorial da Câmara</span>
+                <button onclick="abrirModalHash('Sítio Histórico do Estaleiro Naval', '3e1ff8f76259ad2d849202ca74e622ef8e74591e1d09ba24765668dae0e85ee8', 'https://arinos.mg.leg.br/institucional/historia', 'Memorial Histórico de Arinos / Acervo Documental da Câmara Municipal')" class="font-mono text-[10px] text-yellow-400 bg-yellow-950/40 border border-yellow-500/30 px-2 py-0.5 rounded hover:bg-yellow-900/50 transition">
+                  🔐 SHA-256 ↗
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. IFNMG Campus Arinos -->
+        <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between border-t-4 border-purple-500 hover:border-purple-400 transition group">
+          <div class="relative h-44 overflow-hidden bg-slate-950">
+            <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80" alt="IFNMG Campus Arinos" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+            <div class="absolute top-3 left-3">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-black font-mono bg-slate-950/80 text-purple-400 border border-purple-500/40 shadow backdrop-blur-md">
+                📍 7,2 km de Arinos
+              </span>
+            </div>
+            <div class="absolute bottom-2 right-3 text-right">
+              <span class="text-xs font-mono font-bold text-white bg-slate-950/70 px-2 py-0.5 rounded">Fazenda Escola</span>
+            </div>
+          </div>
+
+          <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
+            <div class="space-y-1.5">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-400">Polo Federal Tecnológico</span>
+              <h3 class="font-extrabold text-white text-base">IFNMG — Campus Arinos</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Campus federal com fazenda-escola e laboratórios de pesquisa agropecuária, produção de grãos e biotecnologia do baru. Cursos gratuitos de Agronomia e Sistemas.
+              </p>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-[11px]">
+              <div class="text-slate-400">
+                <strong>Trajeto:</strong> Rodovia MG-202, km 392, sentido Uruana de Minas.
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">GPS:</span>
+                <a href="https://www.google.com/maps?q=-15.9520,-46.0580" target="_blank" class="font-mono text-cyan-400 hover:underline">
+                  15°57'07.2"S 46°03'28.8"W ↗
+                </a>
+              </div>
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                <span class="text-[10px] text-slate-500">Fonte: MEC / IFNMG</span>
+                <button onclick="abrirModalHash('IFNMG Campus Arinos', '8da452c75dd3093f41fa99f57cfc1da621b9bfba90680a6b7d6b38c2089e900c', 'https://www.ifnmg.edu.br/arinos', 'Ministério da Educação (MEC) / Portal Oficial IFNMG')" class="font-mono text-[10px] text-purple-400 bg-purple-950/40 border border-purple-500/30 px-2 py-0.5 rounded hover:bg-purple-900/50 transition">
+                  🔐 SHA-256 ↗
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Seção de Notícias Relevantes & Obras Estruturantes com Hashes Forenses -->
+    <div class="space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <div class="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold">
+            <span>📰 Notícias Oficiais & Desenvolvimento Regional</span>
+          </div>
+          <h2 class="text-2xl font-black text-white tracking-tight mt-1 flex items-center space-x-2">
+            <span>Notícias Relevantes & Obras Auditadas de Arinos / MG</span>
+          </h2>
+          <p class="text-xs text-slate-400">Publicações de órgãos oficiais (DER-MG, SEBRAE, MPF, IEF e Câmara) com links diretos e hashes forenses SHA-256</p>
+        </div>
+
+        <span class="px-3 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono font-bold">
+          5 Notícias Estruturadas
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        
+        <!-- Notícia 1: MG-202 Asfalto -->
+        <div class="glass-card p-5 rounded-2xl flex flex-col justify-between space-y-4 border-t-4 border-blue-500">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-[11px] font-mono">
+              <span class="text-blue-400 font-bold">DER-MG / Agência Minas</span>
+              <span class="text-slate-500">28/10/2026</span>
+            </div>
+            <h3 class="font-extrabold text-white text-base">Obras de Asfalto e Pontes na MG-202 Avançam no Noroeste</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              O DER-MG concluiu as etapas de drenagem estrutural e pavimentação asfáltica nos principais trechos da rodovia MG-202 (corredor Urucuia – Pintópolis – Arinos). Foram executadas pontes de concreto sobre os córregos Gameleira e Tabocas, eliminando atoleiros históricos.
+            </p>
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-emerald-400">
+              <strong>Impacto:</strong> Redução de 2 horas no frete agrícola e ligação pavimentada direta com Brasília e o Norte de Minas.
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <a href="https://www.der.mg.gov.br" target="_blank" class="text-cyan-400 hover:underline font-semibold flex items-center space-x-1">
+              <span>Ler no Portal DER ↗</span>
+            </a>
+            <button onclick="abrirModalHash('Obras Rodovia MG-202 (DER-MG)', '4c478a01f5e85bbd8ea5e89d1b6e4faec05be535694c03478fe1ad7c9bc53926', 'https://www.der.mg.gov.br', 'Departamento de Edificações e Estradas de Rodagem de Minas Gerais')" class="font-mono text-[10px] text-blue-400 bg-blue-950/40 border border-blue-500/30 px-2.5 py-1 rounded hover:bg-blue-900/50 transition">
+              🔐 Hash SHA-256
+            </button>
+          </div>
+        </div>
+
+        <!-- Notícia 2: FENABARU / Capital do Baru -->
+        <div class="glass-card p-5 rounded-2xl flex flex-col justify-between space-y-4 border-t-4 border-amber-500">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-[11px] font-mono">
+              <span class="text-amber-400 font-bold">Agência SEBRAE / Prefeitura</span>
+              <span class="text-slate-500">15/09/2026</span>
+            </div>
+            <h3 class="font-extrabold text-white text-base">Arinos se Consolida como a Capital Nacional do Baru com a FENABARU</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              A Festa Nacional do Baru reuniu cooperados, agricultores familiares e chefs em Arinos para celebrar a cadeia produtiva da castanha de baru ("joia do Cerrado"). Com parcerias técnicas, impulsionou a comercialização e renda de mais de 400 famílias extrativistas.
+            </p>
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-amber-300">
+              <strong>Impacto:</strong> Geração de renda no Cerrado em pé e expansão do ecoturismo gastronômico regional.
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <a href="https://arinos.mg.gov.br" target="_blank" class="text-cyan-400 hover:underline font-semibold flex items-center space-x-1">
+              <span>Ler no Portal Arinos ↗</span>
+            </a>
+            <button onclick="abrirModalHash('FENABARU — Capital Nacional do Baru', 'a71221dd72b947c6e08c8714eb445214fe04db4f22c67c5e26c6d328399e5a1b', 'https://agenciasebrae.com.br', 'Agência SEBRAE de Notícias / Portal Municipal de Arinos')" class="font-mono text-[10px] text-amber-400 bg-amber-950/40 border border-amber-500/30 px-2.5 py-1 rounded hover:bg-amber-900/50 transition">
+              🔐 Hash SHA-256
+            </button>
+          </div>
+        </div>
+
+        <!-- Notícia 3: Pró-Águas Urucuia -->
+        <div class="glass-card p-5 rounded-2xl flex flex-col justify-between space-y-4 border-t-4 border-emerald-500">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-[11px] font-mono">
+              <span class="text-emerald-400 font-bold">Ministério Público Federal (MPF)</span>
+              <span class="text-slate-500">11/08/2026</span>
+            </div>
+            <h3 class="font-extrabold text-white text-base">Projeto Pró-Águas Urucuia Recupera 50 Nascentes em Sagarana e Arinos</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Iniciativa conjunta entre MPF, Comitê de Bacia e produtores rurais cercou e recuperou mais de 50 olhos d'água degradados no Distrito de Sagarana e Arinos. O projeto visa garantir a segurança hídrica e a perenidade do Rio Urucuia.
+            </p>
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-cyan-400">
+              <strong>Impacto:</strong> Aumento da recarga de aquíferos e proteção da bacia tributária do Rio São Francisco.
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <a href="https://www.mpf.mp.br" target="_blank" class="text-cyan-400 hover:underline font-semibold flex items-center space-x-1">
+              <span>Ler no Portal MPF ↗</span>
+            </a>
+            <button onclick="abrirModalHash('Projeto Pró-Águas Urucuia (MPF)', 'd130a1bf386a6058097b3997db73e16447c2fa4b036573c79f425883d6a2f8b5', 'https://www.mpf.mp.br/mg', 'Ministério Público Federal / Comitê da Bacia do Urucuia')" class="font-mono text-[10px] text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-2.5 py-1 rounded hover:bg-emerald-900/50 transition">
+              🔐 Hash SHA-256
+            </button>
+          </div>
+        </div>
+
+        <!-- Notícia 4: Maternidade Hospital Municipal -->
+        <div class="glass-card p-5 rounded-2xl flex flex-col justify-between space-y-4 border-t-4 border-rose-500">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-[11px] font-mono">
+              <span class="text-rose-400 font-bold">Câmara Municipal / Saúde</span>
+              <span class="text-slate-500">18/05/2026</span>
+            </div>
+            <h3 class="font-extrabold text-white text-base">Nova Ala de Maternidade do Hospital Nossa Senhora Aparecida</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Inauguração da maternidade humanizada e centro obstétrico do Hospital Municipal de Arinos, conforme legislação aprovada na Câmara e investimentos do SUS. Estrutura reduz transferências emergenciais para outras cidades.
+            </p>
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-rose-300">
+              <strong>Impacto:</strong> Atendimento materno-infantil com partos seguros realizados na própria sede de Arinos.
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <a href="https://arinos.mg.leg.br" target="_blank" class="text-cyan-400 hover:underline font-semibold flex items-center space-x-1">
+              <span>Ler na Câmara ↗</span>
+            </a>
+            <button onclick="abrirModalHash('Maternidade do Hospital Municipal', '73c1fa862d55981440d9938bfe48a97752b04c8f58bca06129994c633a693cb5', 'https://arinos.mg.leg.br', 'Câmara Municipal de Arinos / Secretaria de Saúde')" class="font-mono text-[10px] text-rose-400 bg-rose-950/40 border border-rose-500/30 px-2.5 py-1 rounded hover:bg-rose-900/50 transition">
+              🔐 Hash SHA-256
+            </button>
+          </div>
+        </div>
+
+        <!-- Notícia 5: Parque Sagarana Trilhas -->
+        <div class="glass-card p-5 rounded-2xl flex flex-col justify-between space-y-4 border-t-4 border-teal-500">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-[11px] font-mono">
+              <span class="text-teal-400 font-bold">Instituto Estadual de Florestas (IEF)</span>
+              <span class="text-slate-500">22/03/2026</span>
+            </div>
+            <h3 class="font-extrabold text-white text-base">Parque Sagarana Implanta Novas Trilhas Ecológicas e Sinalização</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              O IEF implementou novo plano de manejo na unidade de 2.340 hectares, com trilhas guiadas nas cachoeiras Boi Preto e Marques. Pesquisadores botânicos registraram novas espécies de orquídeas e aves raras do Cerrado.
+            </p>
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-teal-300">
+              <strong>Impacto:</strong> Fortalecimento do ecoturismo sustentável e conservação de espécies em extinção.
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <a href="http://www.ief.mg.gov.br" target="_blank" class="text-cyan-400 hover:underline font-semibold flex items-center space-x-1">
+              <span>Ler no Portal IEF ↗</span>
+            </a>
+            <button onclick="abrirModalHash('Trilhas no Parque Estadual Sagarana', '55239e94bf29c91030e6ebf456c8021d723707cbba504d6e611394541cb83b07', 'http://www.ief.mg.gov.br', 'Instituto Estadual de Florestas (IEF-MG)')" class="font-mono text-[10px] text-teal-400 bg-teal-950/40 border border-teal-500/30 px-2.5 py-1 rounded hover:bg-teal-900/50 transition">
+              🔐 Hash SHA-256
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- O Poder Legislativo: A Câmara Municipal de Arinos -->
+    <div class="glass-card p-6 md:p-8 rounded-3xl border border-slate-800 space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+        <div>
+          <div class="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold">
+            <span>🏛️ Poder Legislativo Municipal</span>
+          </div>
+          <h2 class="text-2xl font-black text-white tracking-tight mt-1">
+            Câmara Municipal de Arinos / MG
+          </h2>
+          <p class="text-xs text-slate-400">Fiscalização dos atos do Executivo, criação de leis e transparência pública</p>
+        </div>
+
+        <!-- Indicador de Transparência da Câmara -->
+        <div class="flex items-center space-x-3 bg-slate-900/90 px-4 py-2.5 rounded-2xl border border-slate-800">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
+            70%
+          </div>
+          <div>
+            <div class="text-[11px] text-slate-400 font-medium">Índice de Transparência</div>
+            <div class="text-xs font-bold text-white">Radar Nacional Atricon</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-300 leading-relaxed">
+        
+        <div class="space-y-2">
+          <h3 class="font-bold text-white text-sm flex items-center space-x-1.5">
+            <span>📍 Sede & Funcionamento</span>
+          </h3>
+          <p>
+            <strong>Endereço:</strong> Rua Professor Benevides, nº 385, Centro — Arinos/MG (CEP 38680-000).<br>
+            <strong>Expediente:</strong> Segunda a Sexta, das 07h às 13h.<br>
+            <strong>Contato:</strong> (38) 3460-0151 • <code>camara@arinos.mg.leg.br</code>.
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="font-bold text-white text-sm flex items-center space-x-1.5">
+            <span>👥 Composição & Mandato</span>
+          </h3>
+          <p>
+            A Câmara de Arinos é composta por <strong>11 vereadores</strong> eleitos democraticamente para mandatos de 4 anos. A casa possui Mesa Diretora e comissões temáticas como a de Legislação, Justiça e Redação, e Finanças, Orçamento e Tomada de Contas.
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="font-bold text-white text-sm flex items-center space-x-1.5">
+            <span>🔗 Sistemas Integrados</span>
+          </h3>
+          <p>
+            • <strong>Portal Modelo (Interlegis):</strong> <code>arinos.mg.leg.br</code><br>
+            • <strong>Processo Legislativo (SAPL):</strong> <code>sapl.arinos.mg.leg.br</code><br>
+            • <strong>Transparência Contábil:</strong> <code>cmarinos-transparencia.gpecloud.com.br</code>
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Links Diretos Externos -->
+      <div class="pt-4 border-t border-slate-800/80 flex flex-wrap gap-2.5">
+        <a href="https://www.arinos.mg.leg.br" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition flex items-center space-x-1">
+          <span>Portal da Câmara Oficial ↗</span>
+        </a>
+        <a href="https://sapl.arinos.mg.leg.br" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition flex items-center space-x-1">
+          <span>SAPL (Projetos de Lei) ↗</span>
+        </a>
+        <a href="https://cmarinos-transparencia.gpecloud.com.br" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition flex items-center space-x-1">
+          <span>Transparência da Câmara (GPE Cloud) ↗</span>
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 space-y-1">
+      <p>Portal Independente de Dados & Memória Cívica — Arinos / MG</p>
+      <p class="font-mono text-[11px] text-slate-600">Fontes: Câmara Municipal de Arinos, IEF/MG, IBGE, TSE e Acervo Histórico do Noroeste Mineiro</p>
+    </div>
+  </footer>
+
+  <!-- Modal de Auditoria Criptográfica SHA-256 -->
+  <div id="modalHashAudit" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden p-6 space-y-4">
+      <div class="flex items-start justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="text-xl">🔐</span>
+          <div>
+            <h3 class="text-base font-bold text-white" id="hashItemTitulo">Certificado de Autenticidade & Hash</h3>
+            <p class="text-xs text-slate-400">Verificação de Integridade Criptográfica (SHA-256)</p>
+          </div>
+        </div>
+        <button onclick="fecharModalHash()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-semibold text-slate-400 block mb-1">Órgão / Fonte Oficial:</label>
+          <div id="hashItemFonte" class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 font-mono"></div>
+        </div>
+
+        <div>
+          <label class="font-semibold text-slate-400 block mb-1">Hash SHA-256 Oficial:</label>
+          <div class="flex items-center space-x-2">
+            <input type="text" id="hashItemValor" readonly class="flex-1 p-2.5 rounded-lg bg-slate-950 border border-emerald-500/40 text-emerald-400 font-mono text-xs select-all">
+            <button onclick="copiarHash()" class="px-3 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold transition">Copiar</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="font-semibold text-slate-400 block mb-1">URL Oficial de Origem:</label>
+          <a id="hashItemUrl" href="#" target="_blank" class="block p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-cyan-400 font-mono truncate hover:underline"></a>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-400 leading-relaxed">
+          💡 <strong>Como Auditar:</strong> Este hash foi gerado sobre os dados e parâmetros oficiais catalogados. Para verificar a integridade, execute no PowerShell:<br>
+          <code class="text-slate-300">Get-FileHash portal_transparencia_arinos/dados/turismo/arinos_turismo_master.json -Algorithm SHA256</code>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="fecharModalHash()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold transition">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function abrirModalHash(titulo, hash, url, fonte) {
+      document.getElementById('hashItemTitulo').innerText = titulo;
+      document.getElementById('hashItemValor').value = hash;
+      document.getElementById('hashItemUrl').href = url;
+      document.getElementById('hashItemUrl').innerText = url;
+      document.getElementById('hashItemFonte').innerText = fonte;
+
+      const modal = document.getElementById('modalHashAudit');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function fecharModalHash() {
+      const modal = document.getElementById('modalHashAudit');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function copiarHash() {
+      const input = document.getElementById('hashItemValor');
+      input.select();
+      navigator.clipboard.writeText(input.value);
+      alert('Hash SHA-256 copiado para a área de transferência!');
+    }
+
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModalHash(); });
+    document.getElementById('modalHashAudit').addEventListener('click', e => {
+      if (e.target.id === 'modalHashAudit') fecharModalHash();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+{
+  "uf": "MG",
+  "cep": "30110915",
+  "qsa": [
+    {
+      "pais": null,
+      "nome_socio": "IVAN LUIZ CARVALHO MENDES",
+      "codigo_pais": null,
+      "faixa_etaria": "Entre 61 a 70 anos",
+      "cnpj_cpf_do_socio": "***975206**",
+      "qualificacao_socio": "Sócio-Administrador",
+      "codigo_faixa_etaria": 7,
+      "data_entrada_sociedade": "1982-08-27",
+      "identificador_de_socio": 2,
+      "cpf_representante_legal": "***000000**",
+      "nome_representante_legal": "",
+      "codigo_qualificacao_socio": 49,
+      "qualificacao_representante_legal": "Não informada",
+      "codigo_qualificacao_representante_legal": 0
+    }
+  ],
+  "cnpj": "18734954000193",
+  "pais": null,
+  "email": null,
+  "porte": "DEMAIS",
+  "bairro": "SANTA EFIGENIA",
+  "numero": "2905",
+  "ddd_fax": "",
+  "municipio": "BELO HORIZONTE",
+  "logradouro": "DO CONTORNO",
+  "cnae_fiscal": 4222701,
+  "codigo_pais": null,
+  "complemento": "SALA 408",
+  "codigo_porte": 5,
+  "razao_social": "EMPREENDIMENTOS M M LTDA - FALIDA",
+  "nome_fantasia": "EMPREENDIMENTOS M M",
+  "capital_social": 4000000,
+  "ddd_telefone_1": "3111111111",
+  "ddd_telefone_2": "",
+  "opcao_pelo_mei": null,
+  "codigo_municipio": 4123,
+  "cnaes_secundarios": [
+    {
+      "codigo": 3811400,
+      "descricao": "Coleta de resíduos não-perigosos"
+    },
+    {
+      "codigo": 4110700,
+      "descricao": "Incorporação de empreendimentos imobiliários"
+    },
+    {
+      "codigo": 4120400,
+      "descricao": "Construção de edifícios"
+    },
+    {
+      "codigo": 6810201,
+      "descricao": "Compra e venda de imóveis próprios"
+    }
+  ],
+  "natureza_juridica": "Sociedade Empresária Limitada",
+  "regime_tributario": [
+    {
+      "ano": 2016,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2017,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2018,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2019,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2020,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO REAL",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2021,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2022,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2023,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    },
+    {
+      "ano": 2024,
+      "cnpj_da_scp": null,
+      "forma_de_tributacao": "LUCRO PRESUMIDO",
+      "quantidade_de_escrituracoes": 1
+    }
+  ],
+  "situacao_especial": "FALIDO",
+  "opcao_pelo_simples": null,
+  "situacao_cadastral": 2,
+  "data_opcao_pelo_mei": null,
+  "data_exclusao_do_mei": null,
+  "cnae_fiscal_descricao": "Construção de redes de abastecimento de água, coleta de esgoto e construções correlatas, exceto obras de irrigação",
+  "codigo_municipio_ibge": 3106200,
+  "data_inicio_atividade": "1975-04-30",
+  "data_situacao_especial": "2026-01-23",
+  "data_opcao_pelo_simples": null,
+  "data_situacao_cadastral": "2004-11-13",
+  "nome_cidade_no_exterior": "",
+  "codigo_natureza_juridica": 2062,
+  "data_exclusao_do_simples": null,
+  "motivo_situacao_cadastral": 0,
+  "ente_federativo_responsavel": "",
+  "identificador_matriz_filial": 1,
+  "qualificacao_do_responsavel": 64,
+  "descricao_situacao_cadastral": "ATIVA",
+  "descricao_tipo_de_logradouro": "AVENIDA",
+  "descricao_motivo_situacao_cadastral": "SEM MOTIVO",
+  "descricao_identificador_matriz_filial": "MATRIZ"
+}

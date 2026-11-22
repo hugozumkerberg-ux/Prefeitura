@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empresas Contratadas, Sócios & Viagens Oficiais — Arinos / MG</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #030712;
+      color: #f3f4f6;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+    
+    .glass {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-card {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .glass-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 14px 35px -10px rgba(59, 130, 246, 0.25);
+    }
+
+    .modal-enter {
+      animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-blue-500 selection:text-white">
+
+  <!-- Header Superior Oficial -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Logo & Título -->
+      <div class="flex items-center space-x-3">
+        <a href="/" class="flex items-center space-x-3 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition">
+            <span class="text-xl">🏢</span>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-extrabold text-base sm:text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+                Auditoria de Empresas & Viagens
+              </span>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/30">QSA • RFB</span>
+            </div>
+            <p class="text-xs text-slate-400 font-medium">Arinos / MG • Sócios, Contratos, Vínculos & Diárias</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Links de Navegação Unificada -->
+      <div class="flex items-center space-x-1.5 sm:space-x-2 overflow-x-auto py-1">
+        <a href="/" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          <span>📊 Painel</span>
+        </a>
+        <a href="/empresas.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-blue-300 bg-blue-950/60 border border-blue-500/50 hover:bg-blue-900/50 transition">
+          <span>🏢 Empresas & Viagens</span>
+        </a>
+        <a href="/vereadores.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-indigo-300 bg-indigo-950/40 border border-indigo-500/30 hover:bg-indigo-900/40 transition">
+          <span>🏛️ Vereadores</span>
+        </a>
+        <a href="/mandatos.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-purple-300 bg-purple-950/40 border border-purple-500/30 hover:bg-purple-900/40 transition">
+          <span>📜 Mandatos</span>
+        </a>
+        <a href="/eleicoes.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-amber-300 bg-amber-950/40 border border-amber-500/30 hover:bg-amber-900/40 transition">
+          <span>🗳️ Eleições TSE</span>
+        </a>
+        <a href="/cidade.html" class="hidden md:flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-emerald-300 bg-emerald-950/40 border border-emerald-500/30 hover:bg-emerald-900/40 transition">
+          <span>📍 Turismo & Notícias</span>
+        </a>
+        <a href="/tabelas.html" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          <span>📋 Tabelas</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
+
+    <!-- Hero Banner Informativo -->
+    <div class="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-950/40 via-slate-900/70 to-slate-950 p-6 md:p-8">
+      <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"></div>
+      
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-3 max-w-3xl">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold">
+            <span>🛡️ Auditoria Cruzada • Receita Federal (QSA) & Portal da Transparência</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+            Quem Contrata com a Prefeitura de Arinos?
+          </h1>
+          <p class="text-sm md:text-base text-slate-300 leading-relaxed">
+            Painel de inteligência fiscal e controle social. Consulte os donos e sócios das empresas que mais recebem recursos públicos, veja cruzamentos com agentes públicos municipais e fiscalize as <strong>29.746 diárias de viagem</strong> empenhadas pelo município.
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <span class="inline-flex items-center gap-1.5 text-xs text-slate-400 font-mono bg-slate-900/80 px-2.5 py-1 rounded border border-slate-800">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Fonte: RFB MinhaReceita + SIAP ADPMNET
+            </span>
+            <span class="inline-flex items-center gap-1.5 text-xs text-blue-400 font-mono bg-blue-950/40 px-2.5 py-1 rounded border border-blue-500/30">
+              Hash Forense SHA-256 Auditável
+            </span>
+          </div>
+        </div>
+
+        <!-- Indicador Rápido -->
+        <div class="glass-card rounded-xl p-4 flex flex-col items-center justify-center text-center border-blue-500/30 min-w-[200px]">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Volume Financeiro Auditado</span>
+          <span id="hero-volume-total" class="text-2xl md:text-3xl font-extrabold text-blue-400 font-mono mt-1">
+            R$ 321,8 Mi
+          </span>
+          <span class="text-[11px] text-slate-400 mt-1">Contratos & Despesas</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estatísticas Principais (Cards) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      <div class="glass-card rounded-xl p-4 border-slate-800">
+        <span class="text-xs text-slate-400 font-medium">Empresas Analisadas</span>
+        <div id="stat-empresas" class="text-xl sm:text-2xl font-extrabold text-white font-mono mt-1">120</div>
+        <span class="text-[11px] text-slate-400">Top contratadas</span>
+      </div>
+
+      <div class="glass-card rounded-xl p-4 border-slate-800">
+        <span class="text-xs text-slate-400 font-medium">Sócios Identificados</span>
+        <div id="stat-socios" class="text-xl sm:text-2xl font-extrabold text-indigo-400 font-mono mt-1">215</div>
+        <span class="text-[11px] text-slate-400">Quadro societário</span>
+      </div>
+
+      <div class="glass-card rounded-xl p-4 border-amber-500/30 bg-amber-950/10">
+        <span class="text-xs text-amber-300 font-medium">Alertas de Vínculo</span>
+        <div id="stat-alertas" class="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono mt-1">11</div>
+        <span class="text-[11px] text-amber-400/80">Sócios c/ agentes públicos</span>
+      </div>
+
+      <div class="glass-card rounded-xl p-4 border-slate-800">
+        <span class="text-xs text-slate-400 font-medium">Total de Diárias</span>
+        <div id="stat-diarias" class="text-xl sm:text-2xl font-extrabold text-cyan-400 font-mono mt-1">29.746</div>
+        <span class="text-[11px] text-slate-400">Viagens oficiais</span>
+      </div>
+
+      <div class="glass-card rounded-xl p-4 border-slate-800">
+        <span class="text-xs text-slate-400 font-medium">Gasto com Viagens</span>
+        <div id="stat-gasto-diarias" class="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono mt-1">R$ 7,1 Mi</div>
+        <span class="text-[11px] text-slate-400">2013 a 2026</span>
+      </div>
+
+      <div class="glass-card rounded-xl p-4 border-slate-800">
+        <span class="text-xs text-slate-400 font-medium">Ticket Médio Viagem</span>
+        <div id="stat-ticket-medio" class="text-xl sm:text-2xl font-extrabold text-purple-400 font-mono mt-1">R$ 238,60</div>
+        <span class="text-[11px] text-slate-400">Por diária concedida</span>
+      </div>
+    </div>
+
+    <!-- Navegação por Abas Principais -->
+    <div class="flex items-center border-b border-slate-800 space-x-2 sm:space-x-4">
+      <button id="tab-btn-empresas" onclick="switchTab('empresas')" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-blue-500 text-blue-400 flex items-center space-x-2 transition">
+        <span>🏢 Empresas & Sócios (QSA)</span>
+        <span id="tab-count-empresas" class="px-2 py-0.5 rounded-full text-xs bg-blue-500/20 text-blue-300">120</span>
+      </button>
+      <button id="tab-btn-alertas" onclick="switchTab('alertas')" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition">
+        <span>⚠️ Alertas de Vínculos</span>
+        <span class="px-2 py-0.5 rounded-full text-xs bg-amber-500/20 text-amber-300">11</span>
+      </button>
+      <button id="tab-btn-viagens" onclick="switchTab('viagens')" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition">
+        <span>✈️ Viagens & Diárias (29k)</span>
+        <span class="px-2 py-0.5 rounded-full text-xs bg-cyan-500/20 text-cyan-300">R$ 7,1 Mi</span>
+      </button>
+    </div>
+
+    <!-- ==================== ABA 1: EMPRESAS & QUADRO DE SÓCIOS ==================== -->
+    <section id="section-empresas" class="space-y-6">
+      
+      <!-- Barra de Filtros e Busca de Empresas -->
+      <div class="glass-card rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
+        <!-- Campo de Busca -->
+        <div class="relative flex-1">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+            🔍
+          </span>
+          <input 
+            type="text" 
+            id="search-empresa" 
+            oninput="aplicarFiltrosEmpresas()"
+            placeholder="Buscar por razão social, nome fantasia, CNPJ ou nome de sócio..." 
+            class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
+          >
+        </div>
+
+        <!-- Filtros Rápidos -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="setEmpresaFilter('todos')" id="filter-btn-todos" class="emp-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-600 text-white shadow-sm transition">
+            Todas (120)
+          </button>
+          <button onclick="setEmpresaFilter('alertas')" id="filter-btn-alertas" class="emp-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            ⚠️ Com Alertas (11)
+          </button>
+          <button onclick="setEmpresaFilter('arinos')" id="filter-btn-arinos" class="emp-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            📍 Sede em Arinos
+          </button>
+          <button onclick="setEmpresaFilter('ativas')" id="filter-btn-ativas" class="emp-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            ✅ Ativas
+          </button>
+          
+          <!-- Ordenação -->
+          <select id="sort-empresa" onchange="aplicarFiltrosEmpresas()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 border border-slate-700 text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500">
+            <option value="volume_desc">Maior Volume (R$)</option>
+            <option value="contratos_desc">Mais Contratos</option>
+            <option value="socios_desc">Mais Sócios</option>
+            <option value="capital_desc">Maior Capital Social</option>
+            <option value="nome_asc">Nome A-Z</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Contador de Resultados -->
+      <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+        <span>Exibindo <strong id="count-exibidas" class="text-white">0</strong> de 120 empresas</span>
+        <span class="font-mono">Dados auditados com Receita Federal do Brasil</span>
+      </div>
+
+      <!-- Grid de Cards de Empresas -->
+      <div id="grid-empresas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+    </section>
+
+    <!-- ==================== ABA 2: ALERTAS DE VÍNCULOS ==================== -->
+    <section id="section-alertas" class="space-y-6 hidden">
+      <div class="p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 text-amber-200 text-sm flex items-start gap-3">
+        <span class="text-2xl">⚠️</span>
+        <div class="space-y-1">
+          <h3 class="font-bold text-amber-300">Cruzamento de Dados de Sócios x Agentes Públicos e Candidatos</h3>
+          <p class="text-xs text-amber-200/90 leading-relaxed">
+            As empresas abaixo possuem sócios ou administradores cujos nomes coincidem exatamente com servidores municipais (incluindo secretários municipais, diretores clínicos e chefes de setor), candidatos a cargos eletivos ou membros do legislativo de Arinos / MG. A identificação é forense e baseada nos dados públicos da Receita Federal e do Portal da Transparência de Arinos.
+          </p>
+        </div>
+      </div>
+
+      <div id="lista-alertas-detalhados" class="space-y-4">
+        <!-- Renderizado via JS -->
+      </div>
+    </section>
+
+    <!-- ==================== ABA 3: VIAGENS & DIÁRIAS (29.746 REGISTROS) ==================== -->
+    <section id="section-viagens" class="space-y-8 hidden">
+      
+      <!-- Resumo Analítico de Diárias -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- Card 1: Diárias de Prefeito -->
+        <div class="glass-card rounded-2xl p-5 border-blue-500/30 bg-blue-950/20 flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Diárias do Prefeito</span>
+            <span class="text-xl">👔</span>
+          </div>
+          <div class="mt-4">
+            <div id="diarias-prefeito-valor" class="text-2xl sm:text-3xl font-extrabold text-white font-mono">R$ 433.704,90</div>
+            <p class="text-xs text-slate-300 mt-1">604 viagens oficiais registradas</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
+            <span>Ticket Médio: <strong>R$ 718,05</strong></span>
+            <span>Destino: BH & BSB</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Diárias de Secretários -->
+        <div class="glass-card rounded-2xl p-5 border-purple-500/30 bg-purple-950/20 flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">Diárias de Secretários</span>
+            <span class="text-xl">💼</span>
+          </div>
+          <div class="mt-4">
+            <div id="diarias-secretarios-valor" class="text-2xl sm:text-3xl font-extrabold text-white font-mono">R$ 454.927,34</div>
+            <p class="text-xs text-slate-300 mt-1">1.103 viagens oficiais registradas</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
+            <span>Ticket Médio: <strong>R$ 412,44</strong></span>
+            <span>Secretarias Municipais</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Diárias de Demais Servidores -->
+        <div class="glass-card rounded-2xl p-5 border-cyan-500/30 bg-cyan-950/20 flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Demais Servidores</span>
+            <span class="text-xl">🚗</span>
+          </div>
+          <div class="mt-4">
+            <div id="diarias-servidores-valor" class="text-2xl sm:text-3xl font-extrabold text-white font-mono">R$ 6.200.905,39</div>
+            <p class="text-xs text-slate-300 mt-1">28.013 viagens oficiais registradas</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
+            <span>Ticket Médio: <strong>R$ 221,36</strong></span>
+            <span>Motoristas, Saúde e Apoio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Evolução Anual de Diárias (Gráfico em Barras CSS) -->
+      <div class="glass-card rounded-2xl p-6 border-slate-800 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h3 class="text-lg font-bold text-white">Evolução Histórica de Gastos com Diárias (2013 - 2026)</h3>
+            <p class="text-xs text-slate-400">Distribuição anual dos R$ 7.097.440,34 em viagens pagas pela Prefeitura</p>
+          </div>
+          <span class="text-xs font-mono text-cyan-400 bg-cyan-950/40 px-3 py-1 rounded-full border border-cyan-500/30">
+            29.746 Registros Analisados
+          </span>
+        </div>
+        <div id="grafico-anos-diarias" class="space-y-3 pt-2">
+          <!-- Renderizado via JS -->
+        </div>
+      </div>
+
+      <!-- Top Destinos Mais Frequentes -->
+      <div class="glass-card rounded-2xl p-6 border-slate-800 space-y-4">
+        <h3 class="text-lg font-bold text-white">Principais Destinos das Viagens Oficiais</h3>
+        <p class="text-xs text-slate-400">Cidades mais visitadas com recursos públicos de Arinos</p>
+        <div id="grid-destinos-diarias" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          <!-- Renderizado via JS -->
+        </div>
+      </div>
+
+      <!-- Top Viajantes (Ranking) -->
+      <div class="glass-card rounded-2xl p-6 border-slate-800 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h3 class="text-lg font-bold text-white">Ranking dos Servidores que Mais Receberam Diárias</h3>
+            <p class="text-xs text-slate-400">Servidores públicos municipais com maior volume acumulado de viagens</p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="text-[11px] uppercase bg-slate-900/80 text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="py-3 px-4">#</th>
+                <th class="py-3 px-4">Servidor</th>
+                <th class="py-3 px-4">Categoria</th>
+                <th class="py-3 px-4 text-center">Viagens</th>
+                <th class="py-3 px-4 text-right">Total Recebido</th>
+                <th class="py-3 px-4 text-right">Ticket Médio</th>
+                <th class="py-3 px-4">Principal Destino</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-top-viajantes" class="divide-y divide-slate-800/60 font-sans">
+              <!-- Renderizado via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Busca Interativa de Diárias em Tempo Real -->
+      <div class="glass-card rounded-2xl p-6 border-slate-800 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h3 class="text-lg font-bold text-white">Pesquisar Todas as 29.746 Diárias Oficiais</h3>
+            <p class="text-xs text-slate-400">Consulte qualquer viagem por nome do servidor, motivo, cidade ou ano</p>
+          </div>
+        </div>
+
+        <!-- Filtros da Tabela de Diárias -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="relative sm:col-span-2">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">🔍</span>
+            <input 
+              type="text" 
+              id="search-diaria-input" 
+              placeholder="Digite o nome do servidor, motivo da viagem ou empenho..." 
+              class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+              onkeydown="if(event.key==='Enter') buscarDiariasPaginadas(1)"
+            >
+          </div>
+          <div class="flex gap-2">
+            <select id="select-ano-diaria" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-cyan-500" onchange="buscarDiariasPaginadas(1)">
+              <option value="">Todos os Anos</option>
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+              <option value="2021">2021</option>
+              <option value="2020">2020</option>
+              <option value="2019">2019</option>
+              <option value="2018">2018</option>
+              <option value="2017">2017</option>
+              <option value="2016">2016</option>
+              <option value="2015">2015</option>
+              <option value="2014">2014</option>
+              <option value="2013">2013</option>
+            </select>
+            <button onclick="buscarDiariasPaginadas(1)" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold rounded-xl transition">
+              Buscar
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabela Paginada de Diárias -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="text-[11px] uppercase bg-slate-900/80 text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="py-2.5 px-3">Data</th>
+                <th class="py-2.5 px-3">Servidor</th>
+                <th class="py-2.5 px-3">Tipo / Cargo</th>
+                <th class="py-2.5 px-3">Destino & Justificativa</th>
+                <th class="py-2.5 px-3 text-right">Valor</th>
+                <th class="py-2.5 px-3 text-center">Empenho</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-diarias-busca" class="divide-y divide-slate-800/60 font-sans">
+              <!-- Preenchido dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Paginação -->
+        <div class="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800">
+          <span id="diarias-paginacao-info">Página 1</span>
+          <div class="flex gap-2">
+            <button id="btn-prev-diarias" onclick="mudarPaginaDiarias(-1)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white disabled:opacity-40" disabled>Anterior</button>
+            <button id="btn-next-diarias" onclick="mudarPaginaDiarias(1)" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white disabled:opacity-40">Próxima</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== MODAL DE DOSSIÊ DA EMPRESA ==================== -->
+  <div id="modal-empresa" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl modal-enter overflow-hidden">
+      
+      <!-- Cabeçalho do Modal -->
+      <div class="p-6 border-b border-slate-800 bg-slate-950/60 flex items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="modal-situacao-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">ATIVA</span>
+            <span id="modal-porte-badge" class="px-2 py-0.5 rounded text-[10px] font-mono text-slate-400 bg-slate-800">PORTE</span>
+          </div>
+          <h2 id="modal-razao-social" class="text-xl sm:text-2xl font-extrabold text-white mt-1">RAZÃO SOCIAL</h2>
+          <p id="modal-cnpj-endereco" class="text-xs text-slate-400 font-mono mt-0.5">CNPJ: 00.000.000/0000-00 • Arinos - MG</p>
+        </div>
+        <button onclick="fecharModalEmpresa()" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/60 hover:bg-slate-800 text-lg transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Conteúdo do Modal (Scroll) -->
+      <div class="p-6 overflow-y-auto space-y-6 flex-1 text-xs text-slate-300">
+        
+        <!-- Alerta de Vínculo se Existir -->
+        <div id="modal-alerta-box" class="hidden p-4 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200">
+          <div class="font-bold flex items-center gap-2 text-sm text-amber-300">
+            <span>⚠️ ALERTA DE VÍNCULO SOCIETÁRIO COM O SETOR PÚBLICO</span>
+          </div>
+          <p id="modal-alerta-texto" class="mt-1 text-xs text-amber-100 font-sans whitespace-pre-line"></p>
+        </div>
+
+        <!-- Resumo Financeiro & Cadastral -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3 rounded-xl bg-slate-950/50 border border-slate-800">
+            <span class="text-slate-500 text-[11px] block">Volume Total Auditado</span>
+            <span id="modal-val-total" class="text-base font-extrabold text-blue-400 font-mono">R$ 0,00</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950/50 border border-slate-800">
+            <span class="text-slate-500 text-[11px] block">Contratos Públicos</span>
+            <span id="modal-val-contratos" class="text-base font-extrabold text-white font-mono">R$ 0,00</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950/50 border border-slate-800">
+            <span class="text-slate-500 text-[11px] block">Capital Social RFB</span>
+            <span id="modal-capital-social" class="text-base font-extrabold text-emerald-400 font-mono">R$ 0,00</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950/50 border border-slate-800">
+            <span class="text-slate-500 text-[11px] block">Data de Abertura</span>
+            <span id="modal-data-abertura" class="text-base font-bold text-slate-300 font-mono">--/--/----</span>
+          </div>
+        </div>
+
+        <!-- Atividade Econômica (CNAE) -->
+        <div class="p-4 rounded-xl bg-slate-950/50 border border-slate-800 space-y-1">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Atividade Principal (CNAE)</span>
+          <p id="modal-cnae-descricao" class="text-sm font-medium text-white"></p>
+        </div>
+
+        <!-- Quadro de Sócios e Administradores (QSA) -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>👥 Quadro de Sócios e Administradores (QSA)</span>
+              <span id="modal-socios-count" class="px-2 py-0.5 rounded-full text-[10px] bg-indigo-500/20 text-indigo-300 font-mono">0</span>
+            </h4>
+            <span class="text-[11px] text-slate-500">Dados da Receita Federal</span>
+          </div>
+          <div id="modal-socios-lista" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Sócios renderizados via JS -->
+          </div>
+        </div>
+
+        <!-- Contratos Registrados -->
+        <div class="space-y-3">
+          <h4 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>📄 Contratos com o Município de Arinos</span>
+            <span id="modal-contratos-count" class="px-2 py-0.5 rounded-full text-[10px] bg-blue-500/20 text-blue-300 font-mono">0</span>
+          </h4>
+          <div id="modal-contratos-lista" class="space-y-2 max-h-48 overflow-y-auto">
+            <!-- Lista de contratos via JS -->
+          </div>
+        </div>
+
+        <!-- Hash Forense e Auditoria -->
+        <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 font-mono text-[11px] space-y-2">
+          <div class="flex items-center justify-between text-slate-400">
+            <span>HASH FORENSE DO REGISTRO (SHA-256)</span>
+            <button onclick="copiarHashEmpresa()" class="text-blue-400 hover:underline">Copiar Hash</button>
+          </div>
+          <div id="modal-hash-forense" class="text-slate-300 break-all bg-slate-900 p-2 rounded border border-slate-800">
+            ----------------------------------------------------------------
+          </div>
+          <p class="text-[10px] text-slate-500">Fonte Oficial: Receita Federal do Brasil / MinhaReceita API & Portal da Transparência de Arinos.</p>
+        </div>
+
+      </div>
+
+      <!-- Rodapé do Modal -->
+      <div class="p-4 border-t border-slate-800 bg-slate-950/60 flex items-center justify-between">
+        <span class="text-xs text-slate-400">Auditoria Pública de Transparência</span>
+        <button onclick="fecharModalEmpresa()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition">
+          Fechar Dossiê
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950/90 py-8 mt-12 text-center text-xs text-slate-500 space-y-2">
+    <div class="max-w-7xl mx-auto px-4">
+      <p class="text-slate-400 font-medium">Portal de Controle Social e Transparência Pública — Município de Arinos / MG (IBGE 3104502)</p>
+      <p class="text-slate-600">Dados oficiais obtidos diretamente da Receita Federal do Brasil e Portal SIAP ADPMNET. Autenticação criptográfica por hashes SHA-256.</p>
+    </div>
+  </footer>
+
+  <!-- ==================== LOGICA JAVASCRIPT ==================== -->
+  <script>
+    let empresasMaster = [];
+    let empresasFiltradas = [];
+    let viagensMaster = null;
+    let filtroAtual = 'todos';
+    let diariaPaginaAtual = 1;
+    let hashModalAtual = '';
+
+    // Formatar Moeda Real
+    function formatMoney(val) {
+      if (!val && val !== 0) return 'R$ 0,00';
+      return Number(val).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function formatCNPJ(cnpj) {
+      if (!cnpj) return '';
+      const c = cnpj.replace(/\D/g, '');
+      if (c.length === 14) {
+        return c.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+      }
+      return cnpj;
+    }
+
+    // Inicialização
+    async function init() {
+      try {
+        // Carrega Empresas
+        const resEmp = await fetch('/api/dados/empresas');
+        if (resEmp.ok) {
+          const dataEmp = await resEmp.json();
+          empresasMaster = dataEmp.empresas || [];
+          empresasFiltradas = [...empresasMaster];
+          renderizarEmpresas();
+
+          if (dataEmp.resumo) {
+            document.getElementById('stat-empresas').textContent = dataEmp.resumo.total_empresas_catalogadas;
+            document.getElementById('stat-socios').textContent = dataEmp.resumo.total_socios_mapeados;
+            document.getElementById('stat-alertas').textContent = dataEmp.resumo.empresas_com_alerta_vinculo;
+            document.getElementById('hero-volume-total').textContent = 'R$ ' + (dataEmp.resumo.volume_financeiro_total / 1000000).toFixed(1).replace('.', ',') + ' Mi';
+          }
+          renderizarAlertas();
+        }
+
+        // Carrega Viagens
+        const resViag = await fetch('/api/dados/viagens');
+        if (resViag.ok) {
+          viagensMaster = await resViag.json();
+          renderizarViagensAnalytics();
+          buscarDiariasPaginadas(1);
+        }
+      } catch (err) {
+        console.error('Erro ao carregar dados:', err);
+      }
+    }
+
+    // Alternar Abas
+    function switchTab(tabId) {
+      const tabs = ['empresas', 'alertas', 'viagens'];
+      tabs.forEach(t => {
+        const sec = document.getElementById(`section-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (t === tabId) {
+          sec.classList.remove('hidden');
+          btn.classList.add('border-blue-500', 'text-blue-400');
+          btn.classList.remove('border-transparent', 'text-slate-400');
+        } else {
+          sec.classList.add('hidden');
+          btn.classList.remove('border-blue-500', 'text-blue-400');
+          btn.classList.add('border-transparent', 'text-slate-400');
+        }
+      });
+    }
+
+    // Filtrar Empresas
+    function setEmpresaFilter(filtro) {
+      filtroAtual = filtro;
+      document.querySelectorAll('.emp-filter-btn').forEach(b => {
+        b.classList.remove('bg-blue-600', 'text-white');
+        b.classList.add('bg-slate-800', 'text-slate-300');
+      });
+      const activeBtn = document.getElementById(`filter-btn-${filtro}`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-blue-600', 'text-white');
+        activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+      }
+      aplicarFiltrosEmpresas();
+    }
+
+    function aplicarFiltrosEmpresas() {
+      const q = (document.getElementById('search-empresa').value || '').toLowerCase().trim();
+      const sort = document.getElementById('sort-empresa').value;
+
+      empresasFiltradas = empresasMaster.filter(e => {
+        // Filtro de aba/categoria
+        if (filtroAtual === 'alertas' && e.possui_alerta_vinculo !== 1) return false;
+        if (filtroAtual === 'arinos' && (e.municipio || '').toUpperCase() !== 'ARINOS') return false;
+        if (filtroAtual === 'ativas' && e.situacao_cadastral !== 'ATIVA') return false;
+
+        // Busca por texto
+        if (q) {
+          const matchNome = (e.razao_social || '').toLowerCase().includes(q) ||
+                            (e.nome_fantasia || '').toLowerCase().includes(q) ||
+                            (e.cnpj || '').includes(q) ||
+                            (e.cnae_principal_descricao || '').toLowerCase().includes(q);
+          const matchSocio = (e.socios || []).some(s => (s.nome_socio || '').toLowerCase().includes(q));
+          return matchNome || matchSocio;
+        }
+        return true;
+      });
+
+      // Ordenação
+      if (sort === 'volume_desc') {
+        empresasFiltradas.sort((a, b) => (b.total_geral || 0) - (a.total_geral || 0));
+      } else if (sort === 'contratos_desc') {
+        empresasFiltradas.sort((a, b) => (b.qtd_contratos || 0) - (a.qtd_contratos || 0));
+      } else if (sort === 'socios_desc') {
+        empresasFiltradas.sort((a, b) => (b.qtd_socios || 0) - (a.qtd_socios || 0));
+      } else if (sort === 'capital_desc') {
+        empresasFiltradas.sort((a, b) => (b.capital_social || 0) - (a.capital_social || 0));
+      } else if (sort === 'nome_asc') {
+        empresasFiltradas.sort((a, b) => (a.razao_social || '').localeCompare(b.razao_social || ''));
+      }
+
+      renderizarEmpresas();
+    }
+
+    // Renderizar Grid de Empresas
+    function renderizarEmpresas() {
+      const grid = document.getElementById('grid-empresas');
+      document.getElementById('count-exibidas').textContent = empresasFiltradas.length;
+
+      if (empresasFiltradas.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center text-slate-500">
+            <span class="text-3xl block mb-2">🔍</span>
+            <p class="text-sm font-semibold text-slate-400">Nenhuma empresa encontrada com os filtros aplicados</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = empresasFiltradas.map((emp, idx) => {
+        const isAtiva = emp.situacao_cadastral === 'ATIVA';
+        const temAlerta = emp.possui_alerta_vinculo === 1;
+        const socios = emp.socios || [];
+
+        return `
+          <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-slate-800 hover:border-blue-500/40 relative">
+            
+            ${temAlerta ? `
+              <div class="absolute -top-2.5 right-4 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-slate-950 shadow-md flex items-center gap-1">
+                <span>⚠️ VÍNCULO DETECTADO</span>
+              </div>
+            ` : ''}
+
+            <!-- Topo do Card -->
+            <div>
+              <div class="flex items-start justify-between gap-2 mb-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isAtiva ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'}">
+                  ${emp.situacao_cadastral || 'INDETERMINADA'}
+                </span>
+                <span class="text-[11px] font-mono text-slate-400">
+                  ${emp.municipio ? `${emp.municipio}/${emp.uf || 'MG'}` : 'N/D'}
+                </span>
+              </div>
+
+              <h3 class="text-base font-bold text-white line-clamp-1 hover:text-blue-400 transition" title="${emp.razao_social}">
+                ${emp.razao_social}
+              </h3>
+              ${emp.nome_fantasia ? `<p class="text-xs text-slate-400 line-clamp-1 italic">${emp.nome_fantasia}</p>` : ''}
+              <p class="text-xs font-mono text-slate-500 mt-1">${formatCNPJ(emp.cnpj)}</p>
+
+              <!-- Indicadores Financeiros do Card -->
+              <div class="grid grid-cols-2 gap-2 my-3 p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                <div>
+                  <span class="text-[10px] text-slate-500 block uppercase">Volume Total</span>
+                  <span class="text-sm font-extrabold text-blue-400 font-mono">${formatMoney(emp.total_geral)}</span>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-500 block uppercase">Contratos</span>
+                  <span class="text-sm font-bold text-slate-200 font-mono">${emp.qtd_contratos} reg.</span>
+                </div>
+              </div>
+
+              <!-- Quadro Resumido de Sócios -->
+              <div class="space-y-1 mt-2">
+                <span class="text-[11px] font-semibold text-slate-400 flex items-center justify-between">
+                  <span>Sócios Registrados:</span>
+                  <span class="font-mono text-[10px] text-indigo-400">${socios.length} no QSA</span>
+                </span>
+                
+                <div class="flex flex-wrap gap-1 max-h-16 overflow-hidden">
+                  ${socios.length > 0 ? socios.slice(0, 3).map(s => `
+                    <span class="px-2 py-0.5 rounded text-[10px] font-medium ${s.vinculo_politico_alerta ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold' : 'bg-slate-800/90 text-slate-300 border border-slate-700/60'}" title="${s.qualificacao_socio || 'Sócio'}">
+                      ${s.vinculo_politico_alerta ? '⚠️ ' : ''}${s.nome_socio ? s.nome_socio.split(' ')[0] + ' ' + (s.nome_socio.split(' ')[1] || '') : 'Sócio'}
+                    </span>
+                  `).join('') : '<span class="text-[11px] text-slate-600 italic">EIRELI / Individual / Sem sócios adicionais</span>'}
+                  ${socios.length > 3 ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400">+${socios.length - 3}</span>` : ''}
+                </div>
+              </div>
+            </div>
+
+            <!-- Botão de Ação -->
+            <div class="mt-4 pt-3 border-t border-slate-800/80">
+              <button onclick="abrirDossieEmpresa('${emp.cnpj}')" class="w-full py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white text-xs font-semibold border border-blue-500/30 transition flex items-center justify-center gap-1.5">
+                <span>🔍 Ver Dossiê & Contratos</span>
+              </button>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Renderizar Seção de Alertas
+    function renderizarAlertas() {
+      const listaDiv = document.getElementById('lista-alertas-detalhados');
+      const comAlerta = empresasMaster.filter(e => e.possui_alerta_vinculo === 1);
+
+      listaDiv.innerHTML = comAlerta.map((emp, i) => {
+        const sociosAlerta = (emp.socios || []).filter(s => s.vinculo_politico_alerta);
+
+        return `
+          <div class="glass-card rounded-2xl p-5 border-amber-500/30 bg-gradient-to-r from-amber-950/20 to-slate-900/60 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-slate-950">ALERTA #${i+1}</span>
+                  <span class="text-xs font-mono text-slate-400">${formatCNPJ(emp.cnpj)}</span>
+                </div>
+                <h3 class="text-lg font-extrabold text-white mt-1">${emp.razao_social}</h3>
+              </div>
+              <div class="text-right">
+                <span class="text-xs text-slate-400 block">Volume Total Auditado</span>
+                <span class="text-base font-extrabold text-amber-400 font-mono">${formatMoney(emp.total_geral)}</span>
+              </div>
+            </div>
+
+            <!-- Sócios Envolvidos -->
+            <div class="space-y-2">
+              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Sócios e Vínculos Identificados:</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                ${sociosAlerta.map(s => `
+                  <div class="p-3 rounded-xl bg-slate-950/60 border border-amber-500/30 space-y-1">
+                    <div class="flex items-center justify-between">
+                      <span class="font-bold text-white text-xs">${s.nome_socio}</span>
+                      <span class="text-[10px] font-mono text-slate-400">${s.qualificacao_socio || 'Sócio'}</span>
+                    </div>
+                    <p class="text-xs text-amber-300 font-mono bg-amber-950/40 p-1.5 rounded border border-amber-500/20">
+                      ${s.vinculo_politico_alerta}
+                    </p>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Rodapé do Card de Alerta -->
+            <div class="flex items-center justify-between pt-2">
+              <span class="text-[11px] text-slate-500">Hash Forense: <span class="font-mono">${(emp.hash_forense || '').slice(0, 16)}...</span></span>
+              <button onclick="abrirDossieEmpresa('${emp.cnpj}')" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">
+                Examinar Detalhes
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Renderizar Analytics de Viagens
+    function renderizarViagensAnalytics() {
+      if (!viagensMaster) return;
+
+      const v = viagensMaster;
+      document.getElementById('diarias-prefeito-valor').textContent = formatMoney(433704.90);
+      document.getElementById('diarias-secretarios-valor').textContent = formatMoney(454927.34);
+      document.getElementById('diarias-servidores-valor').textContent = formatMoney(6200905.39);
+
+      // Gráfico Anual de Diárias
+      const grafDiv = document.getElementById('grafico-anos-diarias');
+      const maxAno = Math.max(...(v.evolucao_anual || []).map(a => a.total));
+
+      grafDiv.innerHTML = (v.evolucao_anual || []).map(a => {
+        const pct = ((a.total / maxAno) * 100).toFixed(1);
+        return `
+          <div class="space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-200 font-mono">${a.ano}</span>
+              <span class="text-slate-400">${a.viagens.toLocaleString('pt-BR')} viagens • <strong class="text-cyan-400 font-mono">${formatMoney(a.total)}</strong></span>
+            </div>
+            <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden border border-slate-800">
+              <div class="bg-gradient-to-r from-blue-500 to-cyan-400 h-3 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Top Destinos Grid
+      const destDiv = document.getElementById('grid-destinos-diarias');
+      destDiv.innerHTML = (v.top_destinos || []).slice(0, 12).map((d, i) => `
+        <div class="glass-card rounded-xl p-3 border-slate-800 text-center space-y-1">
+          <span class="text-[10px] font-bold text-cyan-400 block uppercase">#${i+1} Destino</span>
+          <h4 class="text-xs font-bold text-white line-clamp-1" title="${d.destino}">${d.destino}</h4>
+          <span class="text-[11px] font-mono text-slate-300 block">${d.viagens.toLocaleString('pt-BR')} viagens</span>
+          <span class="text-[10px] font-mono text-slate-500 block">${formatMoney(d.total)}</span>
+        </div>
+      `).join('');
+
+      // Top Viajantes Tabela
+      const tbody = document.getElementById('tbody-top-viajantes');
+      tbody.innerHTML = (v.top_viajantes || []).slice(0, 15).map((u, i) => `
+        <tr class="hover:bg-slate-800/40 transition">
+          <td class="py-2.5 px-4 font-mono font-bold text-slate-500">${i+1}</td>
+          <td class="py-2.5 px-4 font-semibold text-white">${u.servidor}</td>
+          <td class="py-2.5 px-4 text-slate-400">${u.tipo_principal}</td>
+          <td class="py-2.5 px-4 text-center font-mono font-bold text-cyan-400">${u.viagens}</td>
+          <td class="py-2.5 px-4 text-right font-mono font-bold text-emerald-400">${formatMoney(u.total)}</td>
+          <td class="py-2.5 px-4 text-right font-mono text-slate-300">${formatMoney(u.ticket_medio)}</td>
+          <td class="py-2.5 px-4 text-slate-400 line-clamp-1" title="${u.principal_destino}">${u.principal_destino}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Buscar Diárias Paginadas
+    async function buscarDiariasPaginadas(pagina = 1) {
+      diariaPaginaAtual = pagina;
+      const q = encodeURIComponent(document.getElementById('search-diaria-input').value.trim());
+      const ano = document.getElementById('select-ano-diaria').value;
+
+      try {
+        const res = await fetch(`/api/dados/viagens?q=${q}&ano=${ano}&page=${pagina}&limit=25`);
+        if (res.ok) {
+          const data = await res.json();
+          const busca = data.busca;
+          const tbody = document.getElementById('tbody-diarias-busca');
+
+          if (!busca || !busca.registros || busca.registros.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-500">Nenhuma diária encontrada</td></tr>`;
+            return;
+          }
+
+          tbody.innerHTML = busca.registros.map(r => `
+            <tr class="hover:bg-slate-800/40 transition">
+              <td class="py-2 px-3 font-mono text-slate-400 whitespace-nowrap">${r.data_viagem || (r.ano + '-' + r.mes)}</td>
+              <td class="py-2 px-3 font-medium text-white">${r.servidor}</td>
+              <td class="py-2 px-3 text-slate-400">${r.tipo_diaria || r.cargo || 'Servidor'}</td>
+              <td class="py-2 px-3 text-slate-300 max-w-xs truncate" title="${r.motivo || r.destino || ''}">${r.motivo || r.destino || ''}</td>
+              <td class="py-2 px-3 text-right font-mono font-bold text-emerald-400 whitespace-nowrap">${formatMoney(r.valor)}</td>
+              <td class="py-2 px-3 text-center font-mono text-slate-500">${r.nr_empenho || '-'}</td>
+            </tr>
+          `).join('');
+
+          document.getElementById('diarias-paginacao-info').textContent = `Página ${busca.page} de ${busca.total_paginas} (${busca.total.toLocaleString('pt-BR')} registros)`;
+          document.getElementById('btn-prev-diarias').disabled = busca.page <= 1;
+          document.getElementById('btn-next-diarias').disabled = busca.page >= busca.total_paginas;
+        }
+      } catch (err) {
+        console.error('Erro na busca de diárias:', err);
+      }
+    }
+
+    function mudarPaginaDiarias(delta) {
+      buscarDiariasPaginadas(diariaPaginaAtual + delta);
+    }
+
+    // Modal de Dossiê da Empresa
+    async function abrirDossieEmpresa(cnpj) {
+      try {
+        const res = await fetch(`/api/dados/empresas/detalhes?cnpj=${cnpj}`);
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const emp = data.empresa;
+        const socios = data.socios || [];
+        const contratos = data.contratos || [];
+        const isAtiva = emp.situacao_cadastral === 'ATIVA';
+
+        hashModalAtual = emp.hash_forense || '';
+
+        // Preenche campos
+        document.getElementById('modal-razao-social').textContent = emp.razao_social;
+        document.getElementById('modal-cnpj-endereco').textContent = `CNPJ: ${formatCNPJ(emp.cnpj)} • ${emp.municipio || 'Arinos'} / ${emp.uf || 'MG'} • Bairro: ${emp.bairro || 'Centro'}`;
+        document.getElementById('modal-val-total').textContent = formatMoney(emp.total_geral);
+        document.getElementById('modal-val-contratos').textContent = formatMoney(emp.total_contratos);
+        document.getElementById('modal-capital-social').textContent = formatMoney(emp.capital_social);
+        document.getElementById('modal-data-abertura').textContent = emp.data_abertura || '--/--/----';
+        document.getElementById('modal-cnae-descricao').textContent = emp.cnae_principal_descricao || 'Não informada';
+        document.getElementById('modal-hash-forense').textContent = emp.hash_forense || 'N/A';
+
+        // Badge de situação
+        const badgeSit = document.getElementById('modal-situacao-badge');
+        badgeSit.textContent = emp.situacao_cadastral || 'INDETERMINADA';
+        badgeSit.className = isAtiva 
+          ? 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+          : 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30';
+
+        document.getElementById('modal-porte-badge').textContent = emp.porte || 'EMPRESA';
+
+        // Alerta
+        const alertaBox = document.getElementById('modal-alerta-box');
+        if (emp.possui_alerta_vinculo === 1) {
+          alertaBox.classList.remove('hidden');
+          document.getElementById('modal-alerta-texto').textContent = emp.alerta_detalhe || 'Vínculo societário com agente público identificado.';
+        } else {
+          alertaBox.classList.add('hidden');
+        }
+
+        // Lista de Sócios
+        document.getElementById('modal-socios-count').textContent = socios.length;
+        const sociosDiv = document.getElementById('modal-socios-lista');
+        if (socios.length === 0) {
+          sociosDiv.innerHTML = `<p class="col-span-full text-slate-500 italic">Nenhum sócio adicional registrado (Empresário Individual ou Titular Único).</p>`;
+        } else {
+          sociosDiv.innerHTML = socios.map(s => `
+            <div class="p-3 rounded-xl bg-slate-950/70 border ${s.vinculo_politico_alerta ? 'border-amber-500/50 bg-amber-950/20' : 'border-slate-800'} space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-white text-xs">${s.nome_socio}</span>
+                <span class="text-[10px] font-mono text-slate-400">${s.faixa_etaria || ''}</span>
+              </div>
+              <p class="text-[11px] text-slate-400">${s.qualificacao_socio || 'Sócio'}</p>
+              ${s.vinculo_politico_alerta ? `<p class="text-[10px] text-amber-300 font-mono bg-amber-950/40 p-1 rounded border border-amber-500/30">⚠️ ${s.vinculo_politico_alerta}</p>` : ''}
+            </div>
+          `).join('');
+        }
+
+        // Lista de Contratos
+        document.getElementById('modal-contratos-count').textContent = contratos.length;
+        const contratosDiv = document.getElementById('modal-contratos-lista');
+        if (contratos.length === 0) {
+          contratosDiv.innerHTML = `<p class="text-slate-500 italic p-2">Nenhum contrato formalizado com este CNPJ (apenas despesas diretas).</p>`;
+        } else {
+          contratosDiv.innerHTML = contratos.map(c => `
+            <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div class="space-y-0.5">
+                <div class="flex items-center gap-2">
+                  <span class="font-mono font-bold text-white text-xs">Contrato nº ${c.nr_contrato || 'S/N'}</span>
+                  <span class="text-[10px] text-slate-400">${c.tipo_contrato || 'Contrato'}</span>
+                </div>
+                <p class="text-[11px] text-slate-300 line-clamp-2" title="${c.objeto}">${c.objeto}</p>
+              </div>
+              <div class="text-right whitespace-nowrap">
+                <span class="text-xs font-extrabold text-blue-400 font-mono block">${formatMoney(c.valor)}</span>
+                <span class="text-[10px] text-slate-500 font-mono">${c.dt_ini_vigencia || ''} a ${c.dt_fim_vigencia || ''}</span>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Exibe o modal
+        const modal = document.getElementById('modal-empresa');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } catch (err) {
+        console.error('Erro ao abrir dossiê:', err);
+      }
+    }
+
+    function fecharModalEmpresa() {
+      const modal = document.getElementById('modal-empresa');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function copiarHashEmpresa() {
+      if (hashModalAtual) {
+        navigator.clipboard.writeText(hashModalAtual);
+        alert('Hash Forense copiado para a área de transferência!');
+      }
+    }
+
+    // Inicializa na carga da página
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
