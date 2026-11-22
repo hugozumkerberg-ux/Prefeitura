@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão Administrativa & Secretarias — Arinos / MG</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
+    .glass { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.06); }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header Padronizado -->
+  <header class="sticky top-0 z-50 glass border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="text-2xl">🏛️</span>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-lg font-bold tracking-tight text-white">Transparência Arinos / MG</h1>
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">Gestão Administrativa</span>
+          </div>
+          <p class="text-xs text-slate-400">Secretarias Municipais, Órgãos Públicos e Estrutura do Executivo</p>
+        </div>
+      </div>
+      
+      <!-- Menu Padronizado Solicitado pelo Usuário -->
+      <nav class="flex items-center space-x-1 sm:space-x-1.5 text-xs font-semibold">
+        <a href="/" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          Início
+        </a>
+        <a href="/mandatos.html" class="px-3 py-1.5 rounded-lg text-purple-300 hover:bg-purple-900/30 border border-purple-500/30 transition">
+          Mandatos
+        </a>
+        <a href="/tabelas.html?tab=pessoas" class="px-3 py-1.5 rounded-lg text-emerald-300 hover:bg-emerald-900/30 border border-emerald-500/30 transition">
+          Pessoas
+        </a>
+        <a href="/empresas.html" class="px-3 py-1.5 rounded-lg text-blue-300 hover:bg-blue-900/30 border border-blue-500/30 transition">
+          Empresas
+        </a>
+        <a href="/tabelas.html?tab=rankings" class="px-3 py-1.5 rounded-lg text-amber-300 hover:bg-amber-900/30 border border-amber-500/30 transition">
+          Rankings
+        </a>
+        <a href="/cidade.html" class="px-3 py-1.5 rounded-lg text-yellow-300 hover:bg-yellow-900/30 border border-yellow-500/30 transition">
+          Cidade
+        </a>
+        <a href="/administrativo.html" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white shadow-md shadow-blue-900/40 border border-blue-400 transition">
+          Administrativo
+        </a>
+        <a href="/mapa.html" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" title="Mapa do Site">
+          🗺️ Mapa
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
+
+    <!-- Hero / Apresentação -->
+    <div class="glass-card p-6 md:p-8 rounded-2xl border border-slate-800 relative overflow-hidden">
+      <div class="max-w-3xl space-y-3">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
+          <span>PODER EXECUTIVO MUNICIPAL • ARINOS / MG</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+          Estrutura Organizacional, Secretarias & Órgãos Administrativos
+        </h2>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          Visão completa das 9 secretarias municipais da Prefeitura de Arinos, histórico de secretários titulares (2013-2026), remunerações pagas pelo erário, competências institucionais e órgãos da administração direta e indireta.
+        </p>
+      </div>
+
+      <!-- KPIs Administrativos -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-slate-800">
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+          <span class="text-[10px] text-slate-400 uppercase font-mono">Secretarias de Pasta</span>
+          <p class="text-xl font-black text-white font-mono mt-0.5">9 Pastas</p>
+          <span class="text-[10px] text-blue-400">Administração Direta</span>
+        </div>
+
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+          <span class="text-[10px] text-slate-400 uppercase font-mono">Órgãos Auditados</span>
+          <p class="text-xl font-black text-emerald-400 font-mono mt-0.5">3 Órgãos</p>
+          <span class="text-[10px] text-slate-400">Prefeitura, Saúde e Câmara</span>
+        </div>
+
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+          <span class="text-[10px] text-slate-400 uppercase font-mono">Folhas de Secretários</span>
+          <p class="text-xl font-black text-purple-400 font-mono mt-0.5">1.300+ Meses</p>
+          <span class="text-[10px] text-slate-400">Histórico 2013-2026</span>
+        </div>
+
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+          <span class="text-[10px] text-slate-400 uppercase font-mono">Despesas Administrativas</span>
+          <p class="text-xl font-black text-cyan-400 font-mono mt-0.5">R$ 38,82 Mi</p>
+          <span class="text-[10px] text-slate-400">6.103 empenhos contábeis</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção: Entidades e Órgãos Oficiais de Arinos -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 font-mono flex items-center space-x-2">
+          <span>🏛️ Entidades e Órgãos Oficiais da Administração</span>
+        </h3>
+        <span class="text-xs text-slate-500 font-mono">CNPJs Oficiais</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Prefeitura -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-xl font-bold">🏛️</div>
+            <div>
+              <h4 class="font-bold text-white text-sm">Prefeitura Municipal de Arinos</h4>
+              <p class="text-xs text-slate-400 font-mono">CNPJ: 18.125.120/0001-80</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400">
+            Sede do Poder Executivo Municipal. Praça Eupídio de Castro, 100 — Centro, Arinos/MG. CEP 38680-000.
+          </p>
+          <div class="pt-2 border-t border-slate-800 text-[11px] font-mono text-slate-500 flex justify-between">
+            <span>Natureza: Adm. Pública Direta</span>
+            <span class="text-emerald-400 font-bold">ATIVA</span>
+          </div>
+        </div>
+
+        <!-- Saúde -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl font-bold">🏥</div>
+            <div>
+              <h4 class="font-bold text-white text-sm">Fundação Municipal de Saúde</h4>
+              <p class="text-xs text-slate-400 font-mono">CNPJ: 02.261.261/0001-80</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400">
+            Entidade gestora do Hospital Municipal e da rede de atenção básica e PSF.
+          </p>
+          <div class="pt-2 border-t border-slate-800 text-[11px] font-mono text-slate-500 flex justify-between">
+            <span>Natureza: Fundação Pública</span>
+            <span class="text-cyan-400 font-bold">ATIVA</span>
+          </div>
+        </div>
+
+        <!-- Câmara -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl font-bold">⚖️</div>
+            <div>
+              <h4 class="font-bold text-white text-sm">Câmara Municipal de Arinos</h4>
+              <p class="text-xs text-slate-400 font-mono">CNPJ: 25.681.453/0001-65</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400">
+            Sede do Poder Legislativo Municipal. Praça Francisco Valadares, 10 — Centro, Arinos/MG.
+          </p>
+          <div class="pt-2 border-t border-slate-800 text-[11px] font-mono text-slate-500 flex justify-between">
+            <span>Natureza: Poder Legislativo</span>
+            <span class="text-sky-400 font-bold">ATIVA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção: As 9 Secretarias Municipais e Histórico de Secretários -->
+    <div class="space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+        <div>
+          <h3 class="text-sm font-bold uppercase tracking-wider text-white font-mono flex items-center space-x-2">
+            <span>📂 Secretarias Municipais & Titulares da Pasta (2013-2026)</span>
+          </h3>
+          <p class="text-xs text-slate-400">Relação oficial apurada a partir das folhas de pagamento e portarias municipais</p>
+        </div>
+        <span class="text-xs text-blue-400 font-mono bg-blue-950/60 border border-blue-800 px-2.5 py-1 rounded-full">
+          9 Pastas Oficiais
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+        <!-- 1. Secretaria de Fazenda e Planejamento -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3 hover:border-slate-700 transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="text-xl">💰</span>
+              <h4 class="font-bold text-white text-sm">Sec. M. Fazenda e Planejamento</h4>
+            </div>
+            <span class="text-[11px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-0.5 rounded">Ativa</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Responsável pela arrecadação tributária (IPTU, ISS, ITBI), repasses constitucionais (FPM, ICMS, IPVA), orçamento anual e LRF.
+          </p>
+          <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500 font-mono font-bold">Secretários no Período:</p>
+            <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-white">Adão Carlos Ferreira Melo</span>
+                <p class="text-[10px] text-slate-400">2018 a 2026 • 106 folhas</p>
+              </div>
+              <span class="font-mono text-emerald-400 font-bold text-xs">R$ 630.135,48</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Jane Alves Martins (2017-2018)</span>
+              <span class="font-mono">R$ 92.859,25</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Geraldo Francisco de Freitas (2013-2016)</span>
+              <span class="font-mono">R$ 148.104,67</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Secretaria de Administração -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3 hover:border-slate-700 transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="text-xl">📋</span>
+              <h4 class="font-bold text-white text-sm">Sec. Municipal de Administração</h4>
+            </div>
+            <span class="text-[11px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-0.5 rounded">Ativa</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Gestão de recursos humanos, folha de pagamento, concursos públicos, compras institucionais, patrimônio e almoxarifado.
+          </p>
+          <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500 font-mono font-bold">Secretários no Período:</p>
+            <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-white">Daniel Ribeiro Santana</span>
+                <p class="text-[10px] text-slate-400">2021 a 2026 • 74 folhas</p>
+              </div>
+              <span class="font-mono text-emerald-400 font-bold text-xs">R$ 473.240,91</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Silvezia Soares Ferreira (2017-2020)</span>
+              <span class="font-mono">R$ 263.358,02</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Osmar Rodrigues Ramalho (2015-2016)</span>
+              <span class="font-mono">R$ 55.679,43</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Secretaria de Obras e Transportes Públicos -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3 hover:border-slate-700 transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="text-xl">🚜</span>
+              <h4 class="font-bold text-white text-sm">Sec. M. Obras e Transportes</h4>
+            </div>
+            <span class="text-[11px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-0.5 rounded">Ativa</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Execução de obras públicas, pavimentação, conservação de estradas vicinais no interior de Arinos, iluminação e frota municipal.
+          </p>
+          <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500 font-mono font-bold">Secretários no Período:</p>
+            <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-white">Vimerson Santana Oliveira</span>
+                <p class="text-[10px] text-slate-400">2022 a 2026 • 55 folhas</p>
+              </div>
+              <span class="font-mono text-emerald-400 font-bold text-xs">R$ 363.591,94</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Lemir Conceição Guimarães (2018-2020)</span>
+              <span class="font-mono">R$ 159.216,47</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Donizete Aparecido Caldeira (2013-2016)</span>
+              <span class="font-mono">R$ 128.971,72</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Secretaria de Saúde -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3 hover:border-slate-700 transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="text-xl">🏥</span>
+              <h4 class="font-bold text-white text-sm">Sec. Municipal de Saúde</h4>
+            </div>
+            <span class="text-[11px] font-mono text-cyan-400 bg-cyan-950/40 border border-cyan-800 px-2 py-0.5 rounded">Ativa</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Gestão do Sistema Único de Saúde (SUS) local, hospital, unidades básicas, fornecimento de medicamentos e regulação em Unaí/BH.
+          </p>
+          <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500 font-mono font-bold">Secretários no Período:</p>
+            <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-white">André Pires Valadares Carneiro</span>
+                <p class="text-[10px] text-slate-400">2024 a 2026 • 33 folhas</p>
+              </div>
+              <span class="font-mono text-cyan-400 font-bold text-xs">R$ 243.085,66</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Samara Souza Amorim Leite (2019-2020)</span>
+              <span class="font-mono">R$ 144.876,06</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Soraya Almeida Magalhães Vieira (2017-2019)</span>
+              <span class="font-mono">R$ 124.069,37</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Jaína Soares Braga (2013-2016)</span>
+              <span class="font-mono">R$ 191.223,86</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Secretaria de Governo -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3 hover:border-slate-700 transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="text-xl">👔</span>
+              <h4 class="font-bold text-white text-sm">Sec. Municipal de Governo</h4>
+            </div>
+            <span class="text-[11px] font-mono text-purple-400 bg-purple-950/40 border border-purple-800 px-2 py-0.5 rounded">Ativa</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Articulação institucional entre Executivo e Câmara de Vereadores, coordenação de gabinete do Prefeito e comunicação oficial.
+          </p>
+          <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500 font-mono font-bold">Secretários no Período:</p>
+            <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-white">Taeide Valadares da Silva</span>
+                <p class="text-[10px] text-slate-400">2025 a 2026 • 22 folhas</p>
+              </div>
+              <span class="font-mono text-purple-400 font-bold text-xs">R$ 163.417,36</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Marcelo Carneiro Valadares (2021-2024)</span>
+              <span class="font-mono">R$ 281.822,70</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Elionor Germano da Silva (2017-2020)</span>
+              <span class="font-mono">R$ 167.512,25</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Secretaria de Agropecuária e Desenvolvimento Rural -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3 hover:border-slate-700 transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="text-xl">🌾</span>
+              <h4 class="font-bold text-white text-sm">Sec. M. Agropecuária e Desen. Rural</h4>
+            </div>
+            <span class="text-[11px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-0.5 rounded">Ativa</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Apoio aos produtores da bacia do Urucuia, feiras livres, maquinário agrícola, eletrificação rural e estradas de escoamento.
+          </p>
+          <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500 font-mono font-bold">Secretários no Período:</p>
+            <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-white">Diego Alexandre Dressler</span>
+                <p class="text-[10px] text-slate-400">2024 a 2026 • 33 folhas</p>
+              </div>
+              <span class="font-mono text-emerald-400 font-bold text-xs">R$ 223.152,36</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Flaviano Nogueira Vargas (2021-2023)</span>
+              <span class="font-mono">R$ 134.167,91</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Newton Carneiro dos Santos (2018-2020)</span>
+              <span class="font-mono">R$ 165.297,99</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Secretaria de Esportes -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3 hover:border-slate-700 transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="text-xl">⚽</span>
+              <h4 class="font-bold text-white text-sm">Sec. Municipal de Esportes</h4>
+            </div>
+            <span class="text-[11px] font-mono text-amber-400 bg-amber-950/40 border border-amber-800 px-2 py-0.5 rounded">Ativa</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Campeonatos municipais, apoio a atletas arinenses, quadras esportivas, estádio e eventos de integração comunitária.
+          </p>
+          <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500 font-mono font-bold">Secretários no Período:</p>
+            <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-white">Julio Cesar Santos Gonçalves</span>
+                <p class="text-[10px] text-slate-400">2025 a 2026 • 22 folhas</p>
+              </div>
+              <span class="font-mono text-amber-400 font-bold text-xs">R$ 160.011,31</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Neusmar Barbosa dos Santos (2017-2020)</span>
+              <span class="font-mono">R$ 250.862,99</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Nilson Santana Valadares (2013-2016)</span>
+              <span class="font-mono">R$ 149.765,53</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. Secretaria de Cultura -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3 hover:border-slate-700 transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="text-xl">🎭</span>
+              <h4 class="font-bold text-white text-sm">Sec. Municipal de Cultura</h4>
+            </div>
+            <span class="text-[11px] font-mono text-yellow-400 bg-yellow-950/40 border border-yellow-800 px-2 py-0.5 rounded">Ativa</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Preservação das tradições sertanejas, folia de reis, festejos do padroeiro, feira cultural e turismo histórico de Arinos.
+          </p>
+          <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500 font-mono font-bold">Secretários no Período:</p>
+            <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-white">Matheus Philipe Souza da Silva</span>
+                <p class="text-[10px] text-slate-400">2022 a 2024 • 30 folhas</p>
+              </div>
+              <span class="font-mono text-yellow-400 font-bold text-xs">R$ 154.276,18</span>
+            </div>
+            <div class="p-2 bg-slate-900/40 rounded border border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+              <span>Wemerson Batista de Oliveira (2017-2020)</span>
+              <span class="font-mono">R$ 252.517,68</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. Secretaria de Meio Ambiente e Limpeza Urbana -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3 hover:border-slate-700 transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="text-xl">🌿</span>
+              <h4 class="font-bold text-white text-sm">Sec. M. Meio Ambiente & Limpeza</h4>
+            </div>
+            <span class="text-[11px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-0.5 rounded">Ativa</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Coleta e destinação de resíduos sólidos, arborização urbana, proteção das nascentes do Urucuia e licenciamento ambiental.
+          </p>
+          <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+            <p class="text-[11px] uppercase tracking-wider text-slate-500 font-mono font-bold">Secretários no Período:</p>
+            <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-white">Ádamo Juliano Isaías Batista</span>
+                <p class="text-[10px] text-slate-400">2025 a 2026 • 16 folhas</p>
+              </div>
+              <span class="font-mono text-emerald-400 font-bold text-xs">R$ 112.204,98</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Seção de Ações Rápidas de Auditoria Administrativa -->
+    <div class="glass-card p-6 rounded-2xl border border-slate-800 flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h4 class="font-bold text-white text-sm">Deseja cruzar dados administrativos com contracheques ou contratos?</h4>
+        <p class="text-xs text-slate-400 mt-1">Todos os gestores e secretários possuem perfil unificado com histórico de proventos e diárias.</p>
+      </div>
+      <div class="flex items-center space-x-2">
+        <a href="/tabelas.html?tab=pessoas" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition shadow-lg shadow-emerald-950">
+          👤 Ver Pessoas & Remunerações
+        </a>
+        <a href="/empresas.html" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition shadow-lg shadow-blue-950">
+          🏢 Ver Empresas Contratadas
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer Global -->
+  <footer class="border-t border-slate-800 bg-slate-950/80 py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-4">
+      <div>
+        <span class="font-bold text-white">Portal da Transparência Independente de Arinos / MG</span> — Gestão Administrativa
+        <p class="text-[11px] text-slate-600 mt-0.5">Auditoria Forense de Dados Abertos • Base SQLite Master</p>
+      </div>
+      <div class="flex items-center space-x-3 text-slate-400">
+        <a href="/" class="hover:text-white">Início</a>
+        <span>•</span>
+        <a href="/mandatos.html" class="hover:text-white">Mandatos</a>
+        <span>•</span>
+        <a href="/tabelas.html?tab=pessoas" class="hover:text-white">Pessoas</a>
+        <span>•</span>
+        <a href="/empresas.html" class="hover:text-white">Empresas</a>
+        <span>•</span>
+        <a href="/tabelas.html?tab=rankings" class="hover:text-white">Rankings</a>
+        <span>•</span>
+        <a href="/cidade.html" class="hover:text-white">Cidade</a>
+        <span>•</span>
+        <a href="/mapa.html" class="hover:text-white">Mapa</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

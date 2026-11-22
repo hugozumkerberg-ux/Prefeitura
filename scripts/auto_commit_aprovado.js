@@ -61,7 +61,8 @@ async function runTestSuite() {
     'cidade.html',
     'eleicoes.html',
     'tabelas.html',
-    'mapa.html'
+    'mapa.html',
+    'administrativo.html'
   ];
 
   let htmlsOk = true;
