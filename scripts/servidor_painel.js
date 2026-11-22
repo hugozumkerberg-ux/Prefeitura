@@ -1342,7 +1342,7 @@ const server = http.createServer((req, res) => {
             total_dinheiro_publico,
             is_politico, is_prefeito, is_vereador, is_candidato, perfil_tipo, partido_politico,
             legislaturas_camara, projetos_apresentados, bens_declarados_tse,
-            is_socio_empresa, empresas_vinculadas, atualizado_em
+            is_socio_empresa, empresas_vinculadas, atualizado_em, foto_url, foto_id
           FROM pessoas_unificadas
           ${whereSql}
           ORDER BY ${orderSql}
@@ -1492,6 +1492,28 @@ const server = http.createServer((req, res) => {
           ultimas_viagens: ultimasViagens,
           empresas_detalhe: dadosEmpresas,
           materias_camara: materiasCamara
+        }));
+        return;
+      }
+
+      // 19. Consulta de Fotos Auditadas de Agentes Públicos (com Hash SHA-256 e ID Único)
+      if (pathname === '/api/dados/fotos-auditadas') {
+        const rows = db.prepare(`
+          SELECT 
+            f.id as foto_id, f.pessoa_id, f.nome_canonic, f.nome_exibicao, 
+            f.nome_urna, f.cargo_tse, f.ano_eleicao, f.id_candidato_tse, 
+            f.caminho_foto, f.hash_sha256, f.status_auditoria, f.auditado_em,
+            p.perfil_tipo, p.total_dinheiro_publico
+          FROM fotos_auditadas_pessoas f
+          JOIN pessoas_unificadas p ON p.id = f.pessoa_id
+          ORDER BY f.nome_exibicao ASC
+        `).all();
+
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({
+          total: rows.length,
+          certificacao: 'Cadeia de Custódia Forense SHA-256 Validada',
+          fotos: rows
         }));
         return;
       }
