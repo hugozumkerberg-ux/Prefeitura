@@ -1016,35 +1016,41 @@ const server = http.createServer((req, res) => {
           resObj.total_geral += empList.length;
         }
 
-        // B. Servidores & Folha de Pagamento
+        // B. Servidores, Políticos & Pessoas Unificadas
         if (categoria === 'todas' || categoria === 'servidores') {
           const servList = [];
           try {
             const servs = db.prepare(`
-              SELECT nome, cargo, vinculo, MAX(total_proventos) as maior_salario, COUNT(*) as meses_folha, MAX(ano) as ultimo_ano
-              FROM contracheques
-              GROUP BY nome
+              SELECT id, nome_canonic, nome_exibicao, cargos_resumo, perfil_tipo, qtd_matriculas, total_dinheiro_publico, total_salarios, total_diarias, is_politico, is_prefeito, is_vereador, is_socio_empresa, partido_politico
+              FROM pessoas_unificadas
             `).all();
 
             servs.forEach(s => {
-              const target = normalizar(`${s.nome} ${s.cargo} ${s.vinculo}`);
+              const target = normalizar(`${s.nome_exibicao} ${s.cargos_resumo} ${s.perfil_tipo} ${s.partido_politico || ''}`);
               if (match(target)) {
+                let badgeText = `${s.qtd_matriculas} Matrícula(s)`;
+                let badgeTipo = 'default';
+                if (s.is_prefeito) { badgeText = '👔 Prefeito'; badgeTipo = 'danger'; }
+                else if (s.is_vereador) { badgeText = '🏛️ Vereador'; badgeTipo = 'warning'; }
+                else if (s.is_socio_empresa) { badgeText = '⚠️ Sócio Fornecedor'; badgeTipo = 'warning'; }
+                else if (s.qtd_matriculas > 1) { badgeText = `🔗 ${s.qtd_matriculas} Matrículas`; badgeTipo = 'info'; }
+
                 servList.push({
-                  tipo: 'servidor',
-                  id: s.nome,
-                  titulo: s.nome,
-                  subtitulo: `Cargo: ${s.cargo || 'Não especificado'} (${s.vinculo || 'Servidor'}) • Até ${s.ultimo_ano}`,
-                  badge: `${s.meses_folha} contracheques`,
-                  badge_tipo: 'default',
-                  valor: s.maior_salario,
-                  url: `/tabelas.html?busca=${encodeURIComponent(s.nome)}`
+                  tipo: 'pessoa_unificada',
+                  id: s.id,
+                  titulo: s.nome_exibicao,
+                  subtitulo: `${s.perfil_tipo} • ${s.cargos_resumo || 'Servidor Público'}${s.qtd_matriculas > 1 ? ` (${s.qtd_matriculas} matrículas unificadas)` : ''}`,
+                  badge: badgeText,
+                  badge_tipo: badgeTipo,
+                  valor: s.total_dinheiro_publico,
+                  url: `/tabelas.html?tab=pessoas&busca=${encodeURIComponent(s.nome_exibicao)}`
                 });
               }
             });
           } catch(e) {}
 
           resObj.categorias.servidores = {
-            nome: 'Servidores & Cargos',
+            nome: 'Servidores & Políticos (Consolidado)',
             icone: '👤',
             total: servList.length,
             itens: servList.slice(0, limit)
@@ -1269,6 +1275,224 @@ const server = http.createServer((req, res) => {
         resObj.tempo_execucao_ms = Date.now() - startTime;
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify(resObj));
+        return;
+      }
+
+      // 17. Consulta de Pessoas Unificadas e Consolidação de Dinheiro Público
+      if (pathname === '/api/dados/pessoas-unificadas') {
+        const tipo = (parsedUrl.searchParams.get('tipo') || 'todos').toLowerCase();
+        const busca = (parsedUrl.searchParams.get('busca') || parsedUrl.searchParams.get('q') || '').trim();
+        const ordenar = (parsedUrl.searchParams.get('ordenar') || 'dinheiro').toLowerCase();
+        const page = Math.max(1, parseInt(parsedUrl.searchParams.get('page') || '1', 10));
+        const limit = Math.min(100, Math.max(5, parseInt(parsedUrl.searchParams.get('limit') || '25', 10)));
+        const offset = (page - 1) * limit;
+
+        let whereClauses = [];
+        let params = [];
+
+        if (tipo === 'prefeitos') {
+          whereClauses.push('is_prefeito = 1');
+        } else if (tipo === 'vereadores') {
+          whereClauses.push('is_vereador = 1');
+        } else if (tipo === 'multi_matricula') {
+          whereClauses.push('qtd_matriculas > 1');
+        } else if (tipo === 'socios') {
+          whereClauses.push('is_socio_empresa = 1');
+        } else if (tipo === 'servidores') {
+          whereClauses.push('is_politico = 0 AND is_socio_empresa = 0');
+        }
+
+        if (busca) {
+          whereClauses.push('(nome_exibicao LIKE ? OR cargos_resumo LIKE ? OR partido_politico LIKE ? OR destinos_frequentes LIKE ?)');
+          const pWild = `%${busca}%`;
+          params.push(pWild, pWild, pWild, pWild);
+        }
+
+        const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
+
+        let orderSql = 'total_dinheiro_publico DESC';
+        if (ordenar === 'salario') orderSql = 'total_salarios DESC';
+        else if (ordenar === 'diarias') orderSql = 'total_diarias DESC';
+        else if (ordenar === 'matriculas') orderSql = 'qtd_matriculas DESC, total_dinheiro_publico DESC';
+        else if (ordenar === 'nome') orderSql = 'nome_exibicao ASC';
+
+        const statsSql = `
+          SELECT 
+            COUNT(*) as total_pessoas,
+            COALESCE(SUM(total_dinheiro_publico), 0) as total_dinheiro_publico,
+            COALESCE(SUM(total_salarios), 0) as total_salarios,
+            COALESCE(SUM(total_diarias), 0) as total_diarias,
+            COALESCE(SUM(CASE WHEN is_prefeito = 1 THEN 1 ELSE 0 END), 0) as total_prefeitos,
+            COALESCE(SUM(CASE WHEN is_vereador = 1 THEN 1 ELSE 0 END), 0) as total_vereadores,
+            COALESCE(SUM(CASE WHEN qtd_matriculas > 1 THEN 1 ELSE 0 END), 0) as total_multi_matricula,
+            COALESCE(SUM(CASE WHEN is_socio_empresa = 1 THEN 1 ELSE 0 END), 0) as total_socios
+          FROM pessoas_unificadas
+        `;
+        const stats = db.prepare(statsSql).get();
+
+        const countQuery = `SELECT COUNT(*) as total_filtrado FROM pessoas_unificadas ${whereSql}`;
+        const totalFiltrado = db.prepare(countQuery).get(...params).total_filtrado;
+
+        const dataQuery = `
+          SELECT 
+            id, nome_canonic, nome_exibicao, matriculas_json, qtd_matriculas,
+            cargos_json, cargos_resumo, entidades_json,
+            total_salarios, qtd_contracheques, ano_primeiro_salario, ano_ultimo_salario, maior_salario,
+            total_diarias, qtd_diarias, ano_primeira_diaria, ano_ultima_diaria, maior_diaria, destinos_frequentes,
+            total_dinheiro_publico,
+            is_politico, is_prefeito, is_vereador, is_candidato, perfil_tipo, partido_politico,
+            legislaturas_camara, projetos_apresentados, bens_declarados_tse,
+            is_socio_empresa, empresas_vinculadas, atualizado_em
+          FROM pessoas_unificadas
+          ${whereSql}
+          ORDER BY ${orderSql}
+          LIMIT ? OFFSET ?
+        `;
+        const rows = db.prepare(dataQuery).all(...params, limit, offset);
+
+        const registros = rows.map(r => {
+          let matriculas = [];
+          try { matriculas = JSON.parse(r.matriculas_json || '[]'); } catch(e) {}
+          let cargos = [];
+          try { cargos = JSON.parse(r.cargos_json || '[]'); } catch(e) {}
+          let empresas = [];
+          try { empresas = JSON.parse(r.empresas_vinculadas || '[]'); } catch(e) {}
+
+          return {
+            ...r,
+            matriculas,
+            cargos,
+            empresas_vinculadas: empresas
+          };
+        });
+
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({
+          estatisticas: stats,
+          paginacao: {
+            page,
+            limit,
+            total_filtrado: totalFiltrado,
+            total_paginas: Math.ceil(totalFiltrado / limit) || 1
+          },
+          registros
+        }));
+        return;
+      }
+
+      // 18. Perfil Detalhado de Pessoa Unificada (Dossiê Cidadão 360°)
+      if (pathname === '/api/dados/perfil-pessoa') {
+        const id = parseInt(parsedUrl.searchParams.get('id') || '0', 10);
+        const nome = (parsedUrl.searchParams.get('nome') || '').trim();
+
+        let pessoa = null;
+        if (id > 0) {
+          pessoa = db.prepare('SELECT * FROM pessoas_unificadas WHERE id = ?').get(id);
+        } else if (nome) {
+          pessoa = db.prepare('SELECT * FROM pessoas_unificadas WHERE nome_exibicao = ? OR nome_canonic = ?').get(nome, nome);
+          if (!pessoa) {
+            pessoa = db.prepare('SELECT * FROM pessoas_unificadas WHERE nome_exibicao LIKE ? LIMIT 1').get(`%${nome}%`);
+          }
+        }
+
+        if (!pessoa) {
+          res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: 'Perfil de pessoa não encontrado' }));
+          return;
+        }
+
+        let matriculas = [];
+        try { matriculas = JSON.parse(pessoa.matriculas_json || '[]'); } catch(e) {}
+        let cargos = [];
+        try { cargos = JSON.parse(pessoa.cargos_json || '[]'); } catch(e) {}
+        let empresas = [];
+        try { empresas = JSON.parse(pessoa.empresas_vinculadas || '[]'); } catch(e) {}
+
+        // Histórico anual de proventos e contracheques
+        const historicoFolha = db.prepare(`
+          SELECT 
+            ano, 
+            COUNT(*) as meses, 
+            ROUND(SUM(total_proventos), 2) as proventos, 
+            ROUND(SUM(salario_liquido), 2) as liquido,
+            ROUND(AVG(total_proventos), 2) as media_mensal,
+            GROUP_CONCAT(DISTINCT cargo) as cargos_ano,
+            GROUP_CONCAT(DISTINCT matricula) as matriculas_ano
+          FROM contracheques
+          WHERE nome = ? OR nome = ?
+          GROUP BY ano
+          ORDER BY ano ASC
+        `).all(pessoa.nome_exibicao, pessoa.nome_canonic);
+
+        // Histórico anual de diárias de viagem
+        const historicoDiarias = db.prepare(`
+          SELECT 
+            ano, 
+            COUNT(*) as viagens, 
+            ROUND(SUM(valor), 2) as total_diarias,
+            ROUND(MAX(valor), 2) as maior_diaria,
+            GROUP_CONCAT(DISTINCT destino) as destinos
+          FROM diarias
+          WHERE servidor = ? OR servidor = ?
+          GROUP BY ano
+          ORDER BY ano ASC
+        `).all(pessoa.nome_exibicao, pessoa.nome_canonic);
+
+        // Viagens detalhadas (últimas 20)
+        const ultimasViagens = db.prepare(`
+          SELECT ano, mes, destino, motivo, valor, data_viagem, entidade
+          FROM diarias
+          WHERE servidor = ? OR servidor = ?
+          ORDER BY ano DESC, mes DESC
+          LIMIT 20
+        `).all(pessoa.nome_exibicao, pessoa.nome_canonic);
+
+        // Se sócio de empresa, enriquecer com dados financeiros das empresas
+        const dadosEmpresas = [];
+        if (empresas.length > 0) {
+          for (const emp of empresas) {
+            try {
+              const info = db.prepare(`
+                SELECT cnpj, razao_social, total_geral, total_contratos, qtd_contratos, total_despesas, qtd_despesas, situacao_cadastral, capital_social
+                FROM empresas_contratadas
+                WHERE cnpj = ?
+              `).get(emp.cnpj);
+              dadosEmpresas.push({
+                ...emp,
+                info: info || null
+              });
+            } catch(e) {}
+          }
+        }
+
+        // Se vereador, buscar matérias e legislaturas
+        let materiasCamara = [];
+        if (pessoa.is_vereador) {
+          try {
+            materiasCamara = db.prepare(`
+              SELECT tipo, numero, ano, ementa, situacao, data_apresentacao
+              FROM camara_materias
+              WHERE autor LIKE ?
+              ORDER BY ano DESC
+              LIMIT 15
+            `).all(`%${pessoa.nome_exibicao}%`);
+          } catch(e) {}
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({
+          perfil: {
+            ...pessoa,
+            matriculas,
+            cargos,
+            empresas_vinculadas: empresas
+          },
+          historico_folha: historicoFolha,
+          historico_diarias: historicoDiarias,
+          ultimas_viagens: ultimasViagens,
+          empresas_detalhe: dadosEmpresas,
+          materias_camara: materiasCamara
+        }));
         return;
       }
     } catch (dbErr) {

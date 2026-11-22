@@ -150,6 +150,21 @@ async function runTestSuite() {
   const apiResult = await apiTestPromise;
   recordTest('API do Servidor Local (:8088)', apiResult.ok, apiResult.details);
 
+  // TESTE 5: Validação da Resolução de Entidades e Tabela pessoas_unificadas
+  try {
+    const db = new DatabaseSync(MASTER_DB, { readOnly: true });
+    const countPessoas = db.prepare('SELECT count(*) as total, sum(total_dinheiro_publico) as volume FROM pessoas_unificadas').get();
+    db.close();
+
+    if (countPessoas && countPessoas.total >= 2800 && countPessoas.volume > 300000000) {
+      recordTest('Resolução de Entidades (pessoas_unificadas)', true, `${countPessoas.total.toLocaleString('pt-BR')} perfis consolidados com R$ ${(countPessoas.volume / 1e6).toFixed(2)} Mi de dinheiro público rastreado.`);
+    } else {
+      recordTest('Resolução de Entidades (pessoas_unificadas)', false, 'Tabela pessoas_unificadas ausente ou com contagem inconsistente.');
+    }
+  } catch (err) {
+    recordTest('Resolução de Entidades (pessoas_unificadas)', false, `Erro ao verificar pessoas_unificadas: ${err.message}`);
+  }
+
   // Avaliação Final da Bateria de Testes
   const totalTests = testResults.length;
   const passedTests = testResults.filter(t => t.passed).length;
