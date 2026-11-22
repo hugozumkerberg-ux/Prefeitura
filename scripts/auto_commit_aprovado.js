@@ -185,6 +185,7 @@ async function runTestSuite() {
   // TESTES APROVADOS -> PROCEDER COM COMMIT E PUBLICAÇÃO
   console.log('2. Verificando estado do repositório Git...');
   
+  const nowIso = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
   let gitStatusOutput = '';
   try {
     gitStatusOutput = execSync('git status --porcelain', { cwd: BASE_DIR }).toString().trim();
@@ -193,6 +194,7 @@ async function runTestSuite() {
     process.exit(1);
   }
 
+  let novoCommitCriado = false;
   if (!gitStatusOutput) {
     console.log('  ℹ Nenhuma modificação pendente para commit no momento (working tree clean).');
   } else {
@@ -201,7 +203,6 @@ async function runTestSuite() {
 
     // Obter mensagem de commit a partir dos argumentos da linha de comando
     const userMsg = process.argv.slice(2).join(' ').trim();
-    const nowIso = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
     const commitTitle = userMsg || 'Ajustes, melhorias e dados validados no Portal de Transparência';
     const commitMsg = `[AUTO-COMMIT APROVADO] ${commitTitle} (${nowIso})\n\nBateria de Testes Aprovada:\n${testResults.map(t => `- ✔ ${t.name}: ${t.details}`).join('\n')}\n\nArquivos alterados: ${lines.length}`;
 
@@ -216,24 +217,77 @@ async function runTestSuite() {
       if (fs.existsSync(tempMsgFile)) fs.unlinkSync(tempMsgFile);
 
       console.log('  ✔ Commit gerado com sucesso!');
+      novoCommitCriado = true;
     } catch (err) {
       console.error('❌ Erro ao criar commit:', err.message);
       process.exit(1);
     }
   }
 
-  // 4. Publicação no Repositório Remoto Privado
-  console.log('\n4. Verificando publicação no Repositório Remoto Privado...');
+  // 4. Gerenciamento de Versão Estável e Tags Semânticas
+  console.log('\n4. Gerenciando Versões Estáveis e Tags de Release...');
+  let nextTag = 'v2.0.0-stable';
+  try {
+    const rawTags = execSync('git tag -l "v*"', { cwd: BASE_DIR }).toString().trim();
+    if (rawTags) {
+      const tagList = rawTags.split('\n').map(t => t.trim()).filter(Boolean);
+      let maxPatch = -1;
+      let maxMinor = 0;
+      let maxMajor = 2;
+
+      tagList.forEach(t => {
+        const match = t.match(/^v(\d+)\.(\d+)\.(\d+)/);
+        if (match) {
+          const major = parseInt(match[1], 10);
+          const minor = parseInt(match[2], 10);
+          const patch = parseInt(match[3], 10);
+          if (major > maxMajor || (major === maxMajor && minor > maxMinor) || (major === maxMajor && minor === maxMinor && patch > maxPatch)) {
+            maxMajor = major;
+            maxMinor = minor;
+            maxPatch = patch;
+          }
+        }
+      });
+
+      if (maxPatch >= 0) {
+        nextTag = `v${maxMajor}.${maxMinor}.${maxPatch + 1}-stable`;
+      }
+    }
+
+    // Verificar se o commit atual já possui tag
+    const commitAtualTag = execSync('git tag --points-at HEAD', { cwd: BASE_DIR }).toString().trim();
+    if (!commitAtualTag) {
+      console.log(`  ✔ Criando Tag de Versão Estável: ${nextTag}...`);
+      execSync(`git tag -a "${nextTag}" -m "Versao Estavel Homologada (${nowIso}) - 100% Testes Aprovados"`, { cwd: BASE_DIR });
+      console.log(`  ✔ Tag ${nextTag} criada e vinculada ao commit HEAD!`);
+    } else {
+      console.log(`  ℹ O commit atual já está tagueado como: ${commitAtualTag}`);
+      nextTag = commitAtualTag;
+    }
+  } catch (errTag) {
+    console.warn(`  ℹ Tag de versão estável: ${errTag.message}`);
+  }
+
+  // 5. Publicação no Repositório Remoto Privado (Branch main, Branch stable e Tags)
+  console.log('\n5. Publicando no GitHub (main, stable e tags)...');
   let remotes = '';
   try {
     remotes = execSync('git remote -v', { cwd: BASE_DIR }).toString().trim();
   } catch {}
 
   if (remotes && remotes.includes('origin')) {
-    console.log('  ✔ Remoto "origin" detectado. Publicando alterações (git push)...');
+    console.log('  ✔ Remoto "origin" detectado. Sincronizando repositório remoto...');
     try {
+      console.log('  -> Publicando branch principal: git push origin main');
       execSync('git push -u origin main', { cwd: BASE_DIR, stdio: 'inherit' });
-      console.log('\n✅ Alterações publicadas com sucesso no repositório remoto!');
+
+      console.log('  -> Atualizando branch de versão estável: git push origin main:refs/heads/stable');
+      execSync('git push origin main:refs/heads/stable --force', { cwd: BASE_DIR, stdio: 'inherit' });
+
+      console.log('  -> Publicando tags de versão estável: git push origin --tags');
+      execSync('git push origin --tags', { cwd: BASE_DIR, stdio: 'inherit' });
+
+      console.log(`\n✅ Versão estável (${nextTag}) publicada com sucesso no GitHub!`);
     } catch (err) {
       console.warn(`  ⚠ Falha no git push: ${err.message}`);
     }
