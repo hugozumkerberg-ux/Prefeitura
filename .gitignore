@@ -5,6 +5,12 @@
 # Ignorar toda a pasta de dados (bancos SQLite, JSONs, fotos, etc.)
 dados/
 **/dados/
+*.sqlite3*
+**/*.sqlite3*
+
+# Dumps volumosos de banco de dados (acima de 100MB)
+database/*.sql
+!database/schema.sql
 
 # Ignorar todos os scripts em lote (.bat)
 *.bat

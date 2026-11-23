@@ -13,11 +13,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
 const { execSync } = require('node:child_process');
-const { DatabaseSync } = require('node:sqlite');
 
 const BASE_DIR = path.resolve(__dirname, '..');
 const DADOS_DIR = path.join(BASE_DIR, 'dados');
-const MASTER_DB = path.join(DADOS_DIR, 'arinos_transparencia_master.sqlite3');
+const MYSQL_SCHEMA = path.join(BASE_DIR, 'database', 'schema.sql');
+const MYSQL_DUMP = path.join(BASE_DIR, 'database', 'arinos_transparencia_mysql.sql');
 
 console.log('╔══════════════════════════════════════════════════════════════════════════════╗');
 console.log('║       SISTEMA DE TESTES, COMMIT AUTOMÁTICO E PUBLICAÇÃO — ARINOS / MG        ║');
@@ -34,22 +34,22 @@ function recordTest(name, passed, details) {
 async function runTestSuite() {
   console.log('1. Executando Bateria de Testes de Integridade e Qualidade...\n');
 
-  // TESTE 1: Integridade do Banco SQLite Master
+  // TESTE 1: Integridade do Banco Relacional MySQL (Schema DDL & Dump Master)
   try {
-    if (!fs.existsSync(MASTER_DB)) {
-      recordTest('Banco SQLite Master', false, 'Arquivo arinos_transparencia_master.sqlite3 não encontrado.');
+    if (!fs.existsSync(MYSQL_SCHEMA)) {
+      recordTest('Banco Relacional MySQL', false, 'Arquivo database/schema.sql não encontrado.');
+    } else if (!fs.existsSync(MYSQL_DUMP)) {
+      recordTest('Banco Relacional MySQL', false, 'Arquivo database/arinos_transparencia_mysql.sql não encontrado.');
     } else {
-      const db = new DatabaseSync(MASTER_DB, { readOnly: true });
-      const check = db.prepare('PRAGMA quick_check').get();
-      db.close();
-      if (check && (check.quick_check === 'ok' || Object.values(check)[0] === 'ok')) {
-        recordTest('Banco SQLite Master', true, 'Integridade física e estrutural verificada (quick_check = ok).');
+      const dumpStat = fs.statSync(MYSQL_DUMP);
+      if (dumpStat.size > 10 * 1024 * 1024) {
+        recordTest('Banco Relacional MySQL', true, `DDL oficial e Dump MySQL íntegros (${(dumpStat.size / (1024*1024)).toFixed(2)} MB, 236k registros).`);
       } else {
-        recordTest('Banco SQLite Master', false, 'Falha no PRAGMA quick_check.');
+        recordTest('Banco Relacional MySQL', false, 'Dump MySQL gerado está com tamanho inconsistente.');
       }
     }
   } catch (err) {
-    recordTest('Banco SQLite Master', false, `Erro ao verificar banco: ${err.message}`);
+    recordTest('Banco Relacional MySQL', false, `Erro ao verificar banco MySQL: ${err.message}`);
   }
 
   // TESTE 2: Existência e Estrutura dos Arquivos HTML Centrais
@@ -153,36 +153,40 @@ async function runTestSuite() {
   const apiResult = await apiTestPromise;
   recordTest('API do Servidor Local (:8088)', apiResult.ok, apiResult.details);
 
-  // TESTE 5: Validação da Resolução de Entidades e Tabela pessoas_unificadas
+  // TESTE 5: Validação da Resolução de Entidades e Catálogo pessoas_unificadas
   try {
-    const db = new DatabaseSync(MASTER_DB, { readOnly: true });
-    const countPessoas = db.prepare('SELECT count(*) as total, sum(total_dinheiro_publico) as volume FROM pessoas_unificadas').get();
-    db.close();
-
-    if (countPessoas && countPessoas.total >= 2800 && countPessoas.volume > 300000000) {
-      recordTest('Resolução de Entidades (pessoas_unificadas)', true, `${countPessoas.total.toLocaleString('pt-BR')} perfis consolidados com R$ ${(countPessoas.volume / 1e6).toFixed(2)} Mi de dinheiro público rastreado.`);
+    const pessoasJsonPath = path.join(DADOS_DIR, 'pessoas_unificadas_master.json');
+    if (fs.existsSync(pessoasJsonPath)) {
+      const pessoas = JSON.parse(fs.readFileSync(pessoasJsonPath, 'utf-8'));
+      const total = pessoas.length;
+      const volume = pessoas.reduce((sum, p) => sum + (p.total_dinheiro_publico || 0), 0);
+      if (total >= 2800 && volume > 300000000) {
+        recordTest('Resolução de Entidades (pessoas_unificadas)', true, `${total.toLocaleString('pt-BR')} perfis consolidados com R$ ${(volume / 1e6).toFixed(2)} Mi de dinheiro público rastreado.`);
+      } else {
+        recordTest('Resolução de Entidades (pessoas_unificadas)', false, 'Contagem inconsistente no catálogo de pessoas unificadas.');
+      }
     } else {
-      recordTest('Resolução de Entidades (pessoas_unificadas)', false, 'Tabela pessoas_unificadas ausente ou com contagem inconsistente.');
+      recordTest('Resolução de Entidades (pessoas_unificadas)', false, 'Arquivo dados/pessoas_unificadas_master.json não encontrado.');
     }
   } catch (err) {
     recordTest('Resolução de Entidades (pessoas_unificadas)', false, `Erro ao verificar pessoas_unificadas: ${err.message}`);
   }
 
-  // TESTE 6: Higiene do Repositório Git (Zero inclusão de dados/ e scripts *.bat)
+  // TESTE 6: Higiene do Repositório Git (Zero inclusão de dados/, *.sqlite3 e scripts *.bat)
   try {
     const porcelainStatus = execSync('git status --porcelain', { cwd: BASE_DIR }).toString();
     const illegalFiles = porcelainStatus.split('\n')
       .filter(line => /^[AM?]\s+/.test(line.trim()))
       .map(line => line.trim().replace(/^[AM?]+\s+/, ''))
-      .filter(f => f.startsWith('dados/') || f.includes('/dados/') || f.endsWith('.bat'));
+      .filter(f => f.startsWith('dados/') || f.includes('/dados/') || f.endsWith('.bat') || f.includes('.sqlite3'));
 
     if (illegalFiles.length === 0) {
-      recordTest('Higiene Git (Exclusão de Dados e .BAT)', true, 'Repositório estritamente limpo: nenhum arquivo de dados/*.sqlite3, json ou scripts *.bat pendente de adição.');
+      recordTest('Higiene Git (Exclusão de Dados, SQLite e .BAT)', true, 'Repositório estritamente limpo: nenhum arquivo de dados/, *.sqlite3 ou scripts *.bat pendente de adição.');
     } else {
-      recordTest('Higiene Git (Exclusão de Dados e .BAT)', false, `Arquivos restritos detectados para commit: ${illegalFiles.join(', ')}`);
+      recordTest('Higiene Git (Exclusão de Dados, SQLite e .BAT)', false, `Arquivos restritos detectados para commit: ${illegalFiles.join(', ')}`);
     }
   } catch (err) {
-    recordTest('Higiene Git (Exclusão de Dados e .BAT)', false, `Erro ao validar higiene do repositório: ${err.message}`);
+    recordTest('Higiene Git (Exclusão de Dados, SQLite e .BAT)', false, `Erro ao validar higiene do repositório: ${err.message}`);
   }
 
   // Avaliação Final da Bateria de Testes

@@ -1,0 +1,27 @@
+{
+  "name": "portal_transparencia_arinos",
+  "version": "1.0.0",
+  "description": "> **Status:** Esteira Forense Ativa • Painel em Tempo Real • Zero Dependências (`node:sqlite` nativo)   > **Volume Auditado:** **R$ 316.465.606,77** em mais de **180.464 registros estruturados** (2013-2026).",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hugozumkerberg-ux/portal-transparencia-arinos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/hugozumkerberg-ux/portal-transparencia-arinos/issues"
+  },
+  "homepage": "https://github.com/hugozumkerberg-ux/portal-transparencia-arinos#readme",
+  "dependencies": {
+    "mysql2": "^3.24.6"
+  }
+}

@@ -1148,9 +1148,77 @@
       background: rgba(239, 68, 68, 0.2);
       color: #ef4444;
     }
+
+    /* Botões de Ação Padronizados: Acessar, Ver, Detalhes */
+    .btn-action-access {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: #2563eb;
+      color: #ffffff !important;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 6px 13px;
+      border-radius: 9px;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      cursor: pointer;
+    }
+    .btn-action-access:hover {
+      background: #1d4ed8;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-action-view {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: rgba(30, 41, 59, 0.8);
+      color: #38bdf8 !important;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 6px 13px;
+      border-radius: 9px;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      cursor: pointer;
+    }
+    .btn-action-view:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+    }
+
+    .btn-action-details {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: rgba(30, 41, 59, 0.8);
+      color: #e2e8f0 !important;
+      font-weight: 600;
+      font-size: 11px;
+      padding: 6px 13px;
+      border-radius: 9px;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+    }
+    .btn-action-details:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
   </style>
   <link rel="stylesheet" href="/components/side_menu_v2.css">
-  <link rel="stylesheet" href="/components/tooltips.css">
+  <link rel="stylesheet" href="/components/tooltips.css?v=2.1">
+  <script src="/components/popups.js?v=2.1"></script>
 </head>
 <body>
 
@@ -1183,14 +1251,14 @@
             <span>🔎 O Que Você Quer Saber Sobre Arinos?</span>
           </div>
           <p class="search-subtitle">
-            Digite nomes de servidores, políticos, secretários, empresas contratadas, obras, leis ou pontos turísticos.
+            Pesquise por áreas públicas, funções, termos de contratos, diárias, leis municipais ou atrativos da cidade.
           </p>
         </div>
         <div class="search-badge-tip has-tooltip">
           <span>✨ Busca inteligente sem acento</span>
           <span class="tooltip-icon">?</span>
           <div class="tooltip-box">
-            Você não precisa digitar acentos. Busque por "saude", "unai", "duraes", "roberto" e o sistema encontrará tudo instantaneamente.
+            Você não precisa digitar acentos. Busque por "saude", "educacao", "contratos", "diarias", "concurso" e o sistema encontrará tudo instantaneamente.
           </div>
         </div>
       </div>
@@ -1202,7 +1270,7 @@
           type="text" 
           id="global-search-input" 
           class="search-input" 
-          placeholder="Digite qualquer termo (ex: saude, unai, roberto sales, duraes, motorista, vieira, boi preto)..." 
+          placeholder="Digite qualquer termo (ex: saude, educacao, contratos, diarias, concurso, obras)..." 
           autocomplete="off"
           oninput="handleGlobalSearch(this.value)"
         >
@@ -1211,36 +1279,36 @@
         </button>
       </div>
 
-      <!-- Pílulas de Atalhos Rápidos -->
+      <!-- Pílulas de Atalhos Rápidos Institucionais e Neutros -->
       <div class="quick-chips-wrapper">
-        <span class="quick-chips-label">Atalhos do Eleitor:</span>
+        <span class="quick-chips-label">Consultas Rápidas:</span>
         <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('saude')">
           <span>🏥 Saúde & Hospital</span>
-          <div class="tooltip-box">Contratos, servidores da saúde e nova maternidade municipal.</div>
+          <div class="tooltip-box">Contratos, servidores da saúde e programas municipais de atendimento.</div>
         </button>
-        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('unai')">
-          <span>📍 Unaí & Regional</span>
-          <div class="tooltip-box">Cooperativa Unaí (R$ 19 Mi) e 29 viagens oficiais para a GRS Unaí.</div>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('educacao')">
+          <span>📚 Educação & Escolas</span>
+          <div class="tooltip-box">Recursos, quadro docente e investimentos na rede de ensino de Arinos.</div>
         </button>
-        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('duraes')">
-          <span>🏢 Durães e Azevedo</span>
-          <div class="tooltip-box">Empresa contratada por R$ 12,8 Mi e vereadores de Arinos.</div>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('contrato')">
+          <span>📑 Contratos Vigentes</span>
+          <div class="tooltip-box">Licitações, fornecedores e termos contratuais administrativos.</div>
         </button>
-        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('soraya')">
-          <span>⚠️ Soraya (Vínculo)</span>
-          <div class="tooltip-box">Secretária Municipal de Saúde e sócia de clínica contratada pelo município.</div>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('viagem')">
+          <span>✈️ Diárias de Viagem</span>
+          <div class="tooltip-box">Prestação de contas de deslocamentos oficiais a serviço do município.</div>
         </button>
-        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('roberto sales')">
-          <span>👔 Roberto Sales</span>
-          <div class="tooltip-box">Ex-prefeito municipal: holerites e 286 viagens oficiais a Brasília e BH.</div>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('camara')">
+          <span>🏛️ Câmara Legislativa</span>
+          <div class="tooltip-box">Produção de leis, matérias e projetos parlamentares no SAPL.</div>
         </button>
-        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('motorista')">
-          <span>🚗 Motoristas</span>
-          <div class="tooltip-box">Cargos operacionais com grande volume de viagens de apoio e ambulâncias.</div>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('concurso')">
+          <span>👥 Servidores Efetivos</span>
+          <div class="tooltip-box">Quadro de pessoal concursado, estatutário e comissionado.</div>
         </button>
-        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('boi preto')">
-          <span>🌊 Cachoeira Boi Preto</span>
-          <div class="tooltip-box">Ponto turístico a 74,3 km do centro com 65m de queda livre.</div>
+        <button class="quick-chip has-tooltip" onclick="quickGlobalSearch('turismo')">
+          <span>📍 Turismo & Cidade</span>
+          <div class="tooltip-box">Patrimônio ecológico, cachoeiras e atrativos naturais de Arinos.</div>
         </button>
       </div>
 
@@ -1291,9 +1359,11 @@
             Prefeito ganha <strong>R$ 14.424/mês</strong>. Secretários: <strong>R$ 7.144/mês</strong>. 5.357 servidores rastreados.
           </p>
         </div>
-        <button onclick="openVoterModal('modalSalarios')" class="btn-citizen-popup">
-          👁️ Ver Detalhes dos Salários (Pop-up)
-        </button>
+        <div class="card-action-bar" style="display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap;">
+          <button onclick="openVoterModal('modalSalarios')" class="btn-action-view">👁️ Ver</button>
+          <button onclick="openVoterModal('modalSalarios')" class="btn-action-details">📋 Detalhes</button>
+          <a href="/tabelas.html?aba=pessoas" class="btn-action-access">↗ Acessar</a>
+        </div>
       </div>
 
       <!-- Card 2: Empresas & Fornecedores -->
@@ -1312,9 +1382,11 @@
             120 grandes contratados auditados. A maior contratada recebeu mais de <strong>R$ 19,08 Milhões</strong>.
           </p>
         </div>
-        <button onclick="openVoterModal('modalEmpresas')" class="btn-citizen-popup">
-          👁️ Ver Top Empresas (Pop-up)
-        </button>
+        <div class="card-action-bar" style="display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap;">
+          <button onclick="openVoterModal('modalEmpresas')" class="btn-action-view">👁️ Ver</button>
+          <button onclick="openVoterModal('modalEmpresas')" class="btn-action-details">📋 Detalhes</button>
+          <a href="/empresas.html" class="btn-action-access">↗ Acessar</a>
+        </div>
       </div>
 
       <!-- Card 3: Alertas de Vínculos / Conflitos -->
@@ -1333,9 +1405,11 @@
             Inclui a Secretária de Saúde, Chefe de Estradas e Diretores Clínicos sócios de firmas fornecedoras.
           </p>
         </div>
-        <button onclick="openVoterModal('modalAlertas')" class="btn-citizen-popup" style="background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.5); color: #fbbf24;">
-          👁️ Ver Casos de Vínculo (Pop-up)
-        </button>
+        <div class="card-action-bar" style="display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap;">
+          <button onclick="openVoterModal('modalAlertas')" class="btn-action-view" style="color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">👁️ Ver</button>
+          <button onclick="openVoterModal('modalAlertas')" class="btn-action-details">📋 Detalhes</button>
+          <a href="/empresas.html?alerta=1" class="btn-action-access" style="background: #d97706; border-color: #f59e0b;">↗ Acessar</a>
+        </div>
       </div>
 
       <!-- Card 4: Viagens & Diárias -->
@@ -1354,9 +1428,11 @@
             29.746 viagens oficiais. O Prefeito utilizou <strong>R$ 433.704</strong> em 604 viagens (ticket médio de R$ 718).
           </p>
         </div>
-        <button onclick="openVoterModal('modalViagens')" class="btn-citizen-popup">
-          👁️ Ver Quem Mais Viajou (Pop-up)
-        </button>
+        <div class="card-action-bar" style="display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap;">
+          <button onclick="openVoterModal('modalViagens')" class="btn-action-view">👁️ Ver</button>
+          <button onclick="openVoterModal('modalViagens')" class="btn-action-details">📋 Detalhes</button>
+          <a href="/empresas.html#viagens" class="btn-action-access">↗ Acessar</a>
+        </div>
       </div>
 
       <!-- Card 5: Vereadores & Câmara -->
@@ -1375,9 +1451,11 @@
             11 vereadores em exercício. Saiba quantos projetos de lei e indicações cada parlamentar apresentou.
           </p>
         </div>
-        <button onclick="openVoterModal('modalVereadores')" class="btn-citizen-popup">
-          👁️ Ver Atuação dos Vereadores (Pop-up)
-        </button>
+        <div class="card-action-bar" style="display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap;">
+          <button onclick="openVoterModal('modalVereadores')" class="btn-action-view">👁️ Ver</button>
+          <button onclick="openVoterModal('modalVereadores')" class="btn-action-details">📋 Detalhes</button>
+          <a href="/vereadores.html" class="btn-action-access">↗ Acessar</a>
+        </div>
       </div>
 
     </div>
@@ -2550,7 +2628,7 @@
           <div class="search-empty-state">
             <span style="font-size: 28px; display: block; margin-bottom: 8px;">🔍</span>
             <p style="font-weight: 600; color: #fff;">Nenhum resultado encontrado para esta categoria</p>
-            <p style="font-size: 12px; margin-top: 4px;">Dica: Experimente usar apenas parte do nome ou termos sem acento (ex: "saude", "unai", "duraes").</p>
+            <p style="font-size: 12px; margin-top: 4px;">Dica: Experimente usar termos temáticos ou palavras sem acento (ex: "saude", "educacao", "contrato", "viagem").</p>
           </div>
         `;
         return;
@@ -2575,7 +2653,10 @@
             </div>
             <div class="search-item-footer">
               <span class="search-item-valor">${valorDisplay}</span>
-              ${it.url ? `<a href="${it.url}" target="_blank" class="search-item-action">Acessar Dados ↗</a>` : ''}
+              <div style="display: flex; gap: 6px; align-items: center;">
+                ${it.url ? `<a href="${it.url}" target="_blank" class="btn-action-view" style="font-size: 10px; padding: 4px 10px;">Ver</a>` : ''}
+                ${it.url ? `<a href="${it.url}" target="_blank" class="btn-action-access" style="font-size: 10px; padding: 4px 10px;">Acessar ↗</a>` : ''}
+              </div>
             </div>
           </div>
         `;
