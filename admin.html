@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centro de Comando & Governança — Administrador Hugo | Arinos / MG</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #080d1a; color: #f3f4f6; }
+    .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.07); }
+    .tab-btn.active { background: #3b82f6; color: #ffffff; font-weight: 700; border-color: #60a5fa; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #080d1a; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+  <link rel="stylesheet" href="/components/side_menu_v2.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header Executivo do Administrador Hugo -->
+  <header class="sticky top-0 z-40 glass border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between flex-wrap gap-3">
+      <div class="flex items-center space-x-3.5">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-xl shadow-lg shadow-blue-500/30 border border-blue-400/40">
+          ⚡
+        </div>
+        <div>
+          <div class="flex items-center space-x-2 flex-wrap">
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-white font-mono">Centro de Comando & Governança</h1>
+            <span class="px-2.5 py-0.5 text-[11px] font-bold rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 font-mono">
+              👤 Administrador Hugo
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">Arinos / MG • Telemetria, Acessos em Tempo Real, Logs & Central de Reports</p>
+        </div>
+      </div>
+
+      <!-- Indicadores de Status e Controles Globais -->
+      <div class="flex items-center space-x-2 sm:space-x-3 text-xs font-mono">
+        <div class="hidden md:flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
+          <span class="text-slate-500 text-[10px] uppercase">Uptime:</span>
+          <span id="header-uptime" class="text-emerald-400 font-bold">0m</span>
+        </div>
+        <div class="hidden sm:flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
+          <span class="text-slate-500 text-[10px] uppercase">RAM:</span>
+          <span id="header-ram" class="text-blue-400 font-bold">-- MB</span>
+        </div>
+        <button onclick="carregarDadosAdmin()" class="px-3 py-1.5 bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white rounded-lg border border-blue-500/40 transition flex items-center space-x-1 font-semibold">
+          <span>🔄</span>
+          <span class="hidden sm:inline">Atualizar</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- Seletor de Abas Administrativas -->
+    <div class="flex items-center space-x-2 border-b border-slate-800 pb-2 overflow-x-auto">
+      <button onclick="mudarAba('visao-geral')" id="tab-visao-geral" class="tab-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition border border-transparent flex items-center space-x-2 whitespace-nowrap">
+        <span>🎛️ Visão Geral & Controles</span>
+      </button>
+      <button onclick="mudarAba('acessos')" id="tab-acessos" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition border border-transparent flex items-center space-x-2 whitespace-nowrap">
+        <span>🌐 Acessos & Tráfego</span>
+        <span id="badge-total-acessos" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-blue-400 font-mono">0</span>
+      </button>
+      <button onclick="mudarAba('logs')" id="tab-logs" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition border border-transparent flex items-center space-x-2 whitespace-nowrap">
+        <span>📜 Logs em Tempo Real</span>
+      </button>
+      <button onclick="mudarAba('reports')" id="tab-reports" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition border border-transparent flex items-center space-x-2 whitespace-nowrap">
+        <span>📑 Central de Reports do Hugo</span>
+      </button>
+    </div>
+
+    <!-- =========================================================================
+         ABA 1: VISÃO GERAL & CONTROLES DO SERVIDOR E BANCO
+         ========================================================================= -->
+    <div id="secao-visao-geral" class="space-y-6">
+      
+      <!-- Cards de Métricas Vitais -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="glass-card p-4 rounded-2xl border-l-4 border-blue-500">
+          <span class="text-[10px] text-slate-400 uppercase font-mono tracking-wider">Total de Requisições</span>
+          <p id="kpi-total-reqs" class="text-2xl font-extrabold text-white font-mono mt-1">0</p>
+          <span class="text-[11px] text-slate-500 font-mono">Desde a inicialização</span>
+        </div>
+
+        <div class="glass-card p-4 rounded-2xl border-l-4 border-emerald-500">
+          <span class="text-[10px] text-slate-400 uppercase font-mono tracking-wider">Latência Média</span>
+          <p id="kpi-latencia" class="text-2xl font-extrabold text-emerald-400 font-mono mt-1">0 ms</p>
+          <span class="text-[11px] text-emerald-500 font-mono">Tempo de resposta ultra-rápido</span>
+        </div>
+
+        <div class="glass-card p-4 rounded-2xl border-l-4 border-purple-500">
+          <span class="text-[10px] text-slate-400 uppercase font-mono tracking-wider">Integridade SQLite</span>
+          <p id="kpi-integridade" class="text-xl font-extrabold text-purple-300 font-mono mt-1">Verificando...</p>
+          <span class="text-[11px] text-slate-500 font-mono">PRAGMA quick_check</span>
+        </div>
+
+        <div class="glass-card p-4 rounded-2xl border-l-4 border-amber-500">
+          <span class="text-[10px] text-slate-400 uppercase font-mono tracking-wider">Registros Gerenciados</span>
+          <p id="kpi-registros-total" class="text-2xl font-extrabold text-amber-400 font-mono mt-1">--</p>
+          <span class="text-[11px] text-slate-500 font-mono">7 tabelas principais auditadas</span>
+        </div>
+      </div>
+
+      <!-- Painel de Controles e Ações Rápidas -->
+      <div class="glass-card p-5 rounded-2xl space-y-4">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h3 class="text-sm font-bold text-white uppercase font-mono tracking-wide flex items-center space-x-2">
+              <span>⚡</span>
+              <span>Ações Rápidas & Diagnóstico do Administrador Hugo</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Execução direta de comandos e checagens no servidor Node.js e banco SQLite.</p>
+          </div>
+          <div id="acao-feedback" class="text-xs font-mono text-emerald-400 font-semibold"></div>
+        </div>
+
+        <div class="flex items-center flex-wrap gap-3 pt-2">
+          <button onclick="executarAcao('quick_check')" class="px-4 py-2 bg-purple-600/30 hover:bg-purple-600 text-purple-300 hover:text-white rounded-xl border border-purple-500/40 text-xs font-bold transition flex items-center space-x-2">
+            <span>🛡️</span>
+            <span>Executar PRAGMA quick_check</span>
+          </button>
+          <button onclick="executarAcao('limpar_acessos')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl border border-slate-700 text-xs font-bold transition flex items-center space-x-2">
+            <span>🧹</span>
+            <span>Limpar Buffer de Acessos Recentes</span>
+          </button>
+          <a href="/tabelas.html" target="_blank" class="px-4 py-2 bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white rounded-xl border border-emerald-500/40 text-xs font-bold transition flex items-center space-x-2">
+            <span>🔍</span>
+            <span>Abrir Explorador de Tabelas ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Distribuição dos Dados no SQLite Master -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="glass-card p-5 rounded-2xl space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase font-mono tracking-wider flex items-center space-x-2">
+            <span>📦</span>
+            <span>Volume de Registros por Tabela</span>
+          </h4>
+          <div class="space-y-2 text-xs font-mono" id="lista-tabelas-counts">
+            Carregando contagens...
+          </div>
+        </div>
+
+        <div class="glass-card p-5 rounded-2xl space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase font-mono tracking-wider flex items-center space-x-2">
+            <span>🔥</span>
+            <span>Rotas Mais Solicitadas</span>
+          </h4>
+          <div class="space-y-2 text-xs font-mono" id="lista-top-rotas">
+            Carregando telemetria...
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =========================================================================
+         ABA 2: ACESSOS & TRÁFEGO EM TEMPO REAL
+         ========================================================================= -->
+    <div id="secao-acessos" class="hidden space-y-4">
+      <div class="glass-card p-5 rounded-2xl space-y-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h3 class="text-sm font-bold text-white uppercase font-mono tracking-wide flex items-center space-x-2">
+              <span>🌐</span>
+              <span>Monitor de Requisições HTTP em Tempo Real</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Últimos acessos capturados pelo servidor HTTP local.</p>
+          </div>
+          <span class="text-xs text-emerald-400 font-mono font-bold flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Escuta Ativa (:8088)</span>
+          </span>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-800/80 text-slate-400 font-mono uppercase text-[11px]">
+              <tr>
+                <th class="py-2.5 px-3">Hora</th>
+                <th class="py-2.5 px-3">Método</th>
+                <th class="py-2.5 px-3">Rota / Endpoint</th>
+                <th class="py-2.5 px-3">Status</th>
+                <th class="py-2.5 px-3 text-right">Latência</th>
+                <th class="py-2.5 px-3">IP</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-acessos-corpo" class="divide-y divide-slate-800/60 font-mono">
+              <tr>
+                <td colspan="6" class="py-8 text-center text-slate-500">Aguardando requisições...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         ABA 3: LOGS EM TEMPO REAL
+         ========================================================================= -->
+    <div id="secao-logs" class="hidden space-y-4">
+      <div class="glass-card p-5 rounded-2xl space-y-4">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <h3 class="text-sm font-bold text-white uppercase font-mono tracking-wide flex items-center space-x-2">
+              <span>📜</span>
+              <span>Console de Logs Unificado (HTTP + Crawler ADPM/SAPL)</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Stream unificado de eventos do sistema, auditoria forense e erros.</p>
+          </div>
+          <div class="flex items-center space-x-2 text-xs font-mono">
+            <button onclick="carregarLogs('todos')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition">Todos</button>
+            <button onclick="carregarLogs('http')" class="px-2.5 py-1 rounded-lg bg-blue-900/40 hover:bg-blue-900 text-blue-300 transition">HTTP</button>
+            <button onclick="carregarLogs('crawler')" class="px-2.5 py-1 rounded-lg bg-emerald-900/40 hover:bg-emerald-900 text-emerald-300 transition">Crawler</button>
+            <button onclick="carregarLogs('erros')" class="px-2.5 py-1 rounded-lg bg-rose-900/40 hover:bg-rose-900 text-rose-300 transition">Erros / Alertas</button>
+          </div>
+        </div>
+
+        <!-- Terminal de Logs -->
+        <div id="terminal-logs" class="bg-black/80 rounded-xl p-4 border border-slate-800 font-mono text-xs max-h-[500px] overflow-y-auto space-y-2">
+          <div class="text-slate-500 py-6 text-center">Carregando logs...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         ABA 4: CENTRAL DE REPORTS & DOSSIÊS DO HUGO
+         ========================================================================= -->
+    <div id="secao-reports" class="hidden space-y-6">
+      
+      <!-- Seletor de Tipo de Report -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <button onclick="gerarReport('conflitos')" class="p-4 bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 rounded-2xl text-left transition space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-xl">⚠️</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold">190 Casos</span>
+          </div>
+          <h4 class="text-sm font-bold text-white">Conflitos de Interesse</h4>
+          <p class="text-xs text-slate-400">Servidores públicos sócios de fornecedores contratados.</p>
+        </button>
+
+        <button onclick="gerarReport('pilares')" class="p-4 bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-blue-500/50 rounded-2xl text-left transition space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-xl">🏛️</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold">3 Pilares</span>
+          </div>
+          <h4 class="text-sm font-bold text-white">Balanço dos 3 Pilares</h4>
+          <p class="text-xs text-slate-400">Comparativo financeiro: Prefeitura, Saúde e Câmara.</p>
+        </button>
+
+        <button onclick="gerarReport('forense')" class="p-4 bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-purple-500/50 rounded-2xl text-left transition space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-xl">🛡️</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 font-bold">SHA-256</span>
+          </div>
+          <h4 class="text-sm font-bold text-white">Cadeia de Custódia Forense</h4>
+          <p class="text-xs text-slate-400">Hashes, integridade de arquivos e fotos auditadas.</p>
+        </button>
+      </div>
+
+      <!-- Área de Visualização do Report -->
+      <div class="glass-card p-5 rounded-2xl space-y-4">
+        <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-800">
+          <div>
+            <h3 id="report-titulo" class="text-base font-bold text-white font-mono flex items-center space-x-2">
+              <span>📑</span>
+              <span>Dossiê Administrativo Selecionado</span>
+            </h3>
+            <p id="report-subtitulo" class="text-xs text-slate-400 mt-0.5">Clique em um dos reports acima para gerar o relatório consolidado.</p>
+          </div>
+          <button onclick="copiarReportTexto()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-mono text-emerald-400 rounded-lg border border-slate-700 transition flex items-center space-x-1.5">
+            <span>📋</span>
+            <span>Copiar Dossiê</span>
+          </button>
+        </div>
+
+        <div id="report-conteudo" class="space-y-3 text-xs text-slate-300">
+          <div class="py-12 text-center text-slate-500 font-mono">
+            Selecione um relatório executivo para visualizar a análise completa.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-800/80 bg-slate-950/80 py-4 text-center text-xs text-slate-500 font-mono">
+    Centro de Comando & Governança • Arinos / MG • Desenvolvido com Governança para o Administrador Hugo
+  </footer>
+
+  <!-- Scripts Lógicos do Painel Administrativo -->
+  <script>
+    let abaAtual = 'visao-geral';
+    let ultimoReportGerado = null;
+    let autoRefreshTimer = null;
+
+    function formatMoeda(val) {
+      return Number(val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function mudarAba(aba) {
+      abaAtual = aba;
+      ['visao-geral', 'acessos', 'logs', 'reports'].forEach(a => {
+        const btn = document.getElementById(`tab-${a}`);
+        const sec = document.getElementById(`secao-${a}`);
+        if (a === aba) {
+          if (btn) btn.className = 'tab-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition border border-transparent flex items-center space-x-2 whitespace-nowrap';
+          if (sec) sec.classList.remove('hidden');
+        } else {
+          if (btn) btn.className = 'tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition border border-transparent flex items-center space-x-2 whitespace-nowrap';
+          if (sec) sec.classList.add('hidden');
+        }
+      });
+
+      if (aba === 'acessos') carregarAcessos();
+      else if (aba === 'logs') carregarLogs('todos');
+      else if (aba === 'reports' && !ultimoReportGerado) gerarReport('conflitos');
+    }
+
+    async function carregarDadosAdmin() {
+      try {
+        const res = await fetch('/api/admin/overview');
+        if (!res.ok) throw new Error('Servidor não respondeu ao overview');
+        const data = await res.json();
+
+        // Header
+        document.getElementById('header-uptime').innerText = data.servidor.uptime_formatado;
+        document.getElementById('header-ram').innerText = `${data.servidor.ram_utilizada_mb} MB`;
+
+        // KPIs
+        document.getElementById('kpi-total-reqs').innerText = Number(data.telemetria.total_requisicoes).toLocaleString('pt-BR');
+        document.getElementById('kpi-latencia').innerText = `${data.telemetria.tempo_medio_ms} ms`;
+        
+        const qkEl = document.getElementById('kpi-integridade');
+        if (data.banco.quick_check === 'ok') {
+          qkEl.innerText = 'Íntegro (100%)';
+          qkEl.className = 'text-xl font-extrabold text-emerald-400 font-mono mt-1';
+        } else {
+          qkEl.innerText = 'Atenção';
+          qkEl.className = 'text-xl font-extrabold text-rose-400 font-mono mt-1';
+        }
+
+        document.getElementById('kpi-registros-total').innerText = Number(data.banco.total_registros).toLocaleString('pt-BR');
+        document.getElementById('badge-total-acessos').innerText = data.telemetria.total_requisicoes;
+
+        // Lista de Tabelas
+        const counts = data.banco.counts || {};
+        const listaTabEl = document.getElementById('lista-tabelas-counts');
+        listaTabEl.innerHTML = `
+          <div class="flex items-center justify-between py-1 border-b border-slate-800">
+            <span class="text-slate-400">Contracheques</span>
+            <strong class="text-white">${Number(counts.contracheques || 0).toLocaleString('pt-BR')}</strong>
+          </div>
+          <div class="flex items-center justify-between py-1 border-b border-slate-800">
+            <span class="text-slate-400">Pessoas Unificadas</span>
+            <strong class="text-emerald-400">${Number(counts.pessoas || 0).toLocaleString('pt-BR')}</strong>
+          </div>
+          <div class="flex items-center justify-between py-1 border-b border-slate-800">
+            <span class="text-slate-400">Contratos Administrativos</span>
+            <strong class="text-blue-400">${Number(counts.contratos || 0).toLocaleString('pt-BR')}</strong>
+          </div>
+          <div class="flex items-center justify-between py-1 border-b border-slate-800">
+            <span class="text-slate-400">Diárias de Viagem</span>
+            <strong class="text-amber-400">${Number(counts.diarias || 0).toLocaleString('pt-BR')}</strong>
+          </div>
+          <div class="flex items-center justify-between py-1 border-b border-slate-800">
+            <span class="text-slate-400">Despesas e Empenhos</span>
+            <strong class="text-purple-400">${Number(counts.despesas || 0).toLocaleString('pt-BR')}</strong>
+          </div>
+          <div class="flex items-center justify-between py-1">
+            <span class="text-slate-400">Matérias Legislativas (Câmara)</span>
+            <strong class="text-indigo-400">${Number(counts.camara_materias || 0).toLocaleString('pt-BR')}</strong>
+          </div>
+        `;
+
+        // Top Rotas
+        const topRotasEl = document.getElementById('lista-top-rotas');
+        if (data.telemetria.top_rotas && data.telemetria.top_rotas.length > 0) {
+          topRotasEl.innerHTML = data.telemetria.top_rotas.map(r => `
+            <div class="flex items-center justify-between py-1.5 border-b border-slate-800">
+              <span class="text-slate-300 truncate max-w-xs" title="${r.rota}">${r.rota}</span>
+              <span class="text-blue-400 font-bold">${r.total} reqs</span>
+            </div>
+          `).join('');
+        } else {
+          topRotasEl.innerHTML = '<div class="text-slate-500 py-3">Nenhuma rota registrada ainda.</div>';
+        }
+
+      } catch(err) {
+        console.warn('Erro ao carregar dados admin:', err);
+      }
+    }
+
+    async function carregarAcessos() {
+      const corpo = document.getElementById('tabela-acessos-corpo');
+      try {
+        const res = await fetch('/api/admin/acessos?limit=50');
+        const data = await res.json();
+        
+        if (!data.acessos || data.acessos.length === 0) {
+          corpo.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-500">Nenhum acesso registrado no momento.</td></tr>';
+          return;
+        }
+
+        corpo.innerHTML = data.acessos.map(a => {
+          let badgeStatus = 'bg-emerald-950 text-emerald-300 border-emerald-600/40';
+          if (a.status >= 500) badgeStatus = 'bg-rose-950 text-rose-300 border-rose-600/40';
+          else if (a.status >= 400) badgeStatus = 'bg-amber-950 text-amber-300 border-amber-600/40';
+
+          return `
+            <tr class="hover:bg-slate-800/40 transition">
+              <td class="py-2.5 px-3 text-slate-400">${a.timestamp}</td>
+              <td class="py-2.5 px-3 font-bold ${a.metodo === 'GET' ? 'text-blue-400' : 'text-amber-400'}">${a.metodo}</td>
+              <td class="py-2.5 px-3 text-slate-200 truncate max-w-xs" title="${a.rota}${a.search}">${a.rota}</td>
+              <td class="py-2.5 px-3">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeStatus}">${a.status}</span>
+              </td>
+              <td class="py-2.5 px-3 text-right font-bold text-emerald-400">${a.tempo_ms} ms</td>
+              <td class="py-2.5 px-3 text-slate-400 text-[11px]">${a.ip}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch(e) {
+        corpo.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-rose-400">Erro ao obter acessos: ${e.message}</td></tr>`;
+      }
+    }
+
+    async function carregarLogs(tipo) {
+      const term = document.getElementById('terminal-logs');
+      term.innerHTML = '<div class="text-slate-400 py-4 text-center">Consultando logs do sistema...</div>';
+
+      try {
+        const res = await fetch(`/api/admin/logs?tipo=${tipo}&limit=80`);
+        const data = await res.json();
+
+        if (!data.logs || data.logs.length === 0) {
+          term.innerHTML = '<div class="text-slate-500 py-4 text-center">Nenhum log encontrado para este filtro.</div>';
+          return;
+        }
+
+        term.innerHTML = data.logs.map(l => {
+          let cor = 'text-slate-300';
+          let tagBg = 'bg-slate-800 text-slate-300';
+          if (l.nivel === 'ERRO') { cor = 'text-rose-400'; tagBg = 'bg-rose-950 text-rose-300 border border-rose-800'; }
+          else if (l.nivel === 'ALERTA') { cor = 'text-amber-400'; tagBg = 'bg-amber-950 text-amber-300 border border-amber-800'; }
+          else if (l.nivel === 'SUCESSO') { cor = 'text-emerald-400'; tagBg = 'bg-emerald-950 text-emerald-300 border border-emerald-800'; }
+
+          return `
+            <div class="py-1 border-b border-slate-900 flex items-start space-x-2">
+              <span class="text-slate-500 select-none whitespace-nowrap">[${l.timestamp}]</span>
+              <span class="px-1.5 py-0.2 rounded text-[10px] font-bold ${tagBg}">${l.tipo}</span>
+              <div class="flex-1">
+                <span class="${cor} font-medium">${l.mensagem}</span>
+                <span class="text-slate-500 text-[11px] block mt-0.5">${l.detalhe}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch(e) {
+        term.innerHTML = `<div class="text-rose-400 py-4 text-center">Falha ao consultar logs: ${e.message}</div>`;
+      }
+    }
+
+    async function gerarReport(tipo) {
+      const titulo = document.getElementById('report-titulo');
+      const subtitulo = document.getElementById('report-subtitulo');
+      const cont = document.getElementById('report-conteudo');
+      cont.innerHTML = '<div class="py-12 text-center text-slate-400 font-mono animate-pulse">Gerando dossiê administrativo com dados em tempo real...</div>';
+
+      try {
+        const res = await fetch(`/api/admin/reports?tipo=${tipo}`);
+        const data = await res.json();
+        ultimoReportGerado = data;
+
+        if (tipo === 'conflitos') {
+          titulo.innerText = `⚠️ ${data.relatorio}`;
+          subtitulo.innerText = `Foram identificados ${data.total_casos} servidores públicos com vínculos societários em fornecedores da prefeitura.`;
+
+          cont.innerHTML = `
+            <div class="overflow-x-auto rounded-xl border border-slate-800">
+              <table class="w-full text-left text-xs text-slate-300">
+                <thead class="bg-slate-800/80 text-slate-400 font-mono uppercase text-[11px]">
+                  <tr>
+                    <th class="py-2 px-3">Servidor</th>
+                    <th class="py-2 px-3">Cargo</th>
+                    <th class="py-2 px-3 text-right">Salários Recebidos</th>
+                    <th class="py-2 px-3">Empresas Vinculadas</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60 font-mono">
+                  ${data.dados.map(c => `
+                    <tr class="hover:bg-slate-800/30">
+                      <td class="py-2.5 px-3 font-bold text-white font-sans">${c.nome}</td>
+                      <td class="py-2.5 px-3 text-slate-400 font-sans">${c.cargo || '-'}</td>
+                      <td class="py-2.5 px-3 text-right text-emerald-400 font-bold">${formatMoeda(c.salarios)}</td>
+                      <td class="py-2.5 px-3 font-sans">
+                        <div class="space-y-0.5">
+                          ${c.empresas.map(e => `
+                            <span class="inline-block px-1.5 py-0.5 rounded bg-slate-800 text-[11px] text-amber-300 border border-slate-700 mr-1 mb-1">
+                              ${e.razao_social} (${e.qualificacao || 'Sócio'})
+                            </span>
+                          `).join('')}
+                        </div>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          `;
+        } else if (tipo === 'pilares') {
+          titulo.innerText = `🏛️ ${data.relatorio}`;
+          subtitulo.innerText = `Diagnóstico orçamentário dos 3 Poderes e Fundações do município.`;
+          const p = data.pilares;
+
+          cont.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono">
+              <div class="p-4 bg-slate-900/80 rounded-xl border border-emerald-500/30 space-y-2">
+                <span class="text-xs font-bold text-emerald-400 uppercase">🏛️ 1. Prefeitura Municipal</span>
+                <p class="text-lg font-bold text-white">${formatMoeda(p.prefeitura.folha_total)}</p>
+                <p class="text-slate-400 text-[11px]">${Number(p.prefeitura.contracheques_processados).toLocaleString('pt-BR')} contracheques</p>
+                <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-300">
+                  <p>Contratos: ${p.prefeitura.contratos_firmados_total} (${formatMoeda(p.prefeitura.contratos_volume)})</p>
+                  <p>Diárias: ${p.prefeitura.diarias_total} (${formatMoeda(p.prefeitura.diarias_volume)})</p>
+                </div>
+              </div>
+
+              <div class="p-4 bg-slate-900/80 rounded-xl border border-cyan-500/30 space-y-2">
+                <span class="text-xs font-bold text-cyan-400 uppercase">🏥 2. Fundação de Saúde</span>
+                <p class="text-lg font-bold text-white">${formatMoeda(p.saude.folha_total)}</p>
+                <p class="text-slate-400 text-[11px]">${Number(p.saude.contracheques_processados).toLocaleString('pt-BR')} contracheques de saúde</p>
+              </div>
+
+              <div class="p-4 bg-slate-900/80 rounded-xl border border-purple-500/30 space-y-2">
+                <span class="text-xs font-bold text-purple-400 uppercase">⚖️ 3. Câmara Municipal</span>
+                <p class="text-lg font-bold text-white">${p.camara.materias_legislativas} Matérias</p>
+                <p class="text-slate-400 text-[11px]">Leis e projetos catalogados no SAPL</p>
+                <p class="text-slate-500 text-[10px] mt-1">Período: ${p.camara.periodo_legislativo}</p>
+              </div>
+            </div>
+          `;
+        } else if (tipo === 'forense') {
+          titulo.innerText = `🛡️ ${data.relatorio}`;
+          subtitulo.innerText = `Cadeia de custódia e garantia pericial contra adulterações.`;
+
+          cont.innerHTML = `
+            <div class="p-4 bg-slate-900/80 rounded-xl border border-purple-500/30 space-y-3 font-mono">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-3 bg-slate-800/50 rounded-lg">
+                  <span class="text-slate-400 text-[10px] uppercase">Integridade Física SQLite</span>
+                  <p class="text-emerald-400 font-bold text-sm mt-0.5">${data.integridade_sqlite}</p>
+                </div>
+                <div class="p-3 bg-slate-800/50 rounded-lg">
+                  <span class="text-slate-400 text-[10px] uppercase">Fotos Oficiais Auditadas SHA-256</span>
+                  <p class="text-white font-bold text-sm mt-0.5">${data.fotos_oficiais_auditadas_sha256} retratos vinculados com hash</p>
+                </div>
+                <div class="p-3 bg-slate-800/50 rounded-lg">
+                  <span class="text-slate-400 text-[10px] uppercase">Consultas Crawler Rastreadas</span>
+                  <p class="text-blue-400 font-bold text-sm mt-0.5">${data.consultas_crawler_rastreadas} execuções</p>
+                </div>
+                <div class="p-3 bg-slate-800/50 rounded-lg">
+                  <span class="text-slate-400 text-[10px] uppercase">Volume Total Auditado</span>
+                  <p class="text-amber-400 font-bold text-sm mt-0.5">${data.volume_dados_auditados_mb} MB</p>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+      } catch(e) {
+        cont.innerHTML = `<div class="py-8 text-center text-rose-400">Erro ao gerar report: ${e.message}</div>`;
+      }
+    }
+
+    async function executarAcao(acao) {
+      const feedback = document.getElementById('acao-feedback');
+      feedback.innerText = 'Processando ação...';
+      try {
+        const res = await fetch(`/api/admin/acao?acao=${acao}`);
+        const data = await res.json();
+        feedback.innerText = data.sucesso ? '✔ Ação concluída com sucesso!' : `❌ Falha: ${data.erro}`;
+        setTimeout(() => feedback.innerText = '', 4000);
+        carregarDadosAdmin();
+      } catch(e) {
+        feedback.innerText = `Erro: ${e.message}`;
+      }
+    }
+
+    function copiarReportTexto() {
+      if (!ultimoReportGerado) {
+        alert('Nenhum report gerado no momento.');
+        return;
+      }
+      navigator.clipboard.writeText(JSON.stringify(ultimoReportGerado, null, 2))
+        .then(() => alert('Dossiê copiado para a área de transferência!'))
+        .catch(() => alert('Não foi possível copiar automaticamente.'));
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      carregarDadosAdmin();
+      autoRefreshTimer = setInterval(() => {
+        if (abaAtual === 'visao-geral') carregarDadosAdmin();
+        else if (abaAtual === 'acessos') carregarAcessos();
+      }, 3500);
+    });
+  </script>
+  <script src="/components/side_menu_v2.js"></script>
+</body>
+</html>

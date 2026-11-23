@@ -62,7 +62,8 @@ async function runTestSuite() {
     'eleicoes.html',
     'tabelas.html',
     'mapa.html',
-    'administrativo.html'
+    'administrativo.html',
+    'admin.html'
   ];
 
   let htmlsOk = true;

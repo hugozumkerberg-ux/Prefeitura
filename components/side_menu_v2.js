@@ -118,6 +118,21 @@
           }
         }
       ]
+    },
+    {
+      category: 'ADMINISTRAÇÃO',
+      items: [
+        {
+          id: 'admin',
+          label: 'Painel do Hugo',
+          sub: 'Acessos, Logs & Relatórios',
+          icon: '⚡',
+          href: '/admin.html',
+          badge: 'ADM',
+          badgeClass: 'v2-badge-blue',
+          aliases: ['/admin.html']
+        }
+      ]
     }
   ];
 
@@ -136,6 +151,7 @@
     if (path.includes('mapa')) return 'mapa';
     if (path.includes('vereadores')) return 'vereadores';
     if (path.includes('eleicoes')) return 'eleicoes';
+    if (path.includes('admin')) return 'admin';
     if (path === '/' || path === '/index.html' || path === '') return 'inicio';
     if (path.includes('tabelas')) return 'pessoas';
     return '';

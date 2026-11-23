@@ -375,10 +375,23 @@ function parseContrachequeDetalhadoHtml(rawHtml) {
   };
 }
 
+// ==============================================================================
+// TELEMETRIA E CONTROLE DE ACESSOS ADMINISTRATIVOS (PAINEL DO HUGO)
+// ==============================================================================
+
+const ACCESS_LOGS = [];
+const ROUTE_HITS = new Map();
+const STATUS_HITS = { 200: 0, 304: 0, 400: 0, 404: 0, 500: 0 };
+let totalRequestsCount = 0;
+let totalLatencySum = 0;
+const serverStartTime = Date.now();
+
 const server = http.createServer(async (req, res) => {
+  const reqStart = Date.now();
+
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
@@ -389,6 +402,284 @@ const server = http.createServer(async (req, res) => {
 
   const parsedUrl = new URL(req.url, `http://localhost:${PORT}`);
   let pathname = parsedUrl.pathname;
+
+  // Registrar acesso na telemetria ao finalizar resposta
+  res.on('finish', () => {
+    const duration = Date.now() - reqStart;
+    totalRequestsCount++;
+    totalLatencySum += duration;
+
+    const code = res.statusCode || 200;
+    STATUS_HITS[code] = (STATUS_HITS[code] || 0) + 1;
+
+    const cleanPath = pathname.length > 50 ? pathname.slice(0, 50) + '...' : pathname;
+    ROUTE_HITS.set(cleanPath, (ROUTE_HITS.get(cleanPath) || 0) + 1);
+
+    const logEntry = {
+      id: totalRequestsCount,
+      timestamp: new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+      timestamp_iso: new Date().toISOString(),
+      metodo: req.method,
+      rota: pathname,
+      search: parsedUrl.search || '',
+      status: code,
+      tempo_ms: duration,
+      ip: (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1').replace('::ffff:', ''),
+      user_agent: req.headers['user-agent'] || 'Desconhecido'
+    };
+
+    ACCESS_LOGS.unshift(logEntry);
+    if (ACCESS_LOGS.length > 500) ACCESS_LOGS.pop();
+  });
+
+  // --- ENDPOINTS ADMINISTRATIVOS (CENTRO DE COMANDO DO HUGO) ---
+  if (pathname.startsWith('/api/admin/')) {
+    if (pathname === '/api/admin/overview') {
+      let dbStats = { quick_check: 'pendente', total_registros: 0, counts: {} };
+      if (fs.existsSync(MASTER_DB)) {
+        try {
+          const db = new DatabaseSync(MASTER_DB, { readOnly: true });
+          const qc = db.prepare('PRAGMA quick_check').get();
+          dbStats.quick_check = qc && (qc.quick_check === 'ok' || Object.values(qc)[0] === 'ok') ? 'ok' : 'alerta';
+          
+          const counts = db.prepare(`
+            SELECT 
+              (SELECT count(*) FROM contracheques) as contracheques,
+              (SELECT count(*) FROM despesas) as despesas,
+              (SELECT count(*) FROM diarias) as diarias,
+              (SELECT count(*) FROM contratos) as contratos,
+              (SELECT count(*) FROM receitas) as receitas,
+              (SELECT count(*) FROM pessoas_unificadas) as pessoas,
+              (SELECT count(*) FROM empresas_contratadas) as empresas,
+              (SELECT count(*) FROM camara_materias) as camara_materias
+          `).get();
+          db.close();
+          dbStats.counts = counts;
+          dbStats.total_registros = Object.values(counts).reduce((a, b) => a + (b || 0), 0);
+        } catch(e) {
+          dbStats.erro = e.message;
+        }
+      }
+
+      const topRotas = Array.from(ROUTE_HITS.entries())
+        .map(([rota, total]) => ({ rota, total }))
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 8);
+
+      const uptimeSec = Math.floor((Date.now() - serverStartTime) / 1000);
+      const horas = Math.floor(uptimeSec / 3600);
+      const minutos = Math.floor((uptimeSec % 3600) / 60);
+      const segundos = uptimeSec % 60;
+
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({
+        administrador: 'Hugo',
+        perfil: 'Super Administrador / Webmaster',
+        servidor: {
+          porta: PORT,
+          uptime_segundos: uptimeSec,
+          uptime_formatado: `${horas}h ${minutos}m ${segundos}s`,
+          ram_utilizada_mb: Math.round(process.memoryUsage().rss / 1024 / 1024 * 10) / 10,
+          ram_heap_mb: Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 10) / 10,
+          node_version: process.version,
+          plataforma: process.platform,
+          banco_master_mb: fs.existsSync(MASTER_DB) ? Math.round(fs.statSync(MASTER_DB).size / 1024 / 1024 * 10) / 10 : 0
+        },
+        telemetria: {
+          total_requisicoes: totalRequestsCount,
+          tempo_medio_ms: totalRequestsCount > 0 ? Math.round(totalLatencySum / totalRequestsCount * 10) / 10 : 0,
+          status_hits: STATUS_HITS,
+          top_rotas: topRotas
+        },
+        banco: dbStats
+      }));
+      return;
+    }
+
+    if (pathname === '/api/admin/acessos') {
+      const limit = Math.min(500, Math.max(10, parseInt(parsedUrl.searchParams.get('limit') || '50', 10)));
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({
+        total_acumulado: totalRequestsCount,
+        tempo_medio_ms: totalRequestsCount > 0 ? Math.round(totalLatencySum / totalRequestsCount * 10) / 10 : 0,
+        status_distribuicao: STATUS_HITS,
+        acessos: ACCESS_LOGS.slice(0, limit)
+      }));
+      return;
+    }
+
+    if (pathname === '/api/admin/logs') {
+      const tipo = (parsedUrl.searchParams.get('tipo') || 'todos').toLowerCase();
+      const limit = Math.min(200, Math.max(10, parseInt(parsedUrl.searchParams.get('limit') || '60', 10)));
+      
+      let logsCombinados = [];
+
+      // Logs de Acessos HTTP
+      if (tipo === 'todos' || tipo === 'http') {
+        ACCESS_LOGS.slice(0, limit).forEach(a => {
+          logsCombinados.push({
+            tipo: 'HTTP',
+            timestamp: a.timestamp,
+            nivel: a.status >= 500 ? 'ERRO' : (a.status >= 400 ? 'ALERTA' : 'INFO'),
+            mensagem: `${a.metodo} ${a.rota} (${a.tempo_ms}ms) -> Status ${a.status}`,
+            detalhe: `IP: ${a.ip} • UA: ${a.user_agent.slice(0, 45)}...`
+          });
+        });
+      }
+
+      // Logs de Auditoria do Crawler ADPM/SAPL
+      if (tipo === 'todos' || tipo === 'crawler' || tipo === 'erros') {
+        const auditLogs = getAuditLogs(limit, tipo === 'erros' ? 'falha' : null);
+        auditLogs.forEach(l => {
+          logsCombinados.push({
+            tipo: 'CRAWLER',
+            timestamp: new Date(l.coletado_em).toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+            nivel: (l.status_coleta || '').startsWith('erro') ? 'ERRO' : ((l.status_coleta === 'vazio') ? 'ALERTA' : 'SUCESSO'),
+            mensagem: `[${l.entidade}] Módulo ${l.modulo} (${l.mes}/${l.ano}) - ${l.qtd_registros || 0} registros`,
+            detalhe: `HTTP ${l.status_http || 200} • ${Math.round((l.bytes_recebidos || 0)/1024)} KB • SHA: ${(l.hash_sha256 || '').slice(0, 12)}...`
+          });
+        });
+      }
+
+      if (tipo === 'erros') {
+        logsCombinados = logsCombinados.filter(l => l.nivel === 'ERRO' || l.nivel === 'ALERTA');
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({
+        total: logsCombinados.length,
+        logs: logsCombinados.slice(0, limit)
+      }));
+      return;
+    }
+
+    if (pathname === '/api/admin/reports') {
+      const tipo = (parsedUrl.searchParams.get('tipo') || 'conflitos').toLowerCase();
+
+      try {
+        const db = new DatabaseSync(MASTER_DB, { readOnly: true });
+
+        if (tipo === 'conflitos') {
+          // Servidores com vínculo em fornecedores
+          const conflitos = db.prepare(`
+            SELECT p.id, p.nome_exibicao, p.cargos_resumo, p.total_salarios, p.total_dinheiro_publico, p.empresas_vinculadas, p.foto_url
+            FROM pessoas_unificadas p
+            WHERE p.is_socio_empresa = 1
+            ORDER BY p.total_dinheiro_publico DESC
+          `).all();
+
+          const formatados = conflitos.map(c => {
+            let empresas = [];
+            try { empresas = JSON.parse(c.empresas_vinculadas || '[]'); } catch(e){}
+            return {
+              id: c.id,
+              nome: c.nome_exibicao,
+              cargo: c.cargos_resumo,
+              salarios: c.total_salarios,
+              total_recebido: c.total_dinheiro_publico,
+              foto_url: c.foto_url,
+              empresas: empresas.map(e => ({
+                razao_social: e.razao_social,
+                cnpj: e.cnpj,
+                qualificacao: e.qualificacao
+              }))
+            };
+          });
+
+          db.close();
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({
+            relatorio: 'Auditoria de Conflitos de Interesse (Servidores Sócios de Fornecedores)',
+            total_casos: formatados.length,
+            dados: formatados
+          }));
+          return;
+        }
+
+        if (tipo === 'pilares') {
+          const prefeitura = db.prepare("SELECT count(*) as contracheques, sum(total_proventos) as folha FROM contracheques WHERE entidade LIKE '%Prefeitura%'").get();
+          const saude = db.prepare("SELECT count(*) as contracheques, sum(total_proventos) as folha FROM contracheques WHERE entidade LIKE '%Saúde%'").get();
+          const camara = db.prepare("SELECT count(*) as total_materias, min(ano) as min_ano, max(ano) as max_ano FROM camara_materias").get();
+          const contratos = db.prepare("SELECT count(*) as total, sum(valor) as volume FROM contratos").get();
+          const diarias = db.prepare("SELECT count(*) as total, sum(valor) as volume FROM diarias").get();
+
+          db.close();
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({
+            relatorio: 'Diagnóstico Orçamentário e Financeiro dos 3 Pilares',
+            pilares: {
+              prefeitura: {
+                folha_total: prefeitura.folha,
+                contracheques_processados: prefeitura.contracheques,
+                contratos_firmados_total: contratos.total,
+                contratos_volume: contratos.volume,
+                diarias_total: diarias.total,
+                diarias_volume: diarias.volume
+              },
+              saude: {
+                folha_total: saude.folha,
+                contracheques_processados: saude.contracheques
+              },
+              camara: {
+                materias_legislativas: camara.total_materias,
+                periodo_legislativo: `${camara.min_ano} a ${camara.max_ano}`
+              }
+            }
+          }));
+          return;
+        }
+
+        if (tipo === 'forense') {
+          const quick = db.prepare('PRAGMA quick_check').get();
+          const fotosAuditadas = db.prepare('SELECT count(*) as total FROM fotos_auditadas_pessoas WHERE status_auditoria = 1').get();
+          const totalAuditConsultas = db.prepare('SELECT count(*) as total, sum(bytes_recebidos) as total_bytes FROM auditoria_consultas').get();
+
+          db.close();
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({
+            relatorio: 'Cadeia de Custódia Forense & Integridade Estrutural SHA-256',
+            integridade_sqlite: quick && (quick.quick_check === 'ok' || Object.values(quick)[0] === 'ok') ? 'APROVADO (PRAGMA quick_check = ok)' : 'FALHA',
+            fotos_oficiais_auditadas_sha256: fotosAuditadas.total,
+            consultas_crawler_rastreadas: totalAuditConsultas.total,
+            volume_dados_auditados_mb: Math.round((totalAuditConsultas.total_bytes || 0) / 1024 / 1024 * 10) / 10
+          }));
+          return;
+        }
+
+        db.close();
+      } catch(err) {
+        res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+    }
+
+    if (pathname === '/api/admin/acao') {
+      const acao = (parsedUrl.searchParams.get('acao') || '').toLowerCase();
+      if (acao === 'quick_check') {
+        try {
+          const db = new DatabaseSync(MASTER_DB, { readOnly: true });
+          const resCheck = db.prepare('PRAGMA quick_check').get();
+          db.close();
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ sucesso: true, resultado: resCheck }));
+          return;
+        } catch(e) {
+          res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ sucesso: false, erro: e.message }));
+          return;
+        }
+      }
+
+      if (acao === 'limpar_acessos') {
+        ACCESS_LOGS.length = 0;
+        ROUTE_HITS.clear();
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ sucesso: true, mensagem: 'Histórico recente de acessos limpo com sucesso' }));
+        return;
+      }
+    }
+  }
 
   // Endpoint de status dinâmico ao vivo
   if (pathname === '/api/live' || pathname === '/api/status') {
