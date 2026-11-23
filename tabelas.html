@@ -186,12 +186,12 @@
     <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-2">
       <div class="flex flex-wrap gap-2">
         <button onclick="mudarAba('pessoas')" id="tab-pessoas" class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/80 hover:bg-slate-700 transition flex items-center space-x-1.5 text-slate-300">
-          <span>👤 Pessoas & Dinheiro Público</span>
+          <span>👥 Funcionários & Servidores</span>
           <span class="text-xs px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono">2.8k</span>
         </button>
 
         <button onclick="mudarAba('contracheques')" id="tab-contracheques" class="tab-btn active px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/80 hover:bg-slate-700 transition flex items-center space-x-1.5">
-          <span>👥 Contracheques</span>
+          <span>📑 Folha & Contracheques</span>
           <span class="text-xs px-1.5 py-0.5 rounded-full bg-black/30">153k</span>
         </button>
 
@@ -568,6 +568,17 @@
       const rankingsContainer = document.getElementById('rankings-container');
       const filtrosPadrao = document.getElementById('filtros-padrao');
       const filtrosPessoas = document.getElementById('filtros-pessoas');
+
+      const inputBusca = document.getElementById('input-busca');
+      if (inputBusca) {
+        if (novaAba === 'pessoas') {
+          inputBusca.placeholder = 'Buscar funcionários por nome, cargo, matrícula...';
+        } else if (novaAba === 'contracheques') {
+          inputBusca.placeholder = 'Buscar contracheque por servidor, cargo ou matrícula...';
+        } else {
+          inputBusca.placeholder = 'Buscar por nome, cargo, credor, motivo...';
+        }
+      }
 
       if (novaAba === 'rankings') {
         filtrosContainer.classList.add('hidden');
@@ -2149,8 +2160,12 @@
       if (buscaParam) {
         document.getElementById('input-busca').value = buscaParam;
       }
-      if (tabParam && ['pessoas', 'contracheques', 'despesas', 'diarias', 'contratos', 'receitas', 'convenios', 'rankings'].includes(tabParam)) {
-        mudarAba(tabParam);
+      let tabDestino = tabParam;
+      if (tabParam === 'funcionarios' || tabParam === 'servidores') {
+        tabDestino = 'pessoas';
+      }
+      if (tabDestino && ['pessoas', 'contracheques', 'despesas', 'diarias', 'contratos', 'receitas', 'convenios', 'rankings'].includes(tabDestino)) {
+        mudarAba(tabDestino);
       } else {
         mudarAba('pessoas');
       }

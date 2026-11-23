@@ -8,6 +8,13 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { DatabaseSync } = require('node:sqlite');
 
+// Módulos Arquiteturais Refatorados (DRY & Funções Reutilizáveis)
+const { getMasterDb, getDetalhadoDb } = require('../lib/db');
+const { normalizarTexto, ehBuscaGenericaFuncionarios } = require('../lib/normalizador');
+const { calcularDescontosEstatutarios, formatarMascaraAnoMeses, processarHistoricoEPeriodos } = require('../lib/calculos_folha');
+const { sendJson, sendError, extrairPaginacao } = require('../lib/respostas_http');
+const { listarFuncionarios, listarContracheques } = require('../lib/servico_funcionarios');
+
 const PORT = 8088;
 const PORTAL_DIR = path.resolve(__dirname, '..');
 const RESUMO_JSON_PATH = path.join(PORTAL_DIR, 'dados/resumo_geral.json');
@@ -180,167 +187,7 @@ function formatarMesAno(ano, mes) {
   return `${m}/${ano}`;
 }
 
-function calcularTempoExtenso(totalMeses) {
-  if (!totalMeses || totalMeses <= 0) return '0 meses';
-  const anos = Math.floor(totalMeses / 12);
-  const meses = totalMeses % 12;
-  const partes = [];
-  if (anos > 0) partes.push(`${anos} ${anos === 1 ? 'ano' : 'anos'}`);
-  if (meses > 0) partes.push(`${meses} ${meses === 1 ? 'mês' : 'meses'}`);
-  return partes.length > 0 ? partes.join(' e ') : '0 meses';
-}
 
-function calcularDescontosEstatutarios(bruto, ano = 2024) {
-  if (!bruto || bruto <= 0) return { inss: 0, irrf: 0, total_descontos: 0, salario_liquido: 0 };
-
-  // 1. Previdência (INSS / RPPS)
-  let previdencia = 0;
-  if (ano >= 2020) {
-    const tetoInss = 7786.02;
-    const basePrev = Math.min(bruto, tetoInss);
-    if (basePrev <= 1412.00) {
-      previdencia = basePrev * 0.075;
-    } else if (basePrev <= 2666.68) {
-      previdencia = 1412.00 * 0.075 + (basePrev - 1412.00) * 0.09;
-    } else if (basePrev <= 4000.03) {
-      previdencia = 1412.00 * 0.075 + (2666.68 - 1412.00) * 0.09 + (basePrev - 2666.68) * 0.12;
-    } else {
-      previdencia = 1412.00 * 0.075 + (2666.68 - 1412.00) * 0.09 + (4000.03 - 2666.68) * 0.12 + (basePrev - 4000.03) * 0.14;
-    }
-  } else {
-    previdencia = Math.min(bruto, 5839.45) * 0.11;
-  }
-  previdencia = Math.round(previdencia * 100) / 100;
-
-  // 2. Base IRRF
-  const baseIrrf = bruto - previdencia;
-  let irrf = 0;
-  if (baseIrrf <= 2259.20) {
-    irrf = 0;
-  } else if (baseIrrf <= 2826.65) {
-    irrf = (baseIrrf * 0.075) - 169.44;
-  } else if (baseIrrf <= 3751.05) {
-    irrf = (baseIrrf * 0.15) - 381.44;
-  } else if (baseIrrf <= 4664.68) {
-    irrf = (baseIrrf * 0.225) - 662.77;
-  } else {
-    irrf = (baseIrrf * 0.275) - 896.00;
-  }
-  irrf = Math.max(0, Math.round(irrf * 100) / 100);
-
-  const totalDescontos = Math.round((previdencia + irrf) * 100) / 100;
-  const salarioLiquido = Math.round((bruto - totalDescontos) * 100) / 100;
-
-  return {
-    inss: previdencia,
-    irrf,
-    total_descontos: totalDescontos,
-    salario_liquido: salarioLiquido
-  };
-}
-
-function processarHistoricoEPeriodos(contracheques) {
-  if (!contracheques || contracheques.length === 0) {
-    return { totalMesesEfetivos: 0, tempoTotalExtenso: '0 meses', timeline: [] };
-  }
-
-  // Ordenar por ano e mês cronologicamente
-  const ordenados = [...contracheques].sort((a, b) => (a.ano * 100 + a.mes) - (b.ano * 100 + b.mes));
-  
-  // Agrupar meses únicos (desconsiderando duplicatas de 13º no mesmo mês)
-  const mesesUnicos = [];
-  const mapMes = new Map();
-  for (const c of ordenados) {
-    const key = `${c.ano}-${String(c.mes).padStart(2, '0')}`;
-    if (!mapMes.has(key)) {
-      mapMes.set(key, { ano: c.ano, mes: c.mes, cargo: c.cargo, items: [] });
-      mesesUnicos.push(mapMes.get(key));
-    }
-    mapMes.get(key).items.push(c);
-  }
-
-  const timeline = [];
-  let periodoAtual = null;
-
-  for (let i = 0; i < mesesUnicos.length; i++) {
-    const atual = mesesUnicos[i];
-    const seqMesAtual = atual.ano * 12 + (atual.mes - 1);
-
-    if (!periodoAtual) {
-      periodoAtual = {
-        inicio: atual,
-        fim: atual,
-        mesesCount: 1,
-        cargos: new Set(atual.cargo ? [atual.cargo] : [])
-      };
-    } else {
-      const seqMesAnterior = periodoAtual.fim.ano * 12 + (periodoAtual.fim.mes - 1);
-      const diffMeses = seqMesAtual - seqMesAnterior;
-
-      if (diffMeses === 1) {
-        periodoAtual.fim = atual;
-        periodoAtual.mesesCount++;
-        if (atual.cargo) periodoAtual.cargos.add(atual.cargo);
-      } else if (diffMeses === 0) {
-        // Mesmo mês
-      } else {
-        // Gap detectado
-        timeline.push({
-          tipo: 'periodo_ativo',
-          inicio: { ano: periodoAtual.inicio.ano, mes: periodoAtual.inicio.mes },
-          fim: { ano: periodoAtual.fim.ano, mes: periodoAtual.fim.mes },
-          meses: periodoAtual.mesesCount,
-          tempo_formatado: calcularTempoExtenso(periodoAtual.mesesCount),
-          cargos: Array.from(periodoAtual.cargos).join(' • ') || 'Servidor Municipal',
-          descricao: `${formatarMesAno(periodoAtual.inicio.ano, periodoAtual.inicio.mes)} a ${formatarMesAno(periodoAtual.fim.ano, periodoAtual.fim.mes)} (${calcularTempoExtenso(periodoAtual.mesesCount)})`
-        });
-
-        const gapMeses = diffMeses - 1;
-        const seqGapInicio = seqMesAnterior + 1;
-        const seqGapFim = seqMesAtual - 1;
-        const gapInicioAno = Math.floor(seqGapInicio / 12);
-        const gapInicioMes = (seqGapInicio % 12) + 1;
-        const gapFimAno = Math.floor(seqGapFim / 12);
-        const gapFimMes = (seqGapFim % 12) + 1;
-
-        timeline.push({
-          tipo: 'intervalo_gap',
-          meses: gapMeses,
-          inicio: { ano: gapInicioAno, mes: gapInicioMes },
-          fim: { ano: gapFimAno, mes: gapFimMes },
-          tempo_formatado: calcularTempoExtenso(gapMeses),
-          descricao: `Intervalo sem registro na Prefeitura: ${formatarMesAno(gapInicioAno, gapInicioMes)} a ${formatarMesAno(gapFimAno, gapFimMes)} (${calcularTempoExtenso(gapMeses)})`
-        });
-
-        periodoAtual = {
-          inicio: atual,
-          fim: atual,
-          mesesCount: 1,
-          cargos: new Set(atual.cargo ? [atual.cargo] : [])
-        };
-      }
-    }
-  }
-
-  if (periodoAtual) {
-    timeline.push({
-      tipo: 'periodo_ativo',
-      inicio: { ano: periodoAtual.inicio.ano, mes: periodoAtual.inicio.mes },
-      fim: { ano: periodoAtual.fim.ano, mes: periodoAtual.fim.mes },
-      meses: periodoAtual.mesesCount,
-      tempo_formatado: calcularTempoExtenso(periodoAtual.mesesCount),
-      cargos: Array.from(periodoAtual.cargos).join(' • ') || 'Servidor Municipal',
-      descricao: `${formatarMesAno(periodoAtual.inicio.ano, periodoAtual.inicio.mes)} a ${formatarMesAno(periodoAtual.fim.ano, periodoAtual.fim.mes)} (${calcularTempoExtenso(periodoAtual.mesesCount)})`
-    });
-  }
-
-  const totalMesesEfetivos = mesesUnicos.length;
-  return {
-    totalMesesEfetivos,
-    tempoTotalExtenso: calcularTempoExtenso(totalMesesEfetivos),
-    timeline
-  };
-}
 
 function decodeHtmlEntities(str) {
   if (!str) return '';
@@ -808,101 +655,28 @@ const server = http.createServer(async (req, res) => {
 
       // 3. Consulta Paginada de Contracheques (com Cálculo de Salário Bruto, Descontos e Líquido)
       if (pathname === '/api/dados/contracheques') {
-        const page = Math.max(1, parseInt(parsedUrl.searchParams.get('page') || '1', 10));
-        const limit = Math.min(100, Math.max(10, parseInt(parsedUrl.searchParams.get('limit') || '25', 10)));
-        const offset = (page - 1) * limit;
-        const q = (parsedUrl.searchParams.get('q') || '').trim();
-        const ano = parsedUrl.searchParams.get('ano') || '';
-        const mes = parsedUrl.searchParams.get('mes') || '';
-        const entidade = parsedUrl.searchParams.get('entidade') || '';
-
-        let whereClause = ' WHERE 1=1 ';
-        const params = [];
-
-        if (q) {
-          whereClause += ' AND (nome LIKE ? OR cargo LIKE ? OR matricula LIKE ?) ';
-          params.push(`%${q}%`, `%${q}%`, `%${q}%`);
-        }
-        if (ano) {
-          whereClause += ' AND ano = ? ';
-          params.push(parseInt(ano, 10));
-        }
-        if (mes) {
-          whereClause += ' AND mes = ? ';
-          params.push(parseInt(mes, 10));
-        }
-        if (entidade) {
-          whereClause += ' AND entidade LIKE ? ';
-          params.push(`%${entidade}%`);
-        }
-
-        const countQuery = `SELECT count(*) as total, sum(total_proventos) as soma_filtrada FROM contracheques ${whereClause}`;
-        const totalInfo = db.prepare(countQuery).get(...params);
-
-        const dataQuery = `
-          SELECT id, entidade, ano, mes, matricula, nome, cargo, vinculo, tipo_folha, total_proventos, total_descontos, salario_liquido, idfun, url_detalhe
-          FROM contracheques
-          ${whereClause}
-          ORDER BY ano DESC, mes DESC, total_proventos DESC
-          LIMIT ${limit} OFFSET ${offset}
-        `;
-        const rows = db.prepare(dataQuery).all(...params);
-
-        // Enriquecer registros com cálculo pericial de Salário Bruto, Descontos e Salário Líquido
-        let dbDetRef = null;
-        if (fs.existsSync(DETALHADO_DB)) {
-          try { dbDetRef = new DatabaseSync(DETALHADO_DB, { readOnly: true }); } catch(e) {}
-        }
-
-        let somaLiquidaFiltrada = 0;
-        let somaDescontosFiltrada = 0;
-
-        rows.forEach(r => {
-          let descontoReal = r.total_descontos || 0;
-          let liquidoReal = r.salario_liquido || 0;
-
-          if (dbDetRef && (!descontoReal || descontoReal === 0)) {
-            let rowD = null;
-            if (r.idfun) {
-              rowD = dbDetRef.prepare('SELECT total_descontos, salario_liquido FROM contracheques WHERE ano = ? AND mes = ? AND idfun = ? LIMIT 1').get(r.ano, r.mes, String(r.idfun));
-            }
-            if (!rowD && r.nome) {
-              rowD = dbDetRef.prepare('SELECT total_descontos, salario_liquido FROM contracheques WHERE ano = ? AND mes = ? AND nome = ? LIMIT 1').get(r.ano, r.mes, r.nome);
-            }
-            if (rowD && rowD.total_descontos > 0) {
-              descontoReal = rowD.total_descontos;
-              liquidoReal = rowD.salario_liquido;
-            }
-          }
-
-          if (!descontoReal || descontoReal === 0) {
-            const calc = calcularDescontosEstatutarios(r.total_proventos, r.ano);
-            descontoReal = calc.total_descontos;
-            liquidoReal = calc.salario_liquido;
-          }
-
-          r.total_descontos = Math.round(descontoReal * 100) / 100;
-          r.salario_liquido = Math.round(liquidoReal * 100) / 100;
-
-          somaDescontosFiltrada += r.total_descontos;
-          somaLiquidaFiltrada += r.salario_liquido;
+        const resultado = listarContracheques({
+          q: parsedUrl.searchParams.get('q') || '',
+          ano: parsedUrl.searchParams.get('ano') || '',
+          mes: parsedUrl.searchParams.get('mes') || '',
+          entidade: parsedUrl.searchParams.get('entidade') || '',
+          page: parsedUrl.searchParams.get('page') || '1',
+          limit: parsedUrl.searchParams.get('limit') || '25'
         });
+        sendJson(res, resultado);
+        return;
+      }
 
-        if (dbDetRef) {
-          try { dbDetRef.close(); } catch(e) {}
-        }
-
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.end(JSON.stringify({
-          page,
-          limit,
-          total: totalInfo.total,
-          total_paginas: Math.ceil((totalInfo.total || 0) / limit),
-          soma_filtrada: totalInfo.soma_filtrada || 0,
-          soma_descontos_filtrada: Math.round(somaDescontosFiltrada * 100) / 100,
-          soma_liquida_filtrada: Math.round(somaLiquidaFiltrada * 100) / 100,
-          registros: rows
-        }));
+      // 3.1. Consulta Rápida de Funcionários & Servidores Públicos (Novo Endpoint Dedicado)
+      if (pathname === '/api/dados/funcionarios' || pathname === '/api/dados/servidores') {
+        const resultado = listarFuncionarios({
+          busca: parsedUrl.searchParams.get('busca') || parsedUrl.searchParams.get('q') || '',
+          tipo: parsedUrl.searchParams.get('tipo') || 'todos',
+          ordenar: parsedUrl.searchParams.get('ordenar') || 'dinheiro',
+          page: parseInt(parsedUrl.searchParams.get('page') || '1', 10),
+          limit: parseInt(parsedUrl.searchParams.get('limit') || '25', 10)
+        });
+        sendJson(res, resultado);
         return;
       }
 
@@ -1638,6 +1412,7 @@ const server = http.createServer(async (req, res) => {
         // B. Servidores, Políticos & Pessoas Unificadas
         if (categoria === 'todas' || categoria === 'servidores') {
           const servList = [];
+          const isGenericaFunc = ehBuscaGenericaFuncionarios(rawQ);
           try {
             const servs = db.prepare(`
               SELECT id, nome_canonic, nome_exibicao, cargos_resumo, perfil_tipo, qtd_matriculas, total_dinheiro_publico, total_salarios, total_diarias, is_politico, is_prefeito, is_vereador, is_socio_empresa, partido_politico
@@ -1645,8 +1420,8 @@ const server = http.createServer(async (req, res) => {
             `).all();
 
             servs.forEach(s => {
-              const target = normalizar(`${s.nome_exibicao} ${s.cargos_resumo} ${s.perfil_tipo} ${s.partido_politico || ''}`);
-              if (match(target)) {
+              const target = normalizar(`${s.nome_exibicao} ${s.cargos_resumo} ${s.perfil_tipo} ${s.partido_politico || ''} funcionario servidores servidor quadro`);
+              if (isGenericaFunc ? (s.perfil_tipo && s.perfil_tipo.includes('Servidor')) : match(target)) {
                 let badgeText = `${s.qtd_matriculas} Matrícula(s)`;
                 let badgeTipo = 'default';
                 if (s.is_prefeito) { badgeText = '👔 Prefeito'; badgeTipo = 'danger'; }
@@ -1897,111 +1672,16 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      // 17. Consulta de Pessoas Unificadas e Consolidação de Dinheiro Público
+      // 17. Consulta de Pessoas Unificadas e Consolidação de Dinheiro Público (Com Busca Semântica de Funcionários)
       if (pathname === '/api/dados/pessoas-unificadas') {
-        const tipo = (parsedUrl.searchParams.get('tipo') || 'todos').toLowerCase();
-        const busca = (parsedUrl.searchParams.get('busca') || parsedUrl.searchParams.get('q') || '').trim();
-        const ordenar = (parsedUrl.searchParams.get('ordenar') || 'dinheiro').toLowerCase();
-        const page = Math.max(1, parseInt(parsedUrl.searchParams.get('page') || '1', 10));
-        const limit = Math.min(100, Math.max(5, parseInt(parsedUrl.searchParams.get('limit') || '25', 10)));
-        const offset = (page - 1) * limit;
-
-        let whereClauses = [];
-        let params = [];
-
-        if (tipo === 'prefeitos') {
-          whereClauses.push('is_prefeito = 1');
-        } else if (tipo === 'vereadores') {
-          whereClauses.push('is_vereador = 1');
-        } else if (tipo === 'politicos') {
-          whereClauses.push('(is_politico = 1 OR is_prefeito = 1 OR is_vereador = 1 OR is_candidato = 1)');
-        } else if (tipo === 'politicos_socios') {
-          whereClauses.push("(is_socio_empresa = 1 AND (is_politico = 1 OR is_candidato = 1 OR is_vereador = 1 OR is_prefeito = 1 OR cargos_resumo LIKE '%secretár%' OR cargos_resumo LIKE '%secretar%'))");
-        } else if (tipo === 'multi_matricula') {
-          whereClauses.push('qtd_matriculas > 1');
-        } else if (tipo === 'socios') {
-          whereClauses.push('is_socio_empresa = 1');
-        } else if (tipo === 'servidores') {
-          whereClauses.push('is_socio_empresa = 0 AND is_politico = 0');
-        } else if (tipo === 'servidores') {
-          whereClauses.push('is_politico = 0 AND is_socio_empresa = 0');
-        }
-
-        if (busca) {
-          whereClauses.push('(nome_exibicao LIKE ? OR cargos_resumo LIKE ? OR partido_politico LIKE ? OR destinos_frequentes LIKE ?)');
-          const pWild = `%${busca}%`;
-          params.push(pWild, pWild, pWild, pWild);
-        }
-
-        const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
-
-        let orderSql = 'total_dinheiro_publico DESC';
-        if (ordenar === 'salario') orderSql = 'total_salarios DESC';
-        else if (ordenar === 'diarias') orderSql = 'total_diarias DESC';
-        else if (ordenar === 'matriculas') orderSql = 'qtd_matriculas DESC, total_dinheiro_publico DESC';
-        else if (ordenar === 'nome') orderSql = 'nome_exibicao ASC';
-
-        const statsSql = `
-          SELECT 
-            COUNT(*) as total_pessoas,
-            COALESCE(SUM(total_dinheiro_publico), 0) as total_dinheiro_publico,
-            COALESCE(SUM(total_salarios), 0) as total_salarios,
-            COALESCE(SUM(total_diarias), 0) as total_diarias,
-            COALESCE(SUM(CASE WHEN is_prefeito = 1 THEN 1 ELSE 0 END), 0) as total_prefeitos,
-            COALESCE(SUM(CASE WHEN is_vereador = 1 THEN 1 ELSE 0 END), 0) as total_vereadores,
-            COALESCE(SUM(CASE WHEN qtd_matriculas > 1 THEN 1 ELSE 0 END), 0) as total_multi_matricula,
-            COALESCE(SUM(CASE WHEN is_socio_empresa = 1 THEN 1 ELSE 0 END), 0) as total_socios
-          FROM pessoas_unificadas
-        `;
-        const stats = db.prepare(statsSql).get();
-
-        const countQuery = `SELECT COUNT(*) as total_filtrado FROM pessoas_unificadas ${whereSql}`;
-        const totalFiltrado = db.prepare(countQuery).get(...params).total_filtrado;
-
-        const dataQuery = `
-          SELECT 
-            id, nome_canonic, nome_exibicao, matriculas_json, qtd_matriculas,
-            cargos_json, cargos_resumo, entidades_json,
-            total_salarios, qtd_contracheques, ano_primeiro_salario, ano_ultimo_salario, maior_salario,
-            total_diarias, qtd_diarias, ano_primeira_diaria, ano_ultima_diaria, maior_diaria, destinos_frequentes,
-            total_dinheiro_publico,
-            is_politico, is_prefeito, is_vereador, is_candidato, perfil_tipo, partido_politico,
-            legislaturas_camara, projetos_apresentados, bens_declarados_tse,
-            is_socio_empresa, empresas_vinculadas, atualizado_em, foto_url, foto_id
-          FROM pessoas_unificadas
-          ${whereSql}
-          ORDER BY ${orderSql}
-          LIMIT ? OFFSET ?
-        `;
-        const rows = db.prepare(dataQuery).all(...params, limit, offset);
-
-        const registros = rows.map(r => {
-          let matriculas = [];
-          try { matriculas = JSON.parse(r.matriculas_json || '[]'); } catch(e) {}
-          let cargos = [];
-          try { cargos = JSON.parse(r.cargos_json || '[]'); } catch(e) {}
-          let empresas = [];
-          try { empresas = JSON.parse(r.empresas_vinculadas || '[]'); } catch(e) {}
-
-          return {
-            ...r,
-            matriculas,
-            cargos,
-            empresas_vinculadas: empresas
-          };
+        const resultado = listarFuncionarios({
+          busca: parsedUrl.searchParams.get('busca') || parsedUrl.searchParams.get('q') || '',
+          tipo: parsedUrl.searchParams.get('tipo') || 'todos',
+          ordenar: parsedUrl.searchParams.get('ordenar') || 'dinheiro',
+          page: parseInt(parsedUrl.searchParams.get('page') || '1', 10),
+          limit: parseInt(parsedUrl.searchParams.get('limit') || '25', 10)
         });
-
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.end(JSON.stringify({
-          estatisticas: stats,
-          paginacao: {
-            page,
-            limit,
-            total_filtrado: totalFiltrado,
-            total_paginas: Math.ceil(totalFiltrado / limit) || 1
-          },
-          registros
-        }));
+        sendJson(res, resultado);
         return;
       }
 

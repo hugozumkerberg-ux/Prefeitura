@@ -31,13 +31,13 @@
         },
         {
           id: 'pessoas',
-          label: 'Pessoas',
-          sub: 'Servidores & Salários',
-          icon: '👤',
+          label: 'Funcionários',
+          sub: 'Servidores & Folha',
+          icon: '👥',
           href: '/tabelas.html?tab=pessoas',
-          badge: '2.865',
+          badge: '2.8k',
           badgeClass: 'v2-badge-emerald',
-          aliases: ['/tabelas.html?tab=pessoas']
+          aliases: ['/tabelas.html?tab=pessoas', '/tabelas.html?tab=funcionarios']
         },
         {
           id: 'empresas',
