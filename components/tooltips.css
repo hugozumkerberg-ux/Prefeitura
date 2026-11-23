@@ -1,0 +1,305 @@
+/* ============================================================
+   TOOLTIPS EXPLICATIVOS CIDADÃOS — ARINOS / MG
+   Suporte a quebra de linha (multi-linha), títulos, fórmulas e notas.
+   Clean UI, alto contraste e acessibilidade completa.
+   ============================================================ */
+
+.has-tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+  outline: none;
+}
+
+/* Ícone de Ajuda e Dúvidas (?) */
+.tooltip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  margin-left: 5px;
+  vertical-align: middle;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: help;
+  flex-shrink: 0;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  line-height: 1;
+  user-select: none;
+}
+
+.tooltip-icon:hover,
+.has-tooltip:focus-within .tooltip-icon,
+.has-tooltip:hover .tooltip-icon {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #38bdf8;
+  transform: scale(1.18);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.55);
+}
+
+/* Caixa Flutuante do Tooltip (Suporte a Linha Quebrada) */
+.has-tooltip .tooltip-box {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #090d16;
+  color: #e2e8f0;
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: pre-line; /* Quebra de linha garantida */
+  width: max-content;
+  max-width: 320px;
+  min-width: 220px;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  z-index: 100020;
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  text-align: left;
+  box-sizing: border-box;
+  text-transform: none;
+}
+
+/* Seta do Tooltip */
+.has-tooltip .tooltip-box::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #090d16 transparent transparent transparent;
+}
+
+/* Alinhamentos Direita / Esquerda / Abaixo para evitar corte na tela */
+.has-tooltip.tooltip-left .tooltip-box,
+.has-tooltip.tooltip-align-left .tooltip-box {
+  left: 0;
+  transform: translateY(4px);
+}
+.has-tooltip.tooltip-left .tooltip-box::after,
+.has-tooltip.tooltip-align-left .tooltip-box::after {
+  left: 16px;
+  transform: none;
+}
+
+.has-tooltip.tooltip-right .tooltip-box,
+.has-tooltip.tooltip-align-right .tooltip-box {
+  left: auto;
+  right: 0;
+  transform: translateY(4px);
+}
+.has-tooltip.tooltip-right .tooltip-box::after,
+.has-tooltip.tooltip-align-right .tooltip-box::after {
+  left: auto;
+  right: 16px;
+  transform: none;
+}
+
+.has-tooltip.tooltip-bottom .tooltip-box {
+  bottom: auto;
+  top: calc(100% + 8px);
+  transform: translateX(-50%) translateY(-4px);
+}
+.has-tooltip.tooltip-bottom .tooltip-box::after {
+  top: auto;
+  bottom: 100%;
+  border-color: transparent transparent #090d16 transparent;
+}
+
+/* Combinações de tooltip-bottom com alinhamento lateral */
+.has-tooltip.tooltip-bottom.tooltip-align-left .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-left .tooltip-box {
+  left: 0;
+  right: auto;
+  transform: translateY(-4px);
+}
+.has-tooltip.tooltip-bottom.tooltip-align-left .tooltip-box::after,
+.has-tooltip.tooltip-bottom.tooltip-left .tooltip-box::after {
+  left: 16px;
+  right: auto;
+  transform: none;
+  top: auto;
+  bottom: 100%;
+  border-color: transparent transparent #090d16 transparent;
+}
+
+.has-tooltip.tooltip-bottom.tooltip-align-right .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-right .tooltip-box {
+  left: auto;
+  right: 0;
+  transform: translateY(-4px);
+}
+.has-tooltip.tooltip-bottom.tooltip-align-right .tooltip-box::after,
+.has-tooltip.tooltip-bottom.tooltip-right .tooltip-box::after {
+  left: auto;
+  right: 16px;
+  transform: none;
+  top: auto;
+  bottom: 100%;
+  border-color: transparent transparent #090d16 transparent;
+}
+
+/* Hover, Foco e Mobile Tap (.tooltip-active) */
+.has-tooltip:hover .tooltip-box,
+.has-tooltip:focus-within .tooltip-box,
+.has-tooltip.tooltip-active .tooltip-box {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.has-tooltip.tooltip-left:hover .tooltip-box,
+.has-tooltip.tooltip-align-left:hover .tooltip-box,
+.has-tooltip.tooltip-left:focus-within .tooltip-box,
+.has-tooltip.tooltip-align-left:focus-within .tooltip-box,
+.has-tooltip.tooltip-left.tooltip-active .tooltip-box,
+.has-tooltip.tooltip-align-left.tooltip-active .tooltip-box {
+  transform: translateY(0);
+}
+
+.has-tooltip.tooltip-right:hover .tooltip-box,
+.has-tooltip.tooltip-align-right:hover .tooltip-box,
+.has-tooltip.tooltip-right:focus-within .tooltip-box,
+.has-tooltip.tooltip-align-right:focus-within .tooltip-box,
+.has-tooltip.tooltip-right.tooltip-active .tooltip-box,
+.has-tooltip.tooltip-align-right.tooltip-active .tooltip-box {
+  transform: translateY(0);
+}
+
+.has-tooltip.tooltip-bottom:hover .tooltip-box,
+.has-tooltip.tooltip-bottom:focus-within .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-active .tooltip-box {
+  transform: translateX(-50%) translateY(0);
+}
+
+.has-tooltip.tooltip-bottom.tooltip-align-left:hover .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-align-left:focus-within .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-align-left.tooltip-active .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-left:hover .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-left:focus-within .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-left.tooltip-active .tooltip-box {
+  transform: translateY(0);
+}
+
+.has-tooltip.tooltip-bottom.tooltip-align-right:hover .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-align-right:focus-within .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-align-right.tooltip-active .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-right:hover .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-right:focus-within .tooltip-box,
+.has-tooltip.tooltip-bottom.tooltip-right.tooltip-active .tooltip-box {
+  transform: translateY(0);
+}
+
+/* Elementos internos para enriquecer a explicação */
+.tooltip-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  margin-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+.tooltip-body {
+  display: block;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.tooltip-calc {
+  display: block;
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 6px;
+  border-left: 3px solid #10b981;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 10.5px;
+  color: #34d399;
+}
+
+.tooltip-note {
+  display: block;
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  font-style: italic;
+}
+
+/* Suporte nativo ao atributo data-tooltip com quebra de linha */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+[data-tooltip]::before {
+  content: attr(data-tooltip);
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #090d16;
+  color: #f1f5f9;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.45;
+  white-space: pre-line;
+  width: max-content;
+  max-width: 290px;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.85);
+  z-index: 100020;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  text-align: left;
+}
+
+[data-tooltip]::after {
+  content: '';
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #090d16 transparent transparent transparent;
+  z-index: 100021;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

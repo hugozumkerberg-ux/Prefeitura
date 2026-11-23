@@ -41,6 +41,7 @@
     ::-webkit-scrollbar-thumb:hover { background: #334155; }
   </style>
   <link rel="stylesheet" href="/components/side_menu_v2.css">
+  <link rel="stylesheet" href="/components/tooltips.css">
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -73,37 +74,109 @@
     <!-- KPIs Rápidos do Banco Master -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
       <div class="glass-card p-3 rounded-xl border-l-4 border-emerald-500">
-        <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Contracheques</p>
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Contracheques</p>
+          <span class="has-tooltip tooltip-bottom tooltip-align-left" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Folha de Pagamento</span>
+              <span class="tooltip-body">Total de registros de remuneração de servidores públicos.
+• Abrange servidores efetivos, comissionados e contratados.
+• Valores brutos antes das deduções de previdência e IRRF.</span>
+              <span class="tooltip-note">Base auditada: 2013 a 2026 (ADPM)</span>
+            </div>
+          </span>
+        </div>
         <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-contracheques">153.938</p>
         <p class="text-[10px] text-emerald-400 font-mono" id="kpi-contracheques-vol">R$ 325,95 Mi</p>
       </div>
 
       <div class="glass-card p-3 rounded-xl border-l-4 border-cyan-500">
-        <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Despesas</p>
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Despesas</p>
+          <span class="has-tooltip tooltip-bottom tooltip-align-left" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Despesas Empenhadas</span>
+              <span class="tooltip-body">Valores de pagamentos efetuados pelo município.
+• Prestação de serviços, compras, contratos e obras.
+• Classificação por credor, histórico e empenho.</span>
+              <span class="tooltip-note">Fonte: SIAP / ADPM Arinos</span>
+            </div>
+          </span>
+        </div>
         <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-despesas">6.103</p>
         <p class="text-[10px] text-cyan-400 font-mono" id="kpi-despesas-vol">R$ 38,82 Mi</p>
       </div>
 
       <div class="glass-card p-3 rounded-xl border-l-4 border-amber-500">
-        <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Diárias</p>
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Diárias</p>
+          <span class="has-tooltip tooltip-bottom" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Diárias de Viagem</span>
+              <span class="tooltip-body">Indenizações para despesas de servidores fora de Arinos.
+• Alimentação e estada para compromissos públicos.
+• Deslocamentos a Brasília, Belo Horizonte, Unaí e região.</span>
+              <span class="tooltip-note">Verba de natureza indenizatória</span>
+            </div>
+          </span>
+        </div>
         <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-diarias">29.746</p>
         <p class="text-[10px] text-amber-400 font-mono" id="kpi-diarias-vol">R$ 7,10 Mi</p>
       </div>
 
       <div class="glass-card p-3 rounded-xl border-l-4 border-blue-500">
-        <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Contratos</p>
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Contratos</p>
+          <span class="has-tooltip tooltip-bottom" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Contratos & Aditivos</span>
+              <span class="tooltip-body">Instrumentos contratuais firmados pela prefeitura.
+• Licitações públicas, dispensas e inexigibilidades.
+• Registro de fornecimento contínuo e serviços.</span>
+              <span class="tooltip-note">Vigências e aditivos registrados</span>
+            </div>
+          </span>
+        </div>
         <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-contratos">2.433</p>
         <p class="text-[10px] text-blue-400 font-mono" id="kpi-contratos-vol">R$ 412,18 Mi</p>
       </div>
 
       <div class="glass-card p-3 rounded-xl border-l-4 border-teal-500">
-        <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Receitas</p>
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Receitas</p>
+          <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Arrecadação Municipal</span>
+              <span class="tooltip-body">Entrada de receitas nos cofres públicos de Arinos.
+• Repasses constitucionais (FPM, FUNDEB, ICMS).
+• Tributos próprios municipais (IPTU, ISSQN, taxas).</span>
+              <span class="tooltip-note">Fonte: SIAP / Tesouro Municipal</span>
+            </div>
+          </span>
+        </div>
         <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-receitas">SIAP</p>
         <p class="text-[10px] text-teal-400 font-mono" id="kpi-receitas-vol">Arrecadação</p>
       </div>
 
       <div class="glass-card p-3 rounded-xl border-l-4 border-purple-500">
-        <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Volume Auditado</p>
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Volume Auditado</p>
+          <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Consolidação Global</span>
+              <span class="tooltip-body">Volume total de recursos públicos auditados.
+• Mais de 202.000 lançamentos oficiais cruzados.
+• Auditoria forense e rastreabilidade total de dados.</span>
+              <span class="tooltip-calc">Total = Folha + Contratos + Despesas</span>
+            </div>
+          </span>
+        </div>
         <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-global">R$ 784+ Mi</p>
         <p class="text-[10px] text-purple-400 font-mono">Consolidado Total</p>
       </div>
@@ -209,6 +282,16 @@
             <option value="Prefeitura">Prefeitura Municipal</option>
             <option value="Saúde">Fundação de Saúde</option>
           </select>
+
+          <span class="has-tooltip tooltip-bottom" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Filtros de Competência e Órgão</span>
+              <span class="tooltip-body">Selecione o Ano e Mês para filtrar contracheques ou despesas por competência contábil (MM/AAAA).
+• Prefeitura: Administração Direta.
+• Saúde: Fundação Municipal de Saúde.</span>
+            </div>
+          </span>
         </div>
 
         <!-- Filtros Especializados de Pessoas Unificadas -->
@@ -231,6 +314,17 @@
             <option value="matriculas">Ordenar: Qtd Matrículas</option>
             <option value="nome">Ordenar: Nome (A-Z)</option>
           </select>
+
+          <span class="has-tooltip tooltip-bottom" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Perfis de Pessoas & Dinheiro Público</span>
+              <span class="tooltip-body">Agrupamento inteligente com cruzamento de fontes:
+• Prefeitos, vereadores e secretários com vínculos.
+• Sócios de empresas contratadas pelo município.
+• Múltiplas matrículas e servidores públicos.</span>
+            </div>
+          </span>
         </div>
       </div>
 
@@ -238,7 +332,16 @@
       <div class="flex items-center space-x-3 text-sm">
         <div class="text-xs text-slate-400 font-mono text-right hidden sm:block">
           <div>Encontrados: <strong class="text-white" id="info-total">0</strong></div>
-          <div>Soma: <strong class="text-emerald-400" id="info-soma">R$ 0,00</strong></div>
+          <div class="flex items-center justify-end space-x-1">
+            <span>Soma: <strong class="text-emerald-400" id="info-soma">R$ 0,00</strong></span>
+            <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-box">
+                <span class="tooltip-title">Soma dos Registros Filtrados</span>
+                <span class="tooltip-body">Totalizador financeiro da listagem ativa com base nos filtros selecionados.</span>
+              </div>
+            </span>
+          </div>
         </div>
 
         <div class="flex items-center space-x-1">
@@ -580,37 +683,208 @@
       if (aba === 'pessoas') {
         thead.innerHTML = `
           <tr>
-            <th class="py-3 px-4">Cidadão / Nome</th>
-            <th class="py-3 px-4">Perfil & Vínculo</th>
-            <th class="py-3 px-4">Matrículas Identificadas</th>
-            <th class="py-3 px-4">Cargos Desempenhados</th>
-            <th class="py-3 px-4 text-right">Salários Acumulados</th>
-            <th class="py-3 px-4 text-right">Diárias de Viagem</th>
-            <th class="py-3 px-4 text-right">TOTAL DINHEIRO PÚBLICO</th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Cidadão / Nome</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Perfil Unificado do Cidadão</span>
+                  <span class="tooltip-body">Registro individual com resolução de entidades.
+• Nome civil e dados biográficos consolidados.
+• Foto auditada pericialmente contra dados oficiais.
+• Clique na linha para abrir a Ficha 360°.</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Perfil & Vínculo</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Classificação Institucional</span>
+                  <span class="tooltip-body">Papel público do agente apurado na base:
+• Prefeito ou Vice-Prefeito de Arinos.
+• Vereador da Câmara Municipal.
+• Servidor Público Concursado ou Comissionado.
+• Sócio de Empresa Fornecedora da Prefeitura.</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Matrículas</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Matrículas Identificadas</span>
+                  <span class="tooltip-body">Quantidade de vínculos funcionais no histórico.
+• Servidores podem possuir múltiplas matrículas ao longo dos anos.
+• Acumulação legal prevista no art. 37 da CF/88 (saúde e magistério).</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Cargos Desempenhados</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Funções Públicas</span>
+                  <span class="tooltip-body">Cargos, secretarias e atribuições exercidas na Prefeitura e na Fundação de Saúde.</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Salários Acumulados</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Remuneração Acumulada</span>
+                  <span class="tooltip-body">Somatório histórico de todos os vencimentos:
+• Salário Bruto: Total integral apurado na folha.
+• Líquido Estimado: Poder de compra real após INSS e IRRF.
+• Tempo: Meses efetivos com contracheque emitido.</span>
+                  <span class="tooltip-calc">Bruto = Base + Gratificações + Adicionais</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Diárias de Viagem</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Diárias e Viagens Oficiais</span>
+                  <span class="tooltip-body">Indenizações para deslocamentos a serviço fora de Arinos:
+• Transporte, alimentação e hospedagem.
+• Viagens a Brasília, Belo Horizonte, Unaí e região.</span>
+                  <span class="tooltip-note">Verba indenizatória que não compõe salário</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>TOTAL DINHEIRO PÚBLICO</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Consolidação Total Recebida</span>
+                  <span class="tooltip-body">Todo o recurso público municipal pago ao cidadão:
+• Somatório de Salários Brutos + Diárias Oficiais.
+• Base histórica auditada de 2013 a 2026.</span>
+                  <span class="tooltip-calc">Total = Salários Brutos + Diárias</span>
+                </div>
+              </span>
+            </th>
           </tr>
         `;
       } else if (aba === 'contracheques') {
         thead.innerHTML = `
           <tr>
-            <th class="py-3 px-4">Competência (MM/AAAA)</th>
-            <th class="py-3 px-4">Entidade</th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Competência</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Competência Contábil</span>
+                  <span class="tooltip-body">Mês e ano da folha de pagamento (MM/AAAA).</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Entidade</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Órgão Emissor</span>
+                  <span class="tooltip-body">Unidade pagadora da folha:
+• Prefeitura Municipal de Arinos
+• Fundação Municipal de Saúde de Arinos.</span>
+                </div>
+              </span>
+            </th>
             <th class="py-3 px-4">Matrícula - Nome do Servidor</th>
             <th class="py-3 px-4">Cargo / Função</th>
-            <th class="py-3 px-4">Vínculo</th>
-            <th class="py-3 px-4 text-right">Salário Bruto</th>
-            <th class="py-3 px-4 text-right">Descontos</th>
-            <th class="py-3 px-4 text-right">Salário Líquido</th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Vínculo</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Natureza do Vínculo</span>
+                  <span class="tooltip-body">Regime de contratação pública:
+• Concursado Efetivo
+• Comissionado / Recrutamento Amplo
+• Contratado por Designação Temporária
+• Agente Político (Prefeito, Secretário, Vereador).</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Salário Bruto</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Remuneração Bruta (Proventos)</span>
+                  <span class="tooltip-body">Valor total a que o servidor tem direito antes de deduções:
+• Vencimento base do cargo.
+• Gratificações de função, quinquênios e horas extras.
+• Adicionais de insalubridade e periculosidade.</span>
+                  <span class="tooltip-calc">Bruto = Vencimento Base + Gratificações</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Descontos</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Descontos Estatutários</span>
+                  <span class="tooltip-body">Deduções legais obrigatórias retidas na fonte:
+• Previdência Oficial (INSS / RPPS Municipal).
+• Imposto de Renda Retido na Fonte (IRRF).
+• Alíquotas progressivas oficiais calculadas por faixa salarial.</span>
+                  <span class="tooltip-calc">Descontos = INSS/RPPS + IRRF</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Salário Líquido</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Salário Líquido a Receber</span>
+                  <span class="tooltip-body">Valor efetivamente creditado na conta bancária do servidor:
+• Calculado pela fórmula matemática: Salário Bruto − Descontos.
+• O valor que o trabalhador realmente recebe para consumo.</span>
+                  <span class="tooltip-calc">Líquido = Bruto − Descontos</span>
+                </div>
+              </span>
+            </th>
           </tr>
         `;
       } else if (aba === 'despesas') {
         thead.innerHTML = `
           <tr>
-            <th class="py-3 px-4">Data / Empenho</th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Data / Empenho</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Data e Número do Empenho</span>
+                  <span class="tooltip-body">Ato emanado de autoridade competente que cria para o município a obrigação de pagamento (Lei 4.320/64).</span>
+                </div>
+              </span>
+            </th>
             <th class="py-3 px-4">Entidade</th>
             <th class="py-3 px-4">Credor / Fornecedor</th>
             <th class="py-3 px-4">Natureza da Despesa</th>
             <th class="py-3 px-4">Histórico</th>
-            <th class="py-3 px-4 text-right">Valor Empenhado</th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Valor Empenhado</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Valor da Despesa Empenhada</span>
+                  <span class="tooltip-body">Recurso público reservado e liquidado para quitação do serviço ou produto fornecido ao município.</span>
+                </div>
+              </span>
+            </th>
           </tr>
         `;
       } else if (aba === 'diarias') {
@@ -621,7 +895,16 @@
             <th class="py-3 px-4">Servidor Beneficiário</th>
             <th class="py-3 px-4">Tipo Diária</th>
             <th class="py-3 px-4">Destino / Motivo</th>
-            <th class="py-3 px-4 text-right">Valor Diária</th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Valor Diária</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Valor Indenizatório</span>
+                  <span class="tooltip-body">Custeio de viagem a serviço público para despesas de alimentação e pousada.</span>
+                </div>
+              </span>
+            </th>
           </tr>
         `;
       } else if (aba === 'contratos') {
@@ -630,9 +913,27 @@
             <th class="py-3 px-4">Contrato / Proc.</th>
             <th class="py-3 px-4">Contratado / Credor</th>
             <th class="py-3 px-4">Tipo Contrato</th>
-            <th class="py-3 px-4">Vigência</th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Vigência</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Período de Vigência</span>
+                  <span class="tooltip-body">Data de início e data final de validade do instrumento contratual e aditivos.</span>
+                </div>
+              </span>
+            </th>
             <th class="py-3 px-4">Objeto</th>
-            <th class="py-3 px-4 text-right">Valor Contratado</th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Valor Contratado</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Valor Global do Contrato</span>
+                  <span class="tooltip-body">Montante financeiro total homologado para a execução do contrato administrativo.</span>
+                </div>
+              </span>
+            </th>
           </tr>
         `;
       } else if (aba === 'receitas') {
@@ -642,7 +943,16 @@
             <th class="py-3 px-4">Classificação / Descrição</th>
             <th class="py-3 px-4">Código Máscara</th>
             <th class="py-3 px-4">Ano / Conhecimento</th>
-            <th class="py-3 px-4 text-right">Valor Arrecadado</th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Valor Arrecadado</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Receita Pública Efetivada</span>
+                  <span class="tooltip-body">Valor creditado nos cofres da Prefeitura (tributos municipais ou repasses estaduais/federais).</span>
+                </div>
+              </span>
+            </th>
           </tr>
         `;
       } else if (aba === 'convenios') {
@@ -652,7 +962,16 @@
             <th class="py-3 px-4">Descrição / Objeto</th>
             <th class="py-3 px-4">Vigência</th>
             <th class="py-3 px-4 text-right">Contrapartida</th>
-            <th class="py-3 px-4 text-right">Valor do Convênio</th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Valor do Convênio</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Montante do Convênio</span>
+                  <span class="tooltip-body">Repasse firmado com o Estado ou União para obras e projetos com contrapartida municipal.</span>
+                </div>
+              </span>
+            </th>
           </tr>
         `;
       }
@@ -701,8 +1020,15 @@
                     </div>
                     ${r.partido_politico ? `<div class="text-[11px] text-slate-400 font-medium font-mono">Partido: ${r.partido_politico}</div>` : ''}
                     <div class="text-[11px] text-emerald-400 font-medium font-mono mt-0.5 flex items-center gap-1">
-                      <span>⏱️ Tempo:</span>
-                      <span>${formatarMascaraAnoMeses(r.qtd_contracheques || 0)}</span>
+                      <span class="has-tooltip tooltip-bottom" tabindex="0">
+                        <span>⏱️ Tempo: ${formatarMascaraAnoMeses(r.qtd_contracheques || 0)}</span>
+                        <div class="tooltip-box">
+                          <span class="tooltip-title">Tempo Efetivo de Serviço</span>
+                          <span class="tooltip-body">Soma apenas os meses com contracheque emitido.
+• Intervalos sem vínculo não são contados.
+• Total de ${r.qtd_contracheques || 0} folhas apuradas.</span>
+                        </div>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -715,19 +1041,41 @@
               <td class="py-3 px-4">${badgeMat}</td>
               <td class="py-3 px-4 text-xs text-slate-300 max-w-xs truncate" title="${r.cargos_resumo || ''}">${r.cargos_resumo || '-'}</td>
               <td class="py-3 px-4 text-right font-mono text-xs text-slate-300">
-                <div class="text-emerald-400 font-bold" title="Salário Bruto Acumulado">Bruto: ${formatMoeda(r.total_salarios)}</div>
-                <div class="text-[10px] text-slate-300 font-mono">Líq. Est.: ${formatMoeda(r.total_salarios * 0.78)}</div>
-                <div class="text-[10px] text-slate-500">${r.qtd_contracheques || 0} folhas (${formatarMascaraAnoMeses(r.qtd_contracheques || 0)})</div>
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <div class="text-right">
+                    <div class="text-emerald-400 font-bold">Bruto: ${formatMoeda(r.total_salarios)}</div>
+                    <div class="text-[10px] text-slate-300 font-mono">Líq. Est.: ${formatMoeda(r.total_salarios * 0.78)}</div>
+                    <div class="text-[10px] text-slate-500">${r.qtd_contracheques || 0} folhas (${formatarMascaraAnoMeses(r.qtd_contracheques || 0)})</div>
+                  </div>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Remuneração Acumulada</span>
+                    <span class="tooltip-body">Total acumulado de salários na base:
+• Bruto: ${formatMoeda(r.total_salarios)}
+• Estimativa Líquida: ${formatMoeda(r.total_salarios * 0.78)}
+• Folhas emitidas: ${r.qtd_contracheques || 0} (${formatarMascaraAnoMeses(r.qtd_contracheques || 0)})</span>
+                    <span class="tooltip-calc">Líquido Est. = Bruto − ~22% Retenções</span>
+                  </div>
+                </span>
               </td>
               <td class="py-3 px-4 text-right font-mono text-xs text-amber-400">
                 <div>${formatMoeda(r.total_diarias)}</div>
                 <div class="text-[10px] text-slate-500">${r.qtd_diarias || 0} viagens</div>
               </td>
               <td class="py-3 px-4 text-right font-mono font-bold text-sm text-emerald-400 bg-emerald-950/20 rounded">
-                <div class="flex items-center justify-end space-x-2">
-                  <span>${formatMoeda(r.total_dinheiro_publico)}</span>
-                  <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
-                </div>
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <div class="flex items-center justify-end space-x-2">
+                    <span>${formatMoeda(r.total_dinheiro_publico)}</span>
+                    <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
+                  </div>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Total Dinheiro Público</span>
+                    <span class="tooltip-body">Consolidação histórica de verba pública recebida:
+• Salários Brutos: ${formatMoeda(r.total_salarios)}
+• Diárias de Viagem: ${formatMoeda(r.total_diarias)}
+• Total Geral: ${formatMoeda(r.total_dinheiro_publico)}</span>
+                    <span class="tooltip-calc">Total = Salários + Diárias</span>
+                  </div>
+                </span>
               </td>
             </tr>
           `;
@@ -751,13 +1099,43 @@
               </td>
               <td class="py-3 px-4 text-slate-300 text-xs">${r.cargo || '-'}</td>
               <td class="py-3 px-4 text-slate-400 text-xs">${r.vinculo || '-'}</td>
-              <td class="py-3 px-4 text-right font-mono font-bold text-emerald-400">${formatMoeda(r.total_proventos)}</td>
-              <td class="py-3 px-4 text-right font-mono font-medium text-rose-400">${descVal > 0 ? '-' + formatMoeda(descVal) : '-'}</td>
+              <td class="py-3 px-4 text-right font-mono font-bold text-emerald-400">
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <span>${formatMoeda(r.total_proventos)}</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Salário Bruto Total</span>
+                    <span class="tooltip-body">Vencimentos integrais do mês antes de deduções:
+• Vencimento-base + gratificações e adicionais.</span>
+                    <span class="tooltip-calc">Bruto = ${formatMoeda(r.total_proventos)}</span>
+                  </div>
+                </span>
+              </td>
+              <td class="py-3 px-4 text-right font-mono font-medium text-rose-400">
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <span>${descVal > 0 ? '-' + formatMoeda(descVal) : '-'}</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Retenções Legais (INSS / IRRF)</span>
+                    <span class="tooltip-body">Deduções oficiais calculadas por faixas progressivas:
+• Previdência e Imposto de Renda Retido na Fonte.</span>
+                    <span class="tooltip-calc">Descontos = -${formatMoeda(descVal)}</span>
+                  </div>
+                </span>
+              </td>
               <td class="py-3 px-4 text-right font-mono font-extrabold text-white bg-slate-900/40">
-                <div class="flex items-center justify-end space-x-2">
-                  <span>${formatMoeda(liqVal)}</span>
-                  <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
-                </div>
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <div class="flex items-center justify-end space-x-2">
+                    <span>${formatMoeda(liqVal)}</span>
+                    <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
+                  </div>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Salário Líquido Final</span>
+                    <span class="tooltip-body">Valor efetivamente creditado na conta do servidor:
+• Salário Bruto: ${formatMoeda(r.total_proventos)}
+• Descontos Oficiais: -${formatMoeda(descVal)}
+• Valor Líquido: ${formatMoeda(liqVal)}</span>
+                    <span class="tooltip-calc">Líquido = ${formatMoeda(liqVal)}</span>
+                  </div>
+                </span>
               </td>
             </tr>
           `;
@@ -920,23 +1298,72 @@
   
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div class="p-3 bg-slate-800/80 rounded-xl border border-emerald-500/30">
-              <span class="text-[10px] text-slate-400 uppercase font-mono">Total Dinheiro Público</span>
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 uppercase font-mono">Total Dinheiro Público</span>
+                <span class="has-tooltip tooltip-bottom tooltip-align-left" tabindex="0">
+                  <span class="tooltip-icon">?</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Recurso Público Total Recebido</span>
+                    <span class="tooltip-body">Somatório consolidado de todas as verbas municipais pagas ao cidadão:
+• Todos os contracheques (Prefeitura + Saúde).
+• Todas as diárias de viagens oficiais.
+• Valores apurados entre 2013 e 2026.</span>
+                    <span class="tooltip-calc">Total = Salários Brutos + Diárias</span>
+                  </div>
+                </span>
+              </div>
               <p class="text-lg font-extrabold text-emerald-400 font-mono mt-0.5">${formatMoeda(p.total_dinheiro_publico)}</p>
               <span class="text-[10px] text-slate-500 font-mono">Salários + Diárias</span>
             </div>
             <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
-              <span class="text-[10px] text-slate-400 uppercase font-mono">Tempo Efetivo de Serviço</span>
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 uppercase font-mono">Tempo Efetivo de Serviço</span>
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <span class="tooltip-icon">?</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Tempo Efetivo de Trabalho</span>
+                    <span class="tooltip-body">Cálculo pericial rigoroso de meses com vínculo ativo:
+• Conta estritamente os meses em que houve folha emitida.
+• Não soma períodos de afastamento, exoneração ou sem vínculo.
+• Evita distorções causadas pela simples diferença entre a data inicial e final.</span>
+                    <span class="tooltip-note">Base: Folhas ativas mensais</span>
+                  </div>
+                </span>
+              </div>
               <p class="text-base font-bold text-white font-mono mt-0.5">${data.tempo_efetivo || formatarMascaraAnoMeses(p.qtd_contracheques || 0)}</p>
               <span class="text-[10px] text-emerald-400 font-mono font-medium">${data.total_meses_efetivos || p.qtd_contracheques || 0} meses ativos (${p.qtd_contracheques || 0} folhas)</span>
             </div>
             <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
-              <span class="text-[10px] text-slate-400 uppercase font-mono">Salários (Bruto & Líquido)</span>
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 uppercase font-mono">Salários (Bruto & Líquido)</span>
+                <span class="has-tooltip tooltip-bottom tooltip-align-left" tabindex="0">
+                  <span class="tooltip-icon">?</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Composição Salarial Histórica</span>
+                    <span class="tooltip-body">Valores acumulados em toda a carreira:
+• Bruto: Total integral de proventos e gratificações.
+• Descontos: Retenções de INSS/RPPS e IRRF na fonte.
+• Líquido: Dinheiro real creditado na conta do servidor.</span>
+                    <span class="tooltip-calc">Líquido = Bruto − Descontos Retidos</span>
+                  </div>
+                </span>
+              </div>
               <p class="text-base font-bold text-emerald-300 font-mono mt-0.5" title="Salário Bruto Total">Bruto: ${formatMoeda(data.total_proventos_acumulado || p.total_salarios)}</p>
               <div class="text-[11px] text-emerald-400 font-mono font-bold mt-0.5" title="Salário Líquido Total">Líquido: ${formatMoeda(data.total_liquido_acumulado || (p.total_salarios * 0.78))}</div>
               <div class="text-[10px] text-rose-400 font-mono">Descontos: -${formatMoeda(data.total_descontos_acumulado || 0)}</div>
             </div>
             <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
-              <span class="text-[10px] text-slate-400 uppercase font-mono">Diárias Recebidas</span>
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 uppercase font-mono">Diárias Recebidas</span>
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <span class="tooltip-icon">?</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Indenizações por Viagem</span>
+                    <span class="tooltip-body">Valores pagos a título indenizatório para cobertura de alimentação e hospedagem em deslocamentos oficiais a trabalho fora de Arinos.</span>
+                    <span class="tooltip-note">Não integra o salário-base</span>
+                  </div>
+                </span>
+              </div>
               <p class="text-base font-bold text-amber-400 font-mono mt-0.5">${formatMoeda(p.total_diarias)}</p>
               <span class="text-[10px] text-slate-500 font-mono">${p.qtd_diarias || 0} viagens registradas</span>
             </div>
@@ -1192,20 +1619,90 @@
                 <table class="w-full text-left text-xs text-slate-300">
                   <thead class="bg-slate-800/80 text-slate-400 font-mono uppercase text-[11px]">
                     <tr>
-                      <th class="py-2.5 px-3">Competência (MM/AAAA)</th>
-                      <th class="py-2.5 px-3">Tipo de Folha</th>
-                      <th class="py-2.5 px-3 text-right">Salário Bruto</th>
-                      <th class="py-2.5 px-3 text-right">Descontos</th>
-                      <th class="py-2.5 px-3 text-right">Salário Líquido</th>
+                      <th class="py-2.5 px-3">
+                        <span class="has-tooltip tooltip-bottom" tabindex="0">
+                          <span>Competência</span>
+                          <span class="tooltip-icon">?</span>
+                          <div class="tooltip-box">
+                            <span class="tooltip-title">Competência Contábil</span>
+                            <span class="tooltip-body">Mês e ano da folha de pagamento (MM/AAAA).</span>
+                          </div>
+                        </span>
+                      </th>
+                      <th class="py-2.5 px-3">
+                        <span class="has-tooltip tooltip-bottom" tabindex="0">
+                          <span>Tipo de Folha</span>
+                          <span class="tooltip-icon">?</span>
+                          <div class="tooltip-box">
+                            <span class="tooltip-title">Classificação da Folha</span>
+                            <span class="tooltip-body">Emissão mensal ordinária, gratificação natalina (13º) ou adicional de férias.</span>
+                          </div>
+                        </span>
+                      </th>
+                      <th class="py-2.5 px-3 text-right">
+                        <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                          <span>Salário Bruto</span>
+                          <span class="tooltip-icon">?</span>
+                          <div class="tooltip-box">
+                            <span class="tooltip-title">Remuneração Bruta</span>
+                            <span class="tooltip-body">Vencimentos totais do mês antes das deduções legais.</span>
+                            <span class="tooltip-calc">Bruto = Base + Adicionais</span>
+                          </div>
+                        </span>
+                      </th>
+                      <th class="py-2.5 px-3 text-right">
+                        <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                          <span>Descontos</span>
+                          <span class="tooltip-icon">?</span>
+                          <div class="tooltip-box">
+                            <span class="tooltip-title">Descontos Estatutários</span>
+                            <span class="tooltip-body">Deduções oficiais de Previdência e Imposto de Renda.</span>
+                          </div>
+                        </span>
+                      </th>
+                      <th class="py-2.5 px-3 text-right">
+                        <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                          <span>Salário Líquido</span>
+                          <span class="tooltip-icon">?</span>
+                          <div class="tooltip-box">
+                            <span class="tooltip-title">Salário Líquido</span>
+                            <span class="tooltip-body">Valor efetivamente creditado na conta bancária do servidor.</span>
+                            <span class="tooltip-calc">Líquido = Bruto − Descontos</span>
+                          </div>
+                        </span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-800 font-mono">
                     ${anoAtivo.meses.map(m => {
                       let badgeFolha = '<span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-sans">Normal</span>';
                       if (m.is_13) {
-                        badgeFolha = '<span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-600/50 font-sans font-bold">🎁 13º Salário</span>';
+                        badgeFolha = `
+                          <span class="has-tooltip tooltip-bottom" tabindex="0">
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-600/50 font-sans font-bold flex items-center gap-1 cursor-help">
+                              <span>🎁 13º Salário</span>
+                              <span class="tooltip-icon">?</span>
+                            </span>
+                            <div class="tooltip-box">
+                              <span class="tooltip-title">Gratificação Natalina (13º)</span>
+                              <span class="tooltip-body">Gratificação anual compulsória prevista em lei.
+• Parcela proporcional ou integral concedida ao servidor.</span>
+                            </div>
+                          </span>
+                        `;
                       } else if (m.is_ferias) {
-                        badgeFolha = '<span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-600/50 font-sans font-bold">🏖️ Férias</span>';
+                        badgeFolha = `
+                          <span class="has-tooltip tooltip-bottom" tabindex="0">
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-600/50 font-sans font-bold flex items-center gap-1 cursor-help">
+                              <span>🏖️ Férias</span>
+                              <span class="tooltip-icon">?</span>
+                            </span>
+                            <div class="tooltip-box">
+                              <span class="tooltip-title">Adicional de Férias</span>
+                              <span class="tooltip-body">Remuneração com acréscimo de 1/3 constitucional (art. 7º, XVII da CF/88).</span>
+                            </div>
+                          </span>
+                        `;
                       }
 
                       return `
@@ -1460,6 +1957,17 @@
                 <div class="flex items-center justify-between pb-2 mb-2 border-b border-emerald-500/20">
                   <span class="text-xs font-bold text-emerald-400 uppercase font-mono flex items-center gap-1.5">
                     <span>🟢</span> Proventos & Vencimentos
+                    <span class="has-tooltip tooltip-bottom" tabindex="0">
+                      <span class="tooltip-icon">?</span>
+                      <div class="tooltip-box">
+                        <span class="tooltip-title">Proventos & Vencimentos</span>
+                        <span class="tooltip-body">Verbas creditadas em favor do servidor:
+• Vencimento-base do cargo efetivo ou comissionado.
+• Gratificações de função, produtividade e horas extras.
+• Adicionais de insalubridade, quinquênios e terço de férias.</span>
+                        <span class="tooltip-calc">Total Proventos = ${formatMoeda(d.total_proventos)}</span>
+                      </div>
+                    </span>
                   </span>
                   <span class="text-xs font-mono font-bold text-emerald-400">${formatMoeda(d.total_proventos)}</span>
                 </div>
@@ -1480,6 +1988,17 @@
                 <div class="flex items-center justify-between pb-2 mb-2 border-b border-rose-500/20">
                   <span class="text-xs font-bold text-rose-400 uppercase font-mono flex items-center gap-1.5">
                     <span>🔴</span> Descontos & Retenções (INSS / IR)
+                    <span class="has-tooltip tooltip-bottom" tabindex="0">
+                      <span class="tooltip-icon">?</span>
+                      <div class="tooltip-box">
+                        <span class="tooltip-title">Deduções Oficiais Obrigatórias</span>
+                        <span class="tooltip-body">Retenções estatutárias calculadas pela lei:
+• INSS / RPPS Municipal: Contribuição previdenciária progressiva.
+• IRRF: Imposto de Renda Retido na Fonte da Receita Federal.
+• Outras deduções legais (consignados, faltas ou pensões judiciais).</span>
+                        <span class="tooltip-calc">Total Descontos = -${formatMoeda(d.total_descontos)}</span>
+                      </div>
+                    </span>
                   </span>
                   <span class="text-xs font-mono font-bold text-rose-400">${formatMoeda(d.total_descontos)}</span>
                 </div>
@@ -1509,9 +2028,22 @@
               </div>
               <div class="text-slate-600 text-lg font-light">=</div>
             </div>
-            <div class="text-right">
-              <span class="text-[11px] text-emerald-300 uppercase font-mono font-bold tracking-wider block">Salário Líquido a Receber</span>
-              <span class="text-2xl font-black text-white font-mono drop-shadow">${formatMoeda(d.salario_liquido)}</span>
+            <div class="text-right flex items-center gap-2">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Cálculo do Salário Líquido</span>
+                  <span class="tooltip-body">Valor líquido final que cai na conta bancária do servidor:
+• Salário Bruto: ${formatMoeda(d.total_proventos)}
+• Descontos Oficiais: -${formatMoeda(d.total_descontos)}
+• Valor Líquido: ${formatMoeda(d.salario_liquido)}</span>
+                  <span class="tooltip-calc">Líquido = Bruto − Descontos</span>
+                </div>
+              </span>
+              <div>
+                <span class="text-[11px] text-emerald-300 uppercase font-mono font-bold tracking-wider block">Salário Líquido a Receber</span>
+                <span class="text-2xl font-black text-white font-mono drop-shadow">${formatMoeda(d.salario_liquido)}</span>
+              </div>
             </div>
           </div>
         `;

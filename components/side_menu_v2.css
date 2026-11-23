@@ -5,6 +5,8 @@
  * ==============================================================================
  */
 
+@import url('/components/tooltips.css');
+
 :root {
   --v2-sidebar-width: 260px;
   --v2-sidebar-collapsed: 76px;

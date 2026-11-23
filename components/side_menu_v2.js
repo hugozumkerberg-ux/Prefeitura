@@ -497,6 +497,19 @@
     `;
   };
 
+  // Suporte móvel/touch para tooltips explicativos cidadãos
+  document.addEventListener('click', (e) => {
+    const tipContainer = e.target.closest('.has-tooltip');
+    if (tipContainer && (e.target.classList.contains('tooltip-icon') || e.target.closest('.tooltip-icon'))) {
+      e.stopPropagation();
+      const isActive = tipContainer.classList.contains('tooltip-active');
+      document.querySelectorAll('.has-tooltip.tooltip-active').forEach(el => el.classList.remove('tooltip-active'));
+      if (!isActive) tipContainer.classList.add('tooltip-active');
+    } else if (!e.target.closest('.tooltip-box')) {
+      document.querySelectorAll('.has-tooltip.tooltip-active').forEach(el => el.classList.remove('tooltip-active'));
+    }
+  });
+
   // Inicializa quando o DOM estiver pronto
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initSideMenu);
