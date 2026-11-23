@@ -201,6 +201,8 @@
             <option value="todos">Todos os Perfis (2.865)</option>
             <option value="prefeitos">👔 Prefeitos Municipais (5)</option>
             <option value="vereadores">🏛️ Vereadores da Câmara (101)</option>
+            <option value="politicos">🗳️ Políticos & Candidatos (197)</option>
+            <option value="politicos_socios">🚨 Políticos/Secretários Sócios de Fornecedores</option>
             <option value="multi_matricula">🔗 Múltiplas Matrículas (62)</option>
             <option value="socios">⚠️ Sócios Fornecedores (190)</option>
             <option value="servidores">👤 Servidores Públicos</option>
@@ -928,24 +930,146 @@
           `;
         }
 
-        // 2. Se sócio de empresa, exibir painel de fornecedor
+        // 1.1. Histórico na Vida Política, Mandatos e Eleições (TSE e SAPL)
+        if ((data.mandatos_historico && data.mandatos_historico.length > 0) || (data.historico_eleitoral && data.historico_eleitoral.length > 0) || (data.materias_camara && data.materias_camara.length > 0)) {
+          htmlCorpo += `
+            <div class="p-4 bg-slate-900/90 border border-blue-500/40 rounded-xl space-y-3">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <div class="flex items-center space-x-2">
+                  <span class="text-blue-400 text-base">🗳️</span>
+                  <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono">
+                    Trajetória na Vida Política, Mandatos & Eleições TSE
+                  </h4>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono">
+                  Registro Oficial TSE / SAPL
+                </span>
+              </div>
+
+              ${data.mandatos_historico && data.mandatos_historico.length > 0 ? `
+                <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/60 space-y-2">
+                  <span class="text-[11px] font-bold text-blue-300 uppercase font-mono">🏛️ Mandatos Exercidos no Município</span>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    ${data.mandatos_historico.map(m => `
+                      <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex items-center justify-between text-xs">
+                        <div>
+                          <strong class="text-white">${m.cargo}</strong>
+                          <p class="text-[11px] text-slate-400 font-mono">${m.tipo}</p>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 font-mono font-bold text-[11px] border border-blue-800">${m.mandato}</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+
+              ${data.historico_eleitoral && data.historico_eleitoral.length > 0 ? `
+                <div class="space-y-1.5 pt-1">
+                  <span class="text-[11px] font-bold text-slate-300 uppercase font-mono">Disputas Eleitorais Registradas no TSE</span>
+                  <div class="overflow-x-auto rounded-lg border border-slate-800">
+                    <table class="w-full text-left text-xs text-slate-300">
+                      <thead class="bg-slate-800/80 text-slate-400 font-mono uppercase text-[10px]">
+                        <tr>
+                          <th class="py-2 px-3">Ano</th>
+                          <th class="py-2 px-3">Cargo Disputado</th>
+                          <th class="py-2 px-3">Nome Urna</th>
+                          <th class="py-2 px-3">Partido</th>
+                          <th class="py-2 px-3">Resultado</th>
+                          <th class="py-2 px-3 text-right">Votos</th>
+                          <th class="py-2 px-3 text-right">Bens Declarados</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-800 font-mono">
+                        ${data.historico_eleitoral.map(ele => {
+                          const isEleito = (ele.resultado || '').toLowerCase().includes('eleito');
+                          const resClass = isEleito ? 'text-emerald-400 font-bold' : 'text-slate-400';
+                          return `
+                            <tr class="hover:bg-slate-800/40">
+                              <td class="py-2 px-3 font-bold text-white">${ele.ano}</td>
+                              <td class="py-2 px-3 text-slate-200">${ele.cargo}</td>
+                              <td class="py-2 px-3 text-amber-300 font-semibold font-sans">"${ele.nome_urna}"</td>
+                              <td class="py-2 px-3"><span class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-blue-300 text-[10px]">${ele.partido_sigla}</span></td>
+                              <td class="py-2 px-3 ${resClass}">${ele.resultado}</td>
+                              <td class="py-2 px-3 text-right">${Number(ele.votos || 0).toLocaleString('pt-BR')}</td>
+                              <td class="py-2 px-3 text-right text-emerald-400 font-bold">${formatMoeda(ele.total_bens)}</td>
+                            </tr>
+                          `;
+                        }).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ` : ''}
+
+              ${data.materias_camara && data.materias_camara.length > 0 ? `
+                <div class="pt-2 border-t border-slate-800/80">
+                  <span class="text-[11px] font-bold text-purple-300 uppercase font-mono">⚖️ Atuação no Legislativo Municipal (Câmara / SAPL)</span>
+                  <div class="mt-1.5 space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                    ${data.materias_camara.map(mat => `
+                      <div class="p-2 bg-slate-900/60 rounded border border-slate-800/80 text-xs">
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                          <span class="text-purple-300 font-bold">${mat.tipo} Nº ${mat.numero}/${mat.ano}</span>
+                          <span>${mat.data_apresentacao || ''}</span>
+                        </div>
+                        <p class="text-slate-300 mt-0.5 line-clamp-2">${mat.ementa}</p>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        // 2. Se sócio de empresa, exibir painel de fornecedor e contratos nos mandatos
         if (p.is_socio_empresa && data.empresas_detalhe && data.empresas_detalhe.length > 0) {
           htmlCorpo += `
             <div class="p-4 bg-amber-950/30 border border-amber-600/40 rounded-xl space-y-3">
-              <div class="flex items-center space-x-2 text-amber-400 font-bold text-sm">
-                <span>⚠️ Vínculo Societário em Empresa Fornecedora da Prefeitura</span>
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <div class="flex items-center space-x-2 text-amber-400 font-bold text-sm">
+                  <span>⚠️ Empresas Vinculadas & Contratos no Período do Mandato</span>
+                </div>
+                <span class="text-[10px] text-amber-300/80 font-mono">Cruzamento CNPJ x Mandatos</span>
               </div>
-              <div class="space-y-2">
+
+              <div class="space-y-3">
                 ${data.empresas_detalhe.map(emp => `
-                  <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-lg flex flex-wrap items-center justify-between gap-2">
-                    <div>
-                      <p class="font-bold text-white text-xs">${emp.razao_social}</p>
-                      <p class="text-[11px] text-slate-400 font-mono">CNPJ: ${emp.cnpj} • Qualificação: ${emp.qualificacao || 'Sócio'}</p>
+                  <div class="p-3 bg-slate-900/90 border border-slate-800 rounded-lg space-y-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
+                      <div>
+                        <p class="font-bold text-white text-xs">${emp.razao_social}</p>
+                        <p class="text-[11px] text-slate-400 font-mono">CNPJ: ${emp.cnpj} • Qualificação: ${emp.qualificacao || 'Sócio'}</p>
+                      </div>
+                      <div class="text-right font-mono">
+                        <span class="text-xs text-amber-400 font-bold">Faturamento da Empresa: ${formatMoeda(emp.info ? emp.info.total_geral : 0)}</span>
+                        <p class="text-[10px] text-slate-500">${emp.info ? emp.info.qtd_contratos : 0} contratos • ${emp.info ? emp.info.qtd_despesas : 0} empenhos</p>
+                      </div>
                     </div>
-                    <div class="text-right font-mono">
-                      <span class="text-xs text-amber-400 font-bold">Faturamento da Empresa: ${formatMoeda(emp.info ? emp.info.total_geral : 0)}</span>
-                      <p class="text-[10px] text-slate-500">${emp.info ? emp.info.qtd_contratos : 0} contratos • ${emp.info ? emp.info.qtd_despesas : 0} empenhos</p>
-                    </div>
+
+                    ${emp.contratos && emp.contratos.length > 0 ? `
+                      <div class="space-y-1.5 pt-1">
+                        <span class="text-[10px] font-bold text-amber-300 uppercase font-mono">Contratos Firmados com o Município durante os Mandatos:</span>
+                        <div class="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+                          ${emp.contratos.map(c => `
+                            <div class="p-2 bg-slate-800/60 rounded border border-slate-700/60 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                              <div class="space-y-0.5">
+                                <div class="flex items-center space-x-2">
+                                  <span class="font-bold text-white font-mono">Contrato Nº ${c.nr_contrato}</span>
+                                  <span class="px-1.5 py-0.2 rounded text-[10px] bg-amber-950 text-amber-300 border border-amber-800 font-mono">${c.gestao_mandato}</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 line-clamp-1" title="${c.objeto || ''}">${c.objeto || '-'}</p>
+                                <span class="text-[10px] text-slate-500 font-mono">Assinatura: ${c.dt_assinatura || '-'} • Vigência: ${c.dt_ini_vigencia || '-'} a ${c.dt_fim_vigencia || '-'}</span>
+                              </div>
+                              <div class="text-right whitespace-nowrap">
+                                <span class="font-mono font-bold text-emerald-400 text-xs">${formatMoeda(c.valor)}</span>
+                              </div>
+                            </div>
+                          `).join('')}
+                        </div>
+                      </div>
+                    ` : `
+                      <div class="text-[11px] text-slate-500 italic">Nenhum contrato direto encontrado no banco sob este CNPJ.</div>
+                    `}
                   </div>
                 `).join('')}
               </div>

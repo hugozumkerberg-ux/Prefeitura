@@ -1790,10 +1790,16 @@ const server = http.createServer(async (req, res) => {
           whereClauses.push('is_prefeito = 1');
         } else if (tipo === 'vereadores') {
           whereClauses.push('is_vereador = 1');
+        } else if (tipo === 'politicos') {
+          whereClauses.push('(is_politico = 1 OR is_prefeito = 1 OR is_vereador = 1 OR is_candidato = 1)');
+        } else if (tipo === 'politicos_socios') {
+          whereClauses.push("(is_socio_empresa = 1 AND (is_politico = 1 OR is_candidato = 1 OR is_vereador = 1 OR is_prefeito = 1 OR cargos_resumo LIKE '%secretár%' OR cargos_resumo LIKE '%secretar%'))");
         } else if (tipo === 'multi_matricula') {
           whereClauses.push('qtd_matriculas > 1');
         } else if (tipo === 'socios') {
           whereClauses.push('is_socio_empresa = 1');
+        } else if (tipo === 'servidores') {
+          whereClauses.push('is_socio_empresa = 0 AND is_politico = 0');
         } else if (tipo === 'servidores') {
           whereClauses.push('is_politico = 0 AND is_socio_empresa = 0');
         }
@@ -2023,7 +2029,7 @@ const server = http.createServer(async (req, res) => {
           LIMIT 20
         `).all(pessoa.nome_exibicao, pessoa.nome_canonic);
 
-        // Se sócio de empresa, enriquecer com dados financeiros das empresas
+        // Se sócio de empresa, enriquecer com dados financeiros das empresas e contratos nos mandatos
         const dadosEmpresas = [];
         if (empresas.length > 0) {
           for (const emp of empresas) {
@@ -2033,26 +2039,84 @@ const server = http.createServer(async (req, res) => {
                 FROM empresas_contratadas
                 WHERE cnpj = ?
               `).get(emp.cnpj);
+
+              // Buscar contratos dessa empresa e relacionar com mandatos
+              const cClean = (emp.cnpj || '').replace(/\D/g, '');
+              let cMasc = emp.cnpj;
+              if (cClean.length === 14) {
+                cMasc = `${cClean.slice(0, 2)}.${cClean.slice(2, 5)}.${cClean.slice(5, 8)}/${cClean.slice(8, 12)}-${cClean.slice(12, 14)}`;
+              }
+              const primeiraPalavra = (emp.razao_social || '').split(' ')[0];
+
+              const contratosEmpresa = db.prepare(`
+                SELECT nr_contrato, valor, dt_assinatura, dt_ini_vigencia, dt_fim_vigencia, objeto, nr_processo
+                FROM contratos
+                WHERE doc_credor LIKE ? OR doc_credor LIKE ? OR credor LIKE ?
+                ORDER BY dt_assinatura DESC
+              `).all(`%${cClean}%`, `%${cMasc}%`, `%${primeiraPalavra}%`);
+
+              // Identificar em qual mandato o contrato foi assinado
+              const contratosComMandato = contratosEmpresa.map(c => {
+                const anoContrato = c.dt_assinatura ? parseInt(c.dt_assinatura.slice(0, 4), 10) : 0;
+                let gestaoMandato = 'Período Geral';
+                if (anoContrato >= 2013 && anoContrato <= 2016) gestaoMandato = 'Gestão Carlos Alberto (1º Mandato: 2013-2016)';
+                else if (anoContrato >= 2017 && anoContrato <= 2020) gestaoMandato = 'Gestão Carlos Alberto (2º Mandato: 2017-2020)';
+                else if (anoContrato >= 2021 && anoContrato <= 2024) gestaoMandato = 'Gestão Marcílio de Tonhão (1º Mandato: 2021-2024)';
+                else if (anoContrato >= 2025) gestaoMandato = 'Gestão Marcílio de Tonhão (2º Mandato: 2025-2028)';
+
+                return {
+                  ...c,
+                  ano_contrato: anoContrato,
+                  gestao_mandato: gestaoMandato
+                };
+              });
+
               dadosEmpresas.push({
                 ...emp,
-                info: info || null
+                info: info || null,
+                contratos: contratosComMandato
               });
             } catch(e) {}
           }
         }
 
-        // Se vereador, buscar matérias e legislaturas
+        // Histórico de Eleições (TSE)
+        const historicoEleitoral = db.prepare(`
+          SELECT ano, cargo, numero, nome_urna, partido_sigla, coligacao, situacao, resultado, votos, percentual, total_bens
+          FROM eleicoes_candidatos
+          WHERE nome_completo = ? OR nome_completo = ?
+          ORDER BY ano DESC
+        `).all(pessoa.nome_canonic, pessoa.nome_exibicao);
+
+        // Se vereador ou atuação no legislativo, buscar matérias no SAPL
         let materiasCamara = [];
-        if (pessoa.is_vereador) {
+        if (pessoa.is_vereador || (pessoa.cargos_resumo && pessoa.cargos_resumo.toLowerCase().includes('vereador'))) {
           try {
             materiasCamara = db.prepare(`
               SELECT tipo, numero, ano, ementa, situacao, data_apresentacao
               FROM camara_materias
-              WHERE autor LIKE ?
+              WHERE autor LIKE ? OR autor LIKE ?
               ORDER BY ano DESC
-              LIMIT 15
-            `).all(`%${pessoa.nome_exibicao}%`);
+              LIMIT 20
+            `).all(`%${pessoa.nome_exibicao}%`, `%${pessoa.nome_canonic}%`);
           } catch(e) {}
+        }
+
+        // Resumo de mandatos e vida política
+        let mandatosHistorico = [];
+        if (pessoa.is_prefeito || (pessoa.cargos_resumo && pessoa.cargos_resumo.toLowerCase().includes('prefeito'))) {
+          if (pessoa.nome_canonic.includes('CARLOS ALBERTO')) {
+            mandatosHistorico.push(
+              { cargo: 'Prefeito Municipal', mandato: '2013 - 2016', tipo: '1º Mandato (Eleito em 2012)' },
+              { cargo: 'Prefeito Municipal', mandato: '2017 - 2020', tipo: '2º Mandato (Reeleito em 2016)' }
+            );
+          } else if (pessoa.nome_canonic.includes('MARCILIO')) {
+            mandatosHistorico.push(
+              { cargo: 'Vereador Municipal', mandato: '2017 - 2020', tipo: 'Legislatura da Câmara (Eleito em 2016)' },
+              { cargo: 'Prefeito Municipal', mandato: '2021 - 2024', tipo: '1º Mandato Executivo (Eleito em 2020)' },
+              { cargo: 'Prefeito Municipal', mandato: '2025 - 2028', tipo: '2º Mandato Executivo (Reeleito em 2024)' }
+            );
+          }
         }
 
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -2072,7 +2136,9 @@ const server = http.createServer(async (req, res) => {
           historico_diarias: historicoDiarias,
           ultimas_viagens: ultimasViagens,
           empresas_detalhe: dadosEmpresas,
-          materias_camara: materiasCamara
+          historico_eleitoral: historicoEleitoral,
+          materias_camara: materiasCamara,
+          mandatos_historico: mandatosHistorico
         }));
         return;
       }
