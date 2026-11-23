@@ -434,7 +434,24 @@
     return `<div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">${badges.join('')}</div>`;
   };
 
-  // Card estruturado de perfil profissional completo (usado em modais)
+  // Utilitário global para Sanfonas / Accordions colapsáveis
+  window.toggleSanfona = function (id) {
+    const el = document.getElementById(id);
+    const icon = document.getElementById(`${id}-icon`);
+    if (!el) return;
+    const isHidden = el.classList.contains('hidden') || el.style.display === 'none';
+    if (isHidden) {
+      el.classList.remove('hidden');
+      el.style.display = '';
+      if (icon) icon.innerText = '▼';
+    } else {
+      el.classList.add('hidden');
+      el.style.display = 'none';
+      if (icon) icon.innerText = '▶';
+    }
+  };
+
+  // Card estruturado de perfil profissional completo com suporte a sanfona (usado em modais)
   window.gerarPainelPerfilProfissional = function (pessoa, dadosAdicionais) {
     if (!pessoa) return '';
 
@@ -443,15 +460,18 @@
     const entidades = pessoa.entidades || (typeof pessoa.entidades_json === 'string' ? JSON.parse(pessoa.entidades_json) : []);
 
     return `
-      <div class="v2-card-elevate" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 18px; margin-bottom: 16px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+      <div class="v2-card-elevate" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 14px; margin-bottom: 16px;">
+        <div onclick="window.toggleSanfona && window.toggleSanfona('sanfona-perfil-funcional')" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; flex-wrap: wrap; gap: 8px;">
           <h4 style="font-size: 13px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; gap: 8px;">
             <span>💼 Ficha Profissional & Vínculo Funcional</span>
           </h4>
-          ${badgesHtml}
+          <div style="display: flex; align-items: center; gap: 8px;">
+            ${badgesHtml}
+            <span id="sanfona-perfil-funcional-icon" style="font-size: 12px; color: #94a3b8; font-family: monospace;">▼</span>
+          </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 12px;">
+        <div id="sanfona-perfil-funcional" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 12px;">
           <div style="background: rgba(30, 41, 59, 0.5); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05);">
             <span style="font-size: 10px; color: #94a3b8; text-transform: uppercase; font-family: monospace; font-weight: 700;">Lotação & Órgãos de Atuação</span>
             <p style="font-size: 13px; font-weight: 700; color: #ffffff; margin-top: 4px;">

@@ -514,47 +514,89 @@
           </div>
         </div>
 
-        <!-- Atividade Econômica (CNAE) -->
-        <div class="p-4 rounded-xl bg-slate-950/50 border border-slate-800 space-y-1">
-          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Atividade Principal (CNAE)</span>
-          <p id="modal-cnae-descricao" class="text-sm font-medium text-white"></p>
-        </div>
-
-        <!-- Quadro de Sócios e Administradores (QSA) -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <h4 class="text-sm font-bold text-white flex items-center gap-2">
-              <span>👥 Quadro de Sócios e Administradores (QSA)</span>
-              <span id="modal-socios-count" class="px-2 py-0.5 rounded-full text-[10px] bg-indigo-500/20 text-indigo-300 font-mono">0</span>
-            </h4>
-            <span class="text-[11px] text-slate-500">Dados da Receita Federal</span>
+        <!-- Quadro de Sócios e Administradores (QSA) (Sanfona Colapsável) -->
+        <div class="rounded-xl border border-indigo-500/30 overflow-hidden bg-slate-950/40">
+          <div onclick="toggleSanfona('sanfona-emp-socios')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+            <div class="flex items-center space-x-2.5">
+              <span class="text-indigo-400 text-base">👥</span>
+              <div>
+                <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-indigo-300 transition flex items-center gap-2">
+                  <span>Quadro de Sócios e Administradores (QSA)</span>
+                  <span id="modal-socios-count" class="px-2 py-0.5 rounded-full text-[10px] bg-indigo-500/20 text-indigo-300 font-mono">0</span>
+                </h4>
+                <p class="text-[11px] text-slate-400">Sócios mapeados na base da Receita Federal do Brasil</p>
+              </div>
+            </div>
+            <span id="sanfona-emp-socios-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
           </div>
-          <div id="modal-socios-lista" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <!-- Sócios renderizados via JS -->
-          </div>
-        </div>
-
-        <!-- Contratos Registrados -->
-        <div class="space-y-3">
-          <h4 class="text-sm font-bold text-white flex items-center gap-2">
-            <span>📄 Contratos com o Município de Arinos</span>
-            <span id="modal-contratos-count" class="px-2 py-0.5 rounded-full text-[10px] bg-blue-500/20 text-blue-300 font-mono">0</span>
-          </h4>
-          <div id="modal-contratos-lista" class="space-y-2 max-h-48 overflow-y-auto">
-            <!-- Lista de contratos via JS -->
+          <div id="sanfona-emp-socios" class="p-4 border-t border-slate-700/60">
+            <div id="modal-socios-lista" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
           </div>
         </div>
 
-        <!-- Hash Forense e Auditoria -->
-        <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 font-mono text-[11px] space-y-2">
-          <div class="flex items-center justify-between text-slate-400">
-            <span>HASH FORENSE DO REGISTRO (SHA-256)</span>
-            <button onclick="copiarHashEmpresa()" class="text-blue-400 hover:underline">Copiar Hash</button>
+        <!-- Contratos Registrados (Sanfona Colapsável com Agrupamento por Gestão de Mandato) -->
+        <div class="rounded-xl border border-blue-500/30 overflow-hidden bg-slate-950/40">
+          <div onclick="toggleSanfona('sanfona-emp-contratos')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+            <div class="flex items-center space-x-2.5">
+              <span class="text-blue-400 text-base">📄</span>
+              <div>
+                <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-blue-300 transition flex items-center gap-2">
+                  <span>Contratos Públicos com o Município</span>
+                  <span id="modal-contratos-count" class="px-2 py-0.5 rounded-full text-[10px] bg-blue-500/20 text-blue-300 font-mono">0</span>
+                </h4>
+                <p class="text-[11px] text-slate-400">Classificados por Ciclo de Mandato e Gestão Governamental</p>
+              </div>
+            </div>
+            <span id="sanfona-emp-contratos-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
           </div>
-          <div id="modal-hash-forense" class="text-slate-300 break-all bg-slate-900 p-2 rounded border border-slate-800">
-            ----------------------------------------------------------------
+          <div id="sanfona-emp-contratos" class="p-4 border-t border-slate-700/60">
+            <div id="modal-contratos-lista" class="space-y-3 max-h-72 overflow-y-auto pr-1"></div>
           </div>
-          <p class="text-[10px] text-slate-500">Fonte Oficial: Receita Federal do Brasil / MinhaReceita API & Portal da Transparência de Arinos.</p>
+        </div>
+
+        <!-- Atividade Econômica (CNAE) (Sanfona Colapsável) -->
+        <div class="rounded-xl border border-slate-700/60 overflow-hidden bg-slate-950/40">
+          <div onclick="toggleSanfona('sanfona-emp-cnae')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+            <div class="flex items-center space-x-2.5">
+              <span class="text-emerald-400 text-base">🏢</span>
+              <div>
+                <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-emerald-300 transition">
+                  Atividade Econômica Principal (CNAE) & Registro
+                </h4>
+                <p class="text-[11px] text-slate-400">Classificação Nacional de Atividades Econômicas</p>
+              </div>
+            </div>
+            <span id="sanfona-emp-cnae-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+          </div>
+          <div id="sanfona-emp-cnae" class="p-4 border-t border-slate-700/60 space-y-1">
+            <p id="modal-cnae-descricao" class="text-sm font-medium text-white"></p>
+          </div>
+        </div>
+
+        <!-- Hash Forense e Auditoria (Sanfona Colapsável) -->
+        <div class="rounded-xl border border-slate-800 overflow-hidden bg-slate-950/40">
+          <div onclick="toggleSanfona('sanfona-emp-hash')" class="p-3.5 bg-slate-800/60 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+            <div class="flex items-center space-x-2.5">
+              <span class="text-slate-400 text-base">🛡️</span>
+              <div>
+                <h4 class="font-bold text-slate-300 text-xs uppercase tracking-wider font-mono group-hover:text-white transition">
+                  Cadeia de Custódia Forense & Hash SHA-256
+                </h4>
+                <p class="text-[11px] text-slate-500">Integridade criptográfica auditável</p>
+              </div>
+            </div>
+            <span id="sanfona-emp-hash-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+          </div>
+          <div id="sanfona-emp-hash" class="p-4 border-t border-slate-700/60 font-mono text-[11px] space-y-2">
+            <div class="flex items-center justify-between text-slate-400">
+              <span>HASH FORENSE DO REGISTRO (SHA-256)</span>
+              <button onclick="copiarHashEmpresa()" class="text-blue-400 hover:underline">Copiar Hash</button>
+            </div>
+            <div id="modal-hash-forense" class="text-slate-300 break-all bg-slate-900 p-2 rounded border border-slate-800">
+              ----------------------------------------------------------------
+            </div>
+            <p class="text-[10px] text-slate-500">Fonte Oficial: Receita Federal do Brasil / MinhaReceita API & Portal da Transparência de Arinos.</p>
+          </div>
         </div>
 
       </div>
@@ -726,7 +768,7 @@
         const socios = emp.socios || [];
 
         return `
-          <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-slate-800 hover:border-blue-500/40 relative">
+          <div onclick="abrirDossieEmpresa('${emp.cnpj}')" class="glass-card rounded-2xl p-5 flex flex-col justify-between border-slate-800 hover:border-blue-500/50 cursor-pointer group transition select-none relative">
             
             ${temAlerta ? `
               <div class="absolute -top-2.5 right-4 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-slate-950 shadow-md flex items-center gap-1">
@@ -745,7 +787,7 @@
                 </span>
               </div>
 
-              <h3 class="text-base font-bold text-white line-clamp-1 hover:text-blue-400 transition" title="${emp.razao_social}">
+              <h3 class="text-base font-bold text-white line-clamp-1 group-hover:text-blue-400 transition" title="${emp.razao_social}">
                 ${emp.razao_social}
               </h3>
               ${emp.nome_fantasia ? `<p class="text-xs text-slate-400 line-clamp-1 italic">${emp.nome_fantasia}</p>` : ''}
@@ -781,11 +823,10 @@
               </div>
             </div>
 
-            <!-- Botão de Ação -->
-            <div class="mt-4 pt-3 border-t border-slate-800/80">
-              <button onclick="abrirDossieEmpresa('${emp.cnpj}')" class="w-full py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white text-xs font-semibold border border-blue-500/30 transition flex items-center justify-center gap-1.5">
-                <span>🔍 Ver Dossiê & Contratos</span>
-              </button>
+            <!-- Rodapé do Card (Clique no card para abrir) -->
+            <div class="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500 group-hover:text-blue-300 font-mono transition">
+              <span>Ver dossiê & contratos</span>
+              <span class="group-hover:translate-x-1 transition text-slate-400 group-hover:text-blue-400 font-bold">›</span>
             </div>
 
           </div>
@@ -802,14 +843,14 @@
         const sociosAlerta = (emp.socios || []).filter(s => s.vinculo_politico_alerta);
 
         return `
-          <div class="glass-card rounded-2xl p-5 border-amber-500/30 bg-gradient-to-r from-amber-950/20 to-slate-900/60 space-y-4">
+          <div onclick="abrirDossieEmpresa('${emp.cnpj}')" class="glass-card rounded-2xl p-5 border-amber-500/30 bg-gradient-to-r from-amber-950/20 to-slate-900/60 space-y-4 cursor-pointer hover:border-amber-400/80 group transition select-none">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
               <div>
                 <div class="flex items-center gap-2">
                   <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-slate-950">ALERTA #${i+1}</span>
                   <span class="text-xs font-mono text-slate-400">${formatCNPJ(emp.cnpj)}</span>
                 </div>
-                <h3 class="text-lg font-extrabold text-white mt-1">${emp.razao_social}</h3>
+                <h3 class="text-lg font-extrabold text-white mt-1 group-hover:text-amber-300 transition">${emp.razao_social}</h3>
               </div>
               <div class="text-right">
                 <span class="text-xs text-slate-400 block">Volume Total Auditado</span>
@@ -835,12 +876,13 @@
               </div>
             </div>
 
-            <!-- Rodapé do Card de Alerta -->
-            <div class="flex items-center justify-between pt-2">
+            <!-- Rodapé do Card de Alerta (Sem botão solto) -->
+            <div class="flex items-center justify-between pt-2 text-xs text-slate-400 group-hover:text-amber-300 font-mono transition">
               <span class="text-[11px] text-slate-500">Hash Forense: <span class="font-mono">${(emp.hash_forense || '').slice(0, 16)}...</span></span>
-              <button onclick="abrirDossieEmpresa('${emp.cnpj}')" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">
-                Examinar Detalhes
-              </button>
+              <div class="flex items-center gap-1 text-amber-400 font-bold">
+                <span>Examinar detalhes & contratos</span>
+                <span class="group-hover:translate-x-1 transition">›</span>
+              </div>
             </div>
           </div>
         `;
@@ -1003,24 +1045,49 @@
           `).join('');
         }
 
-        // Lista de Contratos
+        // Lista de Contratos agrupados por Ciclo de Mandato
         document.getElementById('modal-contratos-count').textContent = contratos.length;
         const contratosDiv = document.getElementById('modal-contratos-lista');
         if (contratos.length === 0) {
-          contratosDiv.innerHTML = `<p class="text-slate-500 italic p-2">Nenhum contrato formalizado com este CNPJ (apenas despesas diretas).</p>`;
+          contratosDiv.innerHTML = `<p class="text-slate-500 italic p-3 bg-slate-950/40 rounded-xl border border-slate-800">Nenhum contrato formalizado com este CNPJ (apenas despesas diretas catalogadas no banco).</p>`;
         } else {
-          contratosDiv.innerHTML = contratos.map(c => `
-            <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <div class="space-y-0.5">
-                <div class="flex items-center gap-2">
-                  <span class="font-mono font-bold text-white text-xs">Contrato nº ${c.nr_contrato || 'S/N'}</span>
-                  <span class="text-[10px] text-slate-400">${c.tipo_contrato || 'Contrato'}</span>
+          // Agrupar contratos por Ciclo de Mandato Político
+          const gruposGestao = {};
+          contratos.forEach(c => {
+            const g = c.gestao_mandato || 'Período Não Identificado';
+            if (!gruposGestao[g]) gruposGestao[g] = [];
+            gruposGestao[g].push(c);
+          });
+
+          contratosDiv.innerHTML = Object.entries(gruposGestao).map(([gestao, lista], gIdx) => `
+            <div class="space-y-1.5 mb-2 bg-slate-950/60 rounded-xl border border-slate-800/80 overflow-hidden">
+              <div onclick="toggleSanfona('sanfona-contratos-gestao-${gIdx}')" class="flex items-center justify-between text-xs font-mono font-bold text-blue-300 bg-slate-900/90 px-3 py-2 cursor-pointer hover:bg-slate-800/80 select-none group transition">
+                <div class="flex items-center space-x-2">
+                  <span>🏛️ ${gestao}</span>
+                  <span class="text-[10px] text-slate-400 font-normal">(${lista.length} contrato${lista.length > 1 ? 's' : ''})</span>
                 </div>
-                <p class="text-[11px] text-slate-300 line-clamp-2" title="${c.objeto}">${c.objeto}</p>
+                <div class="flex items-center space-x-2 text-right">
+                  <span class="text-emerald-400">${formatMoney(lista.reduce((acc, x) => acc + (x.valor || 0), 0))}</span>
+                  <span id="sanfona-contratos-gestao-${gIdx}-icon" class="text-xs text-slate-500 group-hover:text-white transition">▼</span>
+                </div>
               </div>
-              <div class="text-right whitespace-nowrap">
-                <span class="text-xs font-extrabold text-blue-400 font-mono block">${formatMoney(c.valor)}</span>
-                <span class="text-[10px] text-slate-500 font-mono">${c.dt_ini_vigencia || ''} a ${c.dt_fim_vigencia || ''}</span>
+              <div id="sanfona-contratos-gestao-${gIdx}" class="p-2 space-y-1.5 border-t border-slate-800/60">
+                ${lista.map(c => `
+                  <div class="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:border-slate-700 transition">
+                    <div class="space-y-0.5 min-w-0 flex-1">
+                      <div class="flex items-center gap-2">
+                        <span class="font-mono font-bold text-white text-xs">Contrato nº ${c.nr_contrato || 'S/N'}</span>
+                        <span class="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 border border-slate-700">${c.tipo_contrato || 'Contrato'}</span>
+                        ${c.ano ? `<span class="text-[10px] font-mono text-slate-400">${c.ano}</span>` : ''}
+                      </div>
+                      <p class="text-[11px] text-slate-300 truncate" title="${c.objeto || ''}">${c.objeto || 'Sem objeto especificado'}</p>
+                    </div>
+                    <div class="text-right whitespace-nowrap">
+                      <span class="text-xs font-extrabold text-blue-400 font-mono block">${formatMoney(c.valor)}</span>
+                      <span class="text-[10px] text-slate-500 font-mono">${c.dt_ini_vigencia || ''} a ${c.dt_fim_vigencia || ''}</span>
+                    </div>
+                  </div>
+                `).join('')}
               </div>
             </div>
           `).join('');
@@ -1032,6 +1099,26 @@
         modal.classList.add('flex');
       } catch (err) {
         console.error('Erro ao abrir dossiê:', err);
+      }
+    }
+
+    function toggleSanfona(id) {
+      if (window.toggleSanfona && window.toggleSanfona !== toggleSanfona) {
+        window.toggleSanfona(id);
+        return;
+      }
+      const el = document.getElementById(id);
+      const icon = document.getElementById(`${id}-icon`);
+      if (!el) return;
+      const isHidden = el.classList.contains('hidden') || el.style.display === 'none';
+      if (isHidden) {
+        el.classList.remove('hidden');
+        el.style.display = '';
+        if (icon) icon.innerText = '▼';
+      } else {
+        el.classList.add('hidden');
+        el.style.display = 'none';
+        if (icon) icon.innerText = '▶';
       }
     }
 

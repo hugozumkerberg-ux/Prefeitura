@@ -1302,8 +1302,21 @@ const server = http.createServer(async (req, res) => {
           SELECT id, nr_contrato, tipo_contrato, valor, dt_ini_vigencia, dt_fim_vigencia, objeto, dt_assinatura, nr_processo
           FROM contratos
           WHERE doc_credor = ? OR doc_credor = ? OR REPLACE(REPLACE(REPLACE(REPLACE(doc_credor, '.', ''), '/', ''), '-', ''), ' ', '') = ?
-          ORDER BY valor DESC
+          ORDER BY dt_assinatura DESC, valor DESC
         `).all(formatCnpj, rawCnpj, rawCnpj);
+
+        // Enriquecer contratos com ciclo de gestão política e ano
+        contratos.forEach(c => {
+          const dataRef = c.dt_assinatura || c.dt_ini_vigencia || '';
+          const ano = dataRef ? parseInt(dataRef.substring(0, 4), 10) : 0;
+          let gestao = 'Período Não Identificado';
+          if (ano >= 2025) gestao = 'Gestão Marcílio Álisson (2025–2028)';
+          else if (ano >= 2021 && ano <= 2024) gestao = 'Gestão Marcílio Álisson (2021–2024)';
+          else if (ano >= 2017 && ano <= 2020) gestao = 'Gestão Carlos Alberto Recch (2017–2020)';
+          else if (ano >= 2013 && ano <= 2016) gestao = 'Gestão Carlos Alberto Recch (2013–2016)';
+          c.gestao_mandato = gestao;
+          c.ano = ano;
+        });
 
         // Fetch related expenses
         const despesas = db.prepare(`

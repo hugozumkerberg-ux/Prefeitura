@@ -247,6 +247,18 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Barra de Paginação Inferior (Sem botões soltos de 'carregar mais', navegação limpa) -->
+      <div class="flex items-center justify-between p-3.5 bg-slate-900/90 border-t border-slate-800 flex-wrap gap-3 font-mono text-xs">
+        <div class="text-slate-400">
+          Página <strong class="text-white" id="info-pagina-inf">1 / 1</strong> • Total de <strong class="text-emerald-400" id="info-total-inf">0</strong> registros
+        </div>
+        <div class="flex items-center space-x-1.5">
+          <button id="btn-ant-inf" onclick="mudarPagina(-1)" class="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition">◀ Anterior</button>
+          <span class="text-xs text-slate-300 font-mono px-3 py-1.5 bg-slate-950/80 rounded border border-slate-800" id="info-badge-pagina-inf">Pág. 1</span>
+          <button id="btn-prox-inf" onclick="mudarPagina(1)" class="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition">Próxima ▶</button>
+        </div>
+      </div>
     </div>
 
     <!-- Seção de Rankings (Aparece quando a aba Rankings é selecionada) -->
@@ -492,22 +504,38 @@
         const res = await fetch(url);
         const data = await res.json();
 
+        const totalRegistros = abaAtual === 'pessoas' ? (data.paginacao ? data.paginacao.total_filtrado : 0) : (data.total || 0);
         if (abaAtual === 'pessoas') {
           paginaAtual = data.paginacao.page;
           totalPaginas = data.paginacao.total_paginas || 1;
-          document.getElementById('info-total').innerText = Number(data.paginacao.total_filtrado || 0).toLocaleString('pt-BR');
+          document.getElementById('info-total').innerText = Number(totalRegistros).toLocaleString('pt-BR');
           document.getElementById('info-soma').innerText = formatMoeda(data.estatisticas ? data.estatisticas.total_dinheiro_publico : 0);
           document.getElementById('info-pagina').innerText = `${paginaAtual} / ${totalPaginas}`;
         } else {
           paginaAtual = data.page;
           totalPaginas = data.total_paginas || 1;
-          document.getElementById('info-total').innerText = Number(data.total || 0).toLocaleString('pt-BR');
+          document.getElementById('info-total').innerText = Number(totalRegistros).toLocaleString('pt-BR');
           document.getElementById('info-soma').innerText = formatMoeda(data.soma_filtrada);
           document.getElementById('info-pagina').innerText = `${paginaAtual} / ${totalPaginas}`;
         }
 
-        document.getElementById('btn-ant').disabled = (paginaAtual <= 1);
-        document.getElementById('btn-prox').disabled = (paginaAtual >= totalPaginas);
+        // Sincronizar paginação inferior
+        const infoTotalInf = document.getElementById('info-total-inf');
+        if (infoTotalInf) infoTotalInf.innerText = Number(totalRegistros).toLocaleString('pt-BR');
+        const infoPaginaInf = document.getElementById('info-pagina-inf');
+        if (infoPaginaInf) infoPaginaInf.innerText = `${paginaAtual} / ${totalPaginas}`;
+        const infoBadgeInf = document.getElementById('info-badge-pagina-inf');
+        if (infoBadgeInf) infoBadgeInf.innerText = `Pág. ${paginaAtual}`;
+
+        const btnAnt = document.getElementById('btn-ant');
+        if (btnAnt) btnAnt.disabled = (paginaAtual <= 1);
+        const btnAntInf = document.getElementById('btn-ant-inf');
+        if (btnAntInf) btnAntInf.disabled = (paginaAtual <= 1);
+
+        const btnProx = document.getElementById('btn-prox');
+        if (btnProx) btnProx.disabled = (paginaAtual >= totalPaginas);
+        const btnProxInf = document.getElementById('btn-prox-inf');
+        if (btnProxInf) btnProxInf.disabled = (paginaAtual >= totalPaginas);
 
         renderizarCabecalho(abaAtual);
         renderizarCorpo(abaAtual, data.registros || []);
@@ -531,7 +559,6 @@
             <th class="py-3 px-4 text-right">Salários Acumulados</th>
             <th class="py-3 px-4 text-right">Diárias de Viagem</th>
             <th class="py-3 px-4 text-right">TOTAL DINHEIRO PÚBLICO</th>
-            <th class="py-3 px-4 text-center">Ficha 360°</th>
           </tr>
         `;
       } else if (aba === 'contracheques') {
@@ -543,7 +570,6 @@
             <th class="py-3 px-4">Cargo / Função</th>
             <th class="py-3 px-4">Vínculo</th>
             <th class="py-3 px-4 text-right">Total Proventos</th>
-            <th class="py-3 px-4 text-center">Oficial</th>
           </tr>
         `;
       } else if (aba === 'despesas') {
@@ -605,7 +631,7 @@
     function renderizarCorpo(aba, registros) {
       const tbody = document.getElementById('tabela-corpo');
       if (registros.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="py-12 text-center text-slate-500 font-medium">Nenhum registro encontrado para os filtros selecionados.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="py-12 text-center text-slate-500 font-medium">Nenhum registro encontrado para os filtros selecionados.</td></tr>`;
         return;
       }
 
@@ -621,7 +647,7 @@
 
           const matCount = r.qtd_matriculas || 1;
           const badgeMat = matCount > 1 
-            ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-900/40 text-blue-300 border border-blue-700">${matCount} Matrículas Unificadas</span>`
+            ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-900/40 text-blue-300 border border-blue-700">${matCount} Matrículas</span>`
             : `<span class="text-xs text-slate-400 font-mono">${(r.matriculas && r.matriculas[0]) ? r.matriculas[0] : '-'}</span>`;
 
           const avatarHtml = r.foto_url 
@@ -634,12 +660,12 @@
             : `<div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-base flex-shrink-0">${icone}</div>`;
 
           html += `
-            <tr class="hover:bg-slate-800/40 transition">
+            <tr onclick="abrirModalPessoa(${r.id})" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para abrir a Ficha 360° de ${r.nome_exibicao}">
               <td class="py-3 px-4">
                 <div class="flex items-center space-x-3">
                   ${avatarHtml}
                   <div class="min-w-0">
-                    <div class="font-bold text-white flex items-center space-x-1.5 flex-wrap">
+                    <div class="font-bold text-white group-hover:text-emerald-300 transition flex items-center space-x-1.5 flex-wrap">
                       <span>${r.nome_exibicao}</span>
                       ${r.foto_id ? `<span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/60" title="Foto Auditada SHA-256">ID #${r.foto_id}</span>` : ''}
                     </div>
@@ -650,7 +676,7 @@
               <td class="py-3 px-4">
                 <span class="px-2 py-0.5 rounded-full text-xs font-medium border ${badgeTipo}">${r.perfil_tipo}</span>
                 <div class="mt-1">${window.gerarBadgesProfissionais ? window.gerarBadgesProfissionais(r) : ''}</div>
-                ${r.is_socio_empresa ? `<div class="text-[10px] text-amber-400 font-medium mt-1">⚠️ Sócio Empresa Fornecedora</div>` : ''}
+                ${r.is_socio_empresa ? `<div class="text-[10px] text-amber-400 font-medium mt-1">⚠️ Sócio Fornecedor</div>` : ''}
               </td>
               <td class="py-3 px-4">${badgeMat}</td>
               <td class="py-3 px-4 text-xs text-slate-300 max-w-xs truncate" title="${r.cargos_resumo || ''}">${r.cargos_resumo || '-'}</td>
@@ -663,12 +689,10 @@
                 <div class="text-[10px] text-slate-500">${r.qtd_diarias || 0} viagens</div>
               </td>
               <td class="py-3 px-4 text-right font-mono font-bold text-sm text-emerald-400 bg-emerald-950/20 rounded">
-                ${formatMoeda(r.total_dinheiro_publico)}
-              </td>
-              <td class="py-3 px-4 text-center">
-                <button onclick="abrirModalPessoa(${r.id})" class="px-2.5 py-1 text-xs font-semibold bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white rounded-lg border border-emerald-500/40 transition">
-                  🔍 Ficha 360°
-                </button>
+                <div class="flex items-center justify-end space-x-2">
+                  <span>${formatMoeda(r.total_dinheiro_publico)}</span>
+                  <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
+                </div>
               </td>
             </tr>
           `;
@@ -679,17 +703,25 @@
             ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-cyan-900/40 text-cyan-300 border border-cyan-800">Saúde</span>'
             : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-900/40 text-emerald-300 border border-emerald-800">Prefeitura</span>';
 
-          const linkOficial = `
-            <div class="flex items-center justify-center space-x-1.5">
-              <button onclick="abrirPopupContrachequeDetalhe(${r.id})" class="text-xs px-2.5 py-1 bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white rounded-lg border border-emerald-500/40 transition">
-                📄 Detalhar
-              </button>
-              ${r.url_detalhe ? `<a href="http://www.adpmnet.com.br${r.url_detalhe.startsWith('/') ? '' : '/'}${r.url_detalhe}" target="_blank" class="text-xs px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-emerald-400 rounded transition" title="Link Oficial ADPM">↗</a>` : ''}
-            </div>
-          `;
-
           html += `
-            <tr class="hover:bg-slate-800/40 transition">
+            <tr onclick="abrirPopupContrachequeDetalhe(${r.id})" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para ver o contracheque detalhado">
+              <td class="py-3 px-4 font-mono text-xs text-slate-400">${r.ano}/${String(r.mes).padStart(2, '0')}</td>
+              <td class="py-3 px-4">${badgeEnt}</td>
+              <td class="py-3 px-4 font-medium text-white group-hover:text-emerald-300 transition">
+                <div>${r.nome}</div>
+                <div class="text-xs text-slate-500 font-mono">Matr: ${r.matricula || '-'}</div>
+              </td>
+              <td class="py-3 px-4 text-slate-300 text-xs">${r.cargo || '-'}</td>
+              <td class="py-3 px-4 text-slate-400 text-xs">${r.vinculo || '-'}</td>
+              <td class="py-3 px-4 text-right font-mono font-semibold text-emerald-400">
+                <div class="flex items-center justify-end space-x-2">
+                  <span>${formatMoeda(r.total_proventos)}</span>
+                  <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
+                </div>
+              </td>
+            </tr>
+          `;
+        }
               <td class="py-3 px-4 font-mono text-xs text-slate-400">${r.ano}/${String(r.mes).padStart(2, '0')}</td>
               <td class="py-3 px-4">${badgeEnt}</td>
               <td class="py-3 px-4 font-medium text-white">
@@ -883,25 +915,31 @@
           </div>
         `;
 
-        // 1. Linha do Tempo de Períodos Reais e Intervalos (Gaps)
+        // 1. Linha do Tempo de Períodos Reais e Intervalos (Sanfona Colapsável)
         if (data.periodos_timeline && data.periodos_timeline.length > 0) {
           htmlCorpo += `
-            <div class="p-4 bg-slate-800/60 rounded-xl border border-slate-700/80 space-y-3">
-              <div class="flex items-center justify-between flex-wrap gap-2">
-                <div class="flex items-center space-x-2">
+            <div class="rounded-xl border border-slate-700/80 overflow-hidden bg-slate-800/40">
+              <div onclick="toggleSanfona('sanfona-timeline')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
                   <span class="text-emerald-400 text-base">⏱️</span>
-                  <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono">
-                    Linha do Tempo Funcional & Períodos de Exercício
-                  </h4>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-emerald-300 transition">
+                      Linha do Tempo Funcional & Períodos de Exercício
+                    </h4>
+                    <p class="text-[11px] text-slate-400">Auditoria de tempo real de serviço e intervalos (gaps)</p>
+                  </div>
                 </div>
-                <div class="px-2.5 py-0.5 bg-emerald-950/80 border border-emerald-600/50 rounded-lg text-emerald-300 font-mono font-bold text-xs">
-                  ${data.tempo_efetivo} (${data.total_meses_efetivos} meses ativos)
+                <div class="flex items-center space-x-2.5">
+                  <span class="px-2.5 py-0.5 bg-emerald-950/80 border border-emerald-600/50 rounded-lg text-emerald-300 font-mono font-bold text-xs">
+                    ${data.tempo_efetivo} (${data.total_meses_efetivos} meses ativos)
+                  </span>
+                  <span id="sanfona-timeline-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
                 </div>
               </div>
-              <p class="text-[11px] text-slate-400 leading-relaxed">
-                Auditoria pericial de vínculo: intervalos sem recebimento ou exoneração são calculados e destacados separadamente, não sendo somados como tempo de serviço contínuo.
-              </p>
-              <div class="space-y-2 pt-1 border-t border-slate-700/40">
+              <div id="sanfona-timeline" class="p-4 border-t border-slate-700/60 space-y-2">
+                <p class="text-[11px] text-slate-400 leading-relaxed pb-1">
+                  Auditoria pericial de vínculo: intervalos sem recebimento ou exoneração são calculados e destacados separadamente, não sendo somados como tempo de serviço contínuo.
+                </p>
                 ${data.periodos_timeline.map(item => {
                   if (item.tipo === 'periodo_ativo') {
                     return `
@@ -930,109 +968,128 @@
           `;
         }
 
-        // 1.1. Histórico na Vida Política, Mandatos e Eleições (TSE e SAPL)
+        // 1.1. Histórico na Vida Política, Mandatos e Eleições TSE (Sanfona Colapsável)
         if ((data.mandatos_historico && data.mandatos_historico.length > 0) || (data.historico_eleitoral && data.historico_eleitoral.length > 0) || (data.materias_camara && data.materias_camara.length > 0)) {
           htmlCorpo += `
-            <div class="p-4 bg-slate-900/90 border border-blue-500/40 rounded-xl space-y-3">
-              <div class="flex items-center justify-between flex-wrap gap-2">
-                <div class="flex items-center space-x-2">
+            <div class="rounded-xl border border-blue-500/40 overflow-hidden bg-slate-900/60">
+              <div onclick="toggleSanfona('sanfona-politica')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
                   <span class="text-blue-400 text-base">🗳️</span>
-                  <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono">
-                    Trajetória na Vida Política, Mandatos & Eleições TSE
-                  </h4>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-blue-300 transition">
+                      Trajetória na Vida Política, Mandatos & Eleições TSE
+                    </h4>
+                    <p class="text-[11px] text-slate-400">Disputas eleitorais, votos, bens declarados e atuação legislativa (SAPL)</p>
+                  </div>
                 </div>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono">
-                  Registro Oficial TSE / SAPL
-                </span>
+                <div class="flex items-center space-x-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono">
+                    ${(data.historico_eleitoral || []).length} Disputas TSE
+                  </span>
+                  <span id="sanfona-politica-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+                </div>
               </div>
 
-              ${data.mandatos_historico && data.mandatos_historico.length > 0 ? `
-                <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/60 space-y-2">
-                  <span class="text-[11px] font-bold text-blue-300 uppercase font-mono">🏛️ Mandatos Exercidos no Município</span>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    ${data.mandatos_historico.map(m => `
-                      <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex items-center justify-between text-xs">
-                        <div>
-                          <strong class="text-white">${m.cargo}</strong>
-                          <p class="text-[11px] text-slate-400 font-mono">${m.tipo}</p>
+              <div id="sanfona-politica" class="p-4 border-t border-slate-800 space-y-3">
+                ${data.mandatos_historico && data.mandatos_historico.length > 0 ? `
+                  <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/60 space-y-2">
+                    <span class="text-[11px] font-bold text-blue-300 uppercase font-mono">🏛️ Mandatos Exercidos no Município</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      ${data.mandatos_historico.map(m => `
+                        <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex items-center justify-between text-xs">
+                          <div>
+                            <strong class="text-white">${m.cargo}</strong>
+                            <p class="text-[11px] text-slate-400 font-mono">${m.tipo}</p>
+                          </div>
+                          <span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 font-mono font-bold text-[11px] border border-blue-800">${m.mandato}</span>
                         </div>
-                        <span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 font-mono font-bold text-[11px] border border-blue-800">${m.mandato}</span>
-                      </div>
-                    `).join('')}
+                      `).join('')}
+                    </div>
                   </div>
-                </div>
-              ` : ''}
+                ` : ''}
 
-              ${data.historico_eleitoral && data.historico_eleitoral.length > 0 ? `
-                <div class="space-y-1.5 pt-1">
-                  <span class="text-[11px] font-bold text-slate-300 uppercase font-mono">Disputas Eleitorais Registradas no TSE</span>
-                  <div class="overflow-x-auto rounded-lg border border-slate-800">
-                    <table class="w-full text-left text-xs text-slate-300">
-                      <thead class="bg-slate-800/80 text-slate-400 font-mono uppercase text-[10px]">
-                        <tr>
-                          <th class="py-2 px-3">Ano</th>
-                          <th class="py-2 px-3">Cargo Disputado</th>
-                          <th class="py-2 px-3">Nome Urna</th>
-                          <th class="py-2 px-3">Partido</th>
-                          <th class="py-2 px-3">Resultado</th>
-                          <th class="py-2 px-3 text-right">Votos</th>
-                          <th class="py-2 px-3 text-right">Bens Declarados</th>
-                        </tr>
-                      </thead>
-                      <tbody class="divide-y divide-slate-800 font-mono">
-                        ${data.historico_eleitoral.map(ele => {
-                          const isEleito = (ele.resultado || '').toLowerCase().includes('eleito');
-                          const resClass = isEleito ? 'text-emerald-400 font-bold' : 'text-slate-400';
-                          return `
-                            <tr class="hover:bg-slate-800/40">
-                              <td class="py-2 px-3 font-bold text-white">${ele.ano}</td>
-                              <td class="py-2 px-3 text-slate-200">${ele.cargo}</td>
-                              <td class="py-2 px-3 text-amber-300 font-semibold font-sans">"${ele.nome_urna}"</td>
-                              <td class="py-2 px-3"><span class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-blue-300 text-[10px]">${ele.partido_sigla}</span></td>
-                              <td class="py-2 px-3 ${resClass}">${ele.resultado}</td>
-                              <td class="py-2 px-3 text-right">${Number(ele.votos || 0).toLocaleString('pt-BR')}</td>
-                              <td class="py-2 px-3 text-right text-emerald-400 font-bold">${formatMoeda(ele.total_bens)}</td>
-                            </tr>
-                          `;
-                        }).join('')}
-                      </tbody>
-                    </table>
+                ${data.historico_eleitoral && data.historico_eleitoral.length > 0 ? `
+                  <div class="space-y-1.5 pt-1">
+                    <span class="text-[11px] font-bold text-slate-300 uppercase font-mono">Disputas Eleitorais Registradas no TSE</span>
+                    <div class="overflow-x-auto rounded-lg border border-slate-800">
+                      <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-800/80 text-slate-400 font-mono uppercase text-[10px]">
+                          <tr>
+                            <th class="py-2 px-3">Ano</th>
+                            <th class="py-2 px-3">Cargo Disputado</th>
+                            <th class="py-2 px-3">Nome Urna</th>
+                            <th class="py-2 px-3">Partido</th>
+                            <th class="py-2 px-3">Resultado</th>
+                            <th class="py-2 px-3 text-right">Votos</th>
+                            <th class="py-2 px-3 text-right">Bens Declarados</th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 font-mono">
+                          ${data.historico_eleitoral.map(ele => {
+                            const isEleito = (ele.resultado || '').toLowerCase().includes('eleito');
+                            const resClass = isEleito ? 'text-emerald-400 font-bold' : 'text-slate-400';
+                            return `
+                              <tr class="hover:bg-slate-800/40">
+                                <td class="py-2 px-3 font-bold text-white">${ele.ano}</td>
+                                <td class="py-2 px-3 text-slate-200">${ele.cargo}</td>
+                                <td class="py-2 px-3 text-amber-300 font-semibold font-sans">"${ele.nome_urna}"</td>
+                                <td class="py-2 px-3"><span class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-blue-300 text-[10px]">${ele.partido_sigla}</span></td>
+                                <td class="py-2 px-3 ${resClass}">${ele.resultado}</td>
+                                <td class="py-2 px-3 text-right">${Number(ele.votos || 0).toLocaleString('pt-BR')}</td>
+                                <td class="py-2 px-3 text-right text-emerald-400 font-bold">${formatMoeda(ele.total_bens)}</td>
+                              </tr>
+                            `;
+                          }).join('')}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
-              ` : ''}
+                ` : ''}
 
-              ${data.materias_camara && data.materias_camara.length > 0 ? `
-                <div class="pt-2 border-t border-slate-800/80">
-                  <span class="text-[11px] font-bold text-purple-300 uppercase font-mono">⚖️ Atuação no Legislativo Municipal (Câmara / SAPL)</span>
-                  <div class="mt-1.5 space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                    ${data.materias_camara.map(mat => `
-                      <div class="p-2 bg-slate-900/60 rounded border border-slate-800/80 text-xs">
-                        <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">
-                          <span class="text-purple-300 font-bold">${mat.tipo} Nº ${mat.numero}/${mat.ano}</span>
-                          <span>${mat.data_apresentacao || ''}</span>
+                ${data.materias_camara && data.materias_camara.length > 0 ? `
+                  <div class="pt-2 border-t border-slate-800/80">
+                    <span class="text-[11px] font-bold text-purple-300 uppercase font-mono">⚖️ Atuação no Legislativo Municipal (Câmara / SAPL)</span>
+                    <div class="mt-1.5 space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                      ${data.materias_camara.map(mat => `
+                        <div class="p-2 bg-slate-900/60 rounded border border-slate-800/80 text-xs">
+                          <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                            <span class="text-purple-300 font-bold">${mat.tipo} Nº ${mat.numero}/${mat.ano}</span>
+                            <span>${mat.data_apresentacao || ''}</span>
+                          </div>
+                          <p class="text-slate-300 mt-0.5 line-clamp-2">${mat.ementa}</p>
                         </div>
-                        <p class="text-slate-300 mt-0.5 line-clamp-2">${mat.ementa}</p>
-                      </div>
-                    `).join('')}
+                      `).join('')}
+                    </div>
                   </div>
-                </div>
-              ` : ''}
+                ` : ''}
+              </div>
             </div>
           `;
         }
 
-        // 2. Se sócio de empresa, exibir painel de fornecedor e contratos nos mandatos
+        // 2. Empresas Vinculadas & Contratos no Período do Mandato (Sanfona Colapsável)
         if (p.is_socio_empresa && data.empresas_detalhe && data.empresas_detalhe.length > 0) {
           htmlCorpo += `
-            <div class="p-4 bg-amber-950/30 border border-amber-600/40 rounded-xl space-y-3">
-              <div class="flex items-center justify-between flex-wrap gap-2">
-                <div class="flex items-center space-x-2 text-amber-400 font-bold text-sm">
-                  <span>⚠️ Empresas Vinculadas & Contratos no Período do Mandato</span>
+            <div class="rounded-xl border border-amber-600/40 overflow-hidden bg-amber-950/20">
+              <div onclick="toggleSanfona('sanfona-empresas')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-amber-400 text-base">⚠️</span>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-amber-300 transition">
+                      Empresas Vinculadas & Contratos no Período do Mandato
+                    </h4>
+                    <p class="text-[11px] text-slate-400">Cruzamento de sócios com contratos e empenhos da prefeitura</p>
+                  </div>
                 </div>
-                <span class="text-[10px] text-amber-300/80 font-mono">Cruzamento CNPJ x Mandatos</span>
+                <div class="flex items-center space-x-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">
+                    ${data.empresas_detalhe.length} Empresas
+                  </span>
+                  <span id="sanfona-empresas-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+                </div>
               </div>
 
-              <div class="space-y-3">
+              <div id="sanfona-empresas" class="p-4 border-t border-amber-800/40 space-y-3">
                 ${data.empresas_detalhe.map(emp => `
                   <div class="p-3 bg-slate-900/90 border border-slate-800 rounded-lg space-y-2">
                     <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
@@ -1077,33 +1134,32 @@
           `;
         }
 
-        // 3. Folha de Pagamento do Último Ano Ativo (Destaque Principal com todos os meses)
+        // 3. Folha de Pagamento do Último Ano Ativo (Sanfona Colapsável, lista limpa clicável sem botão solto)
         if (data.folha_ultimo_ano && data.folha_ultimo_ano.meses && data.folha_ultimo_ano.meses.length > 0) {
           const anoAtivo = data.folha_ultimo_ano;
           htmlCorpo += `
-            <div class="p-4 bg-slate-800/60 rounded-xl border border-emerald-500/40 space-y-3">
-              <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-slate-700/60">
-                <div>
-                  <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono flex items-center space-x-2">
-                    <span class="text-emerald-400">💼</span>
-                    <span>Folha de Pagamento do Último Ano (${anoAtivo.ano})</span>
-                  </h4>
-                  <p class="text-[11px] text-slate-400 mt-0.5">${anoAtivo.cargos || 'Servidor Municipal'}</p>
+            <div class="rounded-xl border border-emerald-500/40 overflow-hidden bg-slate-800/40">
+              <div onclick="toggleSanfona('sanfona-folha-atual')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-emerald-400 text-base">💼</span>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-emerald-300 transition">
+                      Folha de Pagamento do Último Ano (${anoAtivo.ano})
+                    </h4>
+                    <p class="text-[11px] text-slate-400">${anoAtivo.cargos || 'Servidor Municipal'}</p>
+                  </div>
                 </div>
-                <div class="flex items-center space-x-4 font-mono text-xs">
-                  <div>
-                    <span class="text-[10px] text-slate-400 block uppercase">Total Bruto</span>
-                    <strong class="text-emerald-400 font-bold">${formatMoeda(anoAtivo.total_proventos)}</strong>
+                <div class="flex items-center space-x-3 font-mono text-xs">
+                  <div class="text-right">
+                    <span class="text-emerald-400 font-bold block">${formatMoeda(anoAtivo.total_proventos)}</span>
+                    <span class="text-[10px] text-slate-400">${anoAtivo.meses.length} folhas registradas</span>
                   </div>
-                  <div>
-                    <span class="text-[10px] text-slate-400 block uppercase">Folhas</span>
-                    <span class="text-white">${anoAtivo.meses.length} folhas</span>
-                  </div>
+                  <span id="sanfona-folha-atual-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
                 </div>
               </div>
 
-              <!-- Tabela com todos os meses do último ano -->
-              <div class="overflow-x-auto rounded-lg border border-slate-700/60">
+              <!-- Tabela com todos os meses do último ano (Clique na linha para ver mais) -->
+              <div id="sanfona-folha-atual" class="p-3 border-t border-slate-700/60 overflow-x-auto">
                 <table class="w-full text-left text-xs text-slate-300">
                   <thead class="bg-slate-800/80 text-slate-400 font-mono uppercase text-[11px]">
                     <tr>
@@ -1112,7 +1168,6 @@
                       <th class="py-2.5 px-3 text-right">Proventos (R$)</th>
                       <th class="py-2.5 px-3 text-right">Descontos</th>
                       <th class="py-2.5 px-3 text-right">Líquido (R$)</th>
-                      <th class="py-2.5 px-3 text-center">Ação</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-800 font-mono">
@@ -1125,8 +1180,8 @@
                       }
 
                       return `
-                        <tr class="hover:bg-slate-800/40 transition">
-                          <td class="py-2.5 px-3 font-bold text-white">${String(m.mes).padStart(2, '0')}/${m.ano}</td>
+                        <tr onclick="abrirPopupContrachequeDetalhe(${m.id})" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para ver o contracheque detalhado">
+                          <td class="py-2.5 px-3 font-bold text-white group-hover:text-emerald-300 transition">${String(m.mes).padStart(2, '0')}/${m.ano}</td>
                           <td class="py-2.5 px-3">
                             <div class="flex items-center space-x-1.5 flex-wrap">
                               ${badgeFolha}
@@ -1135,11 +1190,11 @@
                           </td>
                           <td class="py-2.5 px-3 text-right text-emerald-400 font-bold">${formatMoeda(m.total_proventos)}</td>
                           <td class="py-2.5 px-3 text-right text-rose-400">${m.total_descontos > 0 ? '-' + formatMoeda(m.total_descontos) : '-'}</td>
-                          <td class="py-2.5 px-3 text-right text-white font-bold">${formatMoeda(m.salario_liquido || m.total_proventos)}</td>
-                          <td class="py-2.5 px-3 text-center">
-                            <button onclick="abrirPopupContrachequeDetalhe(${m.id})" class="px-2.5 py-1 text-[11px] font-semibold bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white rounded-lg border border-emerald-500/40 transition">
-                              📄 Contracheque Detalhado
-                            </button>
+                          <td class="py-2.5 px-3 text-right text-white font-bold">
+                            <div class="flex items-center justify-end space-x-2">
+                              <span>${formatMoeda(m.salario_liquido || m.total_proventos)}</span>
+                              <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
+                            </div>
                           </td>
                         </tr>
                       `;
@@ -1151,62 +1206,62 @@
           `;
         }
 
-        // 4. Cards dos Outros Anos (Histórico Completo com Meses Expansíveis)
+        // 4. Cards dos Outros Anos (Separados por Anos em Sanfona, sem botões soltos)
         if (data.anos_anteriores && data.anos_anteriores.length > 0) {
           htmlCorpo += `
-            <div class="space-y-3">
-              <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono flex items-center space-x-2">
-                <span>📁 Histórico de Anos Anteriores (Cards Expansíveis)</span>
-              </h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="rounded-xl border border-slate-700/80 overflow-hidden bg-slate-800/30">
+              <div onclick="toggleSanfona('sanfona-anos-anteriores')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-blue-400 text-base">📁</span>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-blue-300 transition">
+                      Histórico de Anos Anteriores (${data.anos_anteriores.length} Anos Catalogados)
+                    </h4>
+                    <p class="text-[11px] text-slate-400">Separação anual com totais acumulados e média mensal</p>
+                  </div>
+                </div>
+                <span id="sanfona-anos-anteriores-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+              </div>
+
+              <div id="sanfona-anos-anteriores" class="p-4 border-t border-slate-700/60 grid grid-cols-1 md:grid-cols-2 gap-3">
                 ${data.anos_anteriores.map((anoItem, aIdx) => `
-                  <div class="p-3.5 bg-slate-800/50 rounded-xl border border-slate-700/70 hover:border-slate-600 transition flex flex-col justify-between">
-                    <div>
-                      <div class="flex items-center justify-between mb-2">
-                        <span class="text-base font-extrabold text-white font-mono">${anoItem.ano}</span>
-                        <span class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-mono">${anoItem.total_folhas} folhas</span>
-                      </div>
-                      <div class="grid grid-cols-2 gap-2 text-xs font-mono py-1 border-t border-slate-700/40">
-                        <div>
-                          <span class="text-[10px] text-slate-500 block uppercase">Total Proventos</span>
-                          <span class="text-emerald-400 font-bold">${formatMoeda(anoItem.total_proventos)}</span>
+                  <div class="bg-slate-800/50 rounded-xl border border-slate-700/70 overflow-hidden flex flex-col justify-between">
+                    <div onclick="toggleAnoMeses(${aIdx})" class="p-3.5 bg-slate-800/80 hover:bg-slate-700/80 cursor-pointer flex items-center justify-between select-none group transition">
+                      <div>
+                        <div class="flex items-center space-x-2">
+                          <span class="text-base font-extrabold text-white font-mono group-hover:text-emerald-300 transition">${anoItem.ano}</span>
+                          <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-mono border border-slate-700">${anoItem.total_folhas} folhas</span>
                         </div>
-                        <div>
-                          <span class="text-[10px] text-slate-500 block uppercase">Média Mensal</span>
-                          <span class="text-slate-300">${formatMoeda(anoItem.media_mensal)}</span>
-                        </div>
+                        <p class="text-[11px] text-slate-400 italic truncate mt-0.5" title="${anoItem.cargos}">${anoItem.cargos || '-'}</p>
                       </div>
-                      <p class="text-[11px] text-slate-400 italic truncate mt-1" title="${anoItem.cargos}">${anoItem.cargos || '-'}</p>
+                      <div class="flex items-center space-x-3 text-right font-mono text-xs">
+                        <div>
+                          <span class="text-emerald-400 font-bold block">${formatMoeda(anoItem.total_proventos)}</span>
+                          <span class="text-[10px] text-slate-400">Média: ${formatMoeda(anoItem.media_mensal)}</span>
+                        </div>
+                        <span id="ano-seta-${aIdx}" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+                      </div>
                     </div>
 
-                    <div class="mt-3 pt-2 border-t border-slate-700/40">
-                      <button onclick="toggleAnoMeses(${aIdx})" class="w-full text-center py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-xs font-medium text-emerald-400 rounded-lg transition border border-slate-700/60 flex items-center justify-center space-x-1.5">
-                        <span>👁️ Ver Meses de ${anoItem.ano}</span>
-                        <span id="ano-seta-${aIdx}">▼</span>
-                      </button>
+                    <div id="ano-detalhes-${aIdx}" class="hidden p-2.5 border-t border-slate-700/80 bg-slate-900/90 space-y-1.5 max-h-60 overflow-y-auto">
+                      ${anoItem.meses.map(m => {
+                        let badgeFolha = '<span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Normal</span>';
+                        if (m.is_13) badgeFolha = '<span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-600/40 font-bold">13º</span>';
+                        else if (m.is_ferias) badgeFolha = '<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/40 font-bold">Férias</span>';
 
-                      <div id="ano-detalhes-${aIdx}" class="hidden mt-3 overflow-x-auto rounded-lg border border-slate-700/80 bg-slate-900/90 p-2 space-y-1.5 max-h-60 overflow-y-auto">
-                        ${anoItem.meses.map(m => {
-                          let badgeFolha = '<span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Normal</span>';
-                          if (m.is_13) badgeFolha = '<span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-600/40 font-bold">13º</span>';
-                          else if (m.is_ferias) badgeFolha = '<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/40 font-bold">Férias</span>';
-
-                          return `
-                            <div class="flex items-center justify-between text-xs py-1.5 px-2 bg-slate-800/40 rounded border border-slate-800 hover:bg-slate-800/80 transition">
-                              <div class="flex items-center space-x-2">
-                                <span class="font-bold text-white font-mono">${String(m.mes).padStart(2, '0')}/${m.ano}</span>
-                                ${badgeFolha}
-                              </div>
-                              <div class="flex items-center space-x-3 font-mono">
-                                <span class="text-emerald-400 font-bold">${formatMoeda(m.total_proventos)}</span>
-                                <button onclick="abrirPopupContrachequeDetalhe(${m.id})" class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white rounded border border-emerald-500/40 transition">
-                                  📄 Detalhar
-                                </button>
-                              </div>
+                        return `
+                          <div onclick="abrirPopupContrachequeDetalhe(${m.id})" class="flex items-center justify-between text-xs py-2 px-2.5 bg-slate-800/40 rounded border border-slate-800 hover:bg-slate-800/80 hover:border-emerald-500/40 cursor-pointer transition select-none group" title="Clique para ver o contracheque">
+                            <div class="flex items-center space-x-2">
+                              <span class="font-bold text-white font-mono group-hover:text-emerald-300 transition">${String(m.mes).padStart(2, '0')}/${m.ano}</span>
+                              ${badgeFolha}
                             </div>
-                          `;
-                        }).join('')}
-                      </div>
+                            <div class="flex items-center space-x-2 font-mono">
+                              <span class="text-emerald-400 font-bold">${formatMoeda(m.total_proventos)}</span>
+                              <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
+                            </div>
+                          </div>
+                        `;
+                      }).join('')}
                     </div>
                   </div>
                 `).join('')}
@@ -1215,23 +1270,47 @@
           `;
         }
 
-        // Se tiver matérias legislativas
-        if (data.materias_camara && data.materias_camara.length > 0) {
+        // 5. Diárias de Viagem & Deslocamentos Oficiais (Sanfona Colapsável)
+        if (p.total_diarias > 0 || (data.ultimas_viagens && data.ultimas_viagens.length > 0)) {
           htmlCorpo += `
-            <div class="space-y-2">
-              <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono flex items-center space-x-2">
-                <span>📜 Matérias Legislativas Apresentadas na Câmara</span>
-              </h4>
-              <div class="space-y-1.5 max-h-48 overflow-y-auto">
-                ${data.materias_camara.map(m => `
-                  <div class="p-2.5 bg-slate-800/50 rounded-lg border border-slate-800 text-xs">
-                    <div class="flex items-center justify-between">
-                      <span class="font-bold text-white">${m.tipo} nº ${m.numero || 'S/N'}/${m.ano}</span>
-                      <span class="text-[10px] text-amber-400 font-mono">${m.situacao || 'Tramitando'}</span>
-                    </div>
-                    <p class="text-slate-400 mt-1 text-[11px]">${m.ementa || 'Sem ementa informada'}</p>
+            <div class="rounded-xl border border-amber-500/30 overflow-hidden bg-slate-800/30">
+              <div onclick="toggleSanfona('sanfona-diarias')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-amber-400 text-base">✈️</span>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-amber-300 transition">
+                      Diárias de Viagem & Deslocamentos Oficiais
+                    </h4>
+                    <p class="text-[11px] text-slate-400">Histórico de viagens pagas com recursos públicos</p>
                   </div>
-                `).join('')}
+                </div>
+                <div class="flex items-center space-x-3 font-mono text-xs">
+                  <span class="text-amber-400 font-bold">${formatMoeda(p.total_diarias)} (${p.qtd_diarias || 0} viagens)</span>
+                  <span id="sanfona-diarias-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+                </div>
+              </div>
+
+              <div id="sanfona-diarias" class="p-4 border-t border-slate-700/60 space-y-2">
+                ${data.ultimas_viagens && data.ultimas_viagens.length > 0 ? `
+                  <div class="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                    ${data.ultimas_viagens.map(v => `
+                      <div class="p-2.5 bg-slate-900/60 rounded border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs">
+                        <div>
+                          <div class="flex items-center space-x-2">
+                            <span class="font-bold text-white font-mono">${v.data_viagem || `${v.ano}/${String(v.mes).padStart(2, '0')}`}</span>
+                            <span class="px-1.5 py-0.2 rounded text-[10px] bg-slate-800 text-amber-300 border border-slate-700">${v.destino || 'Destino Oficial'}</span>
+                          </div>
+                          <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1" title="${v.motivo || ''}">${v.motivo || 'Motivo empenhado no sistema'}</p>
+                        </div>
+                        <div class="text-right whitespace-nowrap">
+                          <span class="font-mono font-bold text-amber-400">${formatMoeda(v.valor)}</span>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : `
+                  <div class="text-xs text-slate-500 italic">Nenhum detalhe adicional de viagem registrado no período.</div>
+                `}
               </div>
             </div>
           `;
@@ -1245,6 +1324,22 @@
 
     function fecharModalPessoa() {
       document.getElementById('modal-pessoa').classList.add('hidden');
+    }
+
+    function toggleSanfona(id) {
+      const el = document.getElementById(id);
+      const icon = document.getElementById(`${id}-icon`);
+      if (!el) return;
+      const isHidden = el.classList.contains('hidden') || el.style.display === 'none';
+      if (isHidden) {
+        el.classList.remove('hidden');
+        el.style.display = '';
+        if (icon) icon.innerText = '▼';
+      } else {
+        el.classList.add('hidden');
+        el.style.display = 'none';
+        if (icon) icon.innerText = '▶';
+      }
     }
 
     function toggleAnoMeses(idx) {

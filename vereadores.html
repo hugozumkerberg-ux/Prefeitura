@@ -462,7 +462,7 @@
         `;
 
         return `
-          <div class="glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div onclick="abrirModalVereador(${v.id})" class="glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4 cursor-pointer hover:border-indigo-500/50 group transition select-none">
             
             <!-- Topo do Card: Foto e Identificação -->
             <div class="flex items-start space-x-4">
@@ -474,7 +474,7 @@
                   ${badgeAtual}
                   ${badgeCargo}
                 </div>
-                <h3 class="text-base font-extrabold text-white truncate tracking-tight">${v.nome_parlamentar}</h3>
+                <h3 class="text-base font-extrabold text-white truncate tracking-tight group-hover:text-indigo-300 transition">${v.nome_parlamentar}</h3>
                 <p class="text-xs text-slate-400 truncate" title="${v.nome_completo}">${v.nome_completo}</p>
               </div>
             </div>
@@ -503,14 +503,11 @@
               </div>
             </div>
 
-            <!-- Botão de Ação -->
-            <button 
-              onclick="abrirModalVereador(${v.id})" 
-              class="w-full mt-2 py-2.5 px-4 rounded-xl text-xs font-bold text-center bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 hover:border-indigo-500/50 transition flex items-center justify-center space-x-1.5"
-            >
-              <span>Ver Todas as ${v.total_materias || 0} Proposições</span>
-              <span>→</span>
-            </button>
+            <!-- Rodapé do Card (Sem botão solto, clique no card) -->
+            <div class="mt-2 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500 group-hover:text-indigo-300 font-mono transition">
+              <span>Ver histórico legislativo & proposições</span>
+              <span class="group-hover:translate-x-1 transition text-slate-400 group-hover:text-indigo-400 font-bold">›</span>
+            </div>
 
           </div>
         `;
@@ -546,7 +543,7 @@
       `).join('');
       cargosEl.innerHTML = cargosHtml;
 
-      // Lista de Matérias
+      // Lista de Matérias Agrupadas por Anos (Sanfonas Colapsáveis)
       const listaEl = document.getElementById('modalListaMaterias');
       const mats = v.materias || [];
 
@@ -559,38 +556,71 @@
           </div>
         `;
       } else {
-        listaEl.innerHTML = mats.map((m, idx) => {
-          const anoBadge = m.ano ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">${m.ano}</span>` : '';
-          const tipoBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">${m.tipo}</span>`;
-          const pdfBtn = m.texto_original ? `
-            <a href="${m.texto_original}" target="_blank" class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 transition">
-              <span>📄 Ver PDF Oficial</span>
-              <span>↗</span>
-            </a>
-          ` : '';
+        // Agrupar matérias por ano
+        const porAno = {};
+        mats.forEach(m => {
+          const ano = m.ano || 'Sem Ano Informado';
+          if (!porAno[ano]) porAno[ano] = [];
+          porAno[ano].push(m);
+        });
+
+        const anosOrdenados = Object.keys(porAno).sort((a, b) => {
+          if (a === 'Sem Ano Informado') return 1;
+          if (b === 'Sem Ano Informado') return -1;
+          return Number(b) - Number(a);
+        });
+
+        listaEl.innerHTML = anosOrdenados.map((ano, aIdx) => {
+          const items = porAno[ano];
+          const qtdPL = items.filter(x => (x.tipo || '').toLowerCase().includes('lei')).length;
+          const qtdInd = items.filter(x => (x.tipo || '').toLowerCase().includes('ind') || (x.tipo || '').toLowerCase().includes('req')).length;
 
           return `
-            <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 transition space-y-2">
-              <div class="flex items-center justify-between gap-2 flex-wrap">
-                <div class="flex items-center space-x-2">
-                  <span class="text-xs font-bold text-slate-500 font-mono">#${idx+1}</span>
-                  <h4 class="text-sm font-bold text-white tracking-tight">${m.titulo}</h4>
+            <div class="rounded-xl border border-indigo-500/30 overflow-hidden bg-slate-950/60 mb-3">
+              <div onclick="toggleSanfona('sanfona-ver-ano-${aIdx}')" class="p-3.5 bg-slate-900/90 hover:bg-slate-800/80 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-indigo-400 font-mono text-base font-extrabold">${ano}</span>
+                  <span class="text-xs text-slate-300 font-medium font-mono">(${items.length} proposiç${items.length > 1 ? 'ões' : 'ão'})</span>
                 </div>
-                <div class="flex items-center space-x-2">
-                  ${anoBadge}
-                  ${tipoBadge}
-                  ${pdfBtn}
+                <div class="flex items-center space-x-3 text-xs font-mono">
+                  <span class="text-slate-400">${qtdPL > 0 ? `${qtdPL} PLs` : ''} ${qtdInd > 0 ? `• ${qtdInd} Ind./Req.` : ''}</span>
+                  <span id="sanfona-ver-ano-${aIdx}-icon" class="text-xs text-slate-400 group-hover:text-white transition">▼</span>
                 </div>
               </div>
 
-              <p class="text-xs text-slate-300 leading-relaxed">${m.ementa || 'Sem ementa cadastrada.'}</p>
+              <div id="sanfona-ver-ano-${aIdx}" class="p-3 border-t border-slate-800/80 space-y-2">
+                ${items.map((m, mIdx) => `
+                  <div onclick="toggleSanfona('detalhe-materia-${aIdx}-${mIdx}')" class="p-3 rounded-lg bg-slate-900/70 border border-slate-800 hover:border-indigo-500/40 cursor-pointer transition space-y-1.5 select-none group" title="Clique para expandir ou recolher detalhes">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                      <div class="flex items-center space-x-2 min-w-0 flex-1">
+                        <span class="text-[11px] font-bold text-slate-500 font-mono">#${mIdx+1}</span>
+                        <h4 class="text-xs font-bold text-white group-hover:text-indigo-300 transition truncate">${m.titulo}</h4>
+                      </div>
+                      <div class="flex items-center space-x-2 shrink-0">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">${m.tipo || 'Proposição'}</span>
+                        ${m.texto_original ? `
+                          <a href="${m.texto_original}" target="_blank" onclick="event.stopPropagation()" class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 transition">
+                            PDF ↗
+                          </a>
+                        ` : ''}
+                        <span id="detalhe-materia-${aIdx}-${mIdx}-icon" class="text-xs text-slate-500 font-mono group-hover:text-white transition">▶</span>
+                      </div>
+                    </div>
 
-              ${m.indexacao ? `
-                <div class="text-[11px] text-slate-500 flex items-center space-x-1">
-                  <span>🏷️ Palavras-chave:</span>
-                  <span class="italic text-slate-400">${m.indexacao}</span>
-                </div>
-              ` : ''}
+                    <p class="text-xs text-slate-300 line-clamp-2">${m.ementa || 'Sem ementa cadastrada.'}</p>
+
+                    <div id="detalhe-materia-${aIdx}-${mIdx}" class="hidden pt-2 border-t border-slate-800/80 text-[11px] text-slate-400 space-y-1">
+                      <p class="text-slate-200 leading-relaxed font-sans">${m.ementa || 'Sem ementa cadastrada.'}</p>
+                      ${m.indexacao ? `
+                        <div class="text-[10px] text-slate-500 flex items-center space-x-1 pt-1">
+                          <span>🏷️ Palavras-chave:</span>
+                          <span class="italic text-slate-400">${m.indexacao}</span>
+                        </div>
+                      ` : ''}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
             </div>
           `;
         }).join('');
@@ -605,6 +635,26 @@
       const modal = document.getElementById('modalMaterias');
       modal.classList.add('hidden');
       modal.classList.remove('flex');
+    }
+
+    function toggleSanfona(id) {
+      if (window.toggleSanfona && window.toggleSanfona !== toggleSanfona) {
+        window.toggleSanfona(id);
+        return;
+      }
+      const el = document.getElementById(id);
+      const icon = document.getElementById(`${id}-icon`);
+      if (!el) return;
+      const isHidden = el.classList.contains('hidden') || el.style.display === 'none';
+      if (isHidden) {
+        el.classList.remove('hidden');
+        el.style.display = '';
+        if (icon) icon.innerText = '▼';
+      } else {
+        el.classList.add('hidden');
+        el.style.display = 'none';
+        if (icon) icon.innerText = '▶';
+      }
     }
 
     // Fechar com ESC ou clique fora
