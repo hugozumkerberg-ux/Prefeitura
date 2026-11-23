@@ -13,7 +13,7 @@ const { getMasterDb, getDetalhadoDb } = require('../lib/db');
 const { normalizarTexto, ehBuscaGenericaFuncionarios } = require('../lib/normalizador');
 const { calcularDescontosEstatutarios, formatarMascaraAnoMeses, processarHistoricoEPeriodos } = require('../lib/calculos_folha');
 const { sendJson, sendError, extrairPaginacao } = require('../lib/respostas_http');
-const { listarFuncionarios, listarContracheques } = require('../lib/servico_funcionarios');
+const { listarFuncionarios, listarContracheques, obterRelatorioInconsistencias } = require('../lib/servico_funcionarios');
 
 const PORT = 8088;
 const PORTAL_DIR = path.resolve(__dirname, '..');
@@ -676,6 +676,13 @@ const server = http.createServer(async (req, res) => {
           page: parseInt(parsedUrl.searchParams.get('page') || '1', 10),
           limit: parseInt(parsedUrl.searchParams.get('limit') || '25', 10)
         });
+        sendJson(res, resultado);
+        return;
+      }
+
+      // 3.2. Auditoria DBA de Inconsistências Cadastrais e Higienização de Matrículas
+      if (pathname === '/api/dados/inconsistencias' || pathname === '/api/dados/dba-auditoria') {
+        const resultado = obterRelatorioInconsistencias();
         sendJson(res, resultado);
         return;
       }

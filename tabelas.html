@@ -1006,9 +1006,17 @@
           else if (r.is_socio_empresa) { badgeTipo = 'bg-purple-950/70 text-purple-300 border-purple-800'; icone = '⚠️'; }
 
           const matCount = r.qtd_matriculas || 1;
+          const matPrimeira = (r.matriculas && r.matriculas[0]) ? r.matriculas[0].replace(/^0+/, '').replace('.', '-') : '-';
           const badgeMat = matCount > 1 
-            ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-900/40 text-blue-300 border border-blue-700">${matCount} Matrículas</span>`
-            : `<span class="text-xs text-slate-400 font-mono">${(r.matriculas && r.matriculas[0]) ? r.matriculas[0] : '-'}</span>`;
+            ? `<span class="has-tooltip tooltip-bottom" tabindex="0">
+                 <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-900/40 text-blue-300 border border-blue-700">${matCount} Matrículas</span>
+                 <div class="tooltip-box">
+                   <span class="tooltip-title">Matrículas Unificadas</span>
+                   <span class="tooltip-body">Histórico funcional com múltiplos contratos/vínculos:
+• ${r.matriculas ? r.matriculas.map(m => m.replace(/^0+/, '').replace('.', '-')).join('\n• ') : '-'}</span>
+                 </div>
+               </span>`
+            : `<span class="text-xs text-slate-300 font-mono font-medium">${matPrimeira}</span>`;
 
           const avatarHtml = r.foto_url 
             ? `<div class="relative flex-shrink-0" title="Foto Oficial Auditada (ID #${r.foto_id})">
@@ -1106,7 +1114,10 @@
               <td class="py-3 px-4">${badgeEnt}</td>
               <td class="py-3 px-4 font-medium text-white group-hover:text-emerald-300 transition">
                 <div>${r.nome}</div>
-                <div class="text-xs text-slate-500 font-mono">Matr: ${r.matricula || '-'}</div>
+                <div class="flex items-center space-x-1.5 mt-0.5 font-mono text-xs">
+                  <span class="text-emerald-400 font-semibold" title="Matrícula Higienizada (sem zeros)">Matr: ${r.matricula_limpa || (r.matricula ? r.matricula.replace(/^0+/, '').replace('.', '-') : '-')}</span>
+                  ${r.matricula_original && r.matricula_original !== r.matricula_limpa ? `<span class="text-[10px] text-slate-500" title="Matrícula Original ADPM">(${r.matricula_original})</span>` : ''}
+                </div>
               </td>
               <td class="py-3 px-4 text-slate-300 text-xs">${r.cargo || '-'}</td>
               <td class="py-3 px-4 text-slate-400 text-xs">${r.vinculo || '-'}</td>
