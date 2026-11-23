@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explorador de Dados e Tabelas Públicas — Arinos / MG</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
+    .glass { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.06); }
+    .tab-btn.active { background: #10b981; color: #ffffff; font-weight: 600; border-color: #10b981; }
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+  <link rel="stylesheet" href="/components/side_menu_v2.css">
+  <link rel="stylesheet" href="/components/tooltips.css">
+  <script src="/components/popups.js"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-50 glass border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="text-2xl">🏛️</span>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-lg font-bold tracking-tight text-white">Transparência Arinos / MG</h1>
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Explorador de Dados</span>
+          </div>
+          <p class="text-xs text-slate-400">Auditoria Forense Independente • 202.000 Registros</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-3 text-xs font-mono">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Painel Ativo • Consulta e Acesso a Informações</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- KPIs Rápidos do Banco Master -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div class="glass-card p-3 rounded-xl border-l-4 border-emerald-500">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Contracheques</p>
+          <span class="has-tooltip tooltip-bottom tooltip-align-left" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Folha de Pagamento</span>
+              <span class="tooltip-body">Total de registros de remuneração de servidores públicos.
+• Abrange servidores efetivos, comissionados e contratados.
+• Valores brutos antes das deduções de previdência e IRRF.</span>
+              <span class="tooltip-note">Base auditada: 2013 a 2026 (ADPM)</span>
+            </div>
+          </span>
+        </div>
+        <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-contracheques">153.938</p>
+        <p class="text-[10px] text-emerald-400 font-mono" id="kpi-contracheques-vol">R$ 325,95 Mi</p>
+      </div>
+
+      <div class="glass-card p-3 rounded-xl border-l-4 border-cyan-500">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Despesas</p>
+          <span class="has-tooltip tooltip-bottom tooltip-align-left" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Despesas Empenhadas</span>
+              <span class="tooltip-body">Valores de pagamentos efetuados pelo município.
+• Prestação de serviços, compras, contratos e obras.
+• Classificação por credor, histórico e empenho.</span>
+              <span class="tooltip-note">Fonte: SIAP / ADPM Arinos</span>
+            </div>
+          </span>
+        </div>
+        <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-despesas">6.103</p>
+        <p class="text-[10px] text-cyan-400 font-mono" id="kpi-despesas-vol">R$ 38,82 Mi</p>
+      </div>
+
+      <div class="glass-card p-3 rounded-xl border-l-4 border-amber-500">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Diárias</p>
+          <span class="has-tooltip tooltip-bottom" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Diárias de Viagem</span>
+              <span class="tooltip-body">Indenizações para despesas de servidores fora de Arinos.
+• Alimentação e estada para compromissos públicos.
+• Deslocamentos a Brasília, Belo Horizonte, Unaí e região.</span>
+              <span class="tooltip-note">Verba de natureza indenizatória</span>
+            </div>
+          </span>
+        </div>
+        <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-diarias">29.746</p>
+        <p class="text-[10px] text-amber-400 font-mono" id="kpi-diarias-vol">R$ 7,10 Mi</p>
+      </div>
+
+      <div class="glass-card p-3 rounded-xl border-l-4 border-blue-500">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Contratos</p>
+          <span class="has-tooltip tooltip-bottom" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Contratos & Aditivos</span>
+              <span class="tooltip-body">Instrumentos contratuais firmados pela prefeitura.
+• Licitações públicas, dispensas e inexigibilidades.
+• Registro de fornecimento contínuo e serviços.</span>
+              <span class="tooltip-note">Vigências e aditivos registrados</span>
+            </div>
+          </span>
+        </div>
+        <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-contratos">2.433</p>
+        <p class="text-[10px] text-blue-400 font-mono" id="kpi-contratos-vol">R$ 412,18 Mi</p>
+      </div>
+
+      <div class="glass-card p-3 rounded-xl border-l-4 border-teal-500">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Receitas</p>
+          <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Arrecadação Municipal</span>
+              <span class="tooltip-body">Entrada de receitas nos cofres públicos de Arinos.
+• Repasses constitucionais (FPM, FUNDEB, ICMS).
+• Tributos próprios municipais (IPTU, ISSQN, taxas).</span>
+              <span class="tooltip-note">Fonte: SIAP / Tesouro Municipal</span>
+            </div>
+          </span>
+        </div>
+        <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-receitas">SIAP</p>
+        <p class="text-[10px] text-teal-400 font-mono" id="kpi-receitas-vol">Arrecadação</p>
+      </div>
+
+      <div class="glass-card p-3 rounded-xl border-l-4 border-purple-500">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Volume Auditado</p>
+          <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Consolidação Global</span>
+              <span class="tooltip-body">Volume total de recursos públicos auditados.
+• Mais de 202.000 lançamentos oficiais cruzados.
+• Auditoria forense e rastreabilidade total de dados.</span>
+              <span class="tooltip-calc">Total = Folha + Contratos + Despesas</span>
+            </div>
+          </span>
+        </div>
+        <p class="text-lg md:text-xl font-extrabold text-white mt-0.5" id="kpi-global">R$ 784+ Mi</p>
+        <p class="text-[10px] text-purple-400 font-mono">Consolidado Total</p>
+      </div>
+    </div>
+
+    <!-- Navegação em Abas -->
+    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-2">
+      <div class="flex flex-wrap gap-2">
+        <button onclick="mudarAba('pessoas')" id="tab-pessoas" class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/80 hover:bg-slate-700 transition flex items-center space-x-1.5 text-slate-300">
+          <span>👥 Funcionários & Servidores</span>
+          <span class="text-xs px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono">2.8k</span>
+        </button>
+
+        <button onclick="mudarAba('contracheques')" id="tab-contracheques" class="tab-btn active px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/80 hover:bg-slate-700 transition flex items-center space-x-1.5">
+          <span>📑 Folha & Contracheques</span>
+          <span class="text-xs px-1.5 py-0.5 rounded-full bg-black/30">153k</span>
+        </button>
+
+        <button onclick="mudarAba('despesas')" id="tab-despesas" class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/80 hover:bg-slate-700 transition flex items-center space-x-1.5 text-slate-300">
+          <span>💸 Despesas</span>
+          <span class="text-xs px-1.5 py-0.5 rounded-full bg-black/30">6.1k</span>
+        </button>
+
+        <button onclick="mudarAba('diarias')" id="tab-diarias" class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/80 hover:bg-slate-700 transition flex items-center space-x-1.5 text-slate-300">
+          <span>🚗 Diárias</span>
+          <span class="text-xs px-1.5 py-0.5 rounded-full bg-black/30">29.7k</span>
+        </button>
+
+        <button onclick="mudarAba('contratos')" id="tab-contratos" class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/80 hover:bg-slate-700 transition flex items-center space-x-1.5 text-slate-300">
+          <span>📑 Contratos & Aditivos</span>
+          <span class="text-xs px-1.5 py-0.5 rounded-full bg-blue-500/20 text-blue-400">2.4k</span>
+        </button>
+
+        <button onclick="mudarAba('receitas')" id="tab-receitas" class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/80 hover:bg-slate-700 transition flex items-center space-x-1.5 text-slate-300">
+          <span>💰 Receitas</span>
+          <span class="text-xs px-1.5 py-0.5 rounded-full bg-teal-500/20 text-teal-400">SIAP</span>
+        </button>
+
+        <button onclick="mudarAba('convenios')" id="tab-convenios" class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/80 hover:bg-slate-700 transition flex items-center space-x-1.5 text-slate-300">
+          <span>🤝 Convênios</span>
+          <span class="text-xs px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400">93</span>
+        </button>
+
+        <button onclick="mudarAba('rankings')" id="tab-rankings" class="tab-btn px-3.5 py-2 rounded-lg text-xs md:text-sm font-medium border border-slate-700 bg-slate-800/80 hover:bg-slate-700 transition flex items-center space-x-1.5 text-slate-300">
+          <span>🏆 Rankings</span>
+        </button>
+      </div>
+
+      <!-- Indicador de Status da Consulta -->
+      <div id="loading-indicator" class="hidden items-center space-x-2 text-xs text-emerald-400 font-mono">
+        <span class="animate-spin inline-block w-3 h-3 border-2 border-emerald-400 border-t-transparent rounded-full"></span>
+        <span>Consultando SQLite...</span>
+      </div>
+    </div>
+
+    <!-- Barra de Filtros (Pesquisa, Ano, Entidade, Paginação) -->
+    <div id="filtros-container" class="glass-card p-4 rounded-xl flex flex-wrap items-center justify-between gap-4">
+      <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
+        <!-- Campo de Busca -->
+        <div class="relative flex-1 min-w-[220px]">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">🔍</span>
+          <input type="text" id="input-busca" oninput="aplicarFiltroDebounced()" placeholder="Buscar por nome, cargo, credor, motivo..." class="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <!-- Filtros Padrao (Ano, Mês e Entidade com Máscaras) -->
+        <div id="filtros-padrao" class="flex flex-wrap items-center gap-3">
+          <select id="select-ano" onchange="aplicarFiltros()" class="bg-slate-900 border border-slate-700 rounded-lg text-sm text-slate-300 px-3 py-2 focus:outline-none focus:border-emerald-500">
+            <option value="">Todos os Anos</option>
+            <option value="2026">2026</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            <option value="2021">2021</option>
+            <option value="2020">2020</option>
+            <option value="2019">2019</option>
+            <option value="2018">2018</option>
+            <option value="2017">2017</option>
+            <option value="2016">2016</option>
+            <option value="2015">2015</option>
+            <option value="2014">2014</option>
+            <option value="2013">2013</option>
+          </select>
+
+          <select id="select-mes" onchange="aplicarFiltros()" class="bg-slate-900 border border-slate-700 rounded-lg text-sm text-slate-300 px-3 py-2 focus:outline-none focus:border-emerald-500">
+            <option value="">Todos os Meses</option>
+            <option value="1">01 - Janeiro</option>
+            <option value="2">02 - Fevereiro</option>
+            <option value="3">03 - Março</option>
+            <option value="4">04 - Abril</option>
+            <option value="5">05 - Maio</option>
+            <option value="6">06 - Junho</option>
+            <option value="7">07 - Julho</option>
+            <option value="8">08 - Agosto</option>
+            <option value="9">09 - Setembro</option>
+            <option value="10">10 - Outubro</option>
+            <option value="11">11 - Novembro</option>
+            <option value="12">12 - Dezembro</option>
+          </select>
+
+          <select id="select-entidade" onchange="aplicarFiltros()" class="bg-slate-900 border border-slate-700 rounded-lg text-sm text-slate-300 px-3 py-2 focus:outline-none focus:border-emerald-500">
+            <option value="">Todas as Entidades</option>
+            <option value="Prefeitura">Prefeitura Municipal</option>
+            <option value="Saúde">Fundação de Saúde</option>
+          </select>
+
+          <span class="has-tooltip tooltip-bottom" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Filtros de Competência e Órgão</span>
+              <span class="tooltip-body">Selecione o Ano e Mês para filtrar contracheques ou despesas por competência contábil (MM/AAAA).
+• Prefeitura: Administração Direta.
+• Saúde: Fundação Municipal de Saúde.</span>
+            </div>
+          </span>
+        </div>
+
+        <!-- Filtros Especializados de Pessoas Unificadas -->
+        <div id="filtros-pessoas" class="hidden flex flex-wrap items-center gap-3">
+          <select id="select-tipo-pessoa" onchange="aplicarFiltros()" class="bg-slate-900 border border-slate-700 rounded-lg text-sm text-slate-300 px-3 py-2 focus:outline-none focus:border-emerald-500">
+            <option value="todos">Todos os Perfis (2.865)</option>
+            <option value="prefeitos">👔 Prefeitos Municipais (5)</option>
+            <option value="vereadores">🏛️ Vereadores da Câmara (101)</option>
+            <option value="politicos">🗳️ Políticos & Candidatos (197)</option>
+            <option value="politicos_socios">🚨 Políticos/Secretários Sócios de Fornecedores</option>
+            <option value="multi_matricula">🔗 Múltiplas Matrículas (62)</option>
+            <option value="socios">⚠️ Sócios Fornecedores (190)</option>
+            <option value="servidores">👤 Servidores Públicos</option>
+          </select>
+
+          <select id="select-ordenar-pessoa" onchange="aplicarFiltros()" class="bg-slate-900 border border-slate-700 rounded-lg text-sm text-slate-300 px-3 py-2 focus:outline-none focus:border-emerald-500">
+            <option value="dinheiro">Ordenar: Total Dinheiro Público</option>
+            <option value="salario">Ordenar: Salários Acumulados</option>
+            <option value="diarias">Ordenar: Diárias de Viagem</option>
+            <option value="matriculas">Ordenar: Qtd Matrículas</option>
+            <option value="nome">Ordenar: Nome (A-Z)</option>
+          </select>
+
+          <span class="has-tooltip tooltip-bottom" tabindex="0">
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-box">
+              <span class="tooltip-title">Perfis de Pessoas & Dinheiro Público</span>
+              <span class="tooltip-body">Agrupamento inteligente com cruzamento de fontes:
+• Prefeitos, vereadores e secretários com vínculos.
+• Sócios de empresas contratadas pelo município.
+• Múltiplas matrículas e servidores públicos.</span>
+            </div>
+          </span>
+        </div>
+      </div>
+
+      <!-- Informações do Filtro Atual e Paginação -->
+      <div class="flex items-center space-x-3 text-sm">
+        <div class="text-xs text-slate-400 font-mono text-right hidden sm:block">
+          <div>Encontrados: <strong class="text-white" id="info-total">0</strong></div>
+          <div class="flex items-center justify-end space-x-1">
+            <span>Soma: <strong class="text-emerald-400" id="info-soma">R$ 0,00</strong></span>
+            <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-box">
+                <span class="tooltip-title">Soma dos Registros Filtrados</span>
+                <span class="tooltip-body">Totalizador financeiro da listagem ativa com base nos filtros selecionados.</span>
+              </div>
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-1">
+          <button id="btn-ant" onclick="mudarPagina(-1)" class="px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">◀</button>
+          <span class="text-xs text-slate-400 font-mono px-2" id="info-pagina">1 / 1</span>
+          <button id="btn-prox" onclick="mudarPagina(1)" class="px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela de Dados Dinâmica -->
+    <div id="tabela-container" class="glass-card rounded-xl overflow-hidden border border-slate-800 shadow-2xl">
+      <div class="overflow-x-auto max-h-[640px]">
+        <table class="w-full text-left text-sm text-slate-300">
+          <thead class="text-xs uppercase bg-slate-900/90 text-slate-400 sticky top-0 border-b border-slate-800 backdrop-blur z-10 font-mono" id="tabela-cabecalho">
+            <!-- Injetado dinamicamente via JS -->
+          </thead>
+          <tbody class="divide-y divide-slate-800/60 font-sans" id="tabela-corpo">
+            <tr>
+              <td colspan="7" class="py-12 text-center text-slate-500">Carregando dados do servidor...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Barra de Paginação Inferior (Sem botões soltos de 'carregar mais', navegação limpa) -->
+      <div class="flex items-center justify-between p-3.5 bg-slate-900/90 border-t border-slate-800 flex-wrap gap-3 font-mono text-xs">
+        <div class="text-slate-400">
+          Página <strong class="text-white" id="info-pagina-inf">1 / 1</strong> • Total de <strong class="text-emerald-400" id="info-total-inf">0</strong> registros
+        </div>
+        <div class="flex items-center space-x-1.5">
+          <button id="btn-ant-inf" onclick="mudarPagina(-1)" class="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition">◀ Anterior</button>
+          <span class="text-xs text-slate-300 font-mono px-3 py-1.5 bg-slate-950/80 rounded border border-slate-800" id="info-badge-pagina-inf">Pág. 1</span>
+          <button id="btn-prox-inf" onclick="mudarPagina(1)" class="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition">Próxima ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção de Rankings (Aparece quando a aba Rankings é selecionada) -->
+    <div id="rankings-container" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Top Salários -->
+      <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h2 class="font-bold text-white flex items-center space-x-2">
+            <span>🏆 Top Salários</span>
+          </h2>
+          <span class="text-xs text-emerald-400 font-mono">Bruto</span>
+        </div>
+        <div class="space-y-3" id="ranking-salarios-list">Carregando...</div>
+      </div>
+
+      <!-- Top Credores de Despesas -->
+      <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h2 class="font-bold text-white flex items-center space-x-2">
+            <span>🏢 Top Fornecedores / Credores</span>
+          </h2>
+          <span class="text-xs text-cyan-400 font-mono">Acumulado</span>
+        </div>
+        <div class="space-y-3" id="ranking-credores-list">Carregando...</div>
+      </div>
+
+      <!-- Top Recebedores de Diárias -->
+      <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h2 class="font-bold text-white flex items-center space-x-2">
+            <span>🚗 Top Beneficiários de Diárias</span>
+          </h2>
+          <span class="text-xs text-amber-400 font-mono">Acumulado</span>
+        </div>
+        <div class="space-y-3" id="ranking-diarias-list">Carregando...</div>
+      </div>
+    </div>
+
+    <!-- Modal de Dados 360° da Pessoa Unificada -->
+    <div id="modal-pessoa" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="glass-card bg-slate-900/95 border border-slate-700 w-full max-w-4xl max-h-[92vh] rounded-2xl overflow-hidden flex flex-col shadow-2xl">
+        <!-- Top header modal -->
+        <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-800/50">
+          <div class="flex items-center space-x-3">
+            <div id="modal-avatar-container" class="flex-shrink-0">
+              <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl font-bold border border-emerald-500/30">👤</div>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+                <h3 class="text-lg font-bold text-white" id="modal-nome">Nome da Pessoa</h3>
+                <span id="modal-badge-perfil" class="text-xs px-2.5 py-0.5 rounded-full font-semibold">Perfil</span>
+                <span id="modal-badge-foto" class="hidden text-[10px] px-2 py-0.5 rounded-full font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-600/50">Foto Auditada #ID</span>
+              </div>
+              <p class="text-xs text-slate-400 font-mono mt-0.5" id="modal-subtitulo">Matrículas • Cargos</p>
+            </div>
+          </div>
+          <button onclick="fecharModalPessoa()" class="text-slate-400 hover:text-white text-2xl font-bold px-3 py-1 rounded-lg hover:bg-slate-800 transition">&times;</button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-6 overflow-y-auto space-y-6 flex-1 text-slate-300 text-sm" id="modal-corpo">
+          <div class="py-12 text-center text-slate-500">Carregando dados 360° do cidadão...</div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="p-4 border-t border-slate-800 flex items-center justify-between bg-slate-950/70 text-xs text-slate-400">
+          <span>Auditoria Forense Unificada • Arinos / MG</span>
+          <button onclick="fecharModalPessoa()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg transition">Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Popup de Contracheque Detalhado (Holerite Oficial com Rubricas, INSS e IRRF) -->
+    <div id="modal-contracheque-detalhe" class="fixed inset-0 hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-3 md:p-6" style="z-index: 70;">
+      <div class="glass-card bg-slate-900 border border-slate-700 w-full max-w-3xl max-h-[92vh] rounded-2xl overflow-hidden flex flex-col shadow-2xl">
+        <!-- Header Holerite -->
+        <div class="p-4 md:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-800/80">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold border border-emerald-500/30">
+              📄
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h3 class="text-base font-bold text-white tracking-wide">Contracheque Oficial Detalhado</h3>
+                <span id="holerite-badge-tipo" class="text-[11px] px-2.5 py-0.5 rounded-full font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-600/40">Mensal</span>
+              </div>
+              <p class="text-xs text-slate-400 font-mono mt-0.5" id="holerite-subtitulo">Competência • Órgão</p>
+            </div>
+          </div>
+          <button onclick="fecharPopupContrachequeDetalhe()" class="text-slate-400 hover:text-white text-2xl font-bold px-3 py-1 rounded-lg hover:bg-slate-800 transition">&times;</button>
+        </div>
+
+        <!-- Body Holerite -->
+        <div class="p-4 md:p-6 overflow-y-auto space-y-4 flex-1 text-slate-300 text-sm" id="holerite-corpo">
+          <div class="py-12 text-center text-slate-500">Carregando demonstrativo...</div>
+        </div>
+
+        <!-- Footer Holerite -->
+        <div class="p-3 md:p-4 border-t border-slate-800 flex items-center justify-between bg-slate-950/80 text-xs text-slate-400">
+          <span id="holerite-origem-info">Contraprova Oficial • ADPM / Arinos MG</span>
+          <div class="flex items-center space-x-2">
+            <a id="holerite-link-oficial" href="#" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 font-medium rounded-lg transition border border-slate-700 hidden">
+              Abrir Original na ADPM ↗
+            </a>
+            <button onclick="fecharPopupContrachequeDetalhe()" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition">
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Script Lógico de Conexão com as APIs em Tempo Real -->
+  <script>
+    let abaAtual = 'pessoas';
+    let paginaAtual = 1;
+    let totalPaginas = 1;
+    let debounceTimer = null;
+
+    function formatMoeda(val) {
+      return Number(val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function formatarMascaraAnoMeses(totalMeses) {
+      const m = parseInt(totalMeses, 10) || 0;
+      if (m <= 0) return '0 meses';
+      const anos = Math.floor(m / 12);
+      const mesesRestantes = m % 12;
+      const partes = [];
+      if (anos > 0) partes.push(`${anos} ${anos === 1 ? 'ano' : 'anos'}`);
+      if (mesesRestantes > 0) partes.push(`${mesesRestantes} ${mesesRestantes === 1 ? 'mês' : 'meses'}`);
+      return partes.join(' e ') || '0 meses';
+    }
+
+    async function carregarResumoKpis() {
+      try {
+        const res = await fetch('/api/dados/resumo');
+        if (!res.ok) return;
+        const data = await res.json();
+        
+        if (data.contracheques) {
+          document.getElementById('kpi-contracheques').innerText = Number(data.contracheques.qtd).toLocaleString('pt-BR');
+          document.getElementById('kpi-contracheques-vol').innerText = formatMoeda(data.contracheques.soma);
+        }
+        if (data.despesas) {
+          document.getElementById('kpi-despesas').innerText = Number(data.despesas.qtd).toLocaleString('pt-BR');
+          document.getElementById('kpi-despesas-vol').innerText = formatMoeda(data.despesas.soma);
+        }
+        if (data.diarias) {
+          document.getElementById('kpi-diarias').innerText = Number(data.diarias.qtd).toLocaleString('pt-BR');
+          document.getElementById('kpi-diarias-vol').innerText = formatMoeda(data.diarias.soma);
+        }
+        if (data.contratos) {
+          document.getElementById('kpi-contratos').innerText = Number(data.contratos.qtd).toLocaleString('pt-BR');
+          document.getElementById('kpi-contratos-vol').innerText = formatMoeda(data.contratos.soma);
+        }
+        if (data.receitas) {
+          document.getElementById('kpi-receitas').innerText = Number(data.receitas.qtd).toLocaleString('pt-BR');
+          document.getElementById('kpi-receitas-vol').innerText = formatMoeda(data.receitas.soma);
+        }
+        if (data.global) {
+          document.getElementById('kpi-global').innerText = formatMoeda(data.global.volume_reais);
+        }
+      } catch (e) {
+        console.error('Erro ao carregar KPIs:', e);
+      }
+    }
+
+    function mudarAba(novaAba) {
+      abaAtual = novaAba;
+      paginaAtual = 1;
+
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active', 'text-white');
+        b.classList.add('text-slate-300');
+      });
+
+      const btn = document.getElementById(`tab-${novaAba}`);
+      if (btn) {
+        btn.classList.add('active', 'text-white');
+        btn.classList.remove('text-slate-300');
+      }
+
+      const filtrosContainer = document.getElementById('filtros-container');
+      const tabelaContainer = document.getElementById('tabela-container');
+      const rankingsContainer = document.getElementById('rankings-container');
+      const filtrosPadrao = document.getElementById('filtros-padrao');
+      const filtrosPessoas = document.getElementById('filtros-pessoas');
+
+      const inputBusca = document.getElementById('input-busca');
+      if (inputBusca) {
+        if (novaAba === 'pessoas') {
+          inputBusca.placeholder = 'Buscar funcionários por nome, cargo, matrícula...';
+        } else if (novaAba === 'contracheques') {
+          inputBusca.placeholder = 'Buscar contracheque por servidor, cargo ou matrícula...';
+        } else {
+          inputBusca.placeholder = 'Buscar por nome, cargo, credor, motivo...';
+        }
+      }
+
+      if (novaAba === 'rankings') {
+        filtrosContainer.classList.add('hidden');
+        tabelaContainer.classList.add('hidden');
+        rankingsContainer.classList.remove('hidden');
+        carregarRankings();
+      } else if (novaAba === 'pessoas') {
+        filtrosContainer.classList.remove('hidden');
+        tabelaContainer.classList.remove('hidden');
+        rankingsContainer.classList.add('hidden');
+        if (filtrosPadrao) filtrosPadrao.classList.add('hidden');
+        if (filtrosPessoas) filtrosPessoas.classList.remove('hidden');
+        carregarTabela();
+      } else {
+        filtrosContainer.classList.remove('hidden');
+        tabelaContainer.classList.remove('hidden');
+        rankingsContainer.classList.add('hidden');
+        if (filtrosPadrao) filtrosPadrao.classList.remove('hidden');
+        if (filtrosPessoas) filtrosPessoas.classList.add('hidden');
+        carregarTabela();
+      }
+    }
+
+    function aplicarFiltroDebounced() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        paginaAtual = 1;
+        carregarTabela();
+      }, 300);
+    }
+
+    function aplicarFiltros() {
+      paginaAtual = 1;
+      carregarTabela();
+    }
+
+    function mudarPagina(delta) {
+      const novaPagina = paginaAtual + delta;
+      if (novaPagina >= 1 && novaPagina <= totalPaginas) {
+        paginaAtual = novaPagina;
+        carregarTabela();
+      }
+    }
+
+    async function carregarTabela() {
+      const indicator = document.getElementById('loading-indicator');
+      indicator.classList.remove('hidden');
+      indicator.classList.add('flex');
+
+      const busca = document.getElementById('input-busca').value;
+      let url = '';
+
+      if (abaAtual === 'pessoas') {
+        const tipo = document.getElementById('select-tipo-pessoa') ? document.getElementById('select-tipo-pessoa').value : 'todos';
+        const ordenar = document.getElementById('select-ordenar-pessoa') ? document.getElementById('select-ordenar-pessoa').value : 'dinheiro';
+        url = `/api/dados/pessoas-unificadas?page=${paginaAtual}&limit=25&tipo=${tipo}&ordenar=${ordenar}&busca=${encodeURIComponent(busca)}`;
+      } else {
+        const ano = document.getElementById('select-ano').value;
+        const mes = document.getElementById('select-mes') ? document.getElementById('select-mes').value : '';
+        const entidade = document.getElementById('select-entidade').value;
+        url = `/api/dados/${abaAtual}?page=${paginaAtual}&limit=25&q=${encodeURIComponent(busca)}&ano=${ano}&mes=${mes}&entidade=${encodeURIComponent(entidade)}`;
+      }
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const totalRegistros = abaAtual === 'pessoas' ? (data.paginacao ? data.paginacao.total_filtrado : 0) : (data.total || 0);
+        if (abaAtual === 'pessoas') {
+          paginaAtual = data.paginacao.page;
+          totalPaginas = data.paginacao.total_paginas || 1;
+          document.getElementById('info-total').innerText = Number(totalRegistros).toLocaleString('pt-BR');
+          document.getElementById('info-soma').innerText = formatMoeda(data.estatisticas ? data.estatisticas.total_dinheiro_publico : 0);
+          document.getElementById('info-pagina').innerText = `${paginaAtual} / ${totalPaginas}`;
+        } else {
+          paginaAtual = data.page;
+          totalPaginas = data.total_paginas || 1;
+          document.getElementById('info-total').innerText = Number(totalRegistros).toLocaleString('pt-BR');
+          document.getElementById('info-soma').innerText = formatMoeda(data.soma_filtrada);
+          document.getElementById('info-pagina').innerText = `${paginaAtual} / ${totalPaginas}`;
+        }
+
+        // Sincronizar paginação inferior
+        const infoTotalInf = document.getElementById('info-total-inf');
+        if (infoTotalInf) infoTotalInf.innerText = Number(totalRegistros).toLocaleString('pt-BR');
+        const infoPaginaInf = document.getElementById('info-pagina-inf');
+        if (infoPaginaInf) infoPaginaInf.innerText = `${paginaAtual} / ${totalPaginas}`;
+        const infoBadgeInf = document.getElementById('info-badge-pagina-inf');
+        if (infoBadgeInf) infoBadgeInf.innerText = `Pág. ${paginaAtual}`;
+
+        const btnAnt = document.getElementById('btn-ant');
+        if (btnAnt) btnAnt.disabled = (paginaAtual <= 1);
+        const btnAntInf = document.getElementById('btn-ant-inf');
+        if (btnAntInf) btnAntInf.disabled = (paginaAtual <= 1);
+
+        const btnProx = document.getElementById('btn-prox');
+        if (btnProx) btnProx.disabled = (paginaAtual >= totalPaginas);
+        const btnProxInf = document.getElementById('btn-prox-inf');
+        if (btnProxInf) btnProxInf.disabled = (paginaAtual >= totalPaginas);
+
+        renderizarCabecalho(abaAtual);
+        renderizarCorpo(abaAtual, data.registros || []);
+      } catch (err) {
+        document.getElementById('tabela-corpo').innerHTML = `<tr><td colspan="8" class="py-8 text-center text-red-400">Erro ao consultar base de dados: ${err.message}</td></tr>`;
+      } finally {
+        indicator.classList.add('hidden');
+        indicator.classList.remove('flex');
+      }
+    }
+
+    function renderizarCabecalho(aba) {
+      const thead = document.getElementById('tabela-cabecalho');
+      if (aba === 'pessoas') {
+        thead.innerHTML = `
+          <tr>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Cidadão / Nome</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Perfil Unificado do Cidadão</span>
+                  <span class="tooltip-body">Registro individual com resolução de entidades.
+• Nome civil e dados biográficos consolidados.
+• Foto auditada pericialmente contra dados oficiais.
+• Clique na linha para abrir a Ficha 360°.</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Perfil & Vínculo</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Classificação Institucional</span>
+                  <span class="tooltip-body">Papel público do agente apurado na base:
+• Prefeito ou Vice-Prefeito de Arinos.
+• Vereador da Câmara Municipal.
+• Servidor Público Concursado ou Comissionado.
+• Sócio de Empresa Fornecedora da Prefeitura.</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Matrículas</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Matrículas Identificadas</span>
+                  <span class="tooltip-body">Quantidade de vínculos funcionais no histórico.
+• Servidores podem possuir múltiplas matrículas ao longo dos anos.
+• Acumulação legal prevista no art. 37 da CF/88 (saúde e magistério).</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Cargos Desempenhados</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Funções Públicas</span>
+                  <span class="tooltip-body">Cargos, secretarias e atribuições exercidas na Prefeitura e na Fundação de Saúde.</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Salários Acumulados</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Remuneração Acumulada</span>
+                  <span class="tooltip-body">Somatório histórico de todos os vencimentos:
+• Salário Bruto: Total integral apurado na folha.
+• Líquido Estimado: Poder de compra real após INSS e IRRF.
+• Tempo: Meses efetivos com contracheque emitido.</span>
+                  <span class="tooltip-calc">Bruto = Base + Gratificações + Adicionais</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Diárias de Viagem</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Diárias e Viagens Oficiais</span>
+                  <span class="tooltip-body">Indenizações para deslocamentos a serviço fora de Arinos:
+• Transporte, alimentação e hospedagem.
+• Viagens a Brasília, Belo Horizonte, Unaí e região.</span>
+                  <span class="tooltip-note">Verba indenizatória que não compõe salário</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>TOTAL DINHEIRO PÚBLICO</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Consolidação Total Recebida</span>
+                  <span class="tooltip-body">Todo o recurso público municipal pago ao cidadão:
+• Somatório de Salários Brutos + Diárias Oficiais.
+• Base histórica auditada de 2013 a 2026.</span>
+                  <span class="tooltip-calc">Total = Salários Brutos + Diárias</span>
+                </div>
+              </span>
+            </th>
+          </tr>
+        `;
+      } else if (aba === 'contracheques') {
+        thead.innerHTML = `
+          <tr>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Competência</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Competência Contábil</span>
+                  <span class="tooltip-body">Mês e ano da folha de pagamento (MM/AAAA).</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Entidade</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Órgão Emissor</span>
+                  <span class="tooltip-body">Unidade pagadora da folha:
+• Prefeitura Municipal de Arinos
+• Fundação Municipal de Saúde de Arinos.</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4">Matrícula - Nome do Servidor</th>
+            <th class="py-3 px-4">Cargo / Função</th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Vínculo</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Natureza do Vínculo</span>
+                  <span class="tooltip-body">Regime de contratação pública:
+• Concursado Efetivo
+• Comissionado / Recrutamento Amplo
+• Contratado por Designação Temporária
+• Agente Político (Prefeito, Secretário, Vereador).</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Salário Bruto</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Remuneração Bruta (Proventos)</span>
+                  <span class="tooltip-body">Valor total a que o servidor tem direito antes de deduções:
+• Vencimento base do cargo.
+• Gratificações de função, quinquênios e horas extras.
+• Adicionais de insalubridade e periculosidade.</span>
+                  <span class="tooltip-calc">Bruto = Vencimento Base + Gratificações</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Descontos</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Descontos Estatutários</span>
+                  <span class="tooltip-body">Deduções legais obrigatórias retidas na fonte:
+• Previdência Oficial (INSS / RPPS Municipal).
+• Imposto de Renda Retido na Fonte (IRRF).
+• Alíquotas progressivas oficiais calculadas por faixa salarial.</span>
+                  <span class="tooltip-calc">Descontos = INSS/RPPS + IRRF</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Salário Líquido</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Salário Líquido a Receber</span>
+                  <span class="tooltip-body">Valor efetivamente creditado na conta bancária do servidor:
+• Calculado pela fórmula matemática: Salário Bruto − Descontos.
+• O valor que o trabalhador realmente recebe para consumo.</span>
+                  <span class="tooltip-calc">Líquido = Bruto − Descontos</span>
+                </div>
+              </span>
+            </th>
+          </tr>
+        `;
+      } else if (aba === 'despesas') {
+        thead.innerHTML = `
+          <tr>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Data / Empenho</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Data e Número do Empenho</span>
+                  <span class="tooltip-body">Ato emanado de autoridade competente que cria para o município a obrigação de pagamento (Lei 4.320/64).</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4">Entidade</th>
+            <th class="py-3 px-4">Credor / Fornecedor</th>
+            <th class="py-3 px-4">Natureza da Despesa</th>
+            <th class="py-3 px-4">Histórico</th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Valor Empenhado</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Valor da Despesa Empenhada</span>
+                  <span class="tooltip-body">Recurso público reservado e liquidado para quitação do serviço ou produto fornecido ao município.</span>
+                </div>
+              </span>
+            </th>
+          </tr>
+        `;
+      } else if (aba === 'diarias') {
+        thead.innerHTML = `
+          <tr>
+            <th class="py-3 px-4">Data Viagem</th>
+            <th class="py-3 px-4">Entidade</th>
+            <th class="py-3 px-4">Servidor Beneficiário</th>
+            <th class="py-3 px-4">Tipo Diária</th>
+            <th class="py-3 px-4">Destino / Motivo</th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Valor Diária</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Valor Indenizatório</span>
+                  <span class="tooltip-body">Custeio de viagem a serviço público para despesas de alimentação e pousada.</span>
+                </div>
+              </span>
+            </th>
+          </tr>
+        `;
+      } else if (aba === 'contratos') {
+        thead.innerHTML = `
+          <tr>
+            <th class="py-3 px-4">Contrato / Proc.</th>
+            <th class="py-3 px-4">Contratado / Credor</th>
+            <th class="py-3 px-4">Tipo Contrato</th>
+            <th class="py-3 px-4">
+              <span class="has-tooltip tooltip-bottom" tabindex="0">
+                <span>Vigência</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Período de Vigência</span>
+                  <span class="tooltip-body">Data de início e data final de validade do instrumento contratual e aditivos.</span>
+                </div>
+              </span>
+            </th>
+            <th class="py-3 px-4">Objeto</th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Valor Contratado</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Valor Global do Contrato</span>
+                  <span class="tooltip-body">Montante financeiro total homologado para a execução do contrato administrativo.</span>
+                </div>
+              </span>
+            </th>
+          </tr>
+        `;
+      } else if (aba === 'receitas') {
+        thead.innerHTML = `
+          <tr>
+            <th class="py-3 px-4">Data Arrecadação</th>
+            <th class="py-3 px-4">Classificação / Descrição</th>
+            <th class="py-3 px-4">Código Máscara</th>
+            <th class="py-3 px-4">Ano / Conhecimento</th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Valor Arrecadado</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Receita Pública Efetivada</span>
+                  <span class="tooltip-body">Valor creditado nos cofres da Prefeitura (tributos municipais ou repasses estaduais/federais).</span>
+                </div>
+              </span>
+            </th>
+          </tr>
+        `;
+      } else if (aba === 'convenios') {
+        thead.innerHTML = `
+          <tr>
+            <th class="py-3 px-4">Nº Convênio</th>
+            <th class="py-3 px-4">Descrição / Objeto</th>
+            <th class="py-3 px-4">Vigência</th>
+            <th class="py-3 px-4 text-right">Contrapartida</th>
+            <th class="py-3 px-4 text-right">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span>Valor do Convênio</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Montante do Convênio</span>
+                  <span class="tooltip-body">Repasse firmado com o Estado ou União para obras e projetos com contrapartida municipal.</span>
+                </div>
+              </span>
+            </th>
+          </tr>
+        `;
+      }
+    }
+
+    function renderizarCorpo(aba, registros) {
+      const tbody = document.getElementById('tabela-corpo');
+      if (registros.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-12 text-center text-slate-500 font-medium">Nenhum registro encontrado para os filtros selecionados.</td></tr>`;
+        return;
+      }
+
+      let html = '';
+
+      if (aba === 'pessoas') {
+        for (const r of registros) {
+          let badgeTipo = 'bg-slate-800 text-slate-300 border-slate-700';
+          let icone = '👤';
+          if (r.is_prefeito) { badgeTipo = 'bg-rose-950/70 text-rose-300 border-rose-800'; icone = '👔'; }
+          else if (r.is_vereador) { badgeTipo = 'bg-amber-950/70 text-amber-300 border-amber-800'; icone = '🏛️'; }
+          else if (r.is_socio_empresa) { badgeTipo = 'bg-purple-950/70 text-purple-300 border-purple-800'; icone = '⚠️'; }
+
+          const matCount = r.qtd_matriculas || 1;
+          const matPrimeira = (r.matriculas && r.matriculas[0]) ? r.matriculas[0].replace(/^0+/, '').replace('.', '-') : '-';
+          const badgeMat = matCount > 1 
+            ? `<span class="has-tooltip tooltip-bottom" tabindex="0">
+                 <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-900/40 text-blue-300 border border-blue-700">${matCount} Matrículas</span>
+                 <div class="tooltip-box">
+                   <span class="tooltip-title">Matrículas Unificadas</span>
+                   <span class="tooltip-body">Histórico funcional com múltiplos contratos/vínculos:
+• ${r.matriculas ? r.matriculas.map(m => m.replace(/^0+/, '').replace('.', '-')).join('\n• ') : '-'}</span>
+                 </div>
+               </span>`
+            : `<span class="text-xs text-slate-300 font-mono font-medium">${matPrimeira}</span>`;
+
+          const avatarHtml = r.foto_url 
+            ? `<div class="relative flex-shrink-0" title="Foto Oficial Auditada (ID #${r.foto_id})">
+                 <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-emerald-500/70 shadow-sm bg-slate-800">
+                   <img src="${r.foto_url}" alt="${r.nome_exibicao}" class="w-full h-full object-cover">
+                 </div>
+                 <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-slate-900" title="Identidade Auditada"></span>
+               </div>`
+            : `<div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-base flex-shrink-0">${icone}</div>`;
+
+          html += `
+            <tr onclick="abrirModalPessoa(${r.id})" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para abrir a Ficha 360° de ${r.nome_exibicao}">
+              <td class="py-3 px-4">
+                <div class="flex items-center space-x-3">
+                  ${avatarHtml}
+                  <div class="min-w-0">
+                    <div class="font-bold text-white group-hover:text-emerald-300 transition flex items-center space-x-1.5 flex-wrap">
+                      <span>${r.nome_exibicao}</span>
+                      ${r.foto_id ? `<span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/60" title="Foto Auditada SHA-256">ID #${r.foto_id}</span>` : ''}
+                    </div>
+                    ${r.partido_politico ? `<div class="text-[11px] text-slate-400 font-medium font-mono">Partido: ${r.partido_politico}</div>` : ''}
+                    <div class="text-[11px] text-emerald-400 font-medium font-mono mt-0.5 flex items-center gap-1">
+                      <span class="has-tooltip tooltip-bottom" tabindex="0">
+                        <span>⏱️ Tempo: ${formatarMascaraAnoMeses(r.qtd_contracheques || 0)}</span>
+                        <div class="tooltip-box">
+                          <span class="tooltip-title">Tempo Efetivo de Serviço</span>
+                          <span class="tooltip-body">Soma apenas os meses com contracheque emitido.
+• Intervalos sem vínculo não são contados.
+• Total de ${r.qtd_contracheques || 0} folhas apuradas.</span>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-4">
+                <span class="px-2 py-0.5 rounded-full text-xs font-medium border ${badgeTipo}">${r.perfil_tipo}</span>
+                <div class="mt-1">${window.gerarBadgesProfissionais ? window.gerarBadgesProfissionais(r) : ''}</div>
+                ${r.is_socio_empresa ? `<div class="text-[10px] text-amber-400 font-medium mt-1">⚠️ Sócio Fornecedor</div>` : ''}
+              </td>
+              <td class="py-3 px-4">${badgeMat}</td>
+              <td class="py-3 px-4 text-xs text-slate-300 max-w-xs truncate" title="${r.cargos_resumo || ''}">${r.cargos_resumo || '-'}</td>
+              <td class="py-3 px-4 text-right font-mono text-xs text-slate-300">
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <div class="text-right">
+                    <div class="text-emerald-400 font-bold">Bruto: ${formatMoeda(r.total_salarios)}</div>
+                    <div class="text-[10px] text-slate-300 font-mono">Líq. Est.: ${formatMoeda(r.total_salarios * 0.78)}</div>
+                    <div class="text-[10px] text-slate-500">${r.qtd_contracheques || 0} folhas (${formatarMascaraAnoMeses(r.qtd_contracheques || 0)})</div>
+                  </div>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Remuneração Acumulada</span>
+                    <span class="tooltip-body">Total acumulado de salários na base:
+• Bruto: ${formatMoeda(r.total_salarios)}
+• Estimativa Líquida: ${formatMoeda(r.total_salarios * 0.78)}
+• Folhas emitidas: ${r.qtd_contracheques || 0} (${formatarMascaraAnoMeses(r.qtd_contracheques || 0)})</span>
+                    <span class="tooltip-calc">Líquido Est. = Bruto − ~22% Retenções</span>
+                  </div>
+                </span>
+              </td>
+              <td class="py-3 px-4 text-right font-mono text-xs text-amber-400">
+                <div>${formatMoeda(r.total_diarias)}</div>
+                <div class="text-[10px] text-slate-500">${r.qtd_diarias || 0} viagens</div>
+              </td>
+              <td class="py-3 px-4 text-right font-mono font-bold text-sm text-emerald-400 bg-emerald-950/20 rounded">
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <div class="flex items-center justify-end space-x-2">
+                    <span>${formatMoeda(r.total_dinheiro_publico)}</span>
+                    <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
+                  </div>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Total Dinheiro Público</span>
+                    <span class="tooltip-body">Consolidação histórica de verba pública recebida:
+• Salários Brutos: ${formatMoeda(r.total_salarios)}
+• Diárias de Viagem: ${formatMoeda(r.total_diarias)}
+• Total Geral: ${formatMoeda(r.total_dinheiro_publico)}</span>
+                    <span class="tooltip-calc">Total = Salários + Diárias</span>
+                  </div>
+                </span>
+              </td>
+            </tr>
+          `;
+        }
+      } else if (aba === 'contracheques') {
+        for (const r of registros) {
+          const badgeEnt = r.entidade.includes('Saúde')
+            ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-cyan-900/40 text-cyan-300 border border-cyan-800">Saúde</span>'
+            : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-900/40 text-emerald-300 border border-emerald-800">Prefeitura</span>';
+
+          const descVal = r.total_descontos > 0 ? r.total_descontos : Math.max(0, (r.total_proventos - (r.salario_liquido || r.total_proventos)));
+          const liqVal = r.salario_liquido || (r.total_proventos - descVal);
+
+          html += `
+            <tr onclick="abrirPopupContrachequeDetalhe(${r.id})" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para ver o contracheque detalhado">
+              <td class="py-3 px-4 font-mono text-xs text-white font-bold">${String(r.mes).padStart(2, '0')}/${r.ano}</td>
+              <td class="py-3 px-4">${badgeEnt}</td>
+              <td class="py-3 px-4 font-medium text-white group-hover:text-emerald-300 transition">
+                <div>${r.nome}</div>
+                <div class="flex items-center space-x-1.5 mt-0.5 font-mono text-xs">
+                  <span class="text-emerald-400 font-semibold" title="Matrícula Higienizada (sem zeros)">Matr: ${r.matricula_limpa || (r.matricula ? r.matricula.replace(/^0+/, '').replace('.', '-') : '-')}</span>
+                  ${r.matricula_original && r.matricula_original !== r.matricula_limpa ? `<span class="text-[10px] text-slate-500" title="Matrícula Original ADPM">(${r.matricula_original})</span>` : ''}
+                </div>
+              </td>
+              <td class="py-3 px-4 text-slate-300 text-xs">${r.cargo || '-'}</td>
+              <td class="py-3 px-4 text-slate-400 text-xs">${r.vinculo || '-'}</td>
+              <td class="py-3 px-4 text-right font-mono font-bold text-emerald-400">
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <span>${formatMoeda(r.total_proventos)}</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Salário Bruto Total</span>
+                    <span class="tooltip-body">Vencimentos integrais do mês antes de deduções:
+• Vencimento-base + gratificações e adicionais.</span>
+                    <span class="tooltip-calc">Bruto = ${formatMoeda(r.total_proventos)}</span>
+                  </div>
+                </span>
+              </td>
+              <td class="py-3 px-4 text-right font-mono font-medium text-rose-400">
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <span>${descVal > 0 ? '-' + formatMoeda(descVal) : '-'}</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Retenções Legais (INSS / IRRF)</span>
+                    <span class="tooltip-body">Deduções oficiais calculadas por faixas progressivas:
+• Previdência e Imposto de Renda Retido na Fonte.</span>
+                    <span class="tooltip-calc">Descontos = -${formatMoeda(descVal)}</span>
+                  </div>
+                </span>
+              </td>
+              <td class="py-3 px-4 text-right font-mono font-extrabold text-white bg-slate-900/40">
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <div class="flex items-center justify-end space-x-2">
+                    <span>${formatMoeda(liqVal)}</span>
+                    <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
+                  </div>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Salário Líquido Final</span>
+                    <span class="tooltip-body">Valor efetivamente creditado na conta do servidor:
+• Salário Bruto: ${formatMoeda(r.total_proventos)}
+• Descontos Oficiais: -${formatMoeda(descVal)}
+• Valor Líquido: ${formatMoeda(liqVal)}</span>
+                    <span class="tooltip-calc">Líquido = ${formatMoeda(liqVal)}</span>
+                  </div>
+                </span>
+              </td>
+            </tr>
+          `;
+        }
+      } else if (aba === 'despesas') {
+        registros.forEach((r, idx) => {
+          const badgeEnt = r.entidade.includes('Saúde')
+            ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-cyan-900/40 text-cyan-300 border border-cyan-800">Saúde</span>'
+            : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-900/40 text-emerald-300 border border-emerald-800">Prefeitura</span>';
+
+          html += `
+            <tr onclick="toggleSubRow('desp-${idx}')" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para expandir detalhes do empenho">
+              <td class="py-3 px-4 font-mono text-xs text-slate-400">
+                <div class="font-bold text-white group-hover:text-cyan-300 transition">${r.data_empenho || `${r.ano}/${String(r.mes).padStart(2, '0')}`}</div>
+                <div class="text-xs text-slate-500">Emp: ${r.nr_empenho || '-'}</div>
+              </td>
+              <td class="py-3 px-4">${badgeEnt}</td>
+              <td class="py-3 px-4 font-medium text-white group-hover:text-cyan-300 transition">
+                <div>${r.credor}</div>
+                ${r.cpf_cnpj ? `<div class="text-xs text-slate-500 font-mono">${r.cpf_cnpj}</div>` : ''}
+              </td>
+              <td class="py-3 px-4 text-slate-300 text-xs max-w-xs truncate">${r.natureza || '-'}</td>
+              <td class="py-3 px-4 text-slate-400 text-xs max-w-sm truncate" title="${r.historico || ''}">${r.historico || '-'}</td>
+              <td class="py-3 px-4 text-right font-mono font-semibold text-cyan-400">
+                <div class="flex items-center justify-end space-x-2">
+                  <span>${formatMoeda(r.valor)}</span>
+                  <span class="text-slate-600 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition font-mono font-bold">›</span>
+                </div>
+              </td>
+            </tr>
+            <tr id="desp-${idx}" class="hidden bg-slate-950/70 border-b border-slate-800">
+              <td colspan="6" class="p-4 text-xs text-slate-300">
+                <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                  <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                    <span class="font-bold text-white font-mono flex items-center gap-2">
+                      <span>📄 Empenho Nº ${r.nr_empenho || '-'} • Ano ${r.ano}</span>
+                      <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">${r.entidade}</span>
+                    </span>
+                    <span class="text-cyan-400 font-mono font-bold text-sm">${formatMoeda(r.valor)}</span>
+                  </div>
+                  <p class="text-slate-300 leading-relaxed font-sans pt-1"><strong>Histórico Completo da Despesa:</strong> ${r.historico || 'Sem histórico detalhado disponível.'}</p>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800/60 font-mono text-[11px] text-slate-400">
+                    <div><span class="text-slate-500">Credor / Favorecido:</span> <strong class="text-white">${r.credor}</strong></div>
+                    <div><span class="text-slate-500">Documento (CPF/CNPJ):</span> <strong class="text-slate-300">${r.cpf_cnpj || '-'}</strong></div>
+                    <div><span class="text-slate-500">Natureza do Gasto:</span> <strong class="text-slate-300">${r.natureza || '-'}</strong></div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+      } else if (aba === 'diarias') {
+        registros.forEach((r, idx) => {
+          const badgeEnt = r.entidade.includes('Saúde')
+            ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-cyan-900/40 text-cyan-300 border border-cyan-800">Saúde</span>'
+            : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-900/40 text-emerald-300 border border-emerald-800">Prefeitura</span>';
+
+          html += `
+            <tr onclick="toggleSubRow('diar-${idx}')" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para expandir detalhes da viagem">
+              <td class="py-3 px-4 font-mono text-xs text-slate-400">
+                <div class="font-bold text-white group-hover:text-amber-300 transition">${r.data_viagem || `${r.ano}/${String(r.mes).padStart(2, '0')}`}</div>
+                <div class="text-xs text-slate-500">Emp: ${r.nr_empenho || '-'}</div>
+              </td>
+              <td class="py-3 px-4">${badgeEnt}</td>
+              <td class="py-3 px-4 font-medium text-white group-hover:text-amber-300 transition">${r.servidor}</td>
+              <td class="py-3 px-4 text-slate-300 text-xs">${r.tipo_diaria || 'Diária'}</td>
+              <td class="py-3 px-4 text-slate-400 text-xs max-w-md truncate" title="${r.motivo || ''}">${r.motivo || '-'}</td>
+              <td class="py-3 px-4 text-right font-mono font-semibold text-amber-400">
+                <div class="flex items-center justify-end space-x-2">
+                  <span>${formatMoeda(r.valor)}</span>
+                  <span class="text-slate-600 group-hover:text-amber-400 group-hover:translate-x-0.5 transition font-mono font-bold">›</span>
+                </div>
+              </td>
+            </tr>
+            <tr id="diar-${idx}" class="hidden bg-slate-950/70 border-b border-slate-800">
+              <td colspan="6" class="p-4 text-xs text-slate-300">
+                <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                  <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                    <span class="font-bold text-white font-mono flex items-center gap-2">
+                      <span>✈️ Viagem Oficial • ${r.servidor}</span>
+                      <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-amber-300">${r.tipo_diaria || 'Diária'}</span>
+                    </span>
+                    <span class="text-amber-400 font-mono font-bold text-sm">${formatMoeda(r.valor)}</span>
+                  </div>
+                  <p class="text-slate-300 leading-relaxed font-sans pt-1"><strong>Finalidade / Destino / Motivo:</strong> ${r.motivo || 'Sem detalhamento de itinerário informado.'}</p>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800/60 font-mono text-[11px] text-slate-400">
+                    <div><span class="text-slate-500">Período / Data:</span> <strong class="text-white">${r.data_viagem || `${r.ano}/${r.mes}`}</strong></div>
+                    <div><span class="text-slate-500">Órgão Emissor:</span> <strong class="text-slate-300">${r.entidade}</strong></div>
+                    <div><span class="text-slate-500">Empenho:</span> <strong class="text-slate-300">${r.nr_empenho || '-'}</strong></div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+      } else if (aba === 'contratos') {
+        registros.forEach((r, idx) => {
+          html += `
+            <tr onclick="toggleSubRow('cont-${idx}')" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para expandir detalhes do contrato">
+              <td class="py-3 px-4 font-mono text-xs text-slate-400">
+                <div class="font-bold text-white group-hover:text-blue-300 transition">Nº ${r.nr_contrato || '-'}</div>
+                <div class="text-xs text-slate-500">Proc: ${r.nr_processo || '-'}</div>
+              </td>
+              <td class="py-3 px-4 font-medium text-white group-hover:text-blue-300 transition">
+                <div>${r.credor}</div>
+                ${r.doc_credor ? `<div class="text-xs text-slate-500 font-mono">${r.doc_credor}</div>` : ''}
+              </td>
+              <td class="py-3 px-4 text-xs text-blue-300">${r.tipo_contrato || 'Contrato'}</td>
+              <td class="py-3 px-4 text-xs text-slate-400 font-mono">
+                <div>Início: ${r.dt_ini_vigencia || r.dt_assinatura || '-'}</div>
+                <div>Fim: ${r.dt_fim_vigencia || '-'}</div>
+              </td>
+              <td class="py-3 px-4 text-xs text-slate-300 max-w-md truncate" title="${r.objeto || ''}">${r.objeto || '-'}</td>
+              <td class="py-3 px-4 text-right font-mono font-semibold text-blue-400">
+                <div class="flex items-center justify-end space-x-2">
+                  <span>${formatMoeda(r.valor)}</span>
+                  <span class="text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition font-mono font-bold">›</span>
+                </div>
+              </td>
+            </tr>
+            <tr id="cont-${idx}" class="hidden bg-slate-950/70 border-b border-slate-800">
+              <td colspan="6" class="p-4 text-xs text-slate-300">
+                <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                  <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                    <span class="font-bold text-white font-mono flex items-center gap-2">
+                      <span>📑 Contrato Administrativo Nº ${r.nr_contrato || '-'}</span>
+                      <span class="text-[10px] px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-600/40">${r.tipo_contrato || 'Contrato'}</span>
+                    </span>
+                    <span class="text-blue-400 font-mono font-bold text-sm">${formatMoeda(r.valor)}</span>
+                  </div>
+                  <p class="text-slate-300 leading-relaxed font-sans pt-1"><strong>Objeto Contratual Completo:</strong> ${r.objeto || 'Sem descrição detalhada do objeto.'}</p>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800/60 font-mono text-[11px] text-slate-400">
+                    <div><span class="text-slate-500">Contratado:</span> <strong class="text-white">${r.credor}</strong></div>
+                    <div><span class="text-slate-500">Documento:</span> <strong class="text-slate-300">${r.doc_credor || '-'}</strong></div>
+                    <div><span class="text-slate-500">Processo:</span> <strong class="text-slate-300">${r.nr_processo || '-'}</strong></div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+      } else if (aba === 'receitas') {
+        for (const r of registros) {
+          html += `
+            <tr class="hover:bg-slate-800/40 transition">
+              <td class="py-3 px-4 font-mono text-xs text-slate-400">${r.data_receita || r.ano}</td>
+              <td class="py-3 px-4 font-medium text-white text-xs">${r.descricao_receita || '-'}</td>
+              <td class="py-3 px-4 font-mono text-xs text-teal-400">${r.mascara_receita || '-'}</td>
+              <td class="py-3 px-4 font-mono text-xs text-slate-400">${r.ano} / Conhec: ${r.nr_conhecimento || '-'}</td>
+              <td class="py-3 px-4 text-right font-mono font-semibold text-teal-400">${formatMoeda(r.valor)}</td>
+            </tr>
+          `;
+        }
+      } else if (aba === 'convenios') {
+        for (const r of registros) {
+          html += `
+            <tr class="hover:bg-slate-800/40 transition">
+              <td class="py-3 px-4 font-mono text-xs text-slate-400">
+                <div class="font-bold text-white">${r.nr_convenio || '-'}</div>
+                <div class="text-xs text-slate-500">ID: ${r.idcnv || '-'}</div>
+              </td>
+              <td class="py-3 px-4 text-xs max-w-md">
+                <div class="font-medium text-white">${r.descricao || '-'}</div>
+                <div class="text-slate-400 truncate" title="${r.objeto || ''}">${r.objeto || '-'}</div>
+              </td>
+              <td class="py-3 px-4 font-mono text-xs text-slate-400">
+                <div>De: ${r.dt_inicio || r.dt_convenio || '-'}</div>
+                <div>Até: ${r.dt_final || '-'}</div>
+              </td>
+              <td class="py-3 px-4 text-right font-mono text-xs text-amber-400">${formatMoeda(r.valor_contrapartida)}</td>
+              <td class="py-3 px-4 text-right font-mono font-semibold text-indigo-400">${formatMoeda(r.valor_convenio)}</td>
+            </tr>
+          `;
+        }
+      }
+
+      tbody.innerHTML = html;
+    }
+
+    async function abrirModalPessoa(id) {
+      const modal = document.getElementById('modal-pessoa');
+      const corpo = document.getElementById('modal-corpo');
+      modal.classList.remove('hidden');
+      corpo.innerHTML = '<div class="py-12 text-center text-slate-400 font-mono animate-pulse">Carregando dados 360°...</div>';
+
+      try {
+        const res = await fetch(`/api/dados/perfil-pessoa?id=${id}`);
+        if (!res.ok) throw new Error('Não foi possível carregar os detalhes');
+        const data = await res.json();
+        const p = data.perfil;
+
+        document.getElementById('modal-nome').innerText = p.nome_exibicao;
+        const badgePerfil = document.getElementById('modal-badge-perfil');
+        badgePerfil.innerText = p.perfil_tipo;
+        if (p.is_prefeito) badgePerfil.className = 'text-xs px-2.5 py-0.5 rounded-full font-semibold bg-rose-900/60 text-rose-300 border border-rose-700';
+        else if (p.is_vereador) badgePerfil.className = 'text-xs px-2.5 py-0.5 rounded-full font-semibold bg-amber-900/60 text-amber-300 border border-amber-700';
+        else if (p.is_socio_empresa) badgePerfil.className = 'text-xs px-2.5 py-0.5 rounded-full font-semibold bg-purple-900/60 text-purple-300 border border-purple-700';
+        else badgePerfil.className = 'text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-900/60 text-emerald-300 border border-emerald-700';
+
+        const subText = `${p.qtd_matriculas} Matrícula(s) • ${p.cargos_resumo || 'Servidor'} ${p.partido_politico ? '• ' + p.partido_politico : ''}`;
+        document.getElementById('modal-subtitulo').innerText = subText;
+
+        const avatarContainer = document.getElementById('modal-avatar-container');
+        if (avatarContainer) {
+          if (p.foto_url) {
+            avatarContainer.innerHTML = `
+              <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-emerald-500 shadow-xl relative bg-slate-800">
+                <img src="${p.foto_url}" alt="${p.nome_exibicao}" class="w-full h-full object-cover">
+              </div>
+            `;
+          } else {
+            avatarContainer.innerHTML = `
+              <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl font-bold border border-emerald-500/30">👤</div>
+            `;
+          }
+        }
+
+        const badgeFoto = document.getElementById('modal-badge-foto');
+        if (badgeFoto) {
+          if (p.foto_id) {
+            badgeFoto.innerText = `Foto Auditada • ID #${p.foto_id}`;
+            badgeFoto.classList.remove('hidden');
+          } else {
+            badgeFoto.classList.add('hidden');
+          }
+        }
+
+        // Render KPI cards com tempo efetivo auditado
+        const painelProfissionalHtml = window.gerarPainelPerfilProfissional ? window.gerarPainelPerfilProfissional(p, data) : '';
+        let htmlCorpo = `
+          ${painelProfissionalHtml}
+  
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="p-3 bg-slate-800/80 rounded-xl border border-emerald-500/30">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 uppercase font-mono">Total Dinheiro Público</span>
+                <span class="has-tooltip tooltip-bottom tooltip-align-left" tabindex="0">
+                  <span class="tooltip-icon">?</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Recurso Público Total Recebido</span>
+                    <span class="tooltip-body">Somatório consolidado de todas as verbas municipais pagas ao cidadão:
+• Todos os contracheques (Prefeitura + Saúde).
+• Todas as diárias de viagens oficiais.
+• Valores apurados entre 2013 e 2026.</span>
+                    <span class="tooltip-calc">Total = Salários Brutos + Diárias</span>
+                  </div>
+                </span>
+              </div>
+              <p class="text-lg font-extrabold text-emerald-400 font-mono mt-0.5">${formatMoeda(p.total_dinheiro_publico)}</p>
+              <span class="text-[10px] text-slate-500 font-mono">Salários + Diárias</span>
+            </div>
+            <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 uppercase font-mono">Tempo Efetivo de Serviço</span>
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <span class="tooltip-icon">?</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Tempo Efetivo de Trabalho</span>
+                    <span class="tooltip-body">Cálculo pericial rigoroso de meses com vínculo ativo:
+• Conta estritamente os meses em que houve folha emitida.
+• Não soma períodos de afastamento, exoneração ou sem vínculo.
+• Evita distorções causadas pela simples diferença entre a data inicial e final.</span>
+                    <span class="tooltip-note">Base: Folhas ativas mensais</span>
+                  </div>
+                </span>
+              </div>
+              <p class="text-base font-bold text-white font-mono mt-0.5">${data.tempo_efetivo || formatarMascaraAnoMeses(p.qtd_contracheques || 0)}</p>
+              <span class="text-[10px] text-emerald-400 font-mono font-medium">${data.total_meses_efetivos || p.qtd_contracheques || 0} meses ativos (${p.qtd_contracheques || 0} folhas)</span>
+            </div>
+            <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 uppercase font-mono">Salários (Bruto & Líquido)</span>
+                <span class="has-tooltip tooltip-bottom tooltip-align-left" tabindex="0">
+                  <span class="tooltip-icon">?</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Composição Salarial Histórica</span>
+                    <span class="tooltip-body">Valores acumulados em toda a carreira:
+• Bruto: Total integral de proventos e gratificações.
+• Descontos: Retenções de INSS/RPPS e IRRF na fonte.
+• Líquido: Dinheiro real creditado na conta do servidor.</span>
+                    <span class="tooltip-calc">Líquido = Bruto − Descontos Retidos</span>
+                  </div>
+                </span>
+              </div>
+              <p class="text-base font-bold text-emerald-300 font-mono mt-0.5" title="Salário Bruto Total">Bruto: ${formatMoeda(data.total_proventos_acumulado || p.total_salarios)}</p>
+              <div class="text-[11px] text-emerald-400 font-mono font-bold mt-0.5" title="Salário Líquido Total">Líquido: ${formatMoeda(data.total_liquido_acumulado || (p.total_salarios * 0.78))}</div>
+              <div class="text-[10px] text-rose-400 font-mono">Descontos: -${formatMoeda(data.total_descontos_acumulado || 0)}</div>
+            </div>
+            <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 uppercase font-mono">Diárias Recebidas</span>
+                <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                  <span class="tooltip-icon">?</span>
+                  <div class="tooltip-box">
+                    <span class="tooltip-title">Indenizações por Viagem</span>
+                    <span class="tooltip-body">Valores pagos a título indenizatório para cobertura de alimentação e hospedagem em deslocamentos oficiais a trabalho fora de Arinos.</span>
+                    <span class="tooltip-note">Não integra o salário-base</span>
+                  </div>
+                </span>
+              </div>
+              <p class="text-base font-bold text-amber-400 font-mono mt-0.5">${formatMoeda(p.total_diarias)}</p>
+              <span class="text-[10px] text-slate-500 font-mono">${p.qtd_diarias || 0} viagens registradas</span>
+            </div>
+          </div>
+        `;
+
+        // 1. Linha do Tempo de Períodos Reais e Intervalos (Sanfona Colapsável)
+        if (data.periodos_timeline && data.periodos_timeline.length > 0) {
+          htmlCorpo += `
+            <div class="rounded-xl border border-slate-700/80 overflow-hidden bg-slate-800/40">
+              <div onclick="toggleSanfona('sanfona-timeline')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-emerald-400 text-base">⏱️</span>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-emerald-300 transition">
+                      Linha do Tempo Funcional & Períodos de Exercício
+                    </h4>
+                    <p class="text-[11px] text-slate-400">Auditoria de tempo real de serviço e intervalos (gaps)</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2.5">
+                  <span class="px-2.5 py-0.5 bg-emerald-950/80 border border-emerald-600/50 rounded-lg text-emerald-300 font-mono font-bold text-xs">
+                    ${data.tempo_efetivo} (${data.total_meses_efetivos} meses ativos)
+                  </span>
+                  <span id="sanfona-timeline-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+                </div>
+              </div>
+              <div id="sanfona-timeline" class="p-4 border-t border-slate-700/60 space-y-2">
+                <p class="text-[11px] text-slate-400 leading-relaxed pb-1">
+                  Auditoria pericial de vínculo: intervalos sem recebimento ou exoneração são calculados e destacados separadamente, não sendo somados como tempo de serviço contínuo.
+                </p>
+                ${data.periodos_timeline.map(item => {
+                  if (item.tipo === 'periodo_ativo') {
+                    return `
+                      <div class="p-2.5 bg-slate-900/90 border border-emerald-500/40 rounded-lg flex items-center justify-between flex-wrap gap-2">
+                        <div class="flex items-center space-x-2.5">
+                          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+                          <span class="text-xs font-bold text-white font-mono">${item.descricao}</span>
+                        </div>
+                        <span class="text-[11px] text-slate-300 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">${item.cargos}</span>
+                      </div>
+                    `;
+                  } else {
+                    return `
+                      <div class="p-2.5 bg-amber-950/20 border border-amber-600/40 rounded-lg flex items-center justify-between flex-wrap gap-2 text-amber-300 text-xs">
+                        <div class="flex items-center space-x-2.5">
+                          <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                          <span class="font-medium">⏸️ ${item.descricao}</span>
+                        </div>
+                        <span class="text-[10px] text-amber-400 font-mono font-bold uppercase bg-amber-950/60 px-2 py-0.5 rounded border border-amber-700/50">Sem Vínculo / Intervalo</span>
+                      </div>
+                    `;
+                  }
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        // 1.1. Histórico na Vida Política, Mandatos e Eleições TSE (Sanfona Colapsável)
+        if ((data.mandatos_historico && data.mandatos_historico.length > 0) || (data.historico_eleitoral && data.historico_eleitoral.length > 0) || (data.materias_camara && data.materias_camara.length > 0)) {
+          htmlCorpo += `
+            <div class="rounded-xl border border-blue-500/40 overflow-hidden bg-slate-900/60">
+              <div onclick="toggleSanfona('sanfona-politica')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-blue-400 text-base">🗳️</span>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-blue-300 transition">
+                      Trajetória na Vida Política, Mandatos & Eleições TSE
+                    </h4>
+                    <p class="text-[11px] text-slate-400">Disputas eleitorais, votos, bens declarados e atuação legislativa (SAPL)</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono">
+                    ${(data.historico_eleitoral || []).length} Disputas TSE
+                  </span>
+                  <span id="sanfona-politica-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+                </div>
+              </div>
+
+              <div id="sanfona-politica" class="p-4 border-t border-slate-800 space-y-3">
+                ${data.mandatos_historico && data.mandatos_historico.length > 0 ? `
+                  <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/60 space-y-2">
+                    <span class="text-[11px] font-bold text-blue-300 uppercase font-mono">🏛️ Mandatos Exercidos no Município</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      ${data.mandatos_historico.map(m => `
+                        <div class="p-2 bg-slate-900/80 rounded border border-slate-800 flex items-center justify-between text-xs">
+                          <div>
+                            <strong class="text-white">${m.cargo}</strong>
+                            <p class="text-[11px] text-slate-400 font-mono">${m.tipo}</p>
+                          </div>
+                          <span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 font-mono font-bold text-[11px] border border-blue-800">${m.mandato}</span>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                ` : ''}
+
+                ${data.historico_eleitoral && data.historico_eleitoral.length > 0 ? `
+                  <div class="space-y-1.5 pt-1">
+                    <span class="text-[11px] font-bold text-slate-300 uppercase font-mono">Disputas Eleitorais Registradas no TSE</span>
+                    <div class="overflow-x-auto rounded-lg border border-slate-800">
+                      <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-800/80 text-slate-400 font-mono uppercase text-[10px]">
+                          <tr>
+                            <th class="py-2 px-3">Ano</th>
+                            <th class="py-2 px-3">Cargo Disputado</th>
+                            <th class="py-2 px-3">Nome Urna</th>
+                            <th class="py-2 px-3">Partido</th>
+                            <th class="py-2 px-3">Resultado</th>
+                            <th class="py-2 px-3 text-right">Votos</th>
+                            <th class="py-2 px-3 text-right">Bens Declarados</th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 font-mono">
+                          ${data.historico_eleitoral.map(ele => {
+                            const isEleito = (ele.resultado || '').toLowerCase().includes('eleito');
+                            const resClass = isEleito ? 'text-emerald-400 font-bold' : 'text-slate-400';
+                            return `
+                              <tr class="hover:bg-slate-800/40">
+                                <td class="py-2 px-3 font-bold text-white">${ele.ano}</td>
+                                <td class="py-2 px-3 text-slate-200">${ele.cargo}</td>
+                                <td class="py-2 px-3 text-amber-300 font-semibold font-sans">"${ele.nome_urna}"</td>
+                                <td class="py-2 px-3"><span class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-blue-300 text-[10px]">${ele.partido_sigla}</span></td>
+                                <td class="py-2 px-3 ${resClass}">${ele.resultado}</td>
+                                <td class="py-2 px-3 text-right">${Number(ele.votos || 0).toLocaleString('pt-BR')}</td>
+                                <td class="py-2 px-3 text-right text-emerald-400 font-bold">${formatMoeda(ele.total_bens)}</td>
+                              </tr>
+                            `;
+                          }).join('')}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ` : ''}
+
+                ${data.materias_camara && data.materias_camara.length > 0 ? `
+                  <div class="pt-2 border-t border-slate-800/80">
+                    <span class="text-[11px] font-bold text-purple-300 uppercase font-mono">⚖️ Atuação no Legislativo Municipal (Câmara / SAPL)</span>
+                    <div class="mt-1.5 space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                      ${data.materias_camara.map(mat => `
+                        <div class="p-2 bg-slate-900/60 rounded border border-slate-800/80 text-xs">
+                          <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                            <span class="text-purple-300 font-bold">${mat.tipo} Nº ${mat.numero}/${mat.ano}</span>
+                            <span>${mat.data_apresentacao || ''}</span>
+                          </div>
+                          <p class="text-slate-300 mt-0.5 line-clamp-2">${mat.ementa}</p>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }
+
+        // 2. Empresas Vinculadas & Contratos no Período do Mandato (Sanfona Colapsável)
+        if (p.is_socio_empresa && data.empresas_detalhe && data.empresas_detalhe.length > 0) {
+          htmlCorpo += `
+            <div class="rounded-xl border border-amber-600/40 overflow-hidden bg-amber-950/20">
+              <div onclick="toggleSanfona('sanfona-empresas')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-amber-400 text-base">⚠️</span>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-amber-300 transition">
+                      Empresas Vinculadas & Contratos no Período do Mandato
+                    </h4>
+                    <p class="text-[11px] text-slate-400">Cruzamento de sócios com contratos e empenhos da prefeitura</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2.5">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">
+                    ${data.empresas_detalhe.length} Empresas
+                  </span>
+                  <span id="sanfona-empresas-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+                </div>
+              </div>
+
+              <div id="sanfona-empresas" class="p-4 border-t border-amber-800/40 space-y-3">
+                ${data.empresas_detalhe.map(emp => `
+                  <div class="p-3 bg-slate-900/90 border border-slate-800 rounded-lg space-y-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
+                      <div>
+                        <p class="font-bold text-white text-xs">${emp.razao_social}</p>
+                        <p class="text-[11px] text-slate-400 font-mono">CNPJ: ${emp.cnpj} • Qualificação: ${emp.qualificacao || 'Sócio'}</p>
+                      </div>
+                      <div class="text-right font-mono">
+                        <span class="text-xs text-amber-400 font-bold">Faturamento da Empresa: ${formatMoeda(emp.info ? emp.info.total_geral : 0)}</span>
+                        <p class="text-[10px] text-slate-500">${emp.info ? emp.info.qtd_contratos : 0} contratos • ${emp.info ? emp.info.qtd_despesas : 0} empenhos</p>
+                      </div>
+                    </div>
+
+                    ${emp.contratos && emp.contratos.length > 0 ? `
+                      <div class="space-y-1.5 pt-1">
+                        <span class="text-[10px] font-bold text-amber-300 uppercase font-mono">Contratos Firmados com o Município durante os Mandatos:</span>
+                        <div class="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+                          ${emp.contratos.map(c => `
+                            <div class="p-2 bg-slate-800/60 rounded border border-slate-700/60 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                              <div class="space-y-0.5">
+                                <div class="flex items-center space-x-2">
+                                  <span class="font-bold text-white font-mono">Contrato Nº ${c.nr_contrato}</span>
+                                  <span class="px-1.5 py-0.2 rounded text-[10px] bg-amber-950 text-amber-300 border border-amber-800 font-mono">${c.gestao_mandato}</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 line-clamp-1" title="${c.objeto || ''}">${c.objeto || '-'}</p>
+                                <span class="text-[10px] text-slate-500 font-mono">Assinatura: ${c.dt_assinatura || '-'} • Vigência: ${c.dt_ini_vigencia || '-'} a ${c.dt_fim_vigencia || '-'}</span>
+                              </div>
+                              <div class="text-right whitespace-nowrap">
+                                <span class="font-mono font-bold text-emerald-400 text-xs">${formatMoeda(c.valor)}</span>
+                              </div>
+                            </div>
+                          `).join('')}
+                        </div>
+                      </div>
+                    ` : `
+                      <div class="text-[11px] text-slate-500 italic">Nenhum contrato direto encontrado no banco sob este CNPJ.</div>
+                    `}
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        // 3. Folha de Pagamento do Último Ano Ativo (Sanfona Colapsável, lista limpa clicável sem botão solto)
+        if (data.folha_ultimo_ano && data.folha_ultimo_ano.meses && data.folha_ultimo_ano.meses.length > 0) {
+          const anoAtivo = data.folha_ultimo_ano;
+          htmlCorpo += `
+            <div class="rounded-xl border border-emerald-500/40 overflow-hidden bg-slate-800/40">
+              <div onclick="toggleSanfona('sanfona-folha-atual')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-emerald-400 text-base">💼</span>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-emerald-300 transition">
+                      Folha de Pagamento do Último Ano (${anoAtivo.ano})
+                    </h4>
+                    <p class="text-[11px] text-slate-400">${anoAtivo.cargos || 'Servidor Municipal'}</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-3 font-mono text-xs">
+                  <div class="text-right">
+                    <span class="text-emerald-400 font-bold block">Bruto: ${formatMoeda(anoAtivo.total_proventos)}</span>
+                    <span class="text-[11px] text-emerald-300 font-semibold block">Líq: ${formatMoeda(anoAtivo.total_liquido || (anoAtivo.total_proventos - anoAtivo.total_descontos))}</span>
+                    <span class="text-[10px] text-slate-400">Desc: -${formatMoeda(anoAtivo.total_descontos)} (${anoAtivo.meses.length} folhas)</span>
+                  </div>
+                  <span id="sanfona-folha-atual-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+                </div>
+              </div>
+
+              <!-- Tabela com todos os meses do último ano (Clique na linha para ver mais) -->
+              <div id="sanfona-folha-atual" class="p-3 border-t border-slate-700/60 overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-300">
+                  <thead class="bg-slate-800/80 text-slate-400 font-mono uppercase text-[11px]">
+                    <tr>
+                      <th class="py-2.5 px-3">
+                        <span class="has-tooltip tooltip-bottom" tabindex="0">
+                          <span>Competência</span>
+                          <span class="tooltip-icon">?</span>
+                          <div class="tooltip-box">
+                            <span class="tooltip-title">Competência Contábil</span>
+                            <span class="tooltip-body">Mês e ano da folha de pagamento (MM/AAAA).</span>
+                          </div>
+                        </span>
+                      </th>
+                      <th class="py-2.5 px-3">
+                        <span class="has-tooltip tooltip-bottom" tabindex="0">
+                          <span>Tipo de Folha</span>
+                          <span class="tooltip-icon">?</span>
+                          <div class="tooltip-box">
+                            <span class="tooltip-title">Classificação da Folha</span>
+                            <span class="tooltip-body">Emissão mensal ordinária, gratificação natalina (13º) ou adicional de férias.</span>
+                          </div>
+                        </span>
+                      </th>
+                      <th class="py-2.5 px-3 text-right">
+                        <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                          <span>Salário Bruto</span>
+                          <span class="tooltip-icon">?</span>
+                          <div class="tooltip-box">
+                            <span class="tooltip-title">Remuneração Bruta</span>
+                            <span class="tooltip-body">Vencimentos totais do mês antes das deduções legais.</span>
+                            <span class="tooltip-calc">Bruto = Base + Adicionais</span>
+                          </div>
+                        </span>
+                      </th>
+                      <th class="py-2.5 px-3 text-right">
+                        <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                          <span>Descontos</span>
+                          <span class="tooltip-icon">?</span>
+                          <div class="tooltip-box">
+                            <span class="tooltip-title">Descontos Estatutários</span>
+                            <span class="tooltip-body">Deduções oficiais de Previdência e Imposto de Renda.</span>
+                          </div>
+                        </span>
+                      </th>
+                      <th class="py-2.5 px-3 text-right">
+                        <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                          <span>Salário Líquido</span>
+                          <span class="tooltip-icon">?</span>
+                          <div class="tooltip-box">
+                            <span class="tooltip-title">Salário Líquido</span>
+                            <span class="tooltip-body">Valor efetivamente creditado na conta bancária do servidor.</span>
+                            <span class="tooltip-calc">Líquido = Bruto − Descontos</span>
+                          </div>
+                        </span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-800 font-mono">
+                    ${anoAtivo.meses.map(m => {
+                      let badgeFolha = '<span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-sans">Normal</span>';
+                      if (m.is_13) {
+                        badgeFolha = `
+                          <span class="has-tooltip tooltip-bottom" tabindex="0">
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-600/50 font-sans font-bold flex items-center gap-1 cursor-help">
+                              <span>🎁 13º Salário</span>
+                              <span class="tooltip-icon">?</span>
+                            </span>
+                            <div class="tooltip-box">
+                              <span class="tooltip-title">Gratificação Natalina (13º)</span>
+                              <span class="tooltip-body">Gratificação anual compulsória prevista em lei.
+• Parcela proporcional ou integral concedida ao servidor.</span>
+                            </div>
+                          </span>
+                        `;
+                      } else if (m.is_ferias) {
+                        badgeFolha = `
+                          <span class="has-tooltip tooltip-bottom" tabindex="0">
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-600/50 font-sans font-bold flex items-center gap-1 cursor-help">
+                              <span>🏖️ Férias</span>
+                              <span class="tooltip-icon">?</span>
+                            </span>
+                            <div class="tooltip-box">
+                              <span class="tooltip-title">Adicional de Férias</span>
+                              <span class="tooltip-body">Remuneração com acréscimo de 1/3 constitucional (art. 7º, XVII da CF/88).</span>
+                            </div>
+                          </span>
+                        `;
+                      }
+
+                      return `
+                        <tr onclick="abrirPopupContrachequeDetalhe(${m.id})" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para ver o contracheque detalhado">
+                          <td class="py-2.5 px-3 font-bold text-white group-hover:text-emerald-300 transition">${String(m.mes).padStart(2, '0')}/${m.ano}</td>
+                          <td class="py-2.5 px-3">
+                            <div class="flex items-center space-x-1.5 flex-wrap">
+                              ${badgeFolha}
+                              <span class="text-[11px] text-slate-400 font-sans truncate max-w-[140px]">${m.tipo_folha}</span>
+                            </div>
+                          </td>
+                          <td class="py-2.5 px-3 text-right text-emerald-400 font-bold">${formatMoeda(m.total_proventos)}</td>
+                          <td class="py-2.5 px-3 text-right text-rose-400">${m.total_descontos > 0 ? '-' + formatMoeda(m.total_descontos) : '-'}</td>
+                          <td class="py-2.5 px-3 text-right text-white font-bold">
+                            <div class="flex items-center justify-end space-x-2">
+                              <span>${formatMoeda(m.salario_liquido || m.total_proventos)}</span>
+                              <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
+                            </div>
+                          </td>
+                        </tr>
+                      `;
+                    }).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        }
+
+        // 4. Cards dos Outros Anos (Separados por Anos em Sanfona, sem botões soltos)
+        if (data.anos_anteriores && data.anos_anteriores.length > 0) {
+          htmlCorpo += `
+            <div class="rounded-xl border border-slate-700/80 overflow-hidden bg-slate-800/30">
+              <div onclick="toggleSanfona('sanfona-anos-anteriores')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-blue-400 text-base">📁</span>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-blue-300 transition">
+                      Histórico de Anos Anteriores (${data.anos_anteriores.length} Anos Catalogados)
+                    </h4>
+                    <p class="text-[11px] text-slate-400">Separação anual com totais acumulados e média mensal</p>
+                  </div>
+                </div>
+                <span id="sanfona-anos-anteriores-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+              </div>
+
+              <div id="sanfona-anos-anteriores" class="p-4 border-t border-slate-700/60 grid grid-cols-1 md:grid-cols-2 gap-3">
+                ${data.anos_anteriores.map((anoItem, aIdx) => `
+                  <div class="bg-slate-800/50 rounded-xl border border-slate-700/70 overflow-hidden flex flex-col justify-between">
+                    <div onclick="toggleAnoMeses(${aIdx})" class="p-3.5 bg-slate-800/80 hover:bg-slate-700/80 cursor-pointer flex items-center justify-between select-none group transition">
+                      <div>
+                        <div class="flex items-center space-x-2">
+                          <span class="text-base font-extrabold text-white font-mono group-hover:text-emerald-300 transition">${anoItem.ano}</span>
+                          <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-mono border border-slate-700">${anoItem.total_folhas} folhas</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 italic truncate mt-0.5" title="${anoItem.cargos}">${anoItem.cargos || '-'}</p>
+                      </div>
+                      <div class="flex items-center space-x-3 text-right font-mono text-xs">
+                        <div>
+                          <span class="text-emerald-400 font-bold block">Bruto: ${formatMoeda(anoItem.total_proventos)}</span>
+                          <span class="text-emerald-300 font-semibold block text-[11px]">Líq: ${formatMoeda(anoItem.total_liquido || (anoItem.total_proventos - anoItem.total_descontos))}</span>
+                          <span class="text-[10px] text-slate-400">Desc: -${formatMoeda(anoItem.total_descontos)}</span>
+                        </div>
+                        <span id="ano-seta-${aIdx}" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+                      </div>
+                    </div>
+
+                    <div id="ano-detalhes-${aIdx}" class="hidden p-2.5 border-t border-slate-700/80 bg-slate-900/90 space-y-1.5 max-h-60 overflow-y-auto">
+                      ${anoItem.meses.map(m => {
+                        let badgeFolha = '<span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Normal</span>';
+                        if (m.is_13) badgeFolha = '<span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-600/40 font-bold">13º</span>';
+                        else if (m.is_ferias) badgeFolha = '<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/40 font-bold">Férias</span>';
+
+                        return `
+                          <div onclick="abrirPopupContrachequeDetalhe(${m.id})" class="flex items-center justify-between text-xs py-2 px-2.5 bg-slate-800/40 rounded border border-slate-800 hover:bg-slate-800/80 hover:border-emerald-500/40 cursor-pointer transition select-none group" title="Clique para ver o contracheque">
+                            <div class="flex items-center space-x-2">
+                              <span class="font-bold text-white font-mono group-hover:text-emerald-300 transition">${String(m.mes).padStart(2, '0')}/${m.ano}</span>
+                              ${badgeFolha}
+                            </div>
+                            <div class="flex items-center space-x-2.5 font-mono">
+                              <span class="text-slate-400 text-[11px]" title="Salário Bruto">Bruto: ${formatMoeda(m.total_proventos)}</span>
+                              <span class="text-rose-400 text-[10px]" title="Descontos">${m.total_descontos > 0 ? '-' + formatMoeda(m.total_descontos) : ''}</span>
+                              <span class="text-emerald-400 font-bold" title="Salário Líquido">Líq: ${formatMoeda(m.salario_liquido || m.total_proventos)}</span>
+                              <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
+                            </div>
+                          </div>
+                        `;
+                      }).join('')}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        // 5. Diárias de Viagem & Deslocamentos Oficiais (Sanfona Colapsável)
+        if (p.total_diarias > 0 || (data.ultimas_viagens && data.ultimas_viagens.length > 0)) {
+          htmlCorpo += `
+            <div class="rounded-xl border border-amber-500/30 overflow-hidden bg-slate-800/30">
+              <div onclick="toggleSanfona('sanfona-diarias')" class="p-3.5 bg-slate-800/80 hover:bg-slate-800 cursor-pointer flex items-center justify-between select-none group transition">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-amber-400 text-base">✈️</span>
+                  <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider font-mono group-hover:text-amber-300 transition">
+                      Diárias de Viagem & Deslocamentos Oficiais
+                    </h4>
+                    <p class="text-[11px] text-slate-400">Histórico de viagens pagas com recursos públicos</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-3 font-mono text-xs">
+                  <span class="text-amber-400 font-bold">${formatMoeda(p.total_diarias)} (${p.qtd_diarias || 0} viagens)</span>
+                  <span id="sanfona-diarias-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
+                </div>
+              </div>
+
+              <div id="sanfona-diarias" class="p-4 border-t border-slate-700/60 space-y-2">
+                ${data.ultimas_viagens && data.ultimas_viagens.length > 0 ? `
+                  <div class="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                    ${data.ultimas_viagens.map(v => `
+                      <div class="p-2.5 bg-slate-900/60 rounded border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs">
+                        <div>
+                          <div class="flex items-center space-x-2">
+                            <span class="font-bold text-white font-mono">${v.data_viagem || `${v.ano}/${String(v.mes).padStart(2, '0')}`}</span>
+                            <span class="px-1.5 py-0.2 rounded text-[10px] bg-slate-800 text-amber-300 border border-slate-700">${v.destino || 'Destino Oficial'}</span>
+                          </div>
+                          <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1" title="${v.motivo || ''}">${v.motivo || 'Motivo empenhado no sistema'}</p>
+                        </div>
+                        <div class="text-right whitespace-nowrap">
+                          <span class="font-mono font-bold text-amber-400">${formatMoeda(v.valor)}</span>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : `
+                  <div class="text-xs text-slate-500 italic">Nenhum detalhe adicional de viagem registrado no período.</div>
+                `}
+              </div>
+            </div>
+          `;
+        }
+
+        corpo.innerHTML = htmlCorpo;
+      } catch(err) {
+        corpo.innerHTML = `<div class="py-8 text-center text-red-400">Erro ao carregar dados: ${err.message}</div>`;
+      }
+    }
+
+    function fecharModalPessoa() {
+      document.getElementById('modal-pessoa').classList.add('hidden');
+    }
+
+    function toggleSanfona(id) {
+      const el = document.getElementById(id);
+      const icon = document.getElementById(`${id}-icon`);
+      if (!el) return;
+      const isHidden = el.classList.contains('hidden') || el.style.display === 'none';
+      if (isHidden) {
+        el.classList.remove('hidden');
+        el.style.display = '';
+        if (icon) icon.innerText = '▼';
+      } else {
+        el.classList.add('hidden');
+        el.style.display = 'none';
+        if (icon) icon.innerText = '▶';
+      }
+    }
+
+    function toggleAnoMeses(idx) {
+      const el = document.getElementById(`ano-detalhes-${idx}`);
+      const seta = document.getElementById(`ano-seta-${idx}`);
+      if (el) {
+        if (el.classList.contains('hidden')) {
+          el.classList.remove('hidden');
+          if (seta) seta.innerText = '▲';
+        } else {
+          el.classList.add('hidden');
+          if (seta) seta.innerText = '▼';
+        }
+      }
+    }
+
+    function toggleSubRow(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.toggle('hidden');
+      }
+    }
+
+    async function abrirPopupContrachequeDetalhe(id) {
+      const modal = document.getElementById('modal-contracheque-detalhe');
+      const corpo = document.getElementById('holerite-corpo');
+      modal.classList.remove('hidden');
+      corpo.innerHTML = '<div class="py-12 text-center text-slate-400 font-mono animate-pulse">Consultando demonstrativo detalhado (rubricas, INSS e descontos)...</div>';
+
+      try {
+        const res = await fetch(`/api/dados/contracheque-detalhe?id=${id}`);
+        if (!res.ok) throw new Error('Não foi possível obter os detalhes do contracheque');
+        const data = await res.json();
+        const d = data.detalhes;
+
+        const badgeTipo = document.getElementById('holerite-badge-tipo');
+        badgeTipo.innerText = data.tipo_folha || 'Folha Normal';
+        if ((data.tipo_folha || '').toLowerCase().includes('13') || (data.tipo_folha || '').toLowerCase().includes('décimo')) {
+          badgeTipo.className = 'text-[11px] px-2.5 py-0.5 rounded-full font-mono font-bold bg-purple-950 text-purple-300 border border-purple-600/40';
+        } else if ((data.tipo_folha || '').toLowerCase().includes('férias') || (data.tipo_folha || '').toLowerCase().includes('ferias')) {
+          badgeTipo.className = 'text-[11px] px-2.5 py-0.5 rounded-full font-mono font-bold bg-amber-950 text-amber-300 border border-amber-600/40';
+        } else {
+          badgeTipo.className = 'text-[11px] px-2.5 py-0.5 rounded-full font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-600/40';
+        }
+
+        document.getElementById('holerite-subtitulo').innerText = `Competência: ${String(data.mes).padStart(2, '0')}/${data.ano} • ${data.entidade || 'Prefeitura Municipal'}`;
+
+        const linkOficialBtn = document.getElementById('holerite-link-oficial');
+        if (d.url_oficial) {
+          linkOficialBtn.href = d.url_oficial;
+          linkOficialBtn.classList.remove('hidden');
+        } else {
+          linkOficialBtn.classList.add('hidden');
+        }
+
+        const proventos = (d.rubricas || []).filter(r => r.tipo === 'PROVENTO');
+        const descontos = (d.rubricas || []).filter(r => r.tipo === 'DESCONTO');
+
+        let corpoHtml = `
+          <!-- Ficha de Identificação do Servidor -->
+          <div class="p-3.5 bg-slate-800/60 rounded-xl border border-slate-700/80 space-y-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div>
+                <span class="text-slate-400 font-mono text-[10px] uppercase block">Nome do Servidor</span>
+                <strong class="text-white text-sm font-semibold">${d.nome || '-'}</strong>
+              </div>
+              <div>
+                <span class="text-slate-400 font-mono text-[10px] uppercase block">Cargo / Função</span>
+                <span class="text-emerald-400 font-medium">${d.cargo || '-'}</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs pt-1 border-t border-slate-700/50">
+              <div>
+                <span class="text-slate-400 font-mono text-[10px] uppercase block">Matrícula</span>
+                <span class="text-blue-400 font-mono font-bold">${d.matricula || '-'}</span>
+              </div>
+              <div>
+                <span class="text-slate-400 font-mono text-[10px] uppercase block">Lotação / Órgão</span>
+                <span class="text-slate-300 truncate block" title="${d.lotacao || ''}">${d.lotacao || 'Geral'}</span>
+              </div>
+              <div>
+                <span class="text-slate-400 font-mono text-[10px] uppercase block">Data Admissão</span>
+                <span class="text-slate-300 font-mono">${d.admissao || 'Não informada'}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grade de Rubricas: Proventos vs Descontos -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Coluna de Proventos -->
+            <div class="p-3.5 bg-slate-800/40 rounded-xl border border-emerald-500/30 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-emerald-500/20">
+                  <span class="text-xs font-bold text-emerald-400 uppercase font-mono flex items-center gap-1.5">
+                    <span>🟢</span> Proventos & Vencimentos
+                    <span class="has-tooltip tooltip-bottom" tabindex="0">
+                      <span class="tooltip-icon">?</span>
+                      <div class="tooltip-box">
+                        <span class="tooltip-title">Proventos & Vencimentos</span>
+                        <span class="tooltip-body">Verbas creditadas em favor do servidor:
+• Vencimento-base do cargo efetivo ou comissionado.
+• Gratificações de função, produtividade e horas extras.
+• Adicionais de insalubridade, quinquênios e terço de férias.</span>
+                        <span class="tooltip-calc">Total Proventos = ${formatMoeda(d.total_proventos)}</span>
+                      </div>
+                    </span>
+                  </span>
+                  <span class="text-xs font-mono font-bold text-emerald-400">${formatMoeda(d.total_proventos)}</span>
+                </div>
+                <div class="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                  ${proventos.length > 0 ? proventos.map(p => `
+                    <div class="flex items-center justify-between text-xs py-1 border-b border-slate-800/60">
+                      <span class="text-slate-300">${p.descricao}</span>
+                      <span class="font-mono font-medium text-emerald-300 whitespace-nowrap ml-2">${formatMoeda(p.valor)}</span>
+                    </div>
+                  `).join('') : '<div class="text-xs text-slate-500 py-2">Nenhuma rubrica discriminada</div>'}
+                </div>
+              </div>
+            </div>
+
+            <!-- Coluna de Descontos -->
+            <div class="p-3.5 bg-slate-800/40 rounded-xl border border-rose-500/30 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-rose-500/20">
+                  <span class="text-xs font-bold text-rose-400 uppercase font-mono flex items-center gap-1.5">
+                    <span>🔴</span> Descontos & Retenções (INSS / IR)
+                    <span class="has-tooltip tooltip-bottom" tabindex="0">
+                      <span class="tooltip-icon">?</span>
+                      <div class="tooltip-box">
+                        <span class="tooltip-title">Deduções Oficiais Obrigatórias</span>
+                        <span class="tooltip-body">Retenções estatutárias calculadas pela lei:
+• INSS / RPPS Municipal: Contribuição previdenciária progressiva.
+• IRRF: Imposto de Renda Retido na Fonte da Receita Federal.
+• Outras deduções legais (consignados, faltas ou pensões judiciais).</span>
+                        <span class="tooltip-calc">Total Descontos = -${formatMoeda(d.total_descontos)}</span>
+                      </div>
+                    </span>
+                  </span>
+                  <span class="text-xs font-mono font-bold text-rose-400">${formatMoeda(d.total_descontos)}</span>
+                </div>
+                <div class="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                  ${descontos.length > 0 ? descontos.map(desc => `
+                    <div class="flex items-center justify-between text-xs py-1 border-b border-slate-800/60">
+                      <span class="text-slate-300">${desc.descricao}</span>
+                      <span class="font-mono font-medium text-rose-300 whitespace-nowrap ml-2">-${formatMoeda(desc.valor)}</span>
+                    </div>
+                  `).join('') : '<div class="text-xs text-slate-500 py-2">Nenhum desconto registrado</div>'}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Totalizadores e Salário Líquido -->
+          <div class="p-4 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-xl border border-emerald-500/40 flex flex-wrap items-center justify-between gap-3 shadow-lg">
+            <div class="flex items-center space-x-4">
+              <div>
+                <span class="text-[10px] text-slate-400 uppercase font-mono block">Total Bruto</span>
+                <span class="text-sm font-bold text-emerald-400 font-mono">${formatMoeda(d.total_proventos)}</span>
+              </div>
+              <div class="text-slate-600 text-lg font-light">-</div>
+              <div>
+                <span class="text-[10px] text-slate-400 uppercase font-mono block">Total Descontos</span>
+                <span class="text-sm font-bold text-rose-400 font-mono">${formatMoeda(d.total_descontos)}</span>
+              </div>
+              <div class="text-slate-600 text-lg font-light">=</div>
+            </div>
+            <div class="text-right flex items-center gap-2">
+              <span class="has-tooltip tooltip-bottom tooltip-align-right" tabindex="0">
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-box">
+                  <span class="tooltip-title">Cálculo do Salário Líquido</span>
+                  <span class="tooltip-body">Valor líquido final que cai na conta bancária do servidor:
+• Salário Bruto: ${formatMoeda(d.total_proventos)}
+• Descontos Oficiais: -${formatMoeda(d.total_descontos)}
+• Valor Líquido: ${formatMoeda(d.salario_liquido)}</span>
+                  <span class="tooltip-calc">Líquido = Bruto − Descontos</span>
+                </div>
+              </span>
+              <div>
+                <span class="text-[11px] text-emerald-300 uppercase font-mono font-bold tracking-wider block">Salário Líquido a Receber</span>
+                <span class="text-2xl font-black text-white font-mono drop-shadow">${formatMoeda(d.salario_liquido)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        corpo.innerHTML = corpoHtml;
+      } catch(err) {
+        corpo.innerHTML = `<div class="py-8 text-center text-red-400 font-medium">Erro ao carregar contracheque: ${err.message}</div>`;
+      }
+    }
+
+    function fecharPopupContrachequeDetalhe() {
+      const modal = document.getElementById('modal-contracheque-detalhe');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Fechar modais com tecla ESC ou clique fora
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modalDet = document.getElementById('modal-contracheque-detalhe');
+        if (modalDet && !modalDet.classList.contains('hidden')) {
+          fecharPopupContrachequeDetalhe();
+        } else {
+          fecharModalPessoa();
+        }
+      }
+    });
+
+    const modalDetEl = document.getElementById('modal-contracheque-detalhe');
+    if (modalDetEl) {
+      modalDetEl.addEventListener('click', (e) => {
+        if (e.target === modalDetEl) fecharPopupContrachequeDetalhe();
+      });
+    }
+
+    const modalPessoaEl = document.getElementById('modal-pessoa');
+    if (modalPessoaEl) {
+      modalPessoaEl.addEventListener('click', (e) => {
+        if (e.target === modalPessoaEl) fecharModalPessoa();
+      });
+    }
+
+    async function carregarRankings() {
+      try {
+        const res = await fetch('/api/dados/rankings');
+        const data = await res.json();
+
+        // 1. Top Salários
+        const salList = document.getElementById('ranking-salarios-list');
+        salList.innerHTML = (data.topSalarios || []).map((s, idx) => `
+          <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-lg flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <span class="w-6 h-6 rounded-full bg-emerald-950 text-emerald-400 font-bold text-xs flex items-center justify-center font-mono">${idx + 1}</span>
+              <div>
+                <p class="text-xs font-semibold text-white">${s.nome}</p>
+                <p class="text-[11px] text-slate-400">${s.cargo || 'Cargo não informado'} • ${s.ano}/${String(s.mes).padStart(2, '0')}</p>
+              </div>
+            </div>
+            <span class="font-mono text-xs font-bold text-emerald-400">${formatMoeda(s.total_proventos)}</span>
+          </div>
+        `).join('');
+
+        // 2. Top Credores
+        const credList = document.getElementById('ranking-credores-list');
+        credList.innerHTML = (data.topCredores || []).map((c, idx) => `
+          <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-lg flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <span class="w-6 h-6 rounded-full bg-cyan-950 text-cyan-400 font-bold text-xs flex items-center justify-center font-mono">${idx + 1}</span>
+              <div class="max-w-[180px] truncate">
+                <p class="text-xs font-semibold text-white truncate" title="${c.credor}">${c.credor}</p>
+                <p class="text-[11px] text-slate-400">${c.qtd_empenhos} empenhos (${c.de_ano}-${c.ate_ano})</p>
+              </div>
+            </div>
+            <span class="font-mono text-xs font-bold text-cyan-400">${formatMoeda(c.volume_total)}</span>
+          </div>
+        `).join('');
+
+        // 3. Top Diárias
+        const diarList = document.getElementById('ranking-diarias-list');
+        diarList.innerHTML = (data.topDiarias || []).map((d, idx) => `
+          <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-lg flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <span class="w-6 h-6 rounded-full bg-amber-950 text-amber-400 font-bold text-xs flex items-center justify-center font-mono">${idx + 1}</span>
+              <div class="max-w-[180px] truncate">
+                <p class="text-xs font-semibold text-white truncate" title="${d.servidor}">${d.servidor}</p>
+                <p class="text-[11px] text-slate-400">${d.qtd_diarias} viagens (${d.de_ano}-${d.ate_ano})</p>
+              </div>
+            </div>
+            <span class="font-mono text-xs font-bold text-amber-400">${formatMoeda(d.volume_total)}</span>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        console.error('Erro ao carregar rankings:', err);
+      }
+    }
+
+    // Inicialização ao carregar
+    document.addEventListener('DOMContentLoaded', () => {
+      carregarResumoKpis();
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get('tab');
+      const buscaParam = urlParams.get('busca') || urlParams.get('q');
+      if (buscaParam) {
+        document.getElementById('input-busca').value = buscaParam;
+      }
+      let tabDestino = tabParam;
+      if (tabParam === 'funcionarios' || tabParam === 'servidores') {
+        tabDestino = 'pessoas';
+      }
+      if (tabDestino && ['pessoas', 'contracheques', 'despesas', 'diarias', 'contratos', 'receitas', 'convenios', 'rankings'].includes(tabDestino)) {
+        mudarAba(tabDestino);
+      } else {
+        mudarAba('pessoas');
+      }
+    });
+  </script>
+  <script src="/components/side_menu_v2.js"></script>
+</body>
+</html>
