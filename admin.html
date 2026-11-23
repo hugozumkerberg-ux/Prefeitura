@@ -247,7 +247,7 @@
     </div>
 
     <!-- =========================================================================
-         ABA 4: CENTRAL DE REPORTS & DOSSIÊS DO HUGO
+         ABA 4: CENTRAL DE REPORTS & DADOS DO HUGO
          ========================================================================= -->
     <div id="secao-reports" class="hidden space-y-6">
       
@@ -287,13 +287,13 @@
           <div>
             <h3 id="report-titulo" class="text-base font-bold text-white font-mono flex items-center space-x-2">
               <span>📑</span>
-              <span>Dossiê Administrativo Selecionado</span>
+              <span>Relatório de Dados Selecionado</span>
             </h3>
             <p id="report-subtitulo" class="text-xs text-slate-400 mt-0.5">Clique em um dos reports acima para gerar o relatório consolidado.</p>
           </div>
           <button onclick="copiarReportTexto()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-mono text-emerald-400 rounded-lg border border-slate-700 transition flex items-center space-x-1.5">
             <span>📋</span>
-            <span>Copiar Dossiê</span>
+            <span>Copiar Dados</span>
           </button>
         </div>
 
@@ -489,7 +489,7 @@
       const titulo = document.getElementById('report-titulo');
       const subtitulo = document.getElementById('report-subtitulo');
       const cont = document.getElementById('report-conteudo');
-      cont.innerHTML = '<div class="py-12 text-center text-slate-400 font-mono animate-pulse">Gerando dossiê administrativo com dados em tempo real...</div>';
+      cont.innerHTML = '<div class="py-12 text-center text-slate-400 font-mono animate-pulse">Gerando relatório administrativo com dados em tempo real...</div>';
 
       try {
         const res = await fetch(`/api/admin/reports?tipo=${tipo}`);
@@ -616,7 +616,7 @@
         return;
       }
       navigator.clipboard.writeText(JSON.stringify(ultimoReportGerado, null, 2))
-        .then(() => alert('Dossiê copiado para a área de transferência!'))
+        .then(() => alert('Dados copiados para a área de transferência!'))
         .catch(() => alert('Não foi possível copiar automaticamente.'));
     }
 

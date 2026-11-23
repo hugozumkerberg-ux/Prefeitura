@@ -416,7 +416,7 @@
       </div>
     </div>
 
-    <!-- Modal de Dossiê 360° da Pessoa Unificada -->
+    <!-- Modal de Dados 360° da Pessoa Unificada -->
     <div id="modal-pessoa" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
       <div class="glass-card bg-slate-900/95 border border-slate-700 w-full max-w-4xl max-h-[92vh] rounded-2xl overflow-hidden flex flex-col shadow-2xl">
         <!-- Top header modal -->
@@ -439,13 +439,13 @@
 
         <!-- Modal Body -->
         <div class="p-6 overflow-y-auto space-y-6 flex-1 text-slate-300 text-sm" id="modal-corpo">
-          <div class="py-12 text-center text-slate-500">Carregando dossiê 360° do cidadão...</div>
+          <div class="py-12 text-center text-slate-500">Carregando dados 360° do cidadão...</div>
         </div>
 
         <!-- Modal Footer -->
         <div class="p-4 border-t border-slate-800 flex items-center justify-between bg-slate-950/70 text-xs text-slate-400">
           <span>Auditoria Forense Unificada • Arinos / MG</span>
-          <button onclick="fecharModalPessoa()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg transition">Fechar Dossiê</button>
+          <button onclick="fecharModalPessoa()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg transition">Fechar</button>
         </div>
       </div>
     </div>
@@ -1163,57 +1163,105 @@
           `;
         }
       } else if (aba === 'despesas') {
-        for (const r of registros) {
+        registros.forEach((r, idx) => {
           const badgeEnt = r.entidade.includes('Saúde')
             ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-cyan-900/40 text-cyan-300 border border-cyan-800">Saúde</span>'
             : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-900/40 text-emerald-300 border border-emerald-800">Prefeitura</span>';
 
           html += `
-            <tr class="hover:bg-slate-800/40 transition">
+            <tr onclick="toggleSubRow('desp-${idx}')" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para expandir detalhes do empenho">
               <td class="py-3 px-4 font-mono text-xs text-slate-400">
-                <div>${r.data_empenho || `${r.ano}/${String(r.mes).padStart(2, '0')}`}</div>
+                <div class="font-bold text-white group-hover:text-cyan-300 transition">${r.data_empenho || `${r.ano}/${String(r.mes).padStart(2, '0')}`}</div>
                 <div class="text-xs text-slate-500">Emp: ${r.nr_empenho || '-'}</div>
               </td>
               <td class="py-3 px-4">${badgeEnt}</td>
-              <td class="py-3 px-4 font-medium text-white">
+              <td class="py-3 px-4 font-medium text-white group-hover:text-cyan-300 transition">
                 <div>${r.credor}</div>
                 ${r.cpf_cnpj ? `<div class="text-xs text-slate-500 font-mono">${r.cpf_cnpj}</div>` : ''}
               </td>
               <td class="py-3 px-4 text-slate-300 text-xs max-w-xs truncate">${r.natureza || '-'}</td>
               <td class="py-3 px-4 text-slate-400 text-xs max-w-sm truncate" title="${r.historico || ''}">${r.historico || '-'}</td>
-              <td class="py-3 px-4 text-right font-mono font-semibold text-cyan-400">${formatMoeda(r.valor)}</td>
+              <td class="py-3 px-4 text-right font-mono font-semibold text-cyan-400">
+                <div class="flex items-center justify-end space-x-2">
+                  <span>${formatMoeda(r.valor)}</span>
+                  <span class="text-slate-600 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition font-mono font-bold">›</span>
+                </div>
+              </td>
+            </tr>
+            <tr id="desp-${idx}" class="hidden bg-slate-950/70 border-b border-slate-800">
+              <td colspan="6" class="p-4 text-xs text-slate-300">
+                <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                  <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                    <span class="font-bold text-white font-mono flex items-center gap-2">
+                      <span>📄 Empenho Nº ${r.nr_empenho || '-'} • Ano ${r.ano}</span>
+                      <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">${r.entidade}</span>
+                    </span>
+                    <span class="text-cyan-400 font-mono font-bold text-sm">${formatMoeda(r.valor)}</span>
+                  </div>
+                  <p class="text-slate-300 leading-relaxed font-sans pt-1"><strong>Histórico Completo da Despesa:</strong> ${r.historico || 'Sem histórico detalhado disponível.'}</p>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800/60 font-mono text-[11px] text-slate-400">
+                    <div><span class="text-slate-500">Credor / Favorecido:</span> <strong class="text-white">${r.credor}</strong></div>
+                    <div><span class="text-slate-500">Documento (CPF/CNPJ):</span> <strong class="text-slate-300">${r.cpf_cnpj || '-'}</strong></div>
+                    <div><span class="text-slate-500">Natureza do Gasto:</span> <strong class="text-slate-300">${r.natureza || '-'}</strong></div>
+                  </div>
+                </div>
+              </td>
             </tr>
           `;
-        }
+        });
       } else if (aba === 'diarias') {
-        for (const r of registros) {
+        registros.forEach((r, idx) => {
           const badgeEnt = r.entidade.includes('Saúde')
             ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-cyan-900/40 text-cyan-300 border border-cyan-800">Saúde</span>'
             : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-900/40 text-emerald-300 border border-emerald-800">Prefeitura</span>';
 
           html += `
-            <tr class="hover:bg-slate-800/40 transition">
+            <tr onclick="toggleSubRow('diar-${idx}')" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para expandir detalhes da viagem">
               <td class="py-3 px-4 font-mono text-xs text-slate-400">
-                <div>${r.data_viagem || `${r.ano}/${String(r.mes).padStart(2, '0')}`}</div>
+                <div class="font-bold text-white group-hover:text-amber-300 transition">${r.data_viagem || `${r.ano}/${String(r.mes).padStart(2, '0')}`}</div>
                 <div class="text-xs text-slate-500">Emp: ${r.nr_empenho || '-'}</div>
               </td>
               <td class="py-3 px-4">${badgeEnt}</td>
-              <td class="py-3 px-4 font-medium text-white">${r.servidor}</td>
+              <td class="py-3 px-4 font-medium text-white group-hover:text-amber-300 transition">${r.servidor}</td>
               <td class="py-3 px-4 text-slate-300 text-xs">${r.tipo_diaria || 'Diária'}</td>
               <td class="py-3 px-4 text-slate-400 text-xs max-w-md truncate" title="${r.motivo || ''}">${r.motivo || '-'}</td>
-              <td class="py-3 px-4 text-right font-mono font-semibold text-amber-400">${formatMoeda(r.valor)}</td>
+              <td class="py-3 px-4 text-right font-mono font-semibold text-amber-400">
+                <div class="flex items-center justify-end space-x-2">
+                  <span>${formatMoeda(r.valor)}</span>
+                  <span class="text-slate-600 group-hover:text-amber-400 group-hover:translate-x-0.5 transition font-mono font-bold">›</span>
+                </div>
+              </td>
+            </tr>
+            <tr id="diar-${idx}" class="hidden bg-slate-950/70 border-b border-slate-800">
+              <td colspan="6" class="p-4 text-xs text-slate-300">
+                <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                  <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                    <span class="font-bold text-white font-mono flex items-center gap-2">
+                      <span>✈️ Viagem Oficial • ${r.servidor}</span>
+                      <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-amber-300">${r.tipo_diaria || 'Diária'}</span>
+                    </span>
+                    <span class="text-amber-400 font-mono font-bold text-sm">${formatMoeda(r.valor)}</span>
+                  </div>
+                  <p class="text-slate-300 leading-relaxed font-sans pt-1"><strong>Finalidade / Destino / Motivo:</strong> ${r.motivo || 'Sem detalhamento de itinerário informado.'}</p>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800/60 font-mono text-[11px] text-slate-400">
+                    <div><span class="text-slate-500">Período / Data:</span> <strong class="text-white">${r.data_viagem || `${r.ano}/${r.mes}`}</strong></div>
+                    <div><span class="text-slate-500">Órgão Emissor:</span> <strong class="text-slate-300">${r.entidade}</strong></div>
+                    <div><span class="text-slate-500">Empenho:</span> <strong class="text-slate-300">${r.nr_empenho || '-'}</strong></div>
+                  </div>
+                </div>
+              </td>
             </tr>
           `;
-        }
+        });
       } else if (aba === 'contratos') {
-        for (const r of registros) {
+        registros.forEach((r, idx) => {
           html += `
-            <tr class="hover:bg-slate-800/40 transition">
+            <tr onclick="toggleSubRow('cont-${idx}')" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para expandir detalhes do contrato">
               <td class="py-3 px-4 font-mono text-xs text-slate-400">
-                <div class="font-bold text-white">Nº ${r.nr_contrato || '-'}</div>
+                <div class="font-bold text-white group-hover:text-blue-300 transition">Nº ${r.nr_contrato || '-'}</div>
                 <div class="text-xs text-slate-500">Proc: ${r.nr_processo || '-'}</div>
               </td>
-              <td class="py-3 px-4 font-medium text-white">
+              <td class="py-3 px-4 font-medium text-white group-hover:text-blue-300 transition">
                 <div>${r.credor}</div>
                 ${r.doc_credor ? `<div class="text-xs text-slate-500 font-mono">${r.doc_credor}</div>` : ''}
               </td>
@@ -1223,10 +1271,34 @@
                 <div>Fim: ${r.dt_fim_vigencia || '-'}</div>
               </td>
               <td class="py-3 px-4 text-xs text-slate-300 max-w-md truncate" title="${r.objeto || ''}">${r.objeto || '-'}</td>
-              <td class="py-3 px-4 text-right font-mono font-semibold text-blue-400">${formatMoeda(r.valor)}</td>
+              <td class="py-3 px-4 text-right font-mono font-semibold text-blue-400">
+                <div class="flex items-center justify-end space-x-2">
+                  <span>${formatMoeda(r.valor)}</span>
+                  <span class="text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition font-mono font-bold">›</span>
+                </div>
+              </td>
+            </tr>
+            <tr id="cont-${idx}" class="hidden bg-slate-950/70 border-b border-slate-800">
+              <td colspan="6" class="p-4 text-xs text-slate-300">
+                <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                  <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                    <span class="font-bold text-white font-mono flex items-center gap-2">
+                      <span>📑 Contrato Administrativo Nº ${r.nr_contrato || '-'}</span>
+                      <span class="text-[10px] px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-600/40">${r.tipo_contrato || 'Contrato'}</span>
+                    </span>
+                    <span class="text-blue-400 font-mono font-bold text-sm">${formatMoeda(r.valor)}</span>
+                  </div>
+                  <p class="text-slate-300 leading-relaxed font-sans pt-1"><strong>Objeto Contratual Completo:</strong> ${r.objeto || 'Sem descrição detalhada do objeto.'}</p>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800/60 font-mono text-[11px] text-slate-400">
+                    <div><span class="text-slate-500">Contratado:</span> <strong class="text-white">${r.credor}</strong></div>
+                    <div><span class="text-slate-500">Documento:</span> <strong class="text-slate-300">${r.doc_credor || '-'}</strong></div>
+                    <div><span class="text-slate-500">Processo:</span> <strong class="text-slate-300">${r.nr_processo || '-'}</strong></div>
+                  </div>
+                </div>
+              </td>
             </tr>
           `;
-        }
+        });
       } else if (aba === 'receitas') {
         for (const r of registros) {
           html += `
@@ -1269,7 +1341,7 @@
       const modal = document.getElementById('modal-pessoa');
       const corpo = document.getElementById('modal-corpo');
       modal.classList.remove('hidden');
-      corpo.innerHTML = '<div class="py-12 text-center text-slate-400 font-mono animate-pulse">Carregando dossiê 360°...</div>';
+      corpo.innerHTML = '<div class="py-12 text-center text-slate-400 font-mono animate-pulse">Carregando dados 360°...</div>';
 
       try {
         const res = await fetch(`/api/dados/perfil-pessoa?id=${id}`);
@@ -1869,7 +1941,7 @@
 
         corpo.innerHTML = htmlCorpo;
       } catch(err) {
-        corpo.innerHTML = `<div class="py-8 text-center text-red-400">Erro ao carregar dossiê: ${err.message}</div>`;
+        corpo.innerHTML = `<div class="py-8 text-center text-red-400">Erro ao carregar dados: ${err.message}</div>`;
       }
     }
 
@@ -1904,6 +1976,13 @@
           el.classList.add('hidden');
           if (seta) seta.innerText = '▼';
         }
+      }
+    }
+
+    function toggleSubRow(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.toggle('hidden');
       }
     }
 

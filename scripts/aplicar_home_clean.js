@@ -290,7 +290,7 @@ const cleanHtml = `
         </div>
         <div id="listaCredores"></div>
         <div style="margin-top: 14px; text-align: right;">
-          <a href="/empresas.html" target="_blank" class="nav-btn" style="text-decoration: none; font-size: 11px; padding: 4px 12px;">Abrir Dossiê Completo de Empresas ↗</a>
+          <a href="/empresas.html" target="_blank" class="nav-btn" style="text-decoration: none; font-size: 11px; padding: 4px 12px;">Abrir Dados de Empresas ↗</a>
         </div>
       </div>
 
@@ -391,7 +391,7 @@ const cleanHtml = `
       <div class="voter-modal-box">
         <div class="voter-modal-header">
           <div>
-            <h3 style="font-size: 18px; font-weight: 800; color: #fff;">💰 Dossiê da Folha de Pagamento & Salários</h3>
+            <h3 style="font-size: 18px; font-weight: 800; color: #fff;">💰 Dados da Folha de Pagamento & Salários</h3>
             <p style="font-size: 12px; color: var(--text-muted);">Série histórica 2013 a 2026 • 153.938 contracheques auditados</p>
           </div>
           <button class="modal-close-btn" onclick="closeVoterModal('modalSalarios')">✕</button>
@@ -527,7 +527,7 @@ const cleanHtml = `
         </div>
         <div class="voter-modal-footer">
           <span style="font-size: 11px; color: var(--text-dim);">Auditoria com base em dados públicos do CNPJ</span>
-          <a href="/empresas.html" target="_blank" class="btn-citizen-popup" style="background: #f59e0b; color: #000; font-weight: 700; width: auto; border: none;">Examinar Dossiê Completo de Alertas ↗</a>
+          <a href="/empresas.html" target="_blank" class="btn-citizen-popup" style="background: #f59e0b; color: #000; font-weight: 700; width: auto; border: none;">Examinar Dados de Alertas ↗</a>
         </div>
       </div>
     </div>

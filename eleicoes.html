@@ -86,6 +86,184 @@
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: #334155; }
   </style>
+  <script>
+    // Cache em memória para fotos com fundo removido e bordas suavizadas
+    const fotoTransparenteCache = new Map();
+
+    /**
+     * Remove o fundo sólido/claro das fotos oficiais do TSE e suaviza as bordas
+     * com anti-aliasing e vinheta orgânica via HTML5 Canvas
+     */
+    function tratarFotoCandidato(imgEl) {
+      if (!imgEl || imgEl.dataset.treated === 'true') return;
+      const srcOriginal = imgEl.src;
+      if (!srcOriginal || srcOriginal.startsWith('data:image/png')) return;
+
+      if (fotoTransparenteCache.has(srcOriginal)) {
+        imgEl.src = fotoTransparenteCache.get(srcOriginal);
+        imgEl.dataset.treated = 'true';
+        return;
+      }
+
+      const tempImg = new Image();
+      tempImg.crossOrigin = 'anonymous';
+      tempImg.src = srcOriginal;
+
+      tempImg.onload = () => {
+        try {
+          const w = tempImg.naturalWidth || 200;
+          const h = tempImg.naturalHeight || 260;
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+          ctx.drawImage(tempImg, 0, 0, w, h);
+          const imgData = ctx.getImageData(0, 0, w, h);
+          const data = imgData.data;
+
+          // Amostra de cores de fundo nos cantos superiores
+          const bgSamples = [];
+          const samplePoints = [
+            [0, 0], [w - 1, 0], [2, 2], [w - 3, 2],
+            [0, Math.min(15, h - 1)], [w - 1, Math.min(15, h - 1)],
+            [Math.floor(w * 0.1), 0], [Math.floor(w * 0.9), 0],
+            [Math.floor(w * 0.5), 0]
+          ];
+
+          for (const [sx, sy] of samplePoints) {
+            const idx = (sy * w + sx) * 4;
+            bgSamples.push({ r: data[idx], g: data[idx + 1], b: data[idx + 2] });
+          }
+
+          function distFundo(r, g, b) {
+            let minD = 999;
+            for (const s of bgSamples) {
+              const d = Math.hypot(r - s.r, g - s.g, b - s.b);
+              if (d < minD) minD = d;
+            }
+            return minD;
+          }
+
+          function isPeleHumana(r, g, b) {
+            return (r > 85 && g > 45 && b > 25 && r > g && g > b && (r - g) > 12 && (r - b) > 16);
+          }
+
+          // Flood-fill com BFS a partir das bordas superiores e laterais
+          const isBg = new Uint8Array(w * h);
+          const queue = [];
+
+          for (let x = 0; x < w; x++) {
+            isBg[x] = 1;
+            queue.push(x, 0);
+          }
+          const limiteY = Math.floor(h * 0.72);
+          for (let y = 1; y < limiteY; y++) {
+            isBg[y * w] = 1;
+            queue.push(0, y);
+            isBg[y * w + (w - 1)] = 1;
+            queue.push(w - 1, y);
+          }
+
+          const threshold = 50;
+          let head = 0;
+
+          while (head < queue.length) {
+            const cx = queue[head++];
+            const cy = queue[head++];
+
+            const vizinhos = [
+              [cx + 1, cy], [cx - 1, cy],
+              [cx, cy + 1], [cx, cy - 1]
+            ];
+
+            for (const [nx, ny] of vizinhos) {
+              if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+                const nIdx = ny * w + nx;
+                if (isBg[nIdx] === 0) {
+                  const pIdx = nIdx * 4;
+                  const r = data[pIdx];
+                  const g = data[pIdx + 1];
+                  const b = data[pIdx + 2];
+
+                  // Não penetra em tons de pele
+                  if (cy > 8 && isPeleHumana(r, g, b)) {
+                    continue;
+                  }
+
+                  const d = distFundo(r, g, b);
+                  const isClaroNeutro = (r > 200 && g > 200 && b > 200 && Math.abs(r - g) < 20 && Math.abs(r - b) < 20);
+
+                  if (d < threshold || (isClaroNeutro && d < threshold * 1.5)) {
+                    isBg[nIdx] = 1;
+                    queue.push(nx, ny);
+                  }
+                }
+              }
+            }
+          }
+
+          // Mapa de transparência Alpha
+          const alphaMap = new Float32Array(w * h);
+          for (let i = 0; i < w * h; i++) {
+            alphaMap[i] = (isBg[i] === 1) ? 0.0 : 1.0;
+          }
+
+          // Suavização das bordas com filtro box 3x3 no Alpha (anti-aliasing)
+          const smoothAlpha = new Float32Array(w * h);
+          for (let y = 1; y < h - 1; y++) {
+            for (let x = 1; x < w - 1; x++) {
+              const idx = y * w + x;
+              if (alphaMap[idx] === 0.0) {
+                smoothAlpha[idx] = 0.0;
+                continue;
+              }
+              let soma = 0;
+              for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= 1; dx++) {
+                  soma += alphaMap[(y + dy) * w + (x + dx)];
+                }
+              }
+              smoothAlpha[idx] = soma / 9.0;
+            }
+          }
+
+          // Fade suave nos últimos 24% inferiores para dissolver o corte seco do busto
+          const fadeStart = Math.floor(h * 0.74);
+          const fadeLen = h - fadeStart;
+
+          for (let y = 0; y < h; y++) {
+            let fadeBusto = 1.0;
+            if (y > fadeStart) {
+              fadeBusto = Math.max(0, 1.0 - ((y - fadeStart) / fadeLen));
+              fadeBusto = Math.pow(fadeBusto, 1.3);
+            }
+
+            for (let x = 0; x < w; x++) {
+              const idx = y * w + x;
+              const pIdx = idx * 4;
+
+              let a = smoothAlpha[idx];
+              if (a === undefined) a = alphaMap[idx];
+              a *= fadeBusto;
+
+              data[pIdx + 3] = Math.round(a * 255);
+            }
+          }
+
+          ctx.putImageData(imgData, 0, 0);
+          const dataUrl = canvas.toDataURL('image/png');
+
+          fotoTransparenteCache.set(srcOriginal, dataUrl);
+          imgEl.src = dataUrl;
+          imgEl.dataset.treated = 'true';
+        } catch (err) {
+          console.warn('Processamento de fundo ignorado:', err);
+        }
+      };
+    }
+  </script>
   <link rel="stylesheet" href="/components/side_menu_v2.css">
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white">
@@ -278,8 +456,8 @@
 
   </main>
 
-  <!-- Modal / Dossier Completo do Candidato -->
-  <div id="modal-dossier" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md transition-opacity">
+  <!-- Modal / Dados Completos do Candidato -->
+  <div id="modal-candidato" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md transition-opacity">
     <div class="glass-card max-w-2xl w-full rounded-2xl border border-slate-700 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col transform transition-transform">
       
       <!-- Topo Modal com Cor da Campanha -->
@@ -386,183 +564,6 @@
     let partidoFiltro = '';
     let textoFiltro = '';
     let anoEleicao = '2024';
-
-    // Cache em memória para fotos com fundo removido e bordas suavizadas
-    const fotoTransparenteCache = new Map();
-
-    /**
-     * Remove o fundo sólido/claro das fotos oficiais do TSE e suaviza as bordas
-     * com anti-aliasing e vinheta orgânica via HTML5 Canvas
-     */
-    function tratarFotoCandidato(imgEl) {
-      if (!imgEl || imgEl.dataset.treated === 'true') return;
-      const srcOriginal = imgEl.src;
-      if (!srcOriginal || srcOriginal.startsWith('data:image/png')) return;
-
-      if (fotoTransparenteCache.has(srcOriginal)) {
-        imgEl.src = fotoTransparenteCache.get(srcOriginal);
-        imgEl.dataset.treated = 'true';
-        return;
-      }
-
-      const tempImg = new Image();
-      tempImg.crossOrigin = 'anonymous';
-      tempImg.src = srcOriginal;
-
-      tempImg.onload = () => {
-        try {
-          const w = tempImg.naturalWidth || 200;
-          const h = tempImg.naturalHeight || 260;
-
-          const canvas = document.createElement('canvas');
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d', { willReadFrequently: true });
-
-          ctx.drawImage(tempImg, 0, 0, w, h);
-          const imgData = ctx.getImageData(0, 0, w, h);
-          const data = imgData.data;
-
-          // Amostra de cores de fundo nos cantos superiores
-          const bgSamples = [];
-          const samplePoints = [
-            [0, 0], [w - 1, 0], [2, 2], [w - 3, 2],
-            [0, Math.min(15, h - 1)], [w - 1, Math.min(15, h - 1)],
-            [Math.floor(w * 0.1), 0], [Math.floor(w * 0.9), 0],
-            [Math.floor(w * 0.5), 0]
-          ];
-
-          for (const [sx, sy] of samplePoints) {
-            const idx = (sy * w + sx) * 4;
-            bgSamples.push({ r: data[idx], g: data[idx + 1], b: data[idx + 2] });
-          }
-
-          function distFundo(r, g, b) {
-            let minD = 999;
-            for (const s of bgSamples) {
-              const d = Math.hypot(r - s.r, g - s.g, b - s.b);
-              if (d < minD) minD = d;
-            }
-            return minD;
-          }
-
-          function isPeleHumana(r, g, b) {
-            return (r > 85 && g > 45 && b > 25 && r > g && g > b && (r - g) > 12 && (r - b) > 16);
-          }
-
-          // Flood-fill com BFS a partir das bordas superiores e laterais
-          const isBg = new Uint8Array(w * h);
-          const queue = [];
-
-          for (let x = 0; x < w; x++) {
-            isBg[x] = 1;
-            queue.push(x, 0);
-          }
-          const limiteY = Math.floor(h * 0.72);
-          for (let y = 1; y < limiteY; y++) {
-            isBg[y * w] = 1;
-            queue.push(0, y);
-            isBg[y * w + (w - 1)] = 1;
-            queue.push(w - 1, y);
-          }
-
-          const threshold = 50;
-          let head = 0;
-
-          while (head < queue.length) {
-            const cx = queue[head++];
-            const cy = queue[head++];
-
-            const vizinhos = [
-              [cx + 1, cy], [cx - 1, cy],
-              [cx, cy + 1], [cx, cy - 1]
-            ];
-
-            for (const [nx, ny] of vizinhos) {
-              if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
-                const nIdx = ny * w + nx;
-                if (isBg[nIdx] === 0) {
-                  const pIdx = nIdx * 4;
-                  const r = data[pIdx];
-                  const g = data[pIdx + 1];
-                  const b = data[pIdx + 2];
-
-                  // Não penetra em tons de pele
-                  if (cy > 8 && isPeleHumana(r, g, b)) {
-                    continue;
-                  }
-
-                  const d = distFundo(r, g, b);
-                  const isClaroNeutro = (r > 200 && g > 200 && b > 200 && Math.abs(r - g) < 20 && Math.abs(r - b) < 20);
-
-                  if (d < threshold || (isClaroNeutro && d < threshold * 1.5)) {
-                    isBg[nIdx] = 1;
-                    queue.push(nx, ny);
-                  }
-                }
-              }
-            }
-          }
-
-          // Mapa de transparência Alpha
-          const alphaMap = new Float32Array(w * h);
-          for (let i = 0; i < w * h; i++) {
-            alphaMap[i] = (isBg[i] === 1) ? 0.0 : 1.0;
-          }
-
-          // Suavização das bordas com filtro box 3x3 no Alpha (anti-aliasing)
-          const smoothAlpha = new Float32Array(w * h);
-          for (let y = 1; y < h - 1; y++) {
-            for (let x = 1; x < w - 1; x++) {
-              const idx = y * w + x;
-              if (alphaMap[idx] === 0.0) {
-                smoothAlpha[idx] = 0.0;
-                continue;
-              }
-              let soma = 0;
-              for (let dy = -1; dy <= 1; dy++) {
-                for (let dx = -1; dx <= 1; dx++) {
-                  soma += alphaMap[(y + dy) * w + (x + dx)];
-                }
-              }
-              smoothAlpha[idx] = soma / 9.0;
-            }
-          }
-
-          // Fade suave nos últimos 24% inferiores para dissolver o corte seco do busto
-          const fadeStart = Math.floor(h * 0.74);
-          const fadeLen = h - fadeStart;
-
-          for (let y = 0; y < h; y++) {
-            let fadeBusto = 1.0;
-            if (y > fadeStart) {
-              fadeBusto = Math.max(0, 1.0 - ((y - fadeStart) / fadeLen));
-              fadeBusto = Math.pow(fadeBusto, 1.3);
-            }
-
-            for (let x = 0; x < w; x++) {
-              const idx = y * w + x;
-              const pIdx = idx * 4;
-
-              let a = smoothAlpha[idx];
-              if (a === undefined) a = alphaMap[idx];
-              a *= fadeBusto;
-
-              data[pIdx + 3] = Math.round(a * 255);
-            }
-          }
-
-          ctx.putImageData(imgData, 0, 0);
-          const dataUrl = canvas.toDataURL('image/png');
-
-          fotoTransparenteCache.set(srcOriginal, dataUrl);
-          imgEl.src = dataUrl;
-          imgEl.dataset.treated = 'true';
-        } catch (err) {
-          console.warn('Processamento de fundo ignorado:', err);
-        }
-      };
-    }
 
     function formatMoeda(val) {
       if (!val || isNaN(val)) return 'R$ 0,00';
@@ -731,7 +732,7 @@
 
         html += `
           <div 
-            onclick="abrirDossier('${c.id_candidato}')" 
+            onclick="abrirDadosCandidato('${c.id_candidato}')" 
             class="rounded-2xl p-4 flex flex-col justify-between cursor-pointer group relative overflow-hidden transition-all duration-300" 
             style="border: 1.5px solid ${cor}40; border-top: 4px solid ${cor}; background: linear-gradient(160deg, ${cor}15 0%, rgba(15, 23, 42, 0.92) 40%, rgba(10, 15, 26, 0.98) 100%); box-shadow: 0 8px 24px -6px ${cor}25;"
             onmouseenter="this.style.borderColor='${cor}'; this.style.boxShadow='0 16px 36px -6px ${cor}50'; this.style.transform='translateY(-6px)';"
@@ -748,7 +749,10 @@
                 <span class="font-mono text-xs font-black px-2.5 py-1 rounded-lg text-white shadow-lg flex items-center space-x-1 tracking-wider" style="background: linear-gradient(135deg, ${cor} 0%, ${corSec} 100%); box-shadow: 0 4px 14px ${cor}60; border: 1px solid rgba(255,255,255,0.25);">
                   <span>Nº ${c.numero}</span>
                 </span>
-                ${badgeResultado}
+                <div class="flex items-center gap-1.5">
+                  ${badgeResultado}
+                  <span class="text-xs font-bold transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" style="color: ${cor};">↗</span>
+                </div>
               </div>
 
               <!-- Retrato com Fundo Transparente, Recorte e Halo de Campanha -->
@@ -773,13 +777,9 @@
               </div>
             </div>
 
-            <!-- Rodapé do Card com Votos / Ação -->
+            <!-- Rodapé do Card com Votos (Sem botão solto na lista) -->
             <div>
               ${barraVotos}
-              <div class="mt-3 pt-2.5 border-t border-slate-800/60 flex items-center justify-between text-[11px] font-semibold text-slate-400 group-hover:text-white transition">
-                <span>Ver dossiê do candidato</span>
-                <span class="font-bold text-sm transition-transform duration-200 group-hover:translate-x-1" style="color: ${cor};">↗</span>
-              </div>
             </div>
 
           </div>
@@ -789,12 +789,12 @@
       grid.innerHTML = html;
     }
 
-    function abrirDossier(idCand) {
+    function abrirDadosCandidato(idCand) {
       const c = todosCandidatos.find(cand => cand.id_candidato === String(idCand));
       if (!c) return;
 
       const cor = c.cor_primaria || '#3B82F6';
-      const modal = document.getElementById('modal-dossier');
+      const modal = document.getElementById('modal-candidato');
       
       document.getElementById('modal-header').style.borderTop = `4px solid ${cor}`;
       const avatarFrame = document.getElementById('modal-avatar-frame');
@@ -846,7 +846,7 @@
     }
 
     function fecharModal() {
-      const modal = document.getElementById('modal-dossier');
+      const modal = document.getElementById('modal-candidato');
       modal.classList.add('hidden');
       modal.classList.remove('flex');
     }
@@ -855,8 +855,8 @@
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') fecharModal();
     });
-    document.getElementById('modal-dossier').addEventListener('click', (e) => {
-      if (e.target.id === 'modal-dossier') fecharModal();
+    document.getElementById('modal-candidato').addEventListener('click', (e) => {
+      if (e.target.id === 'modal-candidato') fecharModal();
     });
 
     // Iniciar carregamento

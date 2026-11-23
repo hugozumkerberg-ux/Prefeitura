@@ -1117,7 +1117,7 @@ const server = http.createServer(async (req, res) => {
           return;
         } else {
           res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
-          res.end(JSON.stringify({ error: 'Dossiê de turismo não encontrado' }));
+          res.end(JSON.stringify({ error: 'Dados de turismo não encontrados' }));
           return;
         }
       }
@@ -1169,7 +1169,7 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
-      // 14. Dossiê Completo da Empresa (com Contratos e Despesas Vinculadas)
+      // 14. Dados Completos da Empresa (com Contratos e Despesas Vinculadas)
       if (pathname === '/api/dados/empresas/detalhes') {
         const rawCnpj = (parsedUrl.searchParams.get('cnpj') || '').replace(/\D/g, '');
         if (!rawCnpj) {
@@ -1298,7 +1298,7 @@ const server = http.createServer(async (req, res) => {
           return;
         } else {
           res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
-          res.end(JSON.stringify({ error: 'Dossiê de viagens não encontrado' }));
+          res.end(JSON.stringify({ error: 'Dados de viagens não encontrados' }));
           return;
         }
       }
@@ -1692,7 +1692,7 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      // 18. Perfil Detalhado de Pessoa Unificada (Dossiê Cidadão 360°)
+      // 18. Perfil Detalhado de Pessoa Unificada (Dados Cidadão 360°)
       if (pathname === '/api/dados/perfil-pessoa') {
         const id = parseInt(parsedUrl.searchParams.get('id') || '0', 10);
         const nome = (parsedUrl.searchParams.get('nome') || '').trim();
