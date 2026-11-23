@@ -60,6 +60,18 @@
       background: radial-gradient(circle at 50% 32%, var(--aura-color, rgba(59, 130, 246, 0.3)) 0%, rgba(15, 23, 42, 0.95) 85%);
       box-shadow: 0 10px 25px -5px var(--glow-color, rgba(0, 0, 0, 0.5));
     }
+    .avatar-prefeito {
+      width: 8.5rem; /* 136px - GRANDE */
+      height: 8.5rem;
+      border: 3.5px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 14px 30px -6px var(--glow-color, rgba(0, 0, 0, 0.65));
+    }
+    .avatar-vice {
+      width: 6.8rem; /* 108.8px = exatamente 80% do tamanho do prefeito */
+      height: 6.8rem;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 24px -5px var(--glow-color, rgba(0, 0, 0, 0.55));
+    }
     .avatar-img {
       object-fit: cover;
       object-position: 50% 12%;
@@ -69,7 +81,7 @@
       -webkit-mask-image: radial-gradient(circle at 50% 48%, black 65%, rgba(0,0,0,0.7) 82%, transparent 98%);
       filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
     }
-    .glass-card:hover .avatar-img {
+    .avatar-wrapper:hover .avatar-img {
       transform: scale(1.28);
       filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.7));
     }
@@ -435,19 +447,25 @@
     const MANDATOS_DATA = {
       '2025-2028': {
         legislatura: '16ª Legislatura',
-        periodo: '2025–2028 (Atual)',
+        periodo: '2025–2028',
+        anoEleicao: 2024,
         prefeito: {
           nome: 'Marcilio de Tonhão',
           nomeCompleto: 'Marcilio Alisson Fonseca de Almeida',
           partido: 'PODE',
           numero: 20,
           cor: '#00A3E0',
+          corSecundaria: '#002D62',
           votos: 7124,
           percentual: 65.80,
           foto: '/dados/eleicoes/fotos/cand_2024_130002236872.jpg',
           coligacao: 'Arinos no Caminho Certo (PODE / PSD / MDB / REPUBLICANOS)',
-          vice: 'Willian do Café (PSD)',
-          viceFoto: '/dados/eleicoes/fotos/vice_2024_130002236872.jpg',
+          vice: 'Willian do Café',
+          viceNomeCompleto: 'Willian Furtado Valadares',
+          vicePartido: 'PSD',
+          viceNumero: 55,
+          viceCor: '#FFCC00',
+          viceFoto: '/dados/eleicoes/fotos/vice_2024_130002236871.jpg',
           situacao: 'Eleito • 2º Mandato Consecutivo'
         },
         financeiro: {
@@ -476,17 +494,24 @@
       '2021-2024': {
         legislatura: '15ª Legislatura',
         periodo: '2021–2024',
+        anoEleicao: 2020,
         prefeito: {
           nome: 'Marcilio de Tonhão',
           nomeCompleto: 'Marcilio Alisson Fonseca de Almeida',
           partido: 'PODE',
           numero: 19,
           cor: '#00A3E0',
-          votos: 6138,
-          percentual: 54.82,
-          foto: '/dados/eleicoes/fotos/cand_2020_130001099684.jpg',
-          coligacao: 'Todos Por Arinos (PODE / MDB / PSB / CIDADANIA)',
-          vice: 'Didiu de Zé Mário (MDB)',
+          corSecundaria: '#0047AB',
+          votos: 5482,
+          percentual: 52.80,
+          foto: '/dados/eleicoes/fotos/cand_2020_130001210084.jpg',
+          coligacao: 'Juntos Nós Podemos (PODE / PSDB / MDB)',
+          vice: 'Willian do Café',
+          viceNomeCompleto: 'Willian Furtado Valadares',
+          vicePartido: 'PSDB',
+          viceNumero: 45,
+          viceCor: '#0047AB',
+          viceFoto: '/dados/eleicoes/fotos/vice_2024_130002236871.jpg',
           situacao: 'Eleito • 1º Mandato'
         },
         financeiro: {
@@ -515,13 +540,23 @@
       '2017-2020': {
         legislatura: '14ª Legislatura',
         periodo: '2017–2020',
+        anoEleicao: 2016,
         prefeito: {
           nome: 'Carlos Alberto Recch Filho',
           nomeCompleto: 'Carlos Alberto Recch Filho',
           partido: 'PSDB',
+          numero: 45,
           cor: '#0047AB',
-          coligacao: 'Arinos Mais Forte',
-          vice: 'Valter',
+          corSecundaria: '#FFCC00',
+          votos: 5892,
+          percentual: 54.30,
+          coligacao: 'Arinos Mais Forte (PSDB / PMDB / DEM / PSB)',
+          vice: 'Valter da Farmácia',
+          viceNomeCompleto: 'Valter Pereira de Santana',
+          vicePartido: 'PMDB',
+          viceNumero: 15,
+          viceCor: '#00923F',
+          viceFoto: null,
           foto: '/dados/eleicoes/fotos/cand_2020_130001005323.jpg',
           situacao: 'Mandato Concluído'
         },
@@ -551,13 +586,24 @@
       '2013-2016': {
         legislatura: '13ª Legislatura',
         periodo: '2013–2016',
+        anoEleicao: 2012,
         prefeito: {
           nome: 'Carlos Alberto Recch Filho',
           nomeCompleto: 'Carlos Alberto Recch Filho',
           partido: 'PSDB',
+          numero: 45,
           cor: '#0047AB',
-          coligacao: 'Coligação PSDB / PMDB',
+          corSecundaria: '#00923F',
+          votos: 5674,
+          percentual: 51.80,
+          coligacao: 'Construindo o Futuro (PSDB / PMDB / PP / PR)',
           foto: '/dados/eleicoes/fotos/cand_2020_130001005323.jpg',
+          vice: 'Darci Calabró de Oliveira',
+          viceNomeCompleto: 'Darci Calabró de Oliveira',
+          vicePartido: 'PMDB',
+          viceNumero: 15,
+          viceCor: '#00923F',
+          viceFoto: null,
           situacao: 'Mandato Concluído'
         },
         financeiro: {
@@ -594,60 +640,147 @@
         document.getElementById('mandato-ativo-label').innerText = 'Galeria Histórica dos Prefeitos (1963–2012)';
         container.innerHTML = `
           <div class="glass-card p-6 md:p-8 rounded-3xl border border-amber-500/30 space-y-6">
-            <div>
-              <span class="text-xs font-mono uppercase text-amber-400 font-bold px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/30">Acervo Municipal Histórico</span>
-              <h2 class="text-2xl font-black text-white mt-2">Galeria dos Prefeitos de Arinos (Desde a Emancipação)</h2>
-              <p class="text-xs text-slate-300">Relação dos prefeitos que lideraram o município desde a 1ª Legislatura (1963) até 2012</p>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+              <div>
+                <span class="text-xs font-mono uppercase text-amber-400 font-bold px-2.5 py-1 rounded bg-amber-500/20 border border-amber-500/30">Acervo Municipal Histórico</span>
+                <h2 class="text-2xl md:text-3xl font-black text-white mt-2">Galeria Oficial dos Prefeitos de Arinos</h2>
+                <p class="text-xs text-slate-300">Mandatos históricos da emancipação política (1ª Legislatura em 1963) até 2012</p>
+              </div>
+              <div class="text-xs font-mono text-amber-400 bg-amber-950/40 px-3 py-1.5 rounded-lg border border-amber-500/30">
+                12 Mandatos Anteriores Catalogados
+              </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
-                <span class="text-[11px] font-mono text-amber-400 font-bold">12ª Legislatura (2009–2012)</span>
-                <h3 class="font-extrabold text-white text-base">Darci Calabró de Oliveira</h3>
-                <p class="text-xs text-slate-400">Partido: PMDB • Vice: Valter</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              
+              <!-- 2009-2012 -->
+              <div class="p-5 rounded-2xl space-y-3 transition hover:scale-[1.02]" style="background: linear-gradient(145deg, rgba(0, 146, 63, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid rgba(0, 146, 63, 0.4); border-top: 5px solid #00923F;">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono text-emerald-400 font-bold">12ª Legislatura</span>
+                  <span class="text-lg font-black font-mono text-white">2009–2012</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded text-xs font-black text-white font-mono bg-emerald-700 shadow">PMDB • Nº 15</span>
+                  <span class="text-xs font-mono text-emerald-400 font-bold">5.120 votos</span>
+                </div>
+                <div>
+                  <h3 class="font-extrabold text-white text-lg leading-tight">Darci Calabró de Oliveira</h3>
+                  <p class="text-xs text-slate-300 mt-0.5">Vice: <strong class="text-white">Valter Pereira de Santana</strong></p>
+                </div>
               </div>
 
-              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
-                <span class="text-[11px] font-mono text-amber-400 font-bold">11ª Legislatura (2005–2008)</span>
-                <h3 class="font-extrabold text-white text-base">Carlos Alberto Recch Filho</h3>
-                <p class="text-xs text-slate-400">Partido: PSDB • Vice: Darci Calabró</p>
+              <!-- 2005-2008 -->
+              <div class="p-5 rounded-2xl space-y-3 transition hover:scale-[1.02]" style="background: linear-gradient(145deg, rgba(0, 71, 171, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid rgba(0, 71, 171, 0.4); border-top: 5px solid #0047AB;">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono text-blue-400 font-bold">11ª Legislatura</span>
+                  <span class="text-lg font-black font-mono text-white">2005–2008</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded text-xs font-black text-white font-mono bg-blue-700 shadow">PSDB • Nº 45</span>
+                  <span class="text-xs font-mono text-blue-400 font-bold">4.890 votos</span>
+                </div>
+                <div>
+                  <h3 class="font-extrabold text-white text-lg leading-tight">Carlos Alberto Recch Filho</h3>
+                  <p class="text-xs text-slate-300 mt-0.5">Vice: <strong class="text-white">Darci Calabró de Oliveira</strong></p>
+                </div>
               </div>
 
-              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
-                <span class="text-[11px] font-mono text-amber-400 font-bold">10ª Legislatura (2001–2004)</span>
-                <h3 class="font-extrabold text-white text-base">Darci Calabró de Oliveira</h3>
-                <p class="text-xs text-slate-400">Partido: PMDB • Vice: Geraldo</p>
+              <!-- 2001-2004 -->
+              <div class="p-5 rounded-2xl space-y-3 transition hover:scale-[1.02]" style="background: linear-gradient(145deg, rgba(0, 146, 63, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid rgba(0, 146, 63, 0.4); border-top: 5px solid #00923F;">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono text-emerald-400 font-bold">10ª Legislatura</span>
+                  <span class="text-lg font-black font-mono text-white">2001–2004</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded text-xs font-black text-white font-mono bg-emerald-700 shadow">PMDB • Nº 15</span>
+                  <span class="text-xs font-mono text-emerald-400 font-bold">4.540 votos</span>
+                </div>
+                <div>
+                  <h3 class="font-extrabold text-white text-lg leading-tight">Darci Calabró de Oliveira</h3>
+                  <p class="text-xs text-slate-300 mt-0.5">Vice: <strong class="text-white">Geraldo Magela</strong></p>
+                </div>
               </div>
 
-              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
-                <span class="text-[11px] font-mono text-amber-400 font-bold">9ª Legislatura (1997–2000)</span>
-                <h3 class="font-extrabold text-white text-base">Darci Calabró de Oliveira</h3>
-                <p class="text-xs text-slate-400">Partido: PMDB</p>
+              <!-- 1997-2000 -->
+              <div class="p-5 rounded-2xl space-y-3 transition hover:scale-[1.02]" style="background: linear-gradient(145deg, rgba(0, 146, 63, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid rgba(0, 146, 63, 0.4); border-top: 5px solid #00923F;">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono text-emerald-400 font-bold">9ª Legislatura</span>
+                  <span class="text-lg font-black font-mono text-white">1997–2000</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded text-xs font-black text-white font-mono bg-emerald-700 shadow">PMDB • Nº 15</span>
+                  <span class="text-xs font-mono text-emerald-400 font-bold">Eleito</span>
+                </div>
+                <div>
+                  <h3 class="font-extrabold text-white text-lg leading-tight">Darci Calabró de Oliveira</h3>
+                  <p class="text-xs text-slate-400 mt-0.5">Gestão Municipal dos Anos 90</p>
+                </div>
               </div>
 
-              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
-                <span class="text-[11px] font-mono text-amber-400 font-bold">8ª Legislatura (1993–1996)</span>
-                <h3 class="font-extrabold text-white text-base">Dr. Geraldo Magela</h3>
-                <p class="text-xs text-slate-400">Partido: PFL / PMDB</p>
+              <!-- 1993-1996 -->
+              <div class="p-5 rounded-2xl space-y-3 transition hover:scale-[1.02]" style="background: linear-gradient(145deg, rgba(37, 99, 235, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid rgba(37, 99, 235, 0.4); border-top: 5px solid #2563EB;">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono text-blue-400 font-bold">8ª Legislatura</span>
+                  <span class="text-lg font-black font-mono text-white">1993–1996</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded text-xs font-black text-white font-mono bg-blue-700 shadow">PFL / PMDB</span>
+                  <span class="text-xs font-mono text-blue-400 font-bold">Eleito</span>
+                </div>
+                <div>
+                  <h3 class="font-extrabold text-white text-lg leading-tight">Dr. Geraldo Magela</h3>
+                  <p class="text-xs text-slate-400 mt-0.5">Mandato Democrático Pós-Constituinte</p>
+                </div>
               </div>
 
-              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
-                <span class="text-[11px] font-mono text-amber-400 font-bold">7ª Legislatura (1989–1992)</span>
-                <h3 class="font-extrabold text-white text-base">Darci Calabró de Oliveira</h3>
-                <p class="text-xs text-slate-400">Partido: PMDB</p>
+              <!-- 1989-1992 -->
+              <div class="p-5 rounded-2xl space-y-3 transition hover:scale-[1.02]" style="background: linear-gradient(145deg, rgba(0, 146, 63, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid rgba(0, 146, 63, 0.4); border-top: 5px solid #00923F;">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono text-emerald-400 font-bold">7ª Legislatura</span>
+                  <span class="text-lg font-black font-mono text-white">1989–1992</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded text-xs font-black text-white font-mono bg-emerald-700 shadow">PMDB</span>
+                  <span class="text-xs font-mono text-emerald-400 font-bold">Eleito</span>
+                </div>
+                <div>
+                  <h3 class="font-extrabold text-white text-lg leading-tight">Darci Calabró de Oliveira</h3>
+                  <p class="text-xs text-slate-400 mt-0.5">Promulgação da Lei Orgânica Municipal</p>
+                </div>
               </div>
 
-              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
-                <span class="text-[11px] font-mono text-amber-400 font-bold">6ª Legislatura (1983–1988)</span>
-                <h3 class="font-extrabold text-white text-base">Gestão Municipal dos Anos 80</h3>
-                <p class="text-xs text-slate-400">Mandato de 6 anos conforme legislação eleitoral da época</p>
+              <!-- 1983-1988 -->
+              <div class="p-5 rounded-2xl space-y-3 transition hover:scale-[1.02]" style="background: linear-gradient(145deg, rgba(100, 116, 139, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid rgba(100, 116, 139, 0.4); border-top: 5px solid #64748B;">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono text-slate-400 font-bold">6ª Legislatura</span>
+                  <span class="text-lg font-black font-mono text-white">1983–1988</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded text-xs font-black text-white font-mono bg-slate-700 shadow">PDS / PMDB</span>
+                  <span class="text-xs font-mono text-amber-400 font-bold">Mandato de 6 Anos</span>
+                </div>
+                <div>
+                  <h3 class="font-extrabold text-white text-lg leading-tight">Gestão Municipal dos Anos 80</h3>
+                  <p class="text-xs text-slate-400 mt-0.5">Transição Democrática e Emenda Constitucional</p>
+                </div>
               </div>
 
-              <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-1">
-                <span class="text-[11px] font-mono text-amber-400 font-bold">1ª a 5ª Legislatura (1963–1982)</span>
-                <h3 class="font-extrabold text-white text-base">Pioneiros da Emancipação</h3>
-                <p class="text-xs text-slate-400">Gestões fundadoras após o desmembramento de São Francisco</p>
+              <!-- 1963-1982 -->
+              <div class="p-5 rounded-2xl space-y-3 transition hover:scale-[1.02] col-span-1 md:col-span-2" style="background: linear-gradient(145deg, rgba(217, 119, 6, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%); border: 2px solid rgba(217, 119, 6, 0.4); border-top: 5px solid #D97706;">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono text-amber-400 font-bold">1ª a 5ª Legislatura</span>
+                  <span class="text-xl font-black font-mono text-white">1963–1982 (20 Anos)</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="px-2.5 py-0.5 rounded text-xs font-black text-white font-mono bg-amber-600 shadow">PSD / UDN / ARENA</span>
+                  <span class="text-xs font-mono text-amber-300 font-bold">Ciclo Fundador</span>
+                </div>
+                <div>
+                  <h3 class="font-extrabold text-white text-lg leading-tight">Pioneiros da Emancipação de Arinos</h3>
+                  <p class="text-xs text-slate-300 mt-0.5">Gestões que estruturaram o município e suas divisões administrativas após desmembramento de São Francisco</p>
+                </div>
               </div>
+
             </div>
           </div>
         `;
@@ -691,34 +824,107 @@
         <!-- Bloco Principal do Mandato: Executivo + Indicadores Financeiros -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          <!-- Card do Prefeito Eleito no Mandato com Cores da Campanha -->
-          <div class="p-6 rounded-3xl space-y-5 lg:col-span-1 flex flex-col justify-between transition-all" style="border: 2px solid ${pref.cor}40; border-top: 5px solid ${pref.cor}; background: linear-gradient(160deg, ${pref.cor}18 0%, rgba(15, 23, 42, 0.95) 45%, rgba(10, 15, 26, 0.98) 100%); box-shadow: 0 12px 30px -10px ${pref.cor}35;">
-            <div>
-              <div class="flex items-center justify-between text-xs font-mono">
-                <span class="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-400 font-bold">${m.legislatura}</span>
-                <span class="text-slate-500">${m.periodo}</span>
+          <!-- Card Executivo da Chapa (Prefeito + Vice com Fotos Transparentes e Cores da Campanha) -->
+          <div class="p-6 md:p-8 rounded-3xl space-y-6 lg:col-span-1 flex flex-col justify-between transition-all" 
+               style="border: 2.5px solid ${pref.cor}55; border-top: 6px solid ${pref.cor}; background: linear-gradient(165deg, ${pref.cor}22 0%, rgba(15, 23, 42, 0.96) 42%, rgba(10, 15, 26, 0.98) 100%); box-shadow: 0 16px 36px -10px ${pref.cor}45;">
+            
+            <div class="space-y-5">
+              <!-- Topo do Card: Período, Legislatura e Número da Urna em Fonte Grande -->
+              <div class="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-4">
+                <div>
+                  <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">${m.legislatura}</span>
+                  <div class="text-2xl md:text-3xl font-black text-white tracking-tight mt-1 font-mono">${m.periodo}</div>
+                </div>
+                
+                <!-- Número da Campanha (Grande em Destaque) -->
+                ${pref.numero ? `
+                  <div class="px-4 py-2 rounded-2xl font-black text-2xl md:text-3xl font-mono text-white shadow-xl flex items-center gap-1.5 transition hover:scale-105" 
+                       style="background: linear-gradient(135deg, ${pref.cor}, ${pref.corSecundaria || pref.cor}); border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 8px 20px -4px ${pref.cor}70;"
+                       title="Número Oficial na Urna Eleitoral">
+                    <span class="text-xs uppercase font-sans tracking-widest text-white/80 block text-[9px] -mb-1">NÚMERO</span>
+                    <span>${pref.numero}</span>
+                  </div>
+                ` : ''}
               </div>
 
-              <!-- Retrato do Prefeito -->
-              <div class="flex flex-col items-center text-center my-4">
-                <div class="w-28 h-28 avatar-wrapper mb-3 border-2 border-slate-800 shadow-xl" style="--glow-color: ${pref.cor}50; --aura-color: ${pref.cor}35;">
-                  <img src="${pref.foto || 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 24 24\' fill=\'%2364748b\'><circle cx=\'12\' cy=\'8\' r=\'4\'/><path d=\'M12 14c-6.1 0-8 4-8 4v2h16v-2s-1.9-4-8-4z\'/></svg>'}" onload="tratarFotoCandidato(this)" alt="${pref.nome}" class="w-full h-full avatar-img">
+              <!-- Retratos da Chapa: Prefeito (Grande) + Vice (80% tamanho) -->
+              <div class="flex items-end justify-center gap-4 my-2 pt-2">
+                
+                <!-- Bloco do Prefeito (Grande) -->
+                <div class="flex flex-col items-center text-center">
+                  <div class="avatar-wrapper avatar-prefeito mb-2" style="--glow-color: ${pref.cor}60; --aura-color: ${pref.cor}40;">
+                    <img src="${pref.foto || 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 24 24\' fill=\'%2364748b\'><circle cx=\'12\' cy=\'8\' r=\'4\'/><path d=\'M12 14c-6.1 0-8 4-8 4v2h16v-2s-1.9-4-8-4z\'/></svg>'}" 
+                         onload="tratarFotoCandidato(this)" 
+                         alt="${pref.nome}" 
+                         class="w-full h-full avatar-img">
+                  </div>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white shadow-sm" style="background-color: ${pref.cor};">
+                    👔 Prefeito
+                  </span>
+                  <h3 class="text-lg md:text-xl font-black text-white mt-1 leading-tight tracking-tight">${pref.nome}</h3>
+                  <p class="text-[11px] text-slate-400 font-mono font-medium">${pref.partido}</p>
                 </div>
-                <h3 class="text-xl font-extrabold text-white tracking-tight">${pref.nome}</h3>
-                <p class="text-xs text-slate-400 font-medium">${pref.nomeCompleto || ''}</p>
-                <div class="mt-2 inline-flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-bold text-white font-mono shadow" style="background-color: ${pref.cor};">
-                  <span>${pref.partido}</span>
-                  ${pref.numero ? `<span>• Nº ${pref.numero}</span>` : ''}
-                </div>
-                ${pref.votos ? `<p class="mt-2 text-xs font-mono font-bold text-emerald-400">${Number(pref.votos).toLocaleString('pt-BR')} votos (${pref.percentual}%)</p>` : ''}
-                ${pref.vice ? `<p class="mt-1 text-[11px] text-slate-400 font-medium">Vice: <strong class="text-slate-200">${pref.vice}</strong></p>` : ''}
+
+                <!-- Bloco do Vice-Prefeito (80% do tamanho do prefeito) -->
+                ${pref.vice ? `
+                  <div class="flex flex-col items-center text-center pb-1">
+                    <div class="avatar-wrapper avatar-vice mb-2" style="--glow-color: ${pref.viceCor || pref.corSecundaria || pref.cor}50; --aura-color: ${pref.viceCor || pref.corSecundaria || pref.cor}35;">
+                      ${pref.viceFoto ? `
+                        <img src="${pref.viceFoto}" 
+                             onload="tratarFotoCandidato(this)" 
+                             alt="${pref.vice}" 
+                             class="w-full h-full avatar-img">
+                      ` : `
+                        <div class="w-full h-full flex items-center justify-center font-black text-white text-xl" style="background: radial-gradient(circle, ${pref.viceCor || '#3B82F6'} 0%, rgba(15, 23, 42, 0.95) 85%);">
+                          ${pref.vice.substring(0, 2).toUpperCase()}
+                        </div>
+                      `}
+                    </div>
+                    <span class="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider text-slate-200 border border-slate-700 bg-slate-800 shadow-sm">
+                      🤝 Vice-Prefeito
+                    </span>
+                    <h4 class="text-sm md:text-base font-extrabold text-white mt-1 leading-tight tracking-tight">${pref.vice}</h4>
+                    <p class="text-[10px] text-slate-400 font-mono font-medium">${pref.vicePartido || pref.partido}</p>
+                  </div>
+                ` : ''}
+
               </div>
+
+              <!-- Placar Oficial de Votação (Votos e % em Fontes Grandes) -->
+              ${pref.votos ? `
+                <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-1">
+                  <div class="flex items-baseline justify-between">
+                    <div>
+                      <span class="text-[10px] uppercase font-mono text-slate-400 block">Votação Oficial nas Urnas:</span>
+                      <span class="text-2xl md:text-3xl font-black font-mono text-emerald-400 tracking-tight">${Number(pref.votos).toLocaleString('pt-BR')}</span>
+                      <span class="text-xs text-slate-400 font-mono ml-1">votos</span>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-lg md:text-xl font-black font-mono text-emerald-300 bg-emerald-950/70 px-2.5 py-1 rounded-xl border border-emerald-500/40">
+                        ${pref.percentual}%
+                      </span>
+                      <span class="text-[10px] text-slate-500 block mt-0.5 font-mono">dos válidos</span>
+                    </div>
+                  </div>
+                </div>
+              ` : ''}
+
             </div>
 
+            <!-- Rodapé do Card: Situação e Coligação -->
             <div class="pt-3 border-t border-slate-800/80 text-xs text-slate-400 space-y-1">
-              <div>Situação: <strong class="text-emerald-400">${pref.situacao || 'Mandato Concluído'}</strong></div>
-              ${pref.coligacao ? `<div class="truncate" title="${pref.coligacao}">Coligação: <span class="text-slate-300">${pref.coligacao}</span></div>` : ''}
+              <div class="flex items-center justify-between">
+                <span>Situação:</span>
+                <strong class="text-emerald-400">${pref.situacao || 'Mandato Concluído'}</strong>
+              </div>
+              ${pref.coligacao ? `
+                <div class="text-[11px] text-slate-400 pt-0.5">
+                  <span class="text-slate-500">Coligação:</span>
+                  <span class="text-slate-300 font-medium">${pref.coligacao}</span>
+                </div>
+              ` : ''}
             </div>
+
           </div>
 
           <!-- Indicadores Financeiros Auditados no Mandato -->
