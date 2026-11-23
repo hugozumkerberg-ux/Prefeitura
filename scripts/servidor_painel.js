@@ -176,8 +176,8 @@ function getLiveStats() {
 // ==============================================================================
 
 function formatarMesAno(ano, mes) {
-  const meses = ['', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-  return `${meses[mes] || mes}/${ano}`;
+  const m = String(mes || 1).padStart(2, '0');
+  return `${m}/${ano}`;
 }
 
 function calcularTempoExtenso(totalMeses) {
@@ -188,6 +188,55 @@ function calcularTempoExtenso(totalMeses) {
   if (anos > 0) partes.push(`${anos} ${anos === 1 ? 'ano' : 'anos'}`);
   if (meses > 0) partes.push(`${meses} ${meses === 1 ? 'mês' : 'meses'}`);
   return partes.length > 0 ? partes.join(' e ') : '0 meses';
+}
+
+function calcularDescontosEstatutarios(bruto, ano = 2024) {
+  if (!bruto || bruto <= 0) return { inss: 0, irrf: 0, total_descontos: 0, salario_liquido: 0 };
+
+  // 1. Previdência (INSS / RPPS)
+  let previdencia = 0;
+  if (ano >= 2020) {
+    const tetoInss = 7786.02;
+    const basePrev = Math.min(bruto, tetoInss);
+    if (basePrev <= 1412.00) {
+      previdencia = basePrev * 0.075;
+    } else if (basePrev <= 2666.68) {
+      previdencia = 1412.00 * 0.075 + (basePrev - 1412.00) * 0.09;
+    } else if (basePrev <= 4000.03) {
+      previdencia = 1412.00 * 0.075 + (2666.68 - 1412.00) * 0.09 + (basePrev - 2666.68) * 0.12;
+    } else {
+      previdencia = 1412.00 * 0.075 + (2666.68 - 1412.00) * 0.09 + (4000.03 - 2666.68) * 0.12 + (basePrev - 4000.03) * 0.14;
+    }
+  } else {
+    previdencia = Math.min(bruto, 5839.45) * 0.11;
+  }
+  previdencia = Math.round(previdencia * 100) / 100;
+
+  // 2. Base IRRF
+  const baseIrrf = bruto - previdencia;
+  let irrf = 0;
+  if (baseIrrf <= 2259.20) {
+    irrf = 0;
+  } else if (baseIrrf <= 2826.65) {
+    irrf = (baseIrrf * 0.075) - 169.44;
+  } else if (baseIrrf <= 3751.05) {
+    irrf = (baseIrrf * 0.15) - 381.44;
+  } else if (baseIrrf <= 4664.68) {
+    irrf = (baseIrrf * 0.225) - 662.77;
+  } else {
+    irrf = (baseIrrf * 0.275) - 896.00;
+  }
+  irrf = Math.max(0, Math.round(irrf * 100) / 100);
+
+  const totalDescontos = Math.round((previdencia + irrf) * 100) / 100;
+  const salarioLiquido = Math.round((bruto - totalDescontos) * 100) / 100;
+
+  return {
+    inss: previdencia,
+    irrf,
+    total_descontos: totalDescontos,
+    salario_liquido: salarioLiquido
+  };
 }
 
 function processarHistoricoEPeriodos(contracheques) {
@@ -757,13 +806,14 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      // 3. Consulta Paginada de Contracheques
+      // 3. Consulta Paginada de Contracheques (com Cálculo de Salário Bruto, Descontos e Líquido)
       if (pathname === '/api/dados/contracheques') {
         const page = Math.max(1, parseInt(parsedUrl.searchParams.get('page') || '1', 10));
         const limit = Math.min(100, Math.max(10, parseInt(parsedUrl.searchParams.get('limit') || '25', 10)));
         const offset = (page - 1) * limit;
         const q = (parsedUrl.searchParams.get('q') || '').trim();
         const ano = parsedUrl.searchParams.get('ano') || '';
+        const mes = parsedUrl.searchParams.get('mes') || '';
         const entidade = parsedUrl.searchParams.get('entidade') || '';
 
         let whereClause = ' WHERE 1=1 ';
@@ -777,6 +827,10 @@ const server = http.createServer(async (req, res) => {
           whereClause += ' AND ano = ? ';
           params.push(parseInt(ano, 10));
         }
+        if (mes) {
+          whereClause += ' AND mes = ? ';
+          params.push(parseInt(mes, 10));
+        }
         if (entidade) {
           whereClause += ' AND entidade LIKE ? ';
           params.push(`%${entidade}%`);
@@ -786,13 +840,57 @@ const server = http.createServer(async (req, res) => {
         const totalInfo = db.prepare(countQuery).get(...params);
 
         const dataQuery = `
-          SELECT id, entidade, ano, mes, matricula, nome, cargo, vinculo, tipo_folha, total_proventos, url_detalhe
+          SELECT id, entidade, ano, mes, matricula, nome, cargo, vinculo, tipo_folha, total_proventos, total_descontos, salario_liquido, idfun, url_detalhe
           FROM contracheques
           ${whereClause}
           ORDER BY ano DESC, mes DESC, total_proventos DESC
           LIMIT ${limit} OFFSET ${offset}
         `;
         const rows = db.prepare(dataQuery).all(...params);
+
+        // Enriquecer registros com cálculo pericial de Salário Bruto, Descontos e Salário Líquido
+        let dbDetRef = null;
+        if (fs.existsSync(DETALHADO_DB)) {
+          try { dbDetRef = new DatabaseSync(DETALHADO_DB, { readOnly: true }); } catch(e) {}
+        }
+
+        let somaLiquidaFiltrada = 0;
+        let somaDescontosFiltrada = 0;
+
+        rows.forEach(r => {
+          let descontoReal = r.total_descontos || 0;
+          let liquidoReal = r.salario_liquido || 0;
+
+          if (dbDetRef && (!descontoReal || descontoReal === 0)) {
+            let rowD = null;
+            if (r.idfun) {
+              rowD = dbDetRef.prepare('SELECT total_descontos, salario_liquido FROM contracheques WHERE ano = ? AND mes = ? AND idfun = ? LIMIT 1').get(r.ano, r.mes, String(r.idfun));
+            }
+            if (!rowD && r.nome) {
+              rowD = dbDetRef.prepare('SELECT total_descontos, salario_liquido FROM contracheques WHERE ano = ? AND mes = ? AND nome = ? LIMIT 1').get(r.ano, r.mes, r.nome);
+            }
+            if (rowD && rowD.total_descontos > 0) {
+              descontoReal = rowD.total_descontos;
+              liquidoReal = rowD.salario_liquido;
+            }
+          }
+
+          if (!descontoReal || descontoReal === 0) {
+            const calc = calcularDescontosEstatutarios(r.total_proventos, r.ano);
+            descontoReal = calc.total_descontos;
+            liquidoReal = calc.salario_liquido;
+          }
+
+          r.total_descontos = Math.round(descontoReal * 100) / 100;
+          r.salario_liquido = Math.round(liquidoReal * 100) / 100;
+
+          somaDescontosFiltrada += r.total_descontos;
+          somaLiquidaFiltrada += r.salario_liquido;
+        });
+
+        if (dbDetRef) {
+          try { dbDetRef.close(); } catch(e) {}
+        }
 
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify({
@@ -801,6 +899,8 @@ const server = http.createServer(async (req, res) => {
           total: totalInfo.total,
           total_paginas: Math.ceil((totalInfo.total || 0) / limit),
           soma_filtrada: totalInfo.soma_filtrada || 0,
+          soma_descontos_filtrada: Math.round(somaDescontosFiltrada * 100) / 100,
+          soma_liquida_filtrada: Math.round(somaLiquidaFiltrada * 100) / 100,
           registros: rows
         }));
         return;
@@ -857,6 +957,7 @@ const server = http.createServer(async (req, res) => {
         const offset = (page - 1) * limit;
         const q = (parsedUrl.searchParams.get('q') || '').trim();
         const ano = parsedUrl.searchParams.get('ano') || '';
+        const mes = parsedUrl.searchParams.get('mes') || '';
         const entidade = parsedUrl.searchParams.get('entidade') || '';
 
         let whereClause = ' WHERE 1=1 ';
@@ -869,6 +970,10 @@ const server = http.createServer(async (req, res) => {
         if (ano) {
           whereClause += ' AND ano = ? ';
           params.push(parseInt(ano, 10));
+        }
+        if (mes) {
+          whereClause += ' AND mes = ? ';
+          params.push(parseInt(mes, 10));
         }
         if (entidade) {
           whereClause += ' AND entidade LIKE ? ';
@@ -955,6 +1060,7 @@ const server = http.createServer(async (req, res) => {
         const offset = (page - 1) * limit;
         const q = (parsedUrl.searchParams.get('q') || '').trim();
         const ano = parsedUrl.searchParams.get('ano') || '';
+        const mes = parsedUrl.searchParams.get('mes') || '';
         const entidade = parsedUrl.searchParams.get('entidade') || '';
 
         let whereClause = ' WHERE 1=1 ';
@@ -967,6 +1073,10 @@ const server = http.createServer(async (req, res) => {
         if (ano) {
           whereClause += ' AND ano = ? ';
           params.push(parseInt(ano, 10));
+        }
+        if (mes) {
+          whereClause += ' AND mes = ? ';
+          params.push(parseInt(mes, 10));
         }
         if (entidade) {
           whereClause += ' AND entidade LIKE ? ';
@@ -1942,11 +2052,57 @@ const server = http.createServer(async (req, res) => {
         // Todos os contracheques individuais para auditoria de períodos reais e gaps
         const todosContracheques = db.prepare(`
           SELECT id, ano, mes, tipo_folha, cargo, matricula, vinculo, 
-                 total_proventos, total_descontos, salario_liquido, url_detalhe, hash_registro, entidade
+                 total_proventos, total_descontos, salario_liquido, idfun, url_detalhe, hash_registro, entidade
           FROM contracheques
           WHERE nome = ? OR nome = ?
           ORDER BY ano DESC, mes DESC, id DESC
         `).all(pessoa.nome_exibicao, pessoa.nome_canonic);
+
+        // Enriquecer com banco detalhado ou calcular Salário Bruto, Descontos e Líquido estatutários
+        let dbDetRef = null;
+        if (fs.existsSync(DETALHADO_DB)) {
+          try { dbDetRef = new DatabaseSync(DETALHADO_DB, { readOnly: true }); } catch(e) {}
+        }
+
+        let totalProventosAcumulado = 0;
+        let totalDescontosAcumulado = 0;
+        let totalLiquidoAcumulado = 0;
+
+        for (const cc of todosContracheques) {
+          let descontoReal = cc.total_descontos || 0;
+          let liquidoReal = cc.salario_liquido || 0;
+
+          if (dbDetRef && (!descontoReal || descontoReal === 0)) {
+            let rowD = null;
+            if (cc.idfun) {
+              rowD = dbDetRef.prepare('SELECT total_descontos, salario_liquido FROM contracheques WHERE ano = ? AND mes = ? AND idfun = ? LIMIT 1').get(cc.ano, cc.mes, String(cc.idfun));
+            }
+            if (!rowD) {
+              rowD = dbDetRef.prepare('SELECT total_descontos, salario_liquido FROM contracheques WHERE ano = ? AND mes = ? AND nome = ? LIMIT 1').get(cc.ano, cc.mes, pessoa.nome_exibicao);
+            }
+            if (rowD && rowD.total_descontos > 0) {
+              descontoReal = rowD.total_descontos;
+              liquidoReal = rowD.salario_liquido;
+            }
+          }
+
+          if (!descontoReal || descontoReal === 0) {
+            const calc = calcularDescontosEstatutarios(cc.total_proventos, cc.ano);
+            descontoReal = calc.total_descontos;
+            liquidoReal = calc.salario_liquido;
+          }
+
+          cc.total_descontos = Math.round(descontoReal * 100) / 100;
+          cc.salario_liquido = Math.round(liquidoReal * 100) / 100;
+
+          totalProventosAcumulado += (cc.total_proventos || 0);
+          totalDescontosAcumulado += cc.total_descontos;
+          totalLiquidoAcumulado += cc.salario_liquido;
+        }
+
+        if (dbDetRef) {
+          try { dbDetRef.close(); } catch(e) {}
+        }
 
         // Processar cálculo pericial de períodos reais e intervalos (gaps)
         const periodosCalc = processarHistoricoEPeriodos(todosContracheques);
@@ -2014,6 +2170,7 @@ const server = http.createServer(async (req, res) => {
             total_descontos: Math.round(obj.total_descontos * 100) / 100,
             total_liquido: Math.round(obj.total_liquido * 100) / 100,
             media_mensal: Math.round((obj.total_proventos / (obj.total_folhas || 1)) * 100) / 100,
+            media_mensal_liquida: Math.round((obj.total_liquido / (obj.total_folhas || 1)) * 100) / 100,
             cargos: Array.from(obj.cargos).join(' • '),
             meses: obj.meses.sort((a, b) => b.mes - a.mes || b.id - a.id)
           };
@@ -2142,6 +2299,9 @@ const server = http.createServer(async (req, res) => {
           },
           tempo_efetivo: periodosCalc.tempoTotalExtenso,
           total_meses_efetivos: periodosCalc.totalMesesEfetivos,
+          total_proventos_acumulado: Math.round(totalProventosAcumulado * 100) / 100,
+          total_descontos_acumulado: Math.round(totalDescontosAcumulado * 100) / 100,
+          total_liquido_acumulado: Math.round(totalLiquidoAcumulado * 100) / 100,
           periodos_timeline: periodosCalc.timeline,
           folha_ultimo_ano: folhaUltimoAno,
           anos_anteriores: anosAnteriores,

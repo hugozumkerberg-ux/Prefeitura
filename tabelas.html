@@ -168,7 +168,7 @@
           <input type="text" id="input-busca" oninput="aplicarFiltroDebounced()" placeholder="Buscar por nome, cargo, credor, motivo..." class="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
         </div>
 
-        <!-- Filtros Padrao (Ano e Entidade para Contracheques, Despesas, Diarias, Contratos) -->
+        <!-- Filtros Padrao (Ano, Mês e Entidade com Máscaras) -->
         <div id="filtros-padrao" class="flex flex-wrap items-center gap-3">
           <select id="select-ano" onchange="aplicarFiltros()" class="bg-slate-900 border border-slate-700 rounded-lg text-sm text-slate-300 px-3 py-2 focus:outline-none focus:border-emerald-500">
             <option value="">Todos os Anos</option>
@@ -186,6 +186,22 @@
             <option value="2015">2015</option>
             <option value="2014">2014</option>
             <option value="2013">2013</option>
+          </select>
+
+          <select id="select-mes" onchange="aplicarFiltros()" class="bg-slate-900 border border-slate-700 rounded-lg text-sm text-slate-300 px-3 py-2 focus:outline-none focus:border-emerald-500">
+            <option value="">Todos os Meses</option>
+            <option value="1">01 - Janeiro</option>
+            <option value="2">02 - Fevereiro</option>
+            <option value="3">03 - Março</option>
+            <option value="4">04 - Abril</option>
+            <option value="5">05 - Maio</option>
+            <option value="6">06 - Junho</option>
+            <option value="7">07 - Julho</option>
+            <option value="8">08 - Agosto</option>
+            <option value="9">09 - Setembro</option>
+            <option value="10">10 - Outubro</option>
+            <option value="11">11 - Novembro</option>
+            <option value="12">12 - Dezembro</option>
           </select>
 
           <select id="select-entidade" onchange="aplicarFiltros()" class="bg-slate-900 border border-slate-700 rounded-lg text-sm text-slate-300 px-3 py-2 focus:outline-none focus:border-emerald-500">
@@ -384,6 +400,17 @@
       return Number(val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
+    function formatarMascaraAnoMeses(totalMeses) {
+      const m = parseInt(totalMeses, 10) || 0;
+      if (m <= 0) return '0 meses';
+      const anos = Math.floor(m / 12);
+      const mesesRestantes = m % 12;
+      const partes = [];
+      if (anos > 0) partes.push(`${anos} ${anos === 1 ? 'ano' : 'anos'}`);
+      if (mesesRestantes > 0) partes.push(`${mesesRestantes} ${mesesRestantes === 1 ? 'mês' : 'meses'}`);
+      return partes.join(' e ') || '0 meses';
+    }
+
     async function carregarResumoKpis() {
       try {
         const res = await fetch('/api/dados/resumo');
@@ -496,8 +523,9 @@
         url = `/api/dados/pessoas-unificadas?page=${paginaAtual}&limit=25&tipo=${tipo}&ordenar=${ordenar}&busca=${encodeURIComponent(busca)}`;
       } else {
         const ano = document.getElementById('select-ano').value;
+        const mes = document.getElementById('select-mes') ? document.getElementById('select-mes').value : '';
         const entidade = document.getElementById('select-entidade').value;
-        url = `/api/dados/${abaAtual}?page=${paginaAtual}&limit=25&q=${encodeURIComponent(busca)}&ano=${ano}&entidade=${encodeURIComponent(entidade)}`;
+        url = `/api/dados/${abaAtual}?page=${paginaAtual}&limit=25&q=${encodeURIComponent(busca)}&ano=${ano}&mes=${mes}&entidade=${encodeURIComponent(entidade)}`;
       }
 
       try {
@@ -564,12 +592,14 @@
       } else if (aba === 'contracheques') {
         thead.innerHTML = `
           <tr>
-            <th class="py-3 px-4">Competência</th>
+            <th class="py-3 px-4">Competência (MM/AAAA)</th>
             <th class="py-3 px-4">Entidade</th>
             <th class="py-3 px-4">Matrícula - Nome do Servidor</th>
             <th class="py-3 px-4">Cargo / Função</th>
             <th class="py-3 px-4">Vínculo</th>
-            <th class="py-3 px-4 text-right">Total Proventos</th>
+            <th class="py-3 px-4 text-right">Salário Bruto</th>
+            <th class="py-3 px-4 text-right">Descontos</th>
+            <th class="py-3 px-4 text-right">Salário Líquido</th>
           </tr>
         `;
       } else if (aba === 'despesas') {
@@ -670,6 +700,10 @@
                       ${r.foto_id ? `<span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/60" title="Foto Auditada SHA-256">ID #${r.foto_id}</span>` : ''}
                     </div>
                     ${r.partido_politico ? `<div class="text-[11px] text-slate-400 font-medium font-mono">Partido: ${r.partido_politico}</div>` : ''}
+                    <div class="text-[11px] text-emerald-400 font-medium font-mono mt-0.5 flex items-center gap-1">
+                      <span>⏱️ Tempo:</span>
+                      <span>${formatarMascaraAnoMeses(r.qtd_contracheques || 0)}</span>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -681,8 +715,9 @@
               <td class="py-3 px-4">${badgeMat}</td>
               <td class="py-3 px-4 text-xs text-slate-300 max-w-xs truncate" title="${r.cargos_resumo || ''}">${r.cargos_resumo || '-'}</td>
               <td class="py-3 px-4 text-right font-mono text-xs text-slate-300">
-                <div>${formatMoeda(r.total_salarios)}</div>
-                <div class="text-[10px] text-slate-500">${r.qtd_contracheques || 0} folhas</div>
+                <div class="text-emerald-400 font-bold" title="Salário Bruto Acumulado">Bruto: ${formatMoeda(r.total_salarios)}</div>
+                <div class="text-[10px] text-slate-300 font-mono">Líq. Est.: ${formatMoeda(r.total_salarios * 0.78)}</div>
+                <div class="text-[10px] text-slate-500">${r.qtd_contracheques || 0} folhas (${formatarMascaraAnoMeses(r.qtd_contracheques || 0)})</div>
               </td>
               <td class="py-3 px-4 text-right font-mono text-xs text-amber-400">
                 <div>${formatMoeda(r.total_diarias)}</div>
@@ -703,9 +738,12 @@
             ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-cyan-900/40 text-cyan-300 border border-cyan-800">Saúde</span>'
             : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-900/40 text-emerald-300 border border-emerald-800">Prefeitura</span>';
 
+          const descVal = r.total_descontos > 0 ? r.total_descontos : Math.max(0, (r.total_proventos - (r.salario_liquido || r.total_proventos)));
+          const liqVal = r.salario_liquido || (r.total_proventos - descVal);
+
           html += `
             <tr onclick="abrirPopupContrachequeDetalhe(${r.id})" class="hover:bg-slate-800/80 cursor-pointer transition select-none group border-b border-slate-800/60" title="Clique para ver o contracheque detalhado">
-              <td class="py-3 px-4 font-mono text-xs text-slate-400">${r.ano}/${String(r.mes).padStart(2, '0')}</td>
+              <td class="py-3 px-4 font-mono text-xs text-white font-bold">${String(r.mes).padStart(2, '0')}/${r.ano}</td>
               <td class="py-3 px-4">${badgeEnt}</td>
               <td class="py-3 px-4 font-medium text-white group-hover:text-emerald-300 transition">
                 <div>${r.nome}</div>
@@ -713,25 +751,14 @@
               </td>
               <td class="py-3 px-4 text-slate-300 text-xs">${r.cargo || '-'}</td>
               <td class="py-3 px-4 text-slate-400 text-xs">${r.vinculo || '-'}</td>
-              <td class="py-3 px-4 text-right font-mono font-semibold text-emerald-400">
+              <td class="py-3 px-4 text-right font-mono font-bold text-emerald-400">${formatMoeda(r.total_proventos)}</td>
+              <td class="py-3 px-4 text-right font-mono font-medium text-rose-400">${descVal > 0 ? '-' + formatMoeda(descVal) : '-'}</td>
+              <td class="py-3 px-4 text-right font-mono font-extrabold text-white bg-slate-900/40">
                 <div class="flex items-center justify-end space-x-2">
-                  <span>${formatMoeda(r.total_proventos)}</span>
+                  <span>${formatMoeda(liqVal)}</span>
                   <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
                 </div>
               </td>
-            </tr>
-          `;
-        }
-              <td class="py-3 px-4 font-mono text-xs text-slate-400">${r.ano}/${String(r.mes).padStart(2, '0')}</td>
-              <td class="py-3 px-4">${badgeEnt}</td>
-              <td class="py-3 px-4 font-medium text-white">
-                <div>${r.nome}</div>
-                <div class="text-xs text-slate-500 font-mono">Matr: ${r.matricula || '-'}</div>
-              </td>
-              <td class="py-3 px-4 text-slate-300 text-xs">${r.cargo || '-'}</td>
-              <td class="py-3 px-4 text-slate-400 text-xs">${r.vinculo || '-'}</td>
-              <td class="py-3 px-4 text-right font-mono font-semibold text-emerald-400">${formatMoeda(r.total_proventos)}</td>
-              <td class="py-3 px-4 text-center">${linkOficial}</td>
             </tr>
           `;
         }
@@ -899,13 +926,14 @@
             </div>
             <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
               <span class="text-[10px] text-slate-400 uppercase font-mono">Tempo Efetivo de Serviço</span>
-              <p class="text-base font-bold text-white font-mono mt-0.5">${data.tempo_efetivo || '0 meses'}</p>
-              <span class="text-[10px] text-emerald-400 font-mono font-medium">${data.total_meses_efetivos || p.qtd_contracheques || 0} meses trabalhados</span>
+              <p class="text-base font-bold text-white font-mono mt-0.5">${data.tempo_efetivo || formatarMascaraAnoMeses(p.qtd_contracheques || 0)}</p>
+              <span class="text-[10px] text-emerald-400 font-mono font-medium">${data.total_meses_efetivos || p.qtd_contracheques || 0} meses ativos (${p.qtd_contracheques || 0} folhas)</span>
             </div>
             <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
-              <span class="text-[10px] text-slate-400 uppercase font-mono">Salários Acumulados</span>
-              <p class="text-base font-bold text-emerald-300 font-mono mt-0.5">${formatMoeda(p.total_salarios)}</p>
-              <span class="text-[10px] text-slate-500 font-mono">${p.qtd_contracheques || 0} contracheques</span>
+              <span class="text-[10px] text-slate-400 uppercase font-mono">Salários (Bruto & Líquido)</span>
+              <p class="text-base font-bold text-emerald-300 font-mono mt-0.5" title="Salário Bruto Total">Bruto: ${formatMoeda(data.total_proventos_acumulado || p.total_salarios)}</p>
+              <div class="text-[11px] text-emerald-400 font-mono font-bold mt-0.5" title="Salário Líquido Total">Líquido: ${formatMoeda(data.total_liquido_acumulado || (p.total_salarios * 0.78))}</div>
+              <div class="text-[10px] text-rose-400 font-mono">Descontos: -${formatMoeda(data.total_descontos_acumulado || 0)}</div>
             </div>
             <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
               <span class="text-[10px] text-slate-400 uppercase font-mono">Diárias Recebidas</span>
@@ -1151,8 +1179,9 @@
                 </div>
                 <div class="flex items-center space-x-3 font-mono text-xs">
                   <div class="text-right">
-                    <span class="text-emerald-400 font-bold block">${formatMoeda(anoAtivo.total_proventos)}</span>
-                    <span class="text-[10px] text-slate-400">${anoAtivo.meses.length} folhas registradas</span>
+                    <span class="text-emerald-400 font-bold block">Bruto: ${formatMoeda(anoAtivo.total_proventos)}</span>
+                    <span class="text-[11px] text-emerald-300 font-semibold block">Líq: ${formatMoeda(anoAtivo.total_liquido || (anoAtivo.total_proventos - anoAtivo.total_descontos))}</span>
+                    <span class="text-[10px] text-slate-400">Desc: -${formatMoeda(anoAtivo.total_descontos)} (${anoAtivo.meses.length} folhas)</span>
                   </div>
                   <span id="sanfona-folha-atual-icon" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
                 </div>
@@ -1163,11 +1192,11 @@
                 <table class="w-full text-left text-xs text-slate-300">
                   <thead class="bg-slate-800/80 text-slate-400 font-mono uppercase text-[11px]">
                     <tr>
-                      <th class="py-2.5 px-3">Competência</th>
+                      <th class="py-2.5 px-3">Competência (MM/AAAA)</th>
                       <th class="py-2.5 px-3">Tipo de Folha</th>
-                      <th class="py-2.5 px-3 text-right">Proventos (R$)</th>
+                      <th class="py-2.5 px-3 text-right">Salário Bruto</th>
                       <th class="py-2.5 px-3 text-right">Descontos</th>
-                      <th class="py-2.5 px-3 text-right">Líquido (R$)</th>
+                      <th class="py-2.5 px-3 text-right">Salário Líquido</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-800 font-mono">
@@ -1236,8 +1265,9 @@
                       </div>
                       <div class="flex items-center space-x-3 text-right font-mono text-xs">
                         <div>
-                          <span class="text-emerald-400 font-bold block">${formatMoeda(anoItem.total_proventos)}</span>
-                          <span class="text-[10px] text-slate-400">Média: ${formatMoeda(anoItem.media_mensal)}</span>
+                          <span class="text-emerald-400 font-bold block">Bruto: ${formatMoeda(anoItem.total_proventos)}</span>
+                          <span class="text-emerald-300 font-semibold block text-[11px]">Líq: ${formatMoeda(anoItem.total_liquido || (anoItem.total_proventos - anoItem.total_descontos))}</span>
+                          <span class="text-[10px] text-slate-400">Desc: -${formatMoeda(anoItem.total_descontos)}</span>
                         </div>
                         <span id="ano-seta-${aIdx}" class="text-xs text-slate-400 font-mono group-hover:text-white transition">▼</span>
                       </div>
@@ -1255,8 +1285,10 @@
                               <span class="font-bold text-white font-mono group-hover:text-emerald-300 transition">${String(m.mes).padStart(2, '0')}/${m.ano}</span>
                               ${badgeFolha}
                             </div>
-                            <div class="flex items-center space-x-2 font-mono">
-                              <span class="text-emerald-400 font-bold">${formatMoeda(m.total_proventos)}</span>
+                            <div class="flex items-center space-x-2.5 font-mono">
+                              <span class="text-slate-400 text-[11px]" title="Salário Bruto">Bruto: ${formatMoeda(m.total_proventos)}</span>
+                              <span class="text-rose-400 text-[10px]" title="Descontos">${m.total_descontos > 0 ? '-' + formatMoeda(m.total_descontos) : ''}</span>
+                              <span class="text-emerald-400 font-bold" title="Salário Líquido">Líq: ${formatMoeda(m.salario_liquido || m.total_proventos)}</span>
                               <span class="text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition font-mono">›</span>
                             </div>
                           </div>
