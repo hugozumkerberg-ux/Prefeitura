@@ -22,24 +22,44 @@ async function handleApiRequest(req, res, parsedUrl) {
   const params = parsedUrl.searchParams;
 
   try {
-    // 1. Estatísticas ao vivo
-    if (pathname === '/api/live') {
-      const stats = await dadosService.getLiveStats();
+    // 1. Estatísticas ao vivo e Resumo de KPIs
+    if (pathname === '/api/live' || pathname === '/api/dados/resumo') {
+      const stats = await dadosService.getResumoMaster();
       return sendJson(res, 200, stats);
     }
 
-    // 2. Consulta de tabelas integradas
-    if (pathname === '/api/dados/tabelas') {
-      const buscaTermo = params.get('busca') || '';
-      const abaNome = params.get('aba') || 'pessoas';
+    // 2. Rankings Oficiais
+    if (pathname === '/api/dados/rankings') {
+      const rankings = await dadosService.getRankingsMaster();
+      return sendJson(res, 200, rankings);
+    }
+
+    // 3. Consulta de tabelas integradas e aliases diretos
+    const tabelaAliases = {
+      '/api/dados/pessoas-unificadas': 'pessoas',
+      '/api/dados/pessoas': 'pessoas',
+      '/api/dados/contracheques': 'contracheques',
+      '/api/dados/despesas': 'despesas',
+      '/api/dados/diarias': 'diarias',
+      '/api/dados/contratos': 'contratos',
+      '/api/dados/receitas': 'receitas',
+      '/api/dados/convenios': 'convenios'
+    };
+
+    if (pathname === '/api/dados/tabelas' || tabelaAliases[pathname]) {
+      const buscaTermo = params.get('busca') || params.get('q') || '';
+      const abaNome = tabelaAliases[pathname] || params.get('aba') || 'pessoas';
       const result = await dadosService.getTabelas({
         aba: abaNome,
         busca: buscaTermo,
         ano: params.get('ano') || '',
         mes: params.get('mes') || '',
-        limit: params.get('limit') || 50,
-        offset: params.get('offset') || 0,
-        sort: params.get('sort') || ''
+        entidade: params.get('entidade') || '',
+        tipo: params.get('tipo') || 'todos',
+        ordenar: params.get('ordenar') || 'dinheiro',
+        page: params.get('page') || 1,
+        limit: params.get('limit') || 25,
+        offset: params.get('offset') || 0
       });
 
       if (buscaTermo.trim()) {

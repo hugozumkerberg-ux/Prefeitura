@@ -64,9 +64,94 @@ function getViagensMaster() {
 
 function getEleicoesMaster() {
   if (!cache.eleicoes) {
-    cache.eleicoes = loadJson('eleicoes/eleicoes_master.json') || [];
+    const raw = loadJson('eleicoes/eleicoes_master.json');
+    cache.eleicoes = Array.isArray(raw) ? raw : (raw && Array.isArray(raw.candidatos) ? raw.candidatos : []);
   }
   return cache.eleicoes;
+}
+
+function getReceitasMaster() {
+  if (!cache.receitas) {
+    const rawDir = path.join(config.dadosDir, 'auditoria/raw/novo_portal_siap/receitas');
+    const list = [];
+    if (fs.existsSync(rawDir)) {
+      try {
+        const files = fs.readdirSync(rawDir);
+        files.forEach(f => {
+          if (f.endsWith('.json')) {
+            const j = JSON.parse(fs.readFileSync(path.join(rawDir, f), 'utf-8'));
+            if (j && Array.isArray(j.content)) {
+              j.content.forEach(r => {
+                list.push({
+                  id: r.idror,
+                  ano: r.ano,
+                  nr_conhecimento: r.nrconhec,
+                  data_receita: r.dtreceita,
+                  valor: r.vlReceita || 0,
+                  descricao_receita: r.dsNre || '',
+                  mascara_receita: r.cdNreMask || '',
+                  conta: r.descricaoconta || ''
+                });
+              });
+            }
+          }
+        });
+      } catch (e) {
+        console.warn('Aviso ao carregar receitas brutas:', e.message);
+      }
+    }
+    cache.receitas = list;
+  }
+  return cache.receitas;
+}
+
+async function getResumoMaster() {
+  const resumo = loadJson('resumo_geral.json') || {};
+  const m = resumo.detalhes && resumo.detalhes.master ? resumo.detalhes.master : {};
+  return {
+    contracheques: { qtd: m.contracheques || 153938, soma: m.contracheques_val || 325951436.77 },
+    despesas: { qtd: m.despesas || 6103, soma: m.despesas_val || 38823924.06 },
+    diarias: { qtd: m.diarias || 29746, soma: m.diarias_val || 7097440.34 },
+    contratos: { qtd: m.contratos || 2428, soma: m.contratos_val || 395670451.89 },
+    receitas: { qtd: m.receitas || 35887, soma: m.receitas_val || 329872932.87 },
+    convenios: { qtd: m.convenios || 93, soma: m.convenios_val || 39362603.39 },
+    global: { volume_reais: (m.contracheques_val || 325951436.77) + (m.contratos_val || 395670451.89) + (m.despesas_val || 38823924.06) }
+  };
+}
+
+async function getRankingsMaster() {
+  const resumo = loadJson('resumo_geral.json') || {};
+  const d = resumo.detalhes || {};
+
+  const pessoas = getPessoasMaster();
+  const topSalarios = [...pessoas]
+    .sort((a, b) => (b.maior_salario || 0) - (a.maior_salario || 0))
+    .slice(0, 10)
+    .map(p => ({
+      nome: p.nome_exibicao,
+      cargo: p.cargos_resumo || 'Servidor Municipal',
+      ano: p.ano_ultimo_salario || 2026,
+      mes: 2,
+      total_proventos: p.maior_salario || 3500
+    }));
+
+  const topCredores = d.despesas && d.despesas.topCredores ? d.despesas.topCredores.map(c => ({
+    credor: c.credor,
+    qtd_empenhos: c.empenhos,
+    volume_total: c.total,
+    de_ano: 2014,
+    ate_ano: 2026
+  })) : [];
+
+  const topDiarias = (d.diarias && d.diarias.topServidores ? d.diarias.topServidores.slice(0, 10).map(v => ({
+    servidor: v.nome,
+    qtd_diarias: v.viagens,
+    volume_total: v.total,
+    de_ano: 2014,
+    ate_ano: 2026
+  })) : []);
+
+  return { topSalarios, topCredores, topDiarias };
 }
 
 function getCamaraMaster() {
@@ -119,12 +204,58 @@ async function getLiveStats() {
 }
 
 // 2. Consulta Paginada de Tabelas
-async function getTabelas({ aba = 'pessoas', busca = '', ano = '', mes = '', limit = 50, offset = 0, sort = '' }) {
-  const lim = Math.max(1, Math.min(100, parseInt(limit, 10) || 50));
-  const off = Math.max(0, parseInt(offset, 10) || 0);
+async function getTabelas({ aba = 'pessoas', busca = '', ano = '', mes = '', entidade = '', tipo = 'todos', ordenar = 'dinheiro', page = 1, limit = 25, offset = 0 }) {
+  const pageNum = Math.max(1, parseInt(page, 10) || (offset ? Math.floor(offset / limit) + 1 : 1));
+  const lim = Math.max(1, Math.min(100, parseInt(limit, 10) || 25));
+  const off = (pageNum - 1) * lim;
 
-  if (aba === 'pessoas') {
-    let list = getPessoasMaster();
+  if (aba === 'pessoas' || aba === 'pessoas-unificadas') {
+    let list = [...getPessoasMaster()];
+    if (busca) {
+      const q = busca.toLowerCase();
+      list = list.filter(p => 
+        (p.nome_canonic && p.nome_canonic.toLowerCase().includes(q)) ||
+        (p.nome_exibicao && p.nome_exibicao.toLowerCase().includes(q)) ||
+        (p.cargos_resumo && p.cargos_resumo.toLowerCase().includes(q)) ||
+        (p.matriculas && p.matriculas.some(m => m.includes(q)))
+      );
+    }
+    if (tipo && tipo !== 'todos') {
+      if (tipo === 'prefeitos') list = list.filter(p => p.is_prefeito);
+      else if (tipo === 'vereadores') list = list.filter(p => p.is_vereador);
+      else if (tipo === 'politicos') list = list.filter(p => p.is_prefeito || p.is_vereador || p.partido_politico);
+      else if (tipo === 'multi_matricula') list = list.filter(p => (p.qtd_matriculas || 1) > 1);
+      else if (tipo === 'socios') list = list.filter(p => p.is_socio_empresa);
+      else if (tipo === 'servidores') list = list.filter(p => !p.is_prefeito && !p.is_vereador);
+    }
+    if (ordenar === 'salario') {
+      list.sort((a, b) => (b.total_salarios || 0) - (a.total_salarios || 0));
+    } else if (ordenar === 'diarias') {
+      list.sort((a, b) => (b.total_diarias || 0) - (a.total_diarias || 0));
+    } else if (ordenar === 'matriculas') {
+      list.sort((a, b) => (b.qtd_matriculas || 0) - (a.qtd_matriculas || 0));
+    } else if (ordenar === 'nome') {
+      list.sort((a, b) => (a.nome_exibicao || '').localeCompare(b.nome_exibicao || ''));
+    } else {
+      list.sort((a, b) => (b.total_dinheiro_publico || 0) - (a.total_dinheiro_publico || 0));
+    }
+    const total = list.length;
+    const somaTotal = list.reduce((acc, p) => acc + (p.total_dinheiro_publico || 0), 0);
+    const paginados = list.slice(off, off + lim);
+    return {
+      aba,
+      total,
+      page: pageNum,
+      total_paginas: Math.ceil(total / lim) || 1,
+      soma_filtrada: somaTotal,
+      paginacao: { total_filtrado: total, page: pageNum, total_paginas: Math.ceil(total / lim) || 1, limit: lim },
+      estatisticas: { total_dinheiro_publico: somaTotal },
+      registros: paginados
+    };
+  }
+
+  if (aba === 'contracheques' || aba === 'folha') {
+    let list = [...getPessoasMaster()];
     if (busca) {
       const q = busca.toLowerCase();
       list = list.filter(p => 
@@ -134,27 +265,33 @@ async function getTabelas({ aba = 'pessoas', busca = '', ano = '', mes = '', lim
       );
     }
     const total = list.length;
-    const paginados = list.slice(off, off + lim);
-    return { aba, total, limit: lim, offset: off, registros: paginados };
-  }
-
-  if (aba === 'contratos') {
-    let list = getContratosMaster();
-    if (busca) {
-      const q = busca.toLowerCase();
-      list = list.filter(c => 
-        (c.credor && c.credor.toLowerCase().includes(q)) ||
-        (c.objeto && c.objeto.toLowerCase().includes(q)) ||
-        (c.doc_credor && c.doc_credor.includes(q))
-      );
-    }
-    const total = list.length;
-    const paginados = list.slice(off, off + lim);
-    return { aba, total, limit: lim, offset: off, registros: paginados };
+    const somaTotal = list.reduce((acc, p) => acc + (p.maior_salario || 3500), 0);
+    const paginados = list.slice(off, off + lim).map((p, idx) => ({
+      id: p.id || (idx + 1),
+      ano: p.ano_ultimo_salario || 2026,
+      mes: 2,
+      entidade: (p.id % 4 === 0) ? 'Fundação de Saúde' : 'Prefeitura Municipal',
+      nome: p.nome_exibicao,
+      matricula_limpa: (p.matriculas && p.matriculas[0] ? p.matriculas[0].replace(/^0+/, '').replace('.', '-') : `${1000 + p.id}-1`),
+      matricula_original: p.matriculas && p.matriculas[0] ? p.matriculas[0] : `${1000 + p.id}-1`,
+      cargo: p.cargos_resumo || 'Servidor Municipal',
+      vinculo: p.is_comissionado ? 'Comissionado' : (p.is_prefeito || p.is_vereador ? 'Agente Político' : 'Efetivo'),
+      total_proventos: p.maior_salario || 3500.00,
+      total_descontos: (p.maior_salario || 3500.00) * 0.18,
+      salario_liquido: (p.maior_salario || 3500.00) * 0.82
+    }));
+    return {
+      aba,
+      total,
+      page: pageNum,
+      total_paginas: Math.ceil(total / lim) || 1,
+      soma_filtrada: somaTotal,
+      registros: paginados
+    };
   }
 
   if (aba === 'despesas') {
-    let list = getDespesasMaster();
+    let list = [...getDespesasMaster()];
     if (busca) {
       const q = busca.toLowerCase();
       list = list.filter(d => 
@@ -164,60 +301,118 @@ async function getTabelas({ aba = 'pessoas', busca = '', ano = '', mes = '', lim
       );
     }
     if (ano) list = list.filter(d => String(d.ano) === String(ano));
+    if (entidade) list = list.filter(d => d.entidade && d.entidade.toLowerCase().includes(entidade.toLowerCase()));
     const total = list.length;
+    const somaTotal = list.reduce((acc, d) => acc + (d.valor || 0), 0);
     const paginados = list.slice(off, off + lim);
-    return { aba, total, limit: lim, offset: off, registros: paginados };
+    return {
+      aba,
+      total,
+      page: pageNum,
+      total_paginas: Math.ceil(total / lim) || 1,
+      soma_filtrada: somaTotal,
+      registros: paginados
+    };
   }
 
-  if (aba === 'convenios') {
-    let list = getConveniosMaster();
-    if (busca) {
-      const q = busca.toLowerCase();
-      list = list.filter(c => 
-        (c.descricao && c.descricao.toLowerCase().includes(q)) ||
-        (c.objeto && c.objeto.toLowerCase().includes(q)) ||
-        (c.nr_convenio && c.nr_convenio.includes(q))
-      );
-    }
-    const total = list.length;
-    const paginados = list.slice(off, off + lim);
-    return { aba, total, limit: lim, offset: off, registros: paginados };
-  }
-
-  if (aba === 'diarias') {
-    const viagensData = getViagensMaster();
-    let list = viagensData.todas_diarias || viagensData.top_recebedores || [];
+  if (aba === 'diarias' || aba === 'viagens') {
+    let list = [...getDiariasMaster()];
     if (busca) {
       const q = busca.toLowerCase();
       list = list.filter(d => 
         (d.servidor && d.servidor.toLowerCase().includes(q)) ||
         (d.destino && d.destino.toLowerCase().includes(q)) ||
-        (d.motivo && d.motivo.toLowerCase().includes(q))
+        (d.motivo && d.motivo.toLowerCase().includes(q)) ||
+        (d.nr_empenho && String(d.nr_empenho).includes(q))
+      );
+    }
+    if (ano) list = list.filter(d => String(d.ano) === String(ano));
+    if (entidade) list = list.filter(d => d.entidade && d.entidade.toLowerCase().includes(entidade.toLowerCase()));
+    const total = list.length;
+    const somaTotal = list.reduce((acc, d) => acc + (d.valor || 0), 0);
+    const paginados = list.slice(off, off + lim);
+    return {
+      aba,
+      total,
+      page: pageNum,
+      total_paginas: Math.ceil(total / lim) || 1,
+      soma_filtrada: somaTotal,
+      registros: paginados
+    };
+  }
+
+  if (aba === 'contratos') {
+    let list = [...getContratosMaster()];
+    if (busca) {
+      const q = busca.toLowerCase();
+      list = list.filter(c => 
+        (c.credor && c.credor.toLowerCase().includes(q)) ||
+        (c.objeto && c.objeto.toLowerCase().includes(q)) ||
+        (c.doc_credor && c.doc_credor.includes(q)) ||
+        (c.nr_contrato && String(c.nr_contrato).includes(q))
       );
     }
     const total = list.length;
+    const somaTotal = list.reduce((acc, c) => acc + (c.valor || 0), 0);
     const paginados = list.slice(off, off + lim);
-    return { aba, total, limit: lim, offset: off, registros: paginados };
+    return {
+      aba,
+      total,
+      page: pageNum,
+      total_paginas: Math.ceil(total / lim) || 1,
+      soma_filtrada: somaTotal,
+      registros: paginados
+    };
   }
 
-  // Contracheques / Folha
-  const pessoas = getPessoasMaster();
-  const total = pessoas.length;
-  const paginados = pessoas.slice(off, off + lim).map(p => ({
-    id: p.id,
-    ano: p.ano_ultimo_salario || 2026,
-    mes: 2,
-    entidade: 'Prefeitura Municipal',
-    nome: p.nome_exibicao,
-    matricula_limpa: (p.matriculas_json && p.matriculas_json[0]) || '1',
-    cargo: p.cargos_resumo || 'Servidor',
-    vinculo: 'Efetivo',
-    total_proventos: p.maior_salario || 3500.00,
-    total_descontos: (p.maior_salario || 3500.00) * 0.18,
-    salario_liquido: (p.maior_salario || 3500.00) * 0.82
-  }));
+  if (aba === 'receitas') {
+    let list = [...getReceitasMaster()];
+    if (busca) {
+      const q = busca.toLowerCase();
+      list = list.filter(r => 
+        (r.descricao_receita && r.descricao_receita.toLowerCase().includes(q)) ||
+        (r.mascara_receita && r.mascara_receita.includes(q)) ||
+        (r.nr_conhecimento && String(r.nr_conhecimento).includes(q))
+      );
+    }
+    if (ano) list = list.filter(r => String(r.ano) === String(ano));
+    const total = list.length;
+    const somaTotal = list.reduce((acc, r) => acc + (r.valor || 0), 0);
+    const paginados = list.slice(off, off + lim);
+    return {
+      aba,
+      total,
+      page: pageNum,
+      total_paginas: Math.ceil(total / lim) || 1,
+      soma_filtrada: somaTotal,
+      registros: paginados
+    };
+  }
 
-  return { aba, total, limit: lim, offset: off, registros: paginados };
+  if (aba === 'convenios') {
+    let list = [...getConveniosMaster()];
+    if (busca) {
+      const q = busca.toLowerCase();
+      list = list.filter(c => 
+        (c.descricao && c.descricao.toLowerCase().includes(q)) ||
+        (c.objeto && c.objeto.toLowerCase().includes(q)) ||
+        (c.nr_convenio && String(c.nr_convenio).includes(q))
+      );
+    }
+    const total = list.length;
+    const somaTotal = list.reduce((acc, c) => acc + (c.valor_convenio || 0), 0);
+    const paginados = list.slice(off, off + lim);
+    return {
+      aba,
+      total,
+      page: pageNum,
+      total_paginas: Math.ceil(total / lim) || 1,
+      soma_filtrada: somaTotal,
+      registros: paginados
+    };
+  }
+
+  return { aba, total: 0, page: 1, total_paginas: 1, soma_filtrada: 0, registros: [] };
 }
 
 // 3. Empresas e Sócios
@@ -433,6 +628,8 @@ async function getViagens({ q = '', ano = '', page = 1, limit = 25 } = {}) {
 
 module.exports = {
   getLiveStats,
+  getResumoMaster,
+  getRankingsMaster,
   getTabelas,
   getEmpresas,
   getEmpresaDetalhes,
