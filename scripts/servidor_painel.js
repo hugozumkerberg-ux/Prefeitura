@@ -14,6 +14,7 @@ const RESUMO_JSON_PATH = path.join(PORTAL_DIR, 'dados/resumo_geral.json');
 const STATUS_JSON_PATH = path.join(PORTAL_DIR, 'dados/status_coleta.json');
 const MASTER_DB = path.join(PORTAL_DIR, 'dados/arinos_transparencia_master.sqlite3');
 const AUDIT_MASTER_DB = path.join(PORTAL_DIR, 'dados/auditoria/arinos_auditoria_master.sqlite3');
+const DETALHADO_DB = path.join(PORTAL_DIR, 'dados/contracheques_detalhados_master.sqlite3');
 
 console.log('╔════════════════════════════════════════════════════════════════════╗');
 console.log('║  SERVIDOR DO PAINEL DE MONITORAMENTO AO VIVO — ARINOS / MG        ║');
@@ -170,7 +171,211 @@ function getLiveStats() {
   };
 }
 
-const server = http.createServer((req, res) => {
+// ==============================================================================
+// HELPERS DE CÁLCULO DE PERÍODOS REAIS, INTERVALOS E CONTRACHEQUE DETALHADO
+// ==============================================================================
+
+function formatarMesAno(ano, mes) {
+  const meses = ['', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  return `${meses[mes] || mes}/${ano}`;
+}
+
+function calcularTempoExtenso(totalMeses) {
+  if (!totalMeses || totalMeses <= 0) return '0 meses';
+  const anos = Math.floor(totalMeses / 12);
+  const meses = totalMeses % 12;
+  const partes = [];
+  if (anos > 0) partes.push(`${anos} ${anos === 1 ? 'ano' : 'anos'}`);
+  if (meses > 0) partes.push(`${meses} ${meses === 1 ? 'mês' : 'meses'}`);
+  return partes.length > 0 ? partes.join(' e ') : '0 meses';
+}
+
+function processarHistoricoEPeriodos(contracheques) {
+  if (!contracheques || contracheques.length === 0) {
+    return { totalMesesEfetivos: 0, tempoTotalExtenso: '0 meses', timeline: [] };
+  }
+
+  // Ordenar por ano e mês cronologicamente
+  const ordenados = [...contracheques].sort((a, b) => (a.ano * 100 + a.mes) - (b.ano * 100 + b.mes));
+  
+  // Agrupar meses únicos (desconsiderando duplicatas de 13º no mesmo mês)
+  const mesesUnicos = [];
+  const mapMes = new Map();
+  for (const c of ordenados) {
+    const key = `${c.ano}-${String(c.mes).padStart(2, '0')}`;
+    if (!mapMes.has(key)) {
+      mapMes.set(key, { ano: c.ano, mes: c.mes, cargo: c.cargo, items: [] });
+      mesesUnicos.push(mapMes.get(key));
+    }
+    mapMes.get(key).items.push(c);
+  }
+
+  const timeline = [];
+  let periodoAtual = null;
+
+  for (let i = 0; i < mesesUnicos.length; i++) {
+    const atual = mesesUnicos[i];
+    const seqMesAtual = atual.ano * 12 + (atual.mes - 1);
+
+    if (!periodoAtual) {
+      periodoAtual = {
+        inicio: atual,
+        fim: atual,
+        mesesCount: 1,
+        cargos: new Set(atual.cargo ? [atual.cargo] : [])
+      };
+    } else {
+      const seqMesAnterior = periodoAtual.fim.ano * 12 + (periodoAtual.fim.mes - 1);
+      const diffMeses = seqMesAtual - seqMesAnterior;
+
+      if (diffMeses === 1) {
+        periodoAtual.fim = atual;
+        periodoAtual.mesesCount++;
+        if (atual.cargo) periodoAtual.cargos.add(atual.cargo);
+      } else if (diffMeses === 0) {
+        // Mesmo mês
+      } else {
+        // Gap detectado
+        timeline.push({
+          tipo: 'periodo_ativo',
+          inicio: { ano: periodoAtual.inicio.ano, mes: periodoAtual.inicio.mes },
+          fim: { ano: periodoAtual.fim.ano, mes: periodoAtual.fim.mes },
+          meses: periodoAtual.mesesCount,
+          tempo_formatado: calcularTempoExtenso(periodoAtual.mesesCount),
+          cargos: Array.from(periodoAtual.cargos).join(' • ') || 'Servidor Municipal',
+          descricao: `${formatarMesAno(periodoAtual.inicio.ano, periodoAtual.inicio.mes)} a ${formatarMesAno(periodoAtual.fim.ano, periodoAtual.fim.mes)} (${calcularTempoExtenso(periodoAtual.mesesCount)})`
+        });
+
+        const gapMeses = diffMeses - 1;
+        const seqGapInicio = seqMesAnterior + 1;
+        const seqGapFim = seqMesAtual - 1;
+        const gapInicioAno = Math.floor(seqGapInicio / 12);
+        const gapInicioMes = (seqGapInicio % 12) + 1;
+        const gapFimAno = Math.floor(seqGapFim / 12);
+        const gapFimMes = (seqGapFim % 12) + 1;
+
+        timeline.push({
+          tipo: 'intervalo_gap',
+          meses: gapMeses,
+          inicio: { ano: gapInicioAno, mes: gapInicioMes },
+          fim: { ano: gapFimAno, mes: gapFimMes },
+          tempo_formatado: calcularTempoExtenso(gapMeses),
+          descricao: `Intervalo sem registro na Prefeitura: ${formatarMesAno(gapInicioAno, gapInicioMes)} a ${formatarMesAno(gapFimAno, gapFimMes)} (${calcularTempoExtenso(gapMeses)})`
+        });
+
+        periodoAtual = {
+          inicio: atual,
+          fim: atual,
+          mesesCount: 1,
+          cargos: new Set(atual.cargo ? [atual.cargo] : [])
+        };
+      }
+    }
+  }
+
+  if (periodoAtual) {
+    timeline.push({
+      tipo: 'periodo_ativo',
+      inicio: { ano: periodoAtual.inicio.ano, mes: periodoAtual.inicio.mes },
+      fim: { ano: periodoAtual.fim.ano, mes: periodoAtual.fim.mes },
+      meses: periodoAtual.mesesCount,
+      tempo_formatado: calcularTempoExtenso(periodoAtual.mesesCount),
+      cargos: Array.from(periodoAtual.cargos).join(' • ') || 'Servidor Municipal',
+      descricao: `${formatarMesAno(periodoAtual.inicio.ano, periodoAtual.inicio.mes)} a ${formatarMesAno(periodoAtual.fim.ano, periodoAtual.fim.mes)} (${calcularTempoExtenso(periodoAtual.mesesCount)})`
+    });
+  }
+
+  const totalMesesEfetivos = mesesUnicos.length;
+  return {
+    totalMesesEfetivos,
+    tempoTotalExtenso: calcularTempoExtenso(totalMesesEfetivos),
+    timeline
+  };
+}
+
+function decodeHtmlEntities(str) {
+  if (!str) return '';
+  return str
+    .replace(/&iacute;/gi, 'í')
+    .replace(/&Iacute;/gi, 'Í')
+    .replace(/&ccedil;/gi, 'ç')
+    .replace(/&Ccedil;/gi, 'Ç')
+    .replace(/&otilde;/gi, 'õ')
+    .replace(/&Otilde;/gi, 'Õ')
+    .replace(/&atilde;/gi, 'ã')
+    .replace(/&Atilde;/gi, 'Ã')
+    .replace(/&eacute;/gi, 'é')
+    .replace(/&Eacute;/gi, 'É')
+    .replace(/&oacute;/gi, 'ó')
+    .replace(/&Oacute;/gi, 'Ó')
+    .replace(/&uacute;/gi, 'ú')
+    .replace(/&Uacute;/gi, 'Ú')
+    .replace(/&aacute;/gi, 'á')
+    .replace(/&Aacute;/gi, 'Á')
+    .replace(/&nbsp;/gi, ' ');
+}
+
+function parseMoneyNum(val) {
+  if (!val) return null;
+  const cleaned = String(val).replace(/R\$/g, '').trim().replace(/\./g, '').replace(',', '.');
+  const num = parseFloat(cleaned);
+  return isNaN(num) ? null : num;
+}
+
+function parseContrachequeDetalhadoHtml(rawHtml) {
+  const html = decodeHtmlEntities(rawHtml);
+  let matricula = null;
+  let nome = null;
+  let cargo = null;
+  let lotacao = null;
+  let admissao = null;
+  const rubricas = [];
+
+  const matNomeM = html.match(/Matr[íi]cula\/Nome[\s\S]*?:[\s\S]*?(?:<\/strong>)?\s*([0-9.]+)\s*-\s*([^<\n\r]+)/i);
+  if (matNomeM) {
+    matricula = matNomeM[1].trim();
+    nome = matNomeM[2].trim();
+  }
+
+  const cargoM = html.match(/Cargo\/Fun[çc][ãa]o\s*:\s*<\/strong>\s*([^<\n\r]+)/i);
+  if (cargoM) cargo = cargoM[1].trim();
+
+  const orgM = html.match(/[ÓO]rg[ãa]o\s*:\s*<\/strong>\s*([^<\n\r]+)/i);
+  if (orgM) lotacao = orgM[1].trim();
+
+  const admM = html.match(/Data de admiss[ãa]o\s*:\s*<\/strong>\s*(\d{2}\/\d{2}\/\d{4})/i);
+  if (admM) admissao = admM[1].trim();
+
+  const eventRegex = /<tr[^>]*>\s*<td[^>]*colspan=["']2["'][^>]*>(.*?)<\/td>\s*<td[^>]*class=["'][^"']*tdrigth[^"']*["'][^>]*>(.*?)<\/td>\s*<td[^>]*class=["'][^"']*tdrigth[^"']*["'][^>]*>(.*?)<\/td>\s*<\/tr>/gi;
+  let evMatch;
+  while ((evMatch = eventRegex.exec(html)) !== null) {
+    const desc = evMatch[1].replace(/<[^>]+>/g, '').trim();
+    const remunStr = evMatch[2].replace(/<[^>]+>/g, '').trim();
+    const descStr = evMatch[3].replace(/<[^>]+>/g, '').trim();
+    if (desc && (remunStr || descStr)) {
+      if (remunStr) rubricas.push({ descricao: desc, tipo: 'PROVENTO', valor: parseMoneyNum(remunStr) });
+      if (descStr) rubricas.push({ descricao: desc, tipo: 'DESCONTO', valor: parseMoneyNum(descStr) });
+    }
+  }
+
+  const totalProventos = rubricas.filter(r => r.tipo === 'PROVENTO').reduce((acc, r) => acc + (r.valor || 0), 0);
+  const totalDescontos = rubricas.filter(r => r.tipo === 'DESCONTO').reduce((acc, r) => acc + (r.valor || 0), 0);
+  const salarioLiquido = Math.round((totalProventos - totalDescontos) * 100) / 100;
+
+  return {
+    matricula,
+    nome,
+    cargo,
+    lotacao,
+    admissao,
+    rubricas,
+    total_proventos: Math.round(totalProventos * 100) / 100,
+    total_descontos: Math.round(totalDescontos * 100) / 100,
+    salario_liquido: salarioLiquido
+  };
+}
+
+const server = http.createServer(async (req, res) => {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -1424,6 +1629,86 @@ const server = http.createServer((req, res) => {
           ORDER BY ano ASC
         `).all(pessoa.nome_exibicao, pessoa.nome_canonic);
 
+        // Todos os contracheques individuais para auditoria de períodos reais e gaps
+        const todosContracheques = db.prepare(`
+          SELECT id, ano, mes, tipo_folha, cargo, matricula, vinculo, 
+                 total_proventos, total_descontos, salario_liquido, url_detalhe, hash_registro, entidade
+          FROM contracheques
+          WHERE nome = ? OR nome = ?
+          ORDER BY ano DESC, mes DESC, id DESC
+        `).all(pessoa.nome_exibicao, pessoa.nome_canonic);
+
+        // Processar cálculo pericial de períodos reais e intervalos (gaps)
+        const periodosCalc = processarHistoricoEPeriodos(todosContracheques);
+
+        // Agrupar mês a mês por ano e identificar 13º e Férias
+        const anosMap = new Map();
+        for (const cc of todosContracheques) {
+          if (!anosMap.has(cc.ano)) {
+            anosMap.set(cc.ano, {
+              ano: cc.ano,
+              total_folhas: 0,
+              total_proventos: 0,
+              total_descontos: 0,
+              total_liquido: 0,
+              cargos: new Set(),
+              meses: []
+            });
+          }
+          const anoObj = anosMap.get(cc.ano);
+          anoObj.total_folhas++;
+          anoObj.total_proventos += (cc.total_proventos || 0);
+          anoObj.total_descontos += (cc.total_descontos || 0);
+          anoObj.total_liquido += (cc.salario_liquido || 0);
+          if (cc.cargo) anoObj.cargos.add(cc.cargo);
+
+          const tipoLower = (cc.tipo_folha || '').toLowerCase();
+          const is13 = tipoLower.includes('13') || tipoLower.includes('décimo') || tipoLower.includes('decimo') || tipoLower.includes('adiantamento');
+          const isFerias = tipoLower.includes('férias') || tipoLower.includes('ferias');
+
+          anoObj.meses.push({
+            id: cc.id,
+            ano: cc.ano,
+            mes: cc.mes,
+            tipo_folha: cc.tipo_folha || 'Pagamento Normal',
+            cargo: cc.cargo || 'Servidor',
+            matricula: cc.matricula,
+            vinculo: cc.vinculo,
+            total_proventos: cc.total_proventos || 0,
+            total_descontos: cc.total_descontos || 0,
+            salario_liquido: cc.salario_liquido || 0,
+            url_detalhe: cc.url_detalhe,
+            is_13: is13,
+            is_ferias: isFerias
+          });
+        }
+
+        const anosOrdenados = Array.from(anosMap.keys()).sort((a, b) => b - a);
+        const ultimoAnoKey = anosOrdenados[0] || null;
+
+        const folhaUltimoAno = ultimoAnoKey ? {
+          ...anosMap.get(ultimoAnoKey),
+          total_proventos: Math.round(anosMap.get(ultimoAnoKey).total_proventos * 100) / 100,
+          total_descontos: Math.round(anosMap.get(ultimoAnoKey).total_descontos * 100) / 100,
+          total_liquido: Math.round(anosMap.get(ultimoAnoKey).total_liquido * 100) / 100,
+          cargos: Array.from(anosMap.get(ultimoAnoKey).cargos).join(' • '),
+          meses: anosMap.get(ultimoAnoKey).meses.sort((a, b) => b.mes - a.mes || b.id - a.id)
+        } : null;
+
+        const anosAnteriores = anosOrdenados.slice(1).map(anoKey => {
+          const obj = anosMap.get(anoKey);
+          return {
+            ano: obj.ano,
+            total_folhas: obj.total_folhas,
+            total_proventos: Math.round(obj.total_proventos * 100) / 100,
+            total_descontos: Math.round(obj.total_descontos * 100) / 100,
+            total_liquido: Math.round(obj.total_liquido * 100) / 100,
+            media_mensal: Math.round((obj.total_proventos / (obj.total_folhas || 1)) * 100) / 100,
+            cargos: Array.from(obj.cargos).join(' • '),
+            meses: obj.meses.sort((a, b) => b.mes - a.mes || b.id - a.id)
+          };
+        });
+
         // Histórico anual de diárias de viagem
         const historicoDiarias = db.prepare(`
           SELECT 
@@ -1487,11 +1772,158 @@ const server = http.createServer((req, res) => {
             cargos,
             empresas_vinculadas: empresas
           },
+          tempo_efetivo: periodosCalc.tempoTotalExtenso,
+          total_meses_efetivos: periodosCalc.totalMesesEfetivos,
+          periodos_timeline: periodosCalc.timeline,
+          folha_ultimo_ano: folhaUltimoAno,
+          anos_anteriores: anosAnteriores,
           historico_folha: historicoFolha,
           historico_diarias: historicoDiarias,
           ultimas_viagens: ultimasViagens,
           empresas_detalhe: dadosEmpresas,
           materias_camara: materiasCamara
+        }));
+        return;
+      }
+
+      // 18.1. Consulta de Contracheque Detalhado (Rubricas, INSS, IRRF, Proventos e Descontos)
+      if (pathname === '/api/dados/contracheque-detalhe') {
+        const id = parseInt(parsedUrl.searchParams.get('id') || '0', 10);
+        if (!id) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: 'Parâmetro id do contracheque é obrigatório' }));
+          return;
+        }
+
+        const cc = db.prepare('SELECT * FROM contracheques WHERE id = ?').get(id);
+        if (!cc) {
+          res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: 'Contracheque não encontrado no banco' }));
+          return;
+        }
+
+        let detalhado = null;
+
+        // 1. Tentar consultar no banco de contracheques detalhados local
+        if (fs.existsSync(DETALHADO_DB)) {
+          try {
+            const dbDet = new DatabaseSync(DETALHADO_DB, { readOnly: true });
+            let rowDet = null;
+            if (cc.idfun) {
+              rowDet = dbDet.prepare('SELECT * FROM contracheques WHERE ano = ? AND mes = ? AND idfun = ? LIMIT 1').get(cc.ano, cc.mes, String(cc.idfun));
+            }
+            if (!rowDet && cc.nome) {
+              rowDet = dbDet.prepare('SELECT * FROM contracheques WHERE ano = ? AND mes = ? AND nome = ? LIMIT 1').get(cc.ano, cc.mes, cc.nome);
+            }
+
+            if (rowDet) {
+              const rubs = dbDet.prepare('SELECT codigo_descricao as descricao, tipo, valor FROM contracheque_rubricas WHERE contracheque_id = ?').all(rowDet.id);
+              detalhado = {
+                matricula: rowDet.matricula || cc.matricula,
+                nome: rowDet.nome || cc.nome,
+                cargo: rowDet.cargo || cc.cargo,
+                lotacao: rowDet.lotacao || 'Órgão Municipal',
+                admissao: rowDet.admissao || null,
+                rubricas: rubs,
+                total_proventos: rowDet.total_proventos,
+                total_descontos: rowDet.total_descontos,
+                salario_liquido: rowDet.salario_liquido,
+                url_oficial: rowDet.url_oficial || (cc.url_detalhe ? (cc.url_detalhe.startsWith('http') ? cc.url_detalhe : 'http://www.adpmnet.com.br' + cc.url_detalhe) : null),
+                origem: 'cache_sqlite'
+              };
+            }
+            dbDet.close();
+          } catch(e) {}
+        }
+
+        // 2. Se não estiver no cache e tiver url_detalhe, buscar da ADPM
+        if (!detalhado && cc.url_detalhe) {
+          try {
+            const fullUrl = cc.url_detalhe.startsWith('http') ? cc.url_detalhe : 'http://www.adpmnet.com.br' + cc.url_detalhe;
+            const fetchRes = await fetch(fullUrl, { signal: AbortSignal.timeout(6000) });
+            if (fetchRes.ok) {
+              const rawHtml = await fetchRes.text();
+              const parsed = parseContrachequeDetalhadoHtml(rawHtml);
+              if (parsed && parsed.rubricas && parsed.rubricas.length > 0) {
+                detalhado = {
+                  ...parsed,
+                  matricula: parsed.matricula || cc.matricula,
+                  nome: parsed.nome || cc.nome,
+                  cargo: parsed.cargo || cc.cargo,
+                  url_oficial: fullUrl,
+                  origem: 'adpm_live'
+                };
+
+                // Gravar em segundo plano no cache detalhado
+                try {
+                  const dbDetW = new DatabaseSync(DETALHADO_DB);
+                  const ins = dbDetW.prepare(`
+                    INSERT OR REPLACE INTO contracheques 
+                    (entidade, ano, mes, idfun, idpcl, matricula, nome, cargo, lotacao, admissao, total_proventos, total_descontos, salario_liquido, url_oficial, hash_sha256, coletado_em)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                  `).run(
+                    cc.entidade || 'prefeitura',
+                    cc.ano,
+                    cc.mes,
+                    String(cc.idfun || '0'),
+                    '1',
+                    detalhado.matricula,
+                    detalhado.nome,
+                    detalhado.cargo,
+                    detalhado.lotacao,
+                    detalhado.admissao,
+                    detalhado.total_proventos,
+                    detalhado.total_descontos,
+                    detalhado.salario_liquido,
+                    fullUrl,
+                    cc.hash_registro || '',
+                    new Date().toISOString()
+                  );
+
+                  const contraId = ins.lastInsertRowid;
+                  if (contraId) {
+                    for (const r of detalhado.rubricas) {
+                      dbDetW.prepare(`
+                        INSERT INTO contracheque_rubricas (contracheque_id, codigo_descricao, tipo, valor)
+                        VALUES (?, ?, ?, ?)
+                      `).run(contraId, r.descricao, r.tipo, r.valor);
+                    }
+                  }
+                  dbDetW.close();
+                } catch(wErr) {}
+              }
+            }
+          } catch(netErr) {}
+        }
+
+        // 3. Fallback pericial caso offline ou sem detalhamento online
+        if (!detalhado) {
+          detalhado = {
+            matricula: cc.matricula,
+            nome: cc.nome,
+            cargo: cc.cargo,
+            lotacao: cc.entidade || 'Prefeitura Municipal de Arinos',
+            admissao: null,
+            rubricas: [
+              { descricao: 'Vencimento / Proventos da Folha', tipo: 'PROVENTO', valor: cc.total_proventos || 0 },
+              ...(cc.total_descontos > 0 ? [{ descricao: 'Deduções Legais (Previdência / IRRF)', tipo: 'DESCONTO', valor: cc.total_descontos }] : [])
+            ],
+            total_proventos: cc.total_proventos,
+            total_descontos: cc.total_descontos,
+            salario_liquido: cc.salario_liquido,
+            url_oficial: cc.url_detalhe ? (cc.url_detalhe.startsWith('http') ? cc.url_detalhe : 'http://www.adpmnet.com.br' + cc.url_detalhe) : null,
+            origem: 'master_resumo'
+          };
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({
+          contracheque_id: cc.id,
+          ano: cc.ano,
+          mes: cc.mes,
+          tipo_folha: cc.tipo_folha,
+          entidade: cc.entidade,
+          detalhes: detalhado
         }));
         return;
       }
