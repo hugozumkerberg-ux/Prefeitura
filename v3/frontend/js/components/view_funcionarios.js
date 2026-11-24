@@ -1,11 +1,12 @@
 /**
  * ==============================================================================
  * PORTAL DA TRANSPARÊNCIA DE ARINOS / MG — V3 FUNCIONÁRIOS & FOLHA
- * Cópia e refatoração idêntica da página de servidores (tabelas.html) da V2
+ * Suporte a padronização de matrícula (sem zeros à esquerda),
+ * identificação consolidada de pessoa física e busca avançada completa.
  * ==============================================================================
  */
 
-import { fetchFolha, fetchStats } from '../api.js';
+import { fetchFolha, fetchFolhaFiltros, fetchStats } from '../api.js';
 import { renderTabela } from './tabela.js';
 import { renderPaginacao } from './paginacao.js';
 
@@ -21,7 +22,14 @@ export async function renderFuncionariosView(container) {
     periodo: '',
     mandato: '',
     ano: '',
-    mes: ''
+    mes: '',
+    nome: '',
+    matricula: '',
+    cargo: '',
+    lotacao: '',
+    salarioMin: '',
+    salarioMax: '',
+    avancadaAberta: false
   };
 
   container.innerHTML = `
@@ -46,9 +54,9 @@ export async function renderFuncionariosView(container) {
       </div>
 
       <div class="card" style="border-left: 4px solid #3b82f6; padding: 14px 18px;">
-        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Servidores</div>
-        <div style="font-size: 20px; font-weight: 800; color: #fff; font-family: 'JetBrains Mono', monospace; margin: 4px 0;">5.357</div>
-        <div style="font-size: 11px; color: #60a5fa;">Base Única</div>
+        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Pessoas Físicas</div>
+        <div style="font-size: 20px; font-weight: 800; color: #fff; font-family: 'JetBrains Mono', monospace; margin: 4px 0;">2.165</div>
+        <div style="font-size: 11px; color: #60a5fa;">Cadastro Único</div>
       </div>
 
       <div class="card" style="border-left: 4px solid #8b5cf6; padding: 14px 18px;">
@@ -64,16 +72,20 @@ export async function renderFuncionariosView(container) {
         <h2 style="font-size: 16px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
           <span>👥</span> Servidores Públicos Municipais & Folha de Pagamento
         </h2>
-        <span class="badge badge-green">Base Oficial SQLite (2013–2026)</span>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <span class="badge badge-green">Base Oficial SQLite (2013–2026)</span>
+          <span class="badge badge-blue">Matrícula Padronizada</span>
+        </div>
       </div>
 
+      <!-- Linha Principal de Filtros Rápidos -->
       <div class="filter-bar" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
         <input 
           type="text" 
           id="folha-input-busca" 
           class="input-field" 
-          placeholder="🔍 Buscar por nome, cargo ou matrícula..." 
-          style="flex: 1; min-width: 240px;"
+          placeholder="🔍 Buscar por nome, matrícula sem zeros (ex: 573 ou 1556-2) ou cargo..." 
+          style="flex: 1; min-width: 260px;"
         >
         <select id="folha-select-periodo" class="input-field" style="min-width: 175px; background: #1e293b; border: 1px solid #334155; color: #fff;">
           <option value="">Todos os Mandatos / Anos</option>
@@ -118,10 +130,66 @@ export async function renderFuncionariosView(container) {
         <button id="folha-btn-filtrar" class="btn-primary" style="padding: 10px 18px;">
           <span>🔍</span> Filtrar
         </button>
+        <button id="folha-btn-toggle-avancada" class="btn" style="background: rgba(59, 130, 246, 0.15); border: 1px solid #3b82f6; color: #93c5fd; padding: 10px 14px; font-weight: 600; cursor: pointer;">
+          <span>⚙️</span> Busca Avançada
+        </button>
         <button id="folha-btn-limpar" class="btn-primary" style="background: #374151; padding: 10px 16px;">
           Limpar
         </button>
       </div>
+
+      <!-- ⚙️ Painel Expansível de Busca Avançada -->
+      <div id="painel-busca-avancada" style="display: none; background: #0b1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; margin-top: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <div style="font-size: 13px; font-weight: 700; color: #60a5fa; display: flex; align-items: center; gap: 6px;">
+            <span>🔬</span> Filtros Estruturados & Busca Avançada
+          </div>
+          <span style="font-size: 11px; color: var(--text-muted);">
+            Localiza registros por matrícula padronizada (sem zeros) ou dados funcionais específicos
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 14px;">
+          <div>
+            <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">Nome da Pessoa Física</label>
+            <input type="text" id="avancada-nome" class="input-field" placeholder="Ex: Maria Conceição" style="width: 100%; background: #1e293b; color: #fff;">
+          </div>
+          <div>
+            <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">Matrícula (sem zeros à esquerda)</label>
+            <input type="text" id="avancada-matricula" class="input-field" placeholder="Ex: 573 ou 1556-2" style="width: 100%; background: #1e293b; color: #fff;">
+          </div>
+          <div>
+            <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">Cargo / Função</label>
+            <input type="text" id="avancada-cargo" class="input-field" list="datalist-cargos" placeholder="Ex: Professor, Motorista..." style="width: 100%; background: #1e293b; color: #fff;">
+            <datalist id="datalist-cargos"></datalist>
+          </div>
+          <div>
+            <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">Secretaria / Lotação</label>
+            <input type="text" id="avancada-lotacao" class="input-field" list="datalist-lotacoes" placeholder="Ex: Educação, Saúde..." style="width: 100%; background: #1e293b; color: #fff;">
+            <datalist id="datalist-lotacoes"></datalist>
+          </div>
+          <div>
+            <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">Proventos Mínimos (R$)</label>
+            <input type="number" id="avancada-salario-min" class="input-field" placeholder="Ex: 2500" style="width: 100%; background: #1e293b; color: #fff;">
+          </div>
+          <div>
+            <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">Proventos Máximos (R$)</label>
+            <input type="number" id="avancada-salario-max" class="input-field" placeholder="Ex: 15000" style="width: 100%; background: #1e293b; color: #fff;">
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+          <button id="avancada-btn-limpar" class="btn" style="background: #334155; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 12px; cursor: pointer;">
+            Limpar Campos
+          </button>
+          <button id="avancada-btn-aplicar" class="btn-primary" style="padding: 6px 16px; font-size: 12px; cursor: pointer;">
+            🔍 Aplicar Filtros Avançados
+          </button>
+        </div>
+      </div>
+
+      <!-- Container de Filtros Ativos -->
+      <div id="folha-filtros-ativos" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;"></div>
     </div>
 
     <!-- Tabela e Paginação -->
@@ -129,18 +197,18 @@ export async function renderFuncionariosView(container) {
       <div style="padding: 2rem; text-align: center; color: var(--text-muted);">Consultando banco oficial...</div>
     </div>
 
-    <!-- Modal Dossiê do Servidor -->
+    <!-- Modal Dossiê da Pessoa Física & Servidor -->
     <div id="modalDossieServidor" class="voter-modal-overlay">
       <div class="voter-modal-box">
         <div class="voter-modal-header">
           <div>
-            <h3 style="font-size: 18px; font-weight: 800; color: #fff;" id="dossie-nome">Dossiê do Servidor</h3>
-            <p style="font-size: 12px; color: var(--text-muted);" id="dossie-cargo">Histórico consolidado</p>
+            <h3 style="font-size: 18px; font-weight: 800; color: #fff;" id="dossie-nome">Cadastro Único da Pessoa Física</h3>
+            <p style="font-size: 12px; color: var(--text-muted);" id="dossie-cargo">Histórico funcional unificado</p>
           </div>
           <button class="modal-close-btn" id="dossie-close-btn">✕</button>
         </div>
         <div class="voter-modal-body" id="dossie-body">
-          <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Carregando histórico do servidor...</div>
+          <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Carregando dados da pessoa física...</div>
         </div>
       </div>
     </div>
@@ -151,9 +219,40 @@ export async function renderFuncionariosView(container) {
   const selectMes = container.querySelector('#folha-select-mes');
   const btnFiltrar = container.querySelector('#folha-btn-filtrar');
   const btnLimpar = container.querySelector('#folha-btn-limpar');
+  const btnToggleAvancada = container.querySelector('#folha-btn-toggle-avancada');
+  const painelAvancada = container.querySelector('#painel-busca-avancada');
+  const filtrosAtivosContainer = container.querySelector('#folha-filtros-ativos');
   const tabelaContainer = container.querySelector('#folha-conteudo-tabela');
   const modalDossie = container.querySelector('#modalDossieServidor');
   const modalCloseBtn = container.querySelector('#dossie-close-btn');
+
+  // Campos avançados
+  const inputAvancadaNome = container.querySelector('#avancada-nome');
+  const inputAvancadaMat = container.querySelector('#avancada-matricula');
+  const inputAvancadaCargo = container.querySelector('#avancada-cargo');
+  const inputAvancadaLotacao = container.querySelector('#avancada-lotacao');
+  const inputAvancadaSalMin = container.querySelector('#avancada-salario-min');
+  const inputAvancadaSalMax = container.querySelector('#avancada-salario-max');
+  const btnAvancadaAplicar = container.querySelector('#avancada-btn-aplicar');
+  const btnAvancadaLimpar = container.querySelector('#avancada-btn-limpar');
+
+  // Carrega opções de autocomplete para a busca avançada
+  async function carregarOpcoesAvancadas() {
+    try {
+      const data = await fetchFolhaFiltros();
+      const dlCargos = container.querySelector('#datalist-cargos');
+      const dlLotacoes = container.querySelector('#datalist-lotacoes');
+      if (dlCargos && data.cargos) {
+        dlCargos.innerHTML = data.cargos.map(c => `<option value="${c}"></option>`).join('');
+      }
+      if (dlLotacoes && data.lotacoes) {
+        dlLotacoes.innerHTML = data.lotacoes.map(l => `<option value="${l}"></option>`).join('');
+      }
+    } catch (e) {
+      // Ignora erro em autocomplete silenciosamente
+    }
+  }
+  carregarOpcoesAvancadas();
 
   function fecharModal() {
     modalDossie.classList.remove('active');
@@ -165,12 +264,46 @@ export async function renderFuncionariosView(container) {
     if (e.target === modalDossie) fecharModal();
   };
 
+  btnToggleAvancada.onclick = () => {
+    estado.avancadaAberta = !estado.avancadaAberta;
+    painelAvancada.style.display = estado.avancadaAberta ? 'block' : 'none';
+    btnToggleAvancada.style.background = estado.avancadaAberta ? 'rgba(59, 130, 246, 0.35)' : 'rgba(59, 130, 246, 0.15)';
+  };
+
+  function renderizarFiltrosAtivos() {
+    filtrosAtivosContainer.innerHTML = '';
+    const ativos = [];
+
+    if (estado.busca) ativos.push({ rotulo: `Busca: "${estado.busca}"`, limpar: () => { estado.busca = ''; inputBusca.value = ''; } });
+    if (estado.nome) ativos.push({ rotulo: `Pessoa: "${estado.nome}"`, limpar: () => { estado.nome = ''; inputAvancadaNome.value = ''; } });
+    if (estado.matricula) ativos.push({ rotulo: `Matrícula: "${estado.matricula}"`, limpar: () => { estado.matricula = ''; inputAvancadaMat.value = ''; } });
+    if (estado.cargo) ativos.push({ rotulo: `Cargo: "${estado.cargo}"`, limpar: () => { estado.cargo = ''; inputAvancadaCargo.value = ''; } });
+    if (estado.lotacao) ativos.push({ rotulo: `Lotação: "${estado.lotacao}"`, limpar: () => { estado.lotacao = ''; inputAvancadaLotacao.value = ''; } });
+    if (estado.salarioMin) ativos.push({ rotulo: `Min: R$ ${estado.salarioMin}`, limpar: () => { estado.salarioMin = ''; inputAvancadaSalMin.value = ''; } });
+    if (estado.salarioMax) ativos.push({ rotulo: `Max: R$ ${estado.salarioMax}`, limpar: () => { estado.salarioMax = ''; inputAvancadaSalMax.value = ''; } });
+
+    if (ativos.length === 0) return;
+
+    ativos.forEach(item => {
+      const pill = document.createElement('span');
+      pill.className = 'badge';
+      pill.style.cssText = 'background: #1e293b; border: 1px solid #3b82f6; color: #93c5fd; font-size: 11px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 6px;';
+      pill.innerHTML = `${item.rotulo} <span style="cursor: pointer; font-weight: bold; color: #f87171;">✕</span>`;
+      pill.querySelector('span').onclick = () => {
+        item.limpar();
+        renderizarFiltrosAtivos();
+        carregarPagina(1);
+      };
+      filtrosAtivosContainer.appendChild(pill);
+    });
+  }
+
   async function abrirDossie(nomeOuMatricula) {
     modalDossie.classList.add('active');
     document.body.style.overflow = 'hidden';
 
     const dossieBody = container.querySelector('#dossie-body');
-    dossieBody.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">Consultando cadeia de custódia e registros oficiais...</div>';
+    dossieBody.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">Consultando cadastro consolidado da pessoa física...</div>';
 
     try {
       const res = await fetch(`/api/auditoria/rastrear?termo=${encodeURIComponent(nomeOuMatricula)}`);
@@ -182,12 +315,12 @@ export async function renderFuncionariosView(container) {
       }
 
       const s = data.servidor;
-      container.querySelector('#dossie-nome').textContent = s.nome;
-      container.querySelector('#dossie-cargo').textContent = `${s.cargos.join(' • ')} • Matrículas: ${s.matriculas.join(', ')}`;
+      container.querySelector('#dossie-nome').textContent = `👤 ${s.nome}`;
+      container.querySelector('#dossie-cargo').textContent = `${s.cargos.join(' • ')} • Matrículas Padronizadas: ${s.matriculas.join(', ')}`;
 
       dossieBody.innerHTML = `
-        <!-- KPI Financeiro -->
-        <div class="card" style="margin-bottom: 16px; border-left: 4px solid #3b82f6;">
+        <!-- Identificação Consolidada da Pessoa Física -->
+        <div class="card" style="margin-bottom: 16px; border-left: 4px solid #3b82f6; background: #0f172a;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
             <div>
               <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">TOTAL ACUMULADO EM PROVENTOS</div>
@@ -200,16 +333,20 @@ export async function renderFuncionariosView(container) {
               <span class="badge badge-amber">${s.totalDiarias} diárias (${formatMoeda(s.totalDiariasValor)})</span>
             </div>
           </div>
+          <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #1e293b; display: flex; gap: 8px; flex-wrap: wrap; font-size: 11px;">
+            <span style="color: var(--text-muted);">Matrícula(s) da Pessoa:</span>
+            ${s.matriculas.map(m => `<span class="badge badge-blue" style="font-family: 'JetBrains Mono', monospace;">${m}</span>`).join(' ')}
+          </div>
         </div>
 
-        <!-- ⏱️ Linha do Tempo de Períodos Reais e Intervalos no Meio -->
+        <!-- ⏱️ Linha do Tempo de Períodos Reais, Férias e 13º Salário -->
         <div class="card" style="margin-bottom: 16px; background: #0b1120; border: 1px solid #1e293b; padding: 16px;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 8px;">
               <span style="font-size: 18px;">⏱️</span>
               <div>
-                <h4 style="font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; margin: 0;">Linha do Tempo Funcional & Períodos de Exercício</h4>
-                <div style="font-size: 11px; color: var(--text-muted);">Auditoria pericial de tempo real de serviço e intervalos (gaps)</div>
+                <h4 style="font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; margin: 0;">Histórico Funcional & Auditoria Pericial</h4>
+                <div style="font-size: 11px; color: var(--text-muted);">Tempo de serviço ininterrupto, férias regulamentares e afastamentos reais</div>
               </div>
             </div>
             <div style="text-align: right;">
@@ -236,6 +373,7 @@ export async function renderFuncionariosView(container) {
             </div>
           </div>
 
+          <!-- Card de Proteção Legal de Férias e 13º -->
           <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; font-size: 11px; line-height: 1.5;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
               <div style="color: #93c5fd; font-weight: 700; display: flex; align-items: center; gap: 6px;">
@@ -243,11 +381,11 @@ export async function renderFuncionariosView(container) {
               </div>
               <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                 ${s.totalMesesFeriasRecesso ? `<span class="badge badge-green">🏖️ ${s.totalMesesFeriasRecesso} meses de Férias/Recesso computados</span>` : ''}
-                ${s.total13Salarios ? `<span class="badge badge-blue">🎁 ${s.total13Salarios} 13º salários</span>` : ''}
+                ${s.total13Salarios ? `<span class="badge badge-blue">🎁 ${s.total13Salarios} 13º salários vinculados</span>` : ''}
               </div>
             </div>
             <p style="margin: 4px 0 0 0; color: #cbd5e1;">
-              Férias regulamentares, recessos anuais de início de ano (Janeiro) e gratificações de 13º salário <strong>são preservados por lei como efetivo exercício</strong> e não são confundidos com afastamento ou quebra de vínculo.
+              Férias anuais regulamentares, recessos escolares/administrativos de Janeiro e gratificações de 13º salário <strong>são preservados por lei como efetivo exercício</strong> e não são confundidos com afastamento ou quebra de vínculo.
             </p>
           </div>
 
@@ -257,7 +395,7 @@ export async function renderFuncionariosView(container) {
                 <span>⚠️</span> Ruptura Real de Vínculo: ${s.totalIntervalos} intervalo(s) de afastamento detectado(s) entre ${s.dataInicio} e ${s.dataFim}
               </div>
               <p style="font-size: 11px; color: #cbd5e1; margin-top: 4px; line-height: 1.4;">
-                Auditoria pericial: períodos prolongados de afastamento sem vencimento somam <strong>${s.totalMesesIntervalos} meses</strong>. Férias legais e 13º salário foram protegidos e computados no tempo efetivo de serviço.
+                Auditoria pericial: períodos prolongados de afastamento sem remuneração somam <strong>${s.totalMesesIntervalos} meses</strong>. Férias legais e 13º salário já foram protegidos e computados no tempo efetivo de serviço.
               </p>
             </div>
           ` : `
@@ -285,7 +423,7 @@ export async function renderFuncionariosView(container) {
                       <span style="width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
                       <span style="font-size: 12px; font-weight: 600;">⏸️ ${item.descricao}</span>
                     </div>
-                    <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fcd34d; font-size: 10px; font-weight: 700; text-transform: uppercase;">Sem Vínculo / Intervalo</span>
+                    <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fcd34d; font-size: 10px; font-weight: 700; text-transform: uppercase;">Afastamento / Ruptura</span>
                   </div>
                 `;
               }
@@ -293,7 +431,7 @@ export async function renderFuncionariosView(container) {
           </div>
         </div>
 
-        <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #fff;">Histórico de Contracheques</h4>
+        <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #fff;">Histórico Consolidado de Contracheques</h4>
         <div class="table-wrapper" style="max-height: 280px; overflow-y: auto;">
           <table>
             <thead>
@@ -336,15 +474,22 @@ export async function renderFuncionariosView(container) {
         mandato: estado.mandato,
         ano: estado.ano,
         periodo: estado.periodo,
-        mes: estado.mes
+        mes: estado.mes,
+        nome: estado.nome,
+        matricula: estado.matricula,
+        cargo: estado.cargo,
+        lotacao: estado.lotacao,
+        salarioMin: estado.salarioMin,
+        salarioMax: estado.salarioMax
       });
 
       tabelaContainer.innerHTML = '';
 
       const colunas = [
         { chave: 'matricula', titulo: 'Matrícula' },
-        { chave: 'nome', titulo: 'Servidor' },
+        { chave: 'nome', titulo: 'Servidor / Pessoa Física' },
         { chave: 'cargo', titulo: 'Cargo / Função' },
+        { chave: 'lotacao', titulo: 'Lotação / Secretaria' },
         { chave: 'periodo', titulo: 'Período', align: 'center' },
         { chave: 'salario_base', titulo: 'Sal. Base', align: 'right' },
         { chave: 'total_proventos', titulo: 'Proventos', align: 'right' },
@@ -353,15 +498,27 @@ export async function renderFuncionariosView(container) {
       ];
 
       const formatadores = {
-        matricula: v => `<span class="badge badge-blue">${v || '—'}</span>`,
-        nome: (v, item) => `<strong style="cursor: pointer; color: #93c5fd;" class="btn-ver-servidor" data-termo="${item.matricula || v}">${v}</strong>`,
-        periodo: (v, item) => `<span class="badge" style="background: rgba(255,255,255,0.06);">${String(item.mes).padStart(2,'0')}/${item.ano}</span>`,
+        matricula: (v, item) => `
+          <span class="badge badge-blue" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;">
+            ${item.matricula_exibicao || item.matricula_padronizada || (v ? v.replace(/^0+/, '') : '—')}
+          </span>
+        `,
+        nome: (v, item) => `
+          <div>
+            <strong style="cursor: pointer; color: #93c5fd; font-size: 13px;" class="btn-ver-servidor" data-termo="${item.nome}">${v}</strong>
+            <div style="font-size: 10px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+              <span style="color: #60a5fa;">👤 Pessoa Física</span> • <span>Matrícula: ${item.matricula_exibicao || item.matricula_padronizada || (item.matricula ? item.matricula.replace(/^0+/, '') : '—')}</span>
+            </div>
+          </div>
+        `,
+        lotacao: v => `<span style="font-size: 11px; color: var(--text-muted);">${v ? v.replace(/^\d+\s*-\s*/, '') : '—'}</span>`,
+        periodo: (v, item) => `<span class="badge" style="background: rgba(255,255,255,0.06); font-family: 'JetBrains Mono', monospace;">${String(item.mes).padStart(2,'0')}/${item.ano}</span>`,
         salario_base: v => formatMoeda(v),
-        total_proventos: v => `<strong style="color: #60a5fa;">${formatMoeda(v)}</strong>`,
-        salario_liquido: v => `<strong style="color: #34d399;">${formatMoeda(v)}</strong>`,
+        total_proventos: v => `<strong style="color: #60a5fa; font-family: 'JetBrains Mono', monospace;">${formatMoeda(v)}</strong>`,
+        salario_liquido: v => `<strong style="color: #34d399; font-family: 'JetBrains Mono', monospace;">${formatMoeda(v)}</strong>`,
         acoes: (v, item) => `
-          <button class="btn-primary btn-ver-servidor" data-termo="${item.matricula || item.nome}" style="padding: 3px 8px; font-size: 11px;">
-            Dossiê
+          <button class="btn-primary btn-ver-servidor" data-termo="${item.nome || item.matricula_padronizada || item.matricula}" style="padding: 4px 10px; font-size: 11px; cursor: pointer;">
+            👤 Dossiê
           </button>
         `
       };
@@ -380,6 +537,7 @@ export async function renderFuncionariosView(container) {
     }
   }
 
+  // Ação de Filtrar Principal (Barra Rápida)
   btnFiltrar.onclick = () => {
     estado.busca = inputBusca.value.trim();
     const pVal = selectPeriodo.value;
@@ -395,18 +553,65 @@ export async function renderFuncionariosView(container) {
       estado.ano = '';
     }
     estado.mes = selectMes.value;
+    renderizarFiltrosAtivos();
     carregarPagina(1);
   };
 
+  // Ação de Limpar Filtros
   btnLimpar.onclick = () => {
     inputBusca.value = '';
     selectPeriodo.value = '';
     selectMes.value = '';
+    inputAvancadaNome.value = '';
+    inputAvancadaMat.value = '';
+    inputAvancadaCargo.value = '';
+    inputAvancadaLotacao.value = '';
+    inputAvancadaSalMin.value = '';
+    inputAvancadaSalMax.value = '';
+
     estado.busca = '';
     estado.periodo = '';
     estado.mandato = '';
     estado.ano = '';
     estado.mes = '';
+    estado.nome = '';
+    estado.matricula = '';
+    estado.cargo = '';
+    estado.lotacao = '';
+    estado.salarioMin = '';
+    estado.salarioMax = '';
+
+    renderizarFiltrosAtivos();
+    carregarPagina(1);
+  };
+
+  // Ação do Botão Aplicar na Busca Avançada
+  btnAvancadaAplicar.onclick = () => {
+    estado.nome = inputAvancadaNome.value.trim();
+    estado.matricula = inputAvancadaMat.value.trim();
+    estado.cargo = inputAvancadaCargo.value.trim();
+    estado.lotacao = inputAvancadaLotacao.value.trim();
+    estado.salarioMin = inputAvancadaSalMin.value.trim();
+    estado.salarioMax = inputAvancadaSalMax.value.trim();
+    renderizarFiltrosAtivos();
+    carregarPagina(1);
+  };
+
+  btnAvancadaLimpar.onclick = () => {
+    inputAvancadaNome.value = '';
+    inputAvancadaMat.value = '';
+    inputAvancadaCargo.value = '';
+    inputAvancadaLotacao.value = '';
+    inputAvancadaSalMin.value = '';
+    inputAvancadaSalMax.value = '';
+
+    estado.nome = '';
+    estado.matricula = '';
+    estado.cargo = '';
+    estado.lotacao = '';
+    estado.salarioMin = '';
+    estado.salarioMax = '';
+    renderizarFiltrosAtivos();
     carregarPagina(1);
   };
 
@@ -416,6 +621,9 @@ export async function renderFuncionariosView(container) {
   inputBusca.onkeyup = e => {
     if (e.key === 'Enter') btnFiltrar.click();
   };
+
+  inputAvancadaNome.onkeyup = e => { if (e.key === 'Enter') btnAvancadaAplicar.click(); };
+  inputAvancadaMat.onkeyup = e => { if (e.key === 'Enter') btnAvancadaAplicar.click(); };
 
   carregarPagina(1);
 }

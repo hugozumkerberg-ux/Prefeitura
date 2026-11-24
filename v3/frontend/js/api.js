@@ -18,9 +18,21 @@ export async function fetchFolha(params = {}) {
   if (params.periodo) query.set('periodo', params.periodo);
   if (params.mes) query.set('mes', params.mes);
   if (params.busca) query.set('busca', params.busca);
+  if (params.nome) query.set('nome', params.nome);
+  if (params.matricula) query.set('matricula', params.matricula);
+  if (params.cargo) query.set('cargo', params.cargo);
+  if (params.lotacao) query.set('lotacao', params.lotacao);
+  if (params.salarioMin) query.set('salarioMin', params.salarioMin);
+  if (params.salarioMax) query.set('salarioMax', params.salarioMax);
 
   const res = await fetch(`/api/folha?${query.toString()}`);
   if (!res.ok) throw new Error('Falha ao consultar folha de pagamento.');
+  return res.json();
+}
+
+export async function fetchFolhaFiltros() {
+  const res = await fetch('/api/folha?filtros=1');
+  if (!res.ok) return { cargos: [], lotacoes: [] };
   return res.json();
 }
 

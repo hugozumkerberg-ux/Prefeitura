@@ -1,14 +1,61 @@
 /**
- * Rota Oficial de Folha de Pagamento / Contracheques
+ * ==============================================================================
+ * Rota Oficial de Folha de Pagamento / Contracheques — V3
  * Consultas paginadas nativas em SQLite com tempo de resposta < 5ms
+ * Suporte a busca avançada, padronização de matrícula e identificação por pessoa
+ * ==============================================================================
  */
 const { dbContracheques } = require('../db');
 const { parsePeriodoFilter } = require('../utils/filtro_periodo');
+const { normalizarNome, padronizarMatricula, formatarMatriculaExibicao } = require('../utils/padronizacao');
+
+// Cache em memória para listas de filtros rápidos
+let cachedFiltros = null;
+
+function carregarFiltrosDisponiveis() {
+  if (cachedFiltros) return cachedFiltros;
+  try {
+    const cargos = dbContracheques.prepare(`
+      SELECT cargo, COUNT(*) as qtd 
+      FROM contracheques 
+      WHERE cargo IS NOT NULL AND cargo != '' 
+      GROUP BY cargo 
+      ORDER BY qtd DESC 
+      LIMIT 40
+    `).all().map(r => r.cargo);
+
+    const lotacoes = dbContracheques.prepare(`
+      SELECT lotacao, COUNT(*) as qtd 
+      FROM contracheques 
+      WHERE lotacao IS NOT NULL AND lotacao != '' 
+      GROUP BY lotacao 
+      ORDER BY qtd DESC 
+      LIMIT 30
+    `).all().map(r => r.lotacao);
+
+    cachedFiltros = { cargos, lotacoes };
+  } catch (e) {
+    cachedFiltros = { cargos: [], lotacoes: [] };
+  }
+  return cachedFiltros;
+}
 
 function handleFolha(req, res, query) {
   if (!dbContracheques) {
     res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
     return res.end(JSON.stringify({ erro: 'Banco de dados de contracheques indisponível.' }));
+  }
+
+  // Se for requisição de opções de filtros para busca avançada
+  if (query.filtros === '1' || query.opcoes === '1') {
+    res.writeHead(200, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600'
+    });
+    return res.end(JSON.stringify({
+      sucesso: true,
+      ...carregarFiltrosDisponiveis()
+    }));
   }
 
   const page = Math.max(1, parseInt(query.page, 10) || 1);
@@ -17,7 +64,15 @@ function handleFolha(req, res, query) {
 
   const { ano, mandato, anoInicio, anoFim, temFiltroAno } = parsePeriodoFilter(query);
   const mes = query.mes ? parseInt(query.mes, 10) : null;
-  const busca = (query.busca || '').trim().toUpperCase();
+
+  // Parâmetros de Busca Rápida e Busca Avançada
+  const busca = (query.busca || '').trim();
+  const nome = (query.nome || '').trim();
+  const matricula = (query.matricula || '').trim();
+  const cargo = (query.cargo || '').trim();
+  const lotacao = (query.lotacao || '').trim();
+  const salarioMin = query.salarioMin ? parseFloat(query.salarioMin) : null;
+  const salarioMax = query.salarioMax ? parseFloat(query.salarioMax) : null;
 
   const whereClauses = ['1=1'];
   const params = {};
@@ -32,13 +87,67 @@ function handleFolha(req, res, query) {
       params.anoFim = anoFim;
     }
   }
+
   if (mes) {
     whereClauses.push('mes = @mes');
     params.mes = mes;
   }
+
+  // 1. Busca Geral Inteligente (Nome, Matrícula padronizada, Cargo ou Lotação)
   if (busca) {
-    whereClauses.push('(nome LIKE @busca OR cargo LIKE @busca)');
-    params.busca = `%${busca}%`;
+    const matLimpa = padronizarMatricula(busca);
+    const nomeNorm = normalizarNome(busca);
+
+    whereClauses.push(`(
+      nome_normalizado LIKE @buscaNomeNorm 
+      OR nome LIKE @buscaRaw 
+      OR matricula_padronizada LIKE @buscaMatPad 
+      OR matricula LIKE @buscaRaw 
+      OR cargo LIKE @buscaRaw 
+      OR lotacao LIKE @buscaRaw
+    )`);
+
+    params.buscaNomeNorm = `%${nomeNorm}%`;
+    params.buscaMatPad = `${matLimpa}%`;
+    params.buscaRaw = `%${busca}%`;
+  }
+
+  // 2. Busca Avançada por Nome
+  if (nome) {
+    const nomeNorm = normalizarNome(nome);
+    whereClauses.push('(nome_normalizado LIKE @filtroNomeNorm OR nome LIKE @filtroNomeRaw)');
+    params.filtroNomeNorm = `%${nomeNorm}%`;
+    params.filtroNomeRaw = `%${nome}%`;
+  }
+
+  // 3. Busca Avançada por Matrícula (Padronizada e sem zeros à esquerda)
+  if (matricula) {
+    const matPad = padronizarMatricula(matricula);
+    whereClauses.push('(matricula_padronizada LIKE @filtroMatPad OR matricula LIKE @filtroMatRaw)');
+    params.filtroMatPad = `${matPad}%`;
+    params.filtroMatRaw = `%${matricula}%`;
+  }
+
+  // 4. Busca Avançada por Cargo
+  if (cargo) {
+    whereClauses.push('cargo LIKE @filtroCargo');
+    params.filtroCargo = `%${cargo}%`;
+  }
+
+  // 5. Busca Avançada por Lotação / Secretaria
+  if (lotacao) {
+    whereClauses.push('lotacao LIKE @filtroLotacao');
+    params.filtroLotacao = `%${lotacao}%`;
+  }
+
+  // 6. Faixa de Remuneração / Proventos
+  if (salarioMin !== null && !isNaN(salarioMin)) {
+    whereClauses.push('total_proventos >= @salarioMin');
+    params.salarioMin = salarioMin;
+  }
+  if (salarioMax !== null && !isNaN(salarioMax)) {
+    whereClauses.push('total_proventos <= @salarioMax');
+    params.salarioMax = salarioMax;
   }
 
   const whereSql = whereClauses.join(' AND ');
@@ -52,7 +161,9 @@ function handleFolha(req, res, query) {
     const dataStmt = dbContracheques.prepare(`
       SELECT 
         matricula, 
+        matricula_padronizada,
         nome, 
+        nome_normalizado,
         cargo, 
         lotacao, 
         ano, 
@@ -72,10 +183,28 @@ function handleFolha(req, res, query) {
 
     const totalPages = Math.ceil(total / limit);
 
+    const dados = rows.map(r => ({
+      matricula: r.matricula,
+      matricula_padronizada: r.matricula_padronizada,
+      matricula_exibicao: formatarMatriculaExibicao(r.matricula_padronizada, r.matricula),
+      nome: r.nome,
+      nome_normalizado: r.nome_normalizado,
+      cargo: r.cargo,
+      lotacao: r.lotacao,
+      ano: r.ano,
+      mes: r.mes,
+      salario_base: r.salario_base,
+      total_proventos: r.total_proventos,
+      total_descontos: r.total_descontos,
+      salario_liquido: r.salario_liquido,
+      sha256: r.sha256
+    }));
+
     res.writeHead(200, {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'public, max-age=60'
     });
+
     res.end(JSON.stringify({
       sucesso: true,
       paginacao: {
@@ -88,7 +217,16 @@ function handleFolha(req, res, query) {
         mandato: mandato || null,
         ano: ano || null
       },
-      dados: rows
+      filtrosAplicados: {
+        busca: busca || null,
+        nome: nome || null,
+        matricula: matricula || null,
+        cargo: cargo || null,
+        lotacao: lotacao || null,
+        salarioMin,
+        salarioMax
+      },
+      dados
     }));
   } catch (err) {
     res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
