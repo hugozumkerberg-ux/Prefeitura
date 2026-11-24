@@ -315,16 +315,112 @@ export async function renderFuncionariosView(container) {
       }
 
       const s = data.servidor;
+      const pol = s.passado_politico || {};
+      const temPol = pol.tem_passado_politico;
+      const venceu = pol.venceu;
+
       container.querySelector('#dossie-nome').textContent = `👤 ${s.nome}`;
       container.querySelector('#dossie-cargo').textContent = `${s.cargos.join(' • ')} • Matrículas Padronizadas: ${s.matriculas.join(', ')}`;
+
+      const fotoDossieHtml = s.foto_url ? `
+        <img 
+          src="${s.foto_url}" 
+          alt="${s.nome}" 
+          style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid ${venceu ? '#10b981' : (temPol ? '#f59e0b' : '#3b82f6')}; flex-shrink: 0;"
+          onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(s.nome)}&background=1e293b&color=93c5fd&size=140';"
+        >
+      ` : `
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: #1e293b; border: 3px solid ${temPol ? (venceu ? '#10b981' : '#f59e0b') : '#334155'}; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #93c5fd; font-size: 24px; flex-shrink: 0;">
+          ${(s.nome || '?').slice(0, 2).toUpperCase()}
+        </div>
+      `;
+
+      const cardPoliticoHtml = temPol ? `
+        <!-- 🏛️ Passado Político & Registro Eleitoral TSE / Câmara -->
+        <div class="card" style="margin-bottom: 16px; background: #0b1120; border: 1px solid ${venceu ? '#10b981' : '#f59e0b'}; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 20px;">${venceu ? '🏛️' : '🗳️'}</span>
+              <div>
+                <h4 style="font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; margin: 0;">Histórico Político & Registro Eleitoral</h4>
+                <div style="font-size: 11px; color: var(--text-muted);">Dados Oficiais cruzados com TSE (Eleições) e Câmara Municipal de Arinos</div>
+              </div>
+            </div>
+            <div>
+              <span class="badge" style="background: ${venceu ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)'}; color: ${venceu ? '#34d399' : '#fbbf24'}; border: 1px solid ${venceu ? '#10b981' : '#f59e0b'}; font-size: 11px; font-weight: 700; padding: 4px 10px;">
+                ${pol.tag_texto || (venceu ? 'Mandato Político Eleito' : 'Candidato TSE')}
+              </span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 12px;">
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Status Eleitoral</div>
+              <div style="font-size: 13px; font-weight: 700; color: ${venceu ? '#34d399' : '#fbbf24'}; margin-top: 2px;">
+                ${venceu ? '✔ Eleito (Venceu)' : `Não Eleito (${pol.status_eleicao || 'Suplente'})`}
+              </div>
+            </div>
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Cargo Disputado / Exercido</div>
+              <div style="font-size: 13px; font-weight: 700; color: #60a5fa; margin-top: 2px;">
+                ${pol.cargo_politico || '—'}
+              </div>
+            </div>
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Partido / Filiação</div>
+              <div style="font-size: 13px; font-weight: 700; color: #cbd5e1; margin-top: 2px;">
+                ${pol.partido_politico || '—'}
+              </div>
+            </div>
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Bens Declarados TSE</div>
+              <div style="font-size: 13px; font-weight: 700; color: #34d399; margin-top: 2px;">
+                ${pol.bens_declarados_tse ? formatMoeda(pol.bens_declarados_tse) : 'Nenhum bem informado'}
+              </div>
+            </div>
+          </div>
+
+          ${(pol.historico_disputas && pol.historico_disputas.length > 0) ? `
+            <div style="background: #1e293b; border-radius: 6px; padding: 10px 12px; margin-top: 8px;">
+              <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px;">
+                📋 Eleições Concorridas pelo Candidato:
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                ${pol.historico_disputas.map(d => `
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; border-radius: 4px; font-size: 11px; background: rgba(255,255,255,0.03);">
+                    <span><strong>${d.ano}</strong> — ${d.cargo} (${d.partido || '—'}${d.numero ? ` Nº ${d.numero}` : ''})</span>
+                    <span class="badge ${d.eleito ? 'badge-green' : 'badge-amber'}">${d.resultado || (d.eleito ? 'Eleito' : 'Não Eleito')}${d.votos ? ` • ${d.votos.toLocaleString('pt-BR')} votos` : ''}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      ` : '';
 
       dossieBody.innerHTML = `
         <!-- Identificação Consolidada da Pessoa Física -->
         <div class="card" style="margin-bottom: 16px; border-left: 4px solid #3b82f6; background: #0f172a;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+            ${fotoDossieHtml}
+            <div style="flex: 1; min-width: 240px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span class="badge" style="background: rgba(192, 132, 252, 0.2); color: #c084fc; border: 1px solid #a855f7; font-weight: 700; font-size: 11px;">
+                  ID ÚNICO CANÔNICO #${s.pessoa_id || '—'}
+                </span>
+                ${temPol ? `<span class="badge ${venceu ? 'badge-green' : 'badge-amber'}">${venceu ? '🏛️ Mandato Eleito' : '🗳️ Candidato TSE'}</span>` : '<span class="badge badge-blue">Servidor Público Civil</span>'}
+              </div>
+              <h3 style="font-size: 18px; font-weight: 800; color: #fff; margin: 4px 0;">${s.nome}</h3>
+              <div style="font-size: 11px; color: var(--text-muted);">
+                ${s.cargos.join(' • ')}
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #1e293b;">
             <div>
-              <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">TOTAL ACUMULADO EM PROVENTOS</div>
-              <div style="font-size: 22px; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace;">
+              <div style="font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Acumulado em Proventos</div>
+              <div style="font-size: 20px; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace;">
                 ${formatMoeda(s.totalSalarios)}
               </div>
             </div>
@@ -333,11 +429,13 @@ export async function renderFuncionariosView(container) {
               <span class="badge badge-amber">${s.totalDiarias} diárias (${formatMoeda(s.totalDiariasValor)})</span>
             </div>
           </div>
-          <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #1e293b; display: flex; gap: 8px; flex-wrap: wrap; font-size: 11px;">
-            <span style="color: var(--text-muted);">Matrícula(s) da Pessoa:</span>
+          <div style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; font-size: 11px;">
+            <span style="color: var(--text-muted);">Matrícula(s) Padronizada(s):</span>
             ${s.matriculas.map(m => `<span class="badge badge-blue" style="font-family: 'JetBrains Mono', monospace;">${m}</span>`).join(' ')}
           </div>
         </div>
+
+        ${cardPoliticoHtml}
 
         <!-- ⏱️ Linha do Tempo de Períodos Reais, Férias e 13º Salário -->
         <div class="card" style="margin-bottom: 16px; background: #0b1120; border: 1px solid #1e293b; padding: 16px;">
@@ -503,14 +601,49 @@ export async function renderFuncionariosView(container) {
             ${item.matricula_exibicao || item.matricula_padronizada || (v ? v.replace(/^0+/, '') : '—')}
           </span>
         `,
-        nome: (v, item) => `
-          <div>
-            <strong style="cursor: pointer; color: #93c5fd; font-size: 13px;" class="btn-ver-servidor" data-termo="${item.nome}">${v}</strong>
-            <div style="font-size: 10px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px;">
-              <span style="color: #60a5fa;">👤 Pessoa Física</span> • <span>Matrícula: ${item.matricula_exibicao || item.matricula_padronizada || (item.matricula ? item.matricula.replace(/^0+/, '') : '—')}</span>
+        nome: (v, item) => {
+          const pol = item.passado_politico || {};
+          const temPol = pol.tem_passado_politico;
+          const venceu = pol.venceu;
+          const tagTexto = pol.tag_texto;
+          const fotoUrl = item.foto_url;
+          const pessoaId = item.pessoa_id || '—';
+
+          const avatarHtml = fotoUrl ? `
+            <img 
+              src="${fotoUrl}" 
+              alt="${v}" 
+              style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid ${venceu ? '#10b981' : (temPol ? '#f59e0b' : '#3b82f6')}; flex-shrink: 0;"
+              onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(v)}&background=1e293b&color=93c5fd&size=80';"
+            >
+          ` : `
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: #1e293b; border: 2px solid ${temPol ? (venceu ? '#10b981' : '#f59e0b') : '#334155'}; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #93c5fd; font-size: 12px; flex-shrink: 0;">
+              ${(v || '?').slice(0, 2).toUpperCase()}
             </div>
-          </div>
-        `,
+          `;
+
+          const tagBadgeHtml = temPol ? `
+            <div style="margin-top: 4px;">
+              <span class="badge" style="background: ${venceu ? 'rgba(16, 185, 129, 0.18)' : 'rgba(245, 158, 11, 0.18)'}; color: ${venceu ? '#34d399' : '#fbbf24'}; border: 1px solid ${venceu ? '#10b981' : '#f59e0b'}; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px;">
+                ${tagTexto}
+              </span>
+            </div>
+          ` : '';
+
+          return `
+            <div style="display: flex; align-items: center; gap: 10px;">
+              ${avatarHtml}
+              <div>
+                <strong style="cursor: pointer; color: #93c5fd; font-size: 13px;" class="btn-ver-servidor" data-termo="${item.nome}">${v}</strong>
+                <div style="font-size: 10px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px; flex-wrap: wrap;">
+                  <span style="color: #c084fc; font-weight: 700;">ID #${pessoaId}</span> • 
+                  <span>Matrícula: ${item.matricula_exibicao || item.matricula_padronizada || (item.matricula ? item.matricula.replace(/^0+/, '') : '—')}</span>
+                </div>
+                ${tagBadgeHtml}
+              </div>
+            </div>
+          `;
+        },
         lotacao: v => `<span style="font-size: 11px; color: var(--text-muted);">${v ? v.replace(/^\d+\s*-\s*/, '') : '—'}</span>`,
         periodo: (v, item) => `<span class="badge" style="background: rgba(255,255,255,0.06); font-family: 'JetBrains Mono', monospace;">${String(item.mes).padStart(2,'0')}/${item.ano}</span>`,
         salario_base: v => formatMoeda(v),

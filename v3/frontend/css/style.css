@@ -781,3 +781,28 @@ tr:hover td {
   border-color: #ef4444;
   color: #f87171;
 }
+
+/* Badges e Identificação de Passado Político TSE / Câmara */
+.badge-politico {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.badge-politico.badge-eleito {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid #10b981;
+}
+
+.badge-politico.badge-nao-eleito {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid #f59e0b;
+}

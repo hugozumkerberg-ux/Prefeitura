@@ -3,6 +3,7 @@
  */
 const { dbContracheques, dbDiarias } = require('../db');
 const { processarHistoricoEPeriodos } = require('../utils/calculos_periodo');
+const { obterDadosPoliticos } = require('../utils/politicos');
 
 function normalizarNome(nome) {
   if (!nome) return '';
@@ -127,6 +128,9 @@ function handleRastrear(req, res, query) {
     // 7. Cálculo pericial de períodos reais e intervalos (gaps de início e fim)
     const periodosInfo = processarHistoricoEPeriodos(historicoFolha);
 
+    // 8. Cruzamento com TSE e Câmara (ID Único, Passado Político, Status Eleitoral e Foto)
+    const infoPolitica = obterDadosPoliticos(documentoAlvo ? documentoAlvo.nome : (nomeNormalizadoAlvo || termo));
+
     res.writeHead(200, {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-cache'
@@ -134,8 +138,11 @@ function handleRastrear(req, res, query) {
     res.end(JSON.stringify({
       sucesso: true,
       servidor: {
+        pessoa_id: infoPolitica.pessoa_id,
         nome: documentoAlvo ? documentoAlvo.nome : termo,
         nomeNormalizado: nomeNormalizadoAlvo,
+        foto_url: infoPolitica.foto_url,
+        passado_politico: infoPolitica,
         matriculas,
         cargos,
         totalContracheques: historicoFolha.length,

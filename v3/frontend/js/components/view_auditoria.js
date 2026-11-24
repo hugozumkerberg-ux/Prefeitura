@@ -101,15 +101,89 @@ export function renderAuditoriaView(container) {
 
       const formatBRL = v => typeof v === 'number' ? v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '—';
 
+      const pol = serv.passado_politico || {};
+      const temPol = pol.tem_passado_politico;
+      const venceu = pol.venceu;
+      const fotoUrl = serv.foto_url;
+
+      const fotoHtml = fotoUrl ? `
+        <img 
+          src="${fotoUrl}" 
+          alt="${nomeExibicao}" 
+          style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid ${venceu ? '#10b981' : (temPol ? '#f59e0b' : '#3b82f6')}; flex-shrink: 0;"
+          onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(nomeExibicao)}&background=1e293b&color=93c5fd&size=120';"
+        >
+      ` : `
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: #1e293b; border: 3px solid ${temPol ? (venceu ? '#10b981' : '#f59e0b') : '#334155'}; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #93c5fd; font-size: 20px; flex-shrink: 0;">
+          ${(nomeExibicao || '?').slice(0, 2).toUpperCase()}
+        </div>
+      `;
+
       resultado.innerHTML = `
         <div class="card" style="background: #0f172a; padding: 22px; border-left: 4px solid #10b981; margin-bottom: 20px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-            <span class="badge badge-green">✔ CUSTÓDIA CONFIRMADA</span>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <span class="badge badge-green">✔ CUSTÓDIA CONFIRMADA</span>
+              <span class="badge" style="background: rgba(192, 132, 252, 0.2); color: #c084fc; border: 1px solid #a855f7; font-weight: 700; font-size: 11px;">
+                ID ÚNICO CANÔNICO #${serv.pessoa_id || '—'}
+              </span>
+              ${temPol ? `<span class="badge ${venceu ? 'badge-green' : 'badge-amber'}">${venceu ? '🏛️ Mandato Eleito' : '🗳️ Candidato TSE'}</span>` : ''}
+            </div>
             <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">Origem: contracheques.db & diárias</span>
           </div>
 
-          <h3 style="font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 6px;">${nomeExibicao}</h3>
-          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Cargo: <strong style="color: #e2e8f0;">${cargoExibicao}</strong> • Lotação: <strong style="color: #e2e8f0;">${lotacaoExibicao}</strong> • Matrícula: <strong style="color: #60a5fa;">${matriculaExibicao}</strong></p>
+          <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 16px; flex-wrap: wrap;">
+            ${fotoHtml}
+            <div>
+              <h3 style="font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 4px;">${nomeExibicao}</h3>
+              <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Cargo: <strong style="color: #e2e8f0;">${cargoExibicao}</strong> • Lotação: <strong style="color: #e2e8f0;">${lotacaoExibicao}</strong> • Matrícula: <strong style="color: #60a5fa;">${matriculaExibicao}</strong></p>
+            </div>
+          </div>
+
+          ${temPol ? `
+            <!-- 🏛️ Card Político e Eleitoral Oficial TSE / Câmara -->
+            <div style="background: #0b1120; border: 1px solid ${venceu ? '#10b981' : '#f59e0b'}; border-radius: 6px; padding: 14px; margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-size: 16px;">${venceu ? '🏛️' : '🗳️'}</span>
+                  <strong style="color: #fff; font-size: 12px; text-transform: uppercase;">Registro Político & Eleitoral (TSE / Câmara de Arinos)</strong>
+                </div>
+                <span class="badge" style="background: ${venceu ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)'}; color: ${venceu ? '#34d399' : '#fbbf24'}; border: 1px solid ${venceu ? '#10b981' : '#f59e0b'}; font-size: 11px; font-weight: 700;">
+                  ${pol.tag_texto || (venceu ? 'Mandato Político Oficial' : 'Candidato TSE')}
+                </span>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 10px;">
+                <div style="background: #1e293b; padding: 6px 10px; border-radius: 4px;">
+                  <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Status Eleitoral</div>
+                  <div style="font-size: 13px; font-weight: 700; color: ${venceu ? '#34d399' : '#fbbf24'};">${venceu ? '✔ Eleito (Venceu)' : `Não Eleito (${pol.status_eleicao || 'Suplente'})`}</div>
+                </div>
+                <div style="background: #1e293b; padding: 6px 10px; border-radius: 4px;">
+                  <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Cargo Disputado</div>
+                  <div style="font-size: 13px; font-weight: 700; color: #60a5fa;">${pol.cargo_politico || '—'}</div>
+                </div>
+                <div style="background: #1e293b; padding: 6px 10px; border-radius: 4px;">
+                  <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Partido / Coligação</div>
+                  <div style="font-size: 13px; font-weight: 700; color: #cbd5e1;">${pol.partido_politico || '—'}</div>
+                </div>
+                <div style="background: #1e293b; padding: 6px 10px; border-radius: 4px;">
+                  <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Bens Declarados TSE</div>
+                  <div style="font-size: 13px; font-weight: 700; color: #34d399;">${pol.bens_declarados_tse ? formatBRL(pol.bens_declarados_tse) : 'Nenhum'}</div>
+                </div>
+              </div>
+
+              ${(pol.historico_disputas && pol.historico_disputas.length > 0) ? `
+                <div style="display: flex; flex-direction: column; gap: 4px; font-size: 11px;">
+                  ${pol.historico_disputas.map(d => `
+                    <div style="padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center;">
+                      <span><strong>${d.ano}</strong> — ${d.cargo} (${d.partido || '—'}${d.numero ? ` Nº ${d.numero}` : ''})</span>
+                      <span class="badge ${d.eleito ? 'badge-green' : 'badge-amber'}">${d.resultado || (d.eleito ? 'Eleito' : 'Não Eleito')}${d.votos ? ` • ${d.votos.toLocaleString('pt-BR')} votos` : ''}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          ` : ''}
 
           ${serv.totalContracheques ? `
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px;">

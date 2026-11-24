@@ -8,6 +8,7 @@
 const { dbContracheques } = require('../db');
 const { parsePeriodoFilter } = require('../utils/filtro_periodo');
 const { normalizarNome, padronizarMatricula, formatarMatriculaExibicao } = require('../utils/padronizacao');
+const { obterDadosPoliticos } = require('../utils/politicos');
 
 // Cache em memória para listas de filtros rápidos
 let cachedFiltros = null;
@@ -183,22 +184,38 @@ function handleFolha(req, res, query) {
 
     const totalPages = Math.ceil(total / limit);
 
-    const dados = rows.map(r => ({
-      matricula: r.matricula,
-      matricula_padronizada: r.matricula_padronizada,
-      matricula_exibicao: formatarMatriculaExibicao(r.matricula_padronizada, r.matricula),
-      nome: r.nome,
-      nome_normalizado: r.nome_normalizado,
-      cargo: r.cargo,
-      lotacao: r.lotacao,
-      ano: r.ano,
-      mes: r.mes,
-      salario_base: r.salario_base,
-      total_proventos: r.total_proventos,
-      total_descontos: r.total_descontos,
-      salario_liquido: r.salario_liquido,
-      sha256: r.sha256
-    }));
+    const dados = rows.map(r => {
+      const infoPolitica = obterDadosPoliticos(r.nome || r.nome_normalizado);
+      return {
+        matricula: r.matricula,
+        matricula_padronizada: r.matricula_padronizada,
+        matricula_exibicao: formatarMatriculaExibicao(r.matricula_padronizada, r.matricula),
+        nome: r.nome,
+        nome_normalizado: r.nome_normalizado,
+        cargo: r.cargo,
+        lotacao: r.lotacao,
+        ano: r.ano,
+        mes: r.mes,
+        salario_base: r.salario_base,
+        total_proventos: r.total_proventos,
+        total_descontos: r.total_descontos,
+        salario_liquido: r.salario_liquido,
+        sha256: r.sha256,
+        pessoa_id: infoPolitica.pessoa_id,
+        foto_url: infoPolitica.foto_url,
+        passado_politico: {
+          tem_passado_politico: infoPolitica.tem_passado_politico,
+          venceu: infoPolitica.venceu,
+          status_eleicao: infoPolitica.status_eleicao,
+          cargo_politico: infoPolitica.cargo_politico,
+          partido_politico: infoPolitica.partido_politico,
+          bens_declarados_tse: infoPolitica.bens_declarados_tse,
+          tag_texto: infoPolitica.tag_texto,
+          tag_tipo: infoPolitica.tag_tipo,
+          tag_badge_html: infoPolitica.tag_badge_html
+        }
+      };
+    });
 
     res.writeHead(200, {
       'Content-Type': 'application/json; charset=utf-8',
