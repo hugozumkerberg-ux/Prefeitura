@@ -2,6 +2,7 @@
  * Rota de Auditoria Forense e Rastreamento de Linhagem por Hash, Matrícula ou Nome
  */
 const { dbContracheques, dbDiarias } = require('../db');
+const { processarHistoricoEPeriodos } = require('../utils/calculos_periodo');
 
 function normalizarNome(nome) {
   if (!nome) return '';
@@ -123,6 +124,9 @@ function handleRastrear(req, res, query) {
     const cargos = Array.from(new Set(historicoFolha.map(h => h.cargo).filter(Boolean)));
     const matriculas = Array.from(new Set(historicoFolha.map(h => h.matricula_padronizada).filter(Boolean)));
 
+    // 7. Cálculo pericial de períodos reais e intervalos (gaps de início e fim)
+    const periodosInfo = processarHistoricoEPeriodos(historicoFolha);
+
     res.writeHead(200, {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-cache'
@@ -137,7 +141,17 @@ function handleRastrear(req, res, query) {
         totalContracheques: historicoFolha.length,
         totalSalarios,
         totalDiarias: historicoDiarias.length,
-        totalDiariasValor
+        totalDiariasValor,
+        dataInicio: periodosInfo.dataInicio,
+        dataFim: periodosInfo.dataFim,
+        tempoBruto: periodosInfo.tempoBrutoExtenso,
+        totalMesesBruto: periodosInfo.totalMesesBruto,
+        tempoEfetivo: periodosInfo.tempoTotalExtenso,
+        totalMesesEfetivos: periodosInfo.totalMesesEfetivos,
+        totalIntervalos: periodosInfo.totalIntervalos,
+        totalMesesIntervalos: periodosInfo.totalMesesIntervalos,
+        temIntervalos: periodosInfo.temIntervalos,
+        periodosTimeline: periodosInfo.timeline
       },
       documentoConsultado: documentoAlvo,
       historicoFolha,

@@ -176,6 +176,7 @@ export async function renderFuncionariosView(container) {
       container.querySelector('#dossie-cargo').textContent = `${s.cargos.join(' • ')} • Matrículas: ${s.matriculas.join(', ')}`;
 
       dossieBody.innerHTML = `
+        <!-- KPI Financeiro -->
         <div class="card" style="margin-bottom: 16px; border-left: 4px solid #3b82f6;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
             <div>
@@ -188,6 +189,82 @@ export async function renderFuncionariosView(container) {
               <span class="badge badge-blue">${s.totalContracheques} contracheques</span>
               <span class="badge badge-amber">${s.totalDiarias} diárias (${formatMoeda(s.totalDiariasValor)})</span>
             </div>
+          </div>
+        </div>
+
+        <!-- ⏱️ Linha do Tempo de Períodos Reais e Intervalos no Meio -->
+        <div class="card" style="margin-bottom: 16px; background: #0b1120; border: 1px solid #1e293b; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 18px;">⏱️</span>
+              <div>
+                <h4 style="font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; margin: 0;">Linha do Tempo Funcional & Períodos de Exercício</h4>
+                <div style="font-size: 11px; color: var(--text-muted);">Auditoria pericial de tempo real de serviço e intervalos (gaps)</div>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <span class="badge badge-green" style="font-size: 12px; font-weight: 700;">${s.tempoEfetivo || '—'} (${s.totalMesesEfetivos || 0} meses ativos)</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 12px;">
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Data Inicial</div>
+              <div style="font-size: 14px; font-weight: 700; color: #60a5fa; margin-top: 2px;">${s.dataInicio || '—'}</div>
+            </div>
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Data Final</div>
+              <div style="font-size: 14px; font-weight: 700; color: #60a5fa; margin-top: 2px;">${s.dataFim || '—'}</div>
+            </div>
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Tempo Bruto Total</div>
+              <div style="font-size: 14px; font-weight: 700; color: #cbd5e1; margin-top: 2px;">${s.tempoBruto || '—'}</div>
+            </div>
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Tempo Efetivo Real</div>
+              <div style="font-size: 14px; font-weight: 700; color: #34d399; margin-top: 2px;">${s.tempoEfetivo || '—'}</div>
+            </div>
+          </div>
+
+          ${s.temIntervalos ? `
+            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px;">
+              <div style="font-size: 12px; font-weight: 700; color: #fbbf24; display: flex; align-items: center; gap: 6px;">
+                <span>⚠️</span> Vínculo Descontínuo: ${s.totalIntervalos} intervalo(s) sem vínculo detectado(s) entre ${s.dataInicio} e ${s.dataFim}
+              </div>
+              <p style="font-size: 11px; color: #cbd5e1; margin-top: 4px; line-height: 1.4;">
+                Auditoria pericial de vínculo: intervalos sem recebimento ou exoneração somam <strong>${s.totalMesesIntervalos} meses</strong> de afastamento. Eles são destacados separadamente e <strong>não são somados</strong> como tempo de serviço contínuo.
+              </p>
+            </div>
+          ` : `
+            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-size: 11px; color: #34d399;">
+              ✔ Vínculo Contínuo: Todos os contracheques foram emitidos consecutivamente sem interrupções de vínculo no período.
+            </div>
+          `}
+
+          <div style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto;">
+            ${(s.periodosTimeline || []).map(item => {
+              if (item.tipo === 'periodo_ativo') {
+                return `
+                  <div style="padding: 8px 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                      <span style="font-size: 12px; font-weight: 700; color: #fff; font-family: 'JetBrains Mono', monospace;">${item.descricao}</span>
+                    </div>
+                    <span class="badge" style="background: #1e293b; color: #94a3b8; font-size: 11px;">${item.cargos}</span>
+                  </div>
+                `;
+              } else {
+                return `
+                  <div style="padding: 8px 12px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; color: #fbbf24;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
+                      <span style="font-size: 12px; font-weight: 600;">⏸️ ${item.descricao}</span>
+                    </div>
+                    <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fcd34d; font-size: 10px; font-weight: 700; text-transform: uppercase;">Sem Vínculo / Intervalo</span>
+                  </div>
+                `;
+              }
+            }).join('')}
           </div>
         </div>
 

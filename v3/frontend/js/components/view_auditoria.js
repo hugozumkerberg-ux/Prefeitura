@@ -126,6 +126,55 @@ export function renderAuditoriaView(container) {
               <div style="font-size: 15px; font-weight: 700; color: #fbbf24; margin-top: 2px;">${serv.totalDiarias || 0} (${formatBRL(serv.totalDiariasValor || 0)})</div>
             </div>
           </div>
+
+          <!-- ⏱️ Períodos Reais e Intervalos no Meio -->
+          <div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 6px; padding: 14px; margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span>⏱️</span>
+                <strong style="color: #fff; font-size: 12px; text-transform: uppercase;">Período Funcional & Auditoria de Vínculo</strong>
+              </div>
+              <span class="badge badge-green" style="font-size: 11px;">Tempo Efetivo: ${serv.tempoEfetivo || '—'} (${serv.totalMesesEfetivos || 0} meses ativos)</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 10px;">
+              <div style="background: #1e293b; padding: 6px 10px; border-radius: 4px;">
+                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Data Inicial</div>
+                <div style="font-size: 13px; font-weight: 700; color: #60a5fa;">${serv.dataInicio || '—'}</div>
+              </div>
+              <div style="background: #1e293b; padding: 6px 10px; border-radius: 4px;">
+                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Data Final</div>
+                <div style="font-size: 13px; font-weight: 700; color: #60a5fa;">${serv.dataFim || '—'}</div>
+              </div>
+              <div style="background: #1e293b; padding: 6px 10px; border-radius: 4px;">
+                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Tempo Bruto</div>
+                <div style="font-size: 13px; font-weight: 700; color: #cbd5e1;">${serv.tempoBruto || '—'}</div>
+              </div>
+              <div style="background: #1e293b; padding: 6px 10px; border-radius: 4px;">
+                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Tempo Efetivo</div>
+                <div style="font-size: 13px; font-weight: 700; color: #34d399;">${serv.tempoEfetivo || '—'}</div>
+              </div>
+            </div>
+
+            ${serv.temIntervalos ? `
+              <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 4px; padding: 8px 10px; font-size: 11px; color: #fbbf24; margin-bottom: 8px;">
+                ⚠️ <strong>Atenção Pericial:</strong> Foram detectados <strong>${serv.totalIntervalos} intervalo(s) sem vínculo</strong> entre ${serv.dataInicio} e ${serv.dataFim} (totalizando ${serv.totalMesesIntervalos} meses de afastamento). O tempo de serviço não é contínuo.
+              </div>
+            ` : `
+              <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 4px; padding: 6px 10px; font-size: 11px; color: #34d399; margin-bottom: 8px;">
+                ✔ Vínculo Contínuo: Sem interrupções ou intervalos no período.
+              </div>
+            `}
+
+            <div style="display: flex; flex-direction: column; gap: 6px; max-height: 160px; overflow-y: auto;">
+              ${(serv.periodosTimeline || []).map(item => `
+                <div style="padding: 6px 10px; border-radius: 4px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; ${item.tipo === 'periodo_ativo' ? 'background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); color: #fff;' : 'background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24;'}">
+                  <span>${item.tipo === 'periodo_ativo' ? '✔ ' : '⏸️ '}${item.descricao}</span>
+                  <span style="font-size: 10px; opacity: 0.8;">${item.tipo === 'periodo_ativo' ? (item.cargos || 'Servidor') : 'Sem Vínculo'}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
           ` : ''}
 
           <div style="background: #1e293b; padding: 14px; border-radius: 6px; font-size: 12px; font-family: 'JetBrains Mono', monospace; word-break: break-all; margin-bottom: 16px;">
