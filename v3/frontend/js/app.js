@@ -8,19 +8,19 @@
 import { renderSidebar } from './components/sidebar.js?v=23';
 import { renderInicioView } from './components/view_inicio.js?v=23';
 import { renderMandatosView } from './components/view_mandatos.js?v=23';
-import { renderFuncionariosView } from './components/view_funcionarios.js?v=23';
-import { renderKanbanView } from './components/view_kanban.js?v=23';
-import { renderEmpresasView } from './components/view_empresas.js?v=23';
-import { renderRankingView } from './components/view_rankings.js?v=23';
-import { renderEleicoesView } from './components/view_eleicoes.js?v=23';
-import { renderVereadoresView } from './components/view_vereadores.js?v=23';
-import { renderAdministrativoView } from './components/view_administrativo.js?v=23';
-import { renderCidadesView } from './components/view_cidade.js?v=23';
-import { renderMapaView } from './components/view_mapa.js?v=23';
-import { renderAdminView } from './components/view_admin.js?v=23';
-import { renderDespesasView } from './components/view_despesas.js?v=23';
-import { renderDiariasView } from './components/view_diarias.js?v=23';
-import { renderAuditoriaView } from './components/view_auditoria.js?v=23';
+import { renderFuncionariosView } from './components/view_funcionarios.js?v=24';
+import { renderKanbanView } from './components/view_kanban.js?v=24';
+import { renderEmpresasView } from './components/view_empresas.js?v=24';
+import { renderRankingView } from './components/view_rankings.js?v=24';
+import { renderEleicoesView } from './components/view_eleicoes.js?v=24';
+import { renderVereadoresView } from './components/view_vereadores.js?v=24';
+import { renderAdministrativoView } from './components/view_administrativo.js?v=24';
+import { renderCidadesView } from './components/view_cidade.js?v=24';
+import { renderMapaView } from './components/view_mapa.js?v=24';
+import { renderAdminView } from './components/view_admin.js?v=24';
+import { renderDespesasView } from './components/view_despesas.js?v=24';
+import { renderDiariasView } from './components/view_diarias.js?v=24';
+import { renderAuditoriaView } from './components/view_auditoria.js?v=24';
 
 const VIEWS = {
   inicio: renderInicioView,

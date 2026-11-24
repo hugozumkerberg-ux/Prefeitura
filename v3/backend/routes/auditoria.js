@@ -44,7 +44,7 @@ function handleRastrear(req, res, query) {
     if (/^[a-fA-F0-9]{64}$/.test(termo)) {
       documentoAlvo = dbContracheques.prepare(`
         SELECT caminho, ano, mes, matricula, matricula_padronizada, nome, nome_normalizado, cargo, lotacao, 
-               salario_base, total_proventos, total_descontos, salario_liquido, sha256, importado_em 
+               salario_base, total_proventos, total_descontos, salario_liquido, tabelas_json, campos_json, sha256, importado_em 
         FROM contracheques 
         WHERE sha256 = ? 
         LIMIT 1
@@ -60,7 +60,7 @@ function handleRastrear(req, res, query) {
       const matPad = padronizarMatricula(termo);
       const docMat = dbContracheques.prepare(`
         SELECT caminho, ano, mes, matricula, matricula_padronizada, nome, nome_normalizado, cargo, lotacao, 
-               salario_base, total_proventos, total_descontos, salario_liquido, sha256, importado_em 
+               salario_base, total_proventos, total_descontos, salario_liquido, tabelas_json, campos_json, sha256, importado_em 
         FROM contracheques 
         WHERE matricula_padronizada = ? OR matricula_padronizada LIKE ?
         ORDER BY ano DESC, mes DESC 
@@ -78,7 +78,7 @@ function handleRastrear(req, res, query) {
       const nomeNormBusca = normalizarNome(termo);
       const docNome = dbContracheques.prepare(`
         SELECT caminho, ano, mes, matricula, matricula_padronizada, nome, nome_normalizado, cargo, lotacao, 
-               salario_base, total_proventos, total_descontos, salario_liquido, sha256, importado_em 
+               salario_base, total_proventos, total_descontos, salario_liquido, tabelas_json, campos_json, sha256, importado_em 
         FROM contracheques 
         WHERE nome_normalizado LIKE ? 
         ORDER BY ano DESC, mes DESC 

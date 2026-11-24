@@ -5,6 +5,71 @@
  * ==============================================================================
  */
 
+function extrairRubricasContracheque(h) {
+  const proventos = [];
+  const descontos = [];
+  const funcionais = {};
+
+  try {
+    let raw = null;
+    if (h.tabelas_json) {
+      raw = typeof h.tabelas_json === 'string' ? JSON.parse(h.tabelas_json) : h.tabelas_json;
+    } else if (h.campos_json) {
+      raw = typeof h.campos_json === 'string' ? JSON.parse(h.campos_json) : h.campos_json;
+    }
+
+    if (raw && Array.isArray(raw)) {
+      let lines = raw;
+      if (lines.length > 0 && Array.isArray(lines[0]) && Array.isArray(lines[0][0])) {
+        lines = lines[0];
+      }
+
+      lines.forEach(item => {
+        if (!Array.isArray(item) || item.length === 0) return;
+        const desc = String(item[0] || '').trim();
+        const val = item.length > 1 ? String(item[1] || '').trim() : '';
+
+        if (desc.startsWith('Orgão:')) funcionais.orgao = desc.replace('Orgão:', '').trim();
+        if (val.startsWith('Data de admissão:')) funcionais.admissao = val.replace('Data de admissão:', '').trim();
+        if (desc.startsWith('Local de Trabalho:')) funcionais.local = desc.replace('Local de Trabalho:', '').trim();
+
+        if (/^\d{4}\./.test(desc)) {
+          const code = desc.slice(0, 4);
+          const isDesc = code.startsWith('04') || 
+                         code.startsWith('05') || 
+                         desc.toLowerCase().includes('inss') || 
+                         desc.toLowerCase().includes('imposto') || 
+                         desc.toLowerCase().includes('desconto') || 
+                         desc.toLowerCase().includes('falta') || 
+                         desc.toLowerCase().includes('pensao') || 
+                         desc.toLowerCase().includes('previdenc') || 
+                         (code === '0000' && desc.toLowerCase().includes('desconto'));
+
+          if (isDesc) {
+            descontos.push({ desc, val });
+          } else {
+            proventos.push({ desc, val });
+          }
+        }
+      });
+    }
+  } catch (e) {
+    // Ignora erro
+  }
+
+  if (proventos.length === 0 && h.total_proventos) {
+    if (h.salario_base) proventos.push({ desc: '0100.01 - Salário Base', val: (h.salario_base || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) });
+    const outros = (h.total_proventos || 0) - (h.salario_base || 0);
+    if (outros > 0.05) proventos.push({ desc: '0200.01 - Gratificações e Vencimentos', val: outros.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) });
+  }
+
+  if (descontos.length === 0 && h.total_descontos) {
+    descontos.push({ desc: '0400.01 - Total de Descontos e Retenções', val: (h.total_descontos || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) });
+  }
+
+  return { proventos, descontos, funcionais };
+}
+
 export function renderAuditoriaView(container) {
   container.innerHTML = `
     <!-- Header Hero -->
@@ -90,7 +155,8 @@ export function renderAuditoriaView(container) {
         return;
       }
 
-      const doc = data.documentoConsultado || {};
+      const doc = data.documentoConsultado || (data.historicoFolha && data.historicoFolha[0]) || {};
+      const rubricas = extrairRubricasContracheque(doc);
       const serv = data.servidor || {};
       const nomeExibicao = doc.nome || serv.nome || 'Registro Auditado';
       const cargoExibicao = doc.cargo || (serv.cargos && serv.cargos.join(', ')) || '—';
@@ -261,6 +327,76 @@ export function renderAuditoriaView(container) {
               `).join('')}
             </div>
           </div>
+          ` : ''}
+
+          <!-- Detalhamento de Rubricas Oficiais do Contracheque Auditado -->
+          ${(doc.total_proventos || rubricas.proventos.length > 0) ? `
+            <div style="background: #0b1120; border: 1px solid #3b82f6; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 16px;">📄</span>
+                  <strong style="color: #60a5fa; font-size: 13px; text-transform: uppercase;">Detalhamento Oficial do Contracheque Auditado</strong>
+                </div>
+                ${doc.ano ? `<span class="badge badge-blue">Competência: ${String(doc.mes).padStart(2,'0')}/${doc.ano}</span>` : ''}
+              </div>
+
+              ${(rubricas.funcionais.orgao || rubricas.funcionais.admissao || rubricas.funcionais.local) ? `
+                <div style="background: rgba(30, 41, 59, 0.6); padding: 8px 12px; border-radius: 6px; font-size: 11.5px; color: #cbd5e1; margin-bottom: 12px;">
+                  <strong>Órgão:</strong> ${rubricas.funcionais.orgao || lotacaoExibicao} 
+                  ${rubricas.funcionais.admissao ? ` • <strong>Admissão:</strong> ${rubricas.funcionais.admissao}` : ''}
+                  ${rubricas.funcionais.local ? ` • <strong>Local:</strong> ${rubricas.funcionais.local}` : ''}
+                </div>
+              ` : ''}
+
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 12px;">
+                <!-- Proventos -->
+                <div style="background: rgba(16, 185, 129, 0.04); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; padding: 12px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(16, 185, 129, 0.2); padding-bottom: 6px; margin-bottom: 8px;">
+                    <strong style="font-size: 11.5px; color: #34d399; text-transform: uppercase;">Remunerações / Proventos (+)</strong>
+                    <span class="badge badge-green" style="font-size: 10px;">${rubricas.proventos.length} rubricas</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto;">
+                    ${rubricas.proventos.map(p => `
+                      <div style="display: flex; justify-content: space-between; font-size: 11.5px; padding: 4px 6px; background: rgba(15, 23, 42, 0.5); border-radius: 4px;">
+                        <span style="color: #e2e8f0;">${p.desc}</span>
+                        <strong style="color: #60a5fa; font-family: 'JetBrains Mono', monospace;">R$ ${p.val}</strong>
+                      </div>
+                    `).join('')}
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(16, 185, 129, 0.3); margin-top: 8px; padding-top: 6px; font-size: 12px;">
+                    <strong style="color: #34d399;">Total das Remunerações:</strong>
+                    <strong style="color: #60a5fa; font-size: 13px; font-family: 'JetBrains Mono', monospace;">${formatBRL(doc.total_proventos)}</strong>
+                  </div>
+                </div>
+
+                <!-- Descontos -->
+                <div style="background: rgba(248, 113, 113, 0.04); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 6px; padding: 12px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(248, 113, 113, 0.2); padding-bottom: 6px; margin-bottom: 8px;">
+                    <strong style="font-size: 11.5px; color: #f87171; text-transform: uppercase;">Descontos / Retenções (-)</strong>
+                    <span class="badge" style="background: rgba(248, 113, 113, 0.2); color: #fca5a5; font-size: 10px;">${rubricas.descontos.length} descontos</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto;">
+                    ${rubricas.descontos.length === 0 ? '<div style="color: var(--text-muted); font-size: 11px; padding: 8px; text-align: center;">Sem descontos no mês</div>' : ''}
+                    ${rubricas.descontos.map(d => `
+                      <div style="display: flex; justify-content: space-between; font-size: 11.5px; padding: 4px 6px; background: rgba(15, 23, 42, 0.5); border-radius: 4px;">
+                        <span style="color: #cbd5e1;">${d.desc}</span>
+                        <strong style="color: #f87171; font-family: 'JetBrains Mono', monospace;">R$ ${d.val}</strong>
+                      </div>
+                    `).join('')}
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(248, 113, 113, 0.3); margin-top: 8px; padding-top: 6px; font-size: 12px;">
+                    <strong style="color: #f87171;">Total de Descontos:</strong>
+                    <strong style="color: #f87171; font-size: 13px; font-family: 'JetBrains Mono', monospace;">${formatBRL(doc.total_descontos)}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fechamento Líquido -->
+              <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 6px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <span style="font-size: 12px; font-weight: 700; color: #e2e8f0;">Valor Líquido Recebido no Mês:</span>
+                <span style="font-size: 18px; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace;">${formatBRL(doc.salario_liquido)}</span>
+              </div>
+            </div>
           ` : ''}
 
           <div style="background: #1e293b; padding: 16px; border-radius: 8px; font-size: 12px; font-family: 'JetBrains Mono', monospace; word-break: break-all; margin-bottom: 16px; border: 1px solid rgba(52, 211, 153, 0.3);">

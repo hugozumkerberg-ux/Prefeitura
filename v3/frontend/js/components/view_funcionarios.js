@@ -95,6 +95,7 @@ function agruparCargosETrajetoria(historico) {
 function extrairRubricasContracheque(h) {
   const proventos = [];
   const descontos = [];
+  const funcionais = {};
 
   try {
     let raw = null;
@@ -105,27 +106,56 @@ function extrairRubricasContracheque(h) {
     }
 
     if (raw && Array.isArray(raw)) {
-      const flattened = raw.flat(3);
-      for (let i = 0; i < flattened.length; i++) {
-        const item = flattened[i];
-        if (Array.isArray(item) && item.length >= 2) {
-          const desc = String(item[0]).trim();
-          const val = String(item[1]).trim();
-          if (desc && val && !desc.includes('Dados do') && !desc.includes('Matrícula/Nome') && !desc.includes('Orgão') && !desc.includes('Local de')) {
-            if (/inss|irrf|previd|desconto|falta|pensao|consign|sindic/i.test(desc)) {
-              descontos.push({ desc, val });
-            } else if (!desc.includes('Total') && !desc.includes('Líquido')) {
-              proventos.push({ desc, val });
-            }
+      let lines = raw;
+      if (lines.length > 0 && Array.isArray(lines[0]) && Array.isArray(lines[0][0])) {
+        lines = lines[0];
+      }
+
+      lines.forEach(item => {
+        if (!Array.isArray(item) || item.length === 0) return;
+        const desc = String(item[0] || '').trim();
+        const val = item.length > 1 ? String(item[1] || '').trim() : '';
+
+        if (desc.startsWith('Orgão:')) funcionais.orgao = desc.replace('Orgão:', '').trim();
+        if (val.startsWith('Data de admissão:')) funcionais.admissao = val.replace('Data de admissão:', '').trim();
+        if (desc.startsWith('Local de Trabalho:')) funcionais.local = desc.replace('Local de Trabalho:', '').trim();
+
+        if (/^\d{4}\./.test(desc)) {
+          const code = desc.slice(0, 4);
+          const isDesc = code.startsWith('04') || 
+                         code.startsWith('05') || 
+                         desc.toLowerCase().includes('inss') || 
+                         desc.toLowerCase().includes('imposto') || 
+                         desc.toLowerCase().includes('desconto') || 
+                         desc.toLowerCase().includes('falta') || 
+                         desc.toLowerCase().includes('pensao') || 
+                         desc.toLowerCase().includes('previdenc') || 
+                         (code === '0000' && desc.toLowerCase().includes('desconto'));
+
+          if (isDesc) {
+            descontos.push({ desc, val });
+          } else {
+            proventos.push({ desc, val });
           }
         }
-      }
+      });
     }
   } catch (e) {
     // Ignora erro em parse
   }
 
-  return { proventos, descontos };
+  // Fallback caso não haja rubricas nominais
+  if (proventos.length === 0 && h.total_proventos) {
+    if (h.salario_base) proventos.push({ desc: '0100.01 - Salário Base', val: (h.salario_base || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) });
+    const outros = (h.total_proventos || 0) - (h.salario_base || 0);
+    if (outros > 0.05) proventos.push({ desc: '0200.01 - Gratificações e Vantagens', val: outros.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) });
+  }
+
+  if (descontos.length === 0 && h.total_descontos) {
+    descontos.push({ desc: '0400.01 - Total de Descontos e Retenções', val: (h.total_descontos || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) });
+  }
+
+  return { proventos, descontos, funcionais };
 }
 
 export async function renderFuncionariosView(container) {
@@ -737,8 +767,12 @@ export async function renderFuncionariosView(container) {
             ${temFerias ? '<span class="badge badge-amber" style="font-size: 10px; margin-left: 4px;">🏖️ Férias</span>' : ''}
           `;
 
+          const rubricas = extrairRubricasContracheque(h);
+          const matriculaExib = h.matricula_padronizada || h.matricula || '—';
+          const mesNome = MESES_EXTENSO[h.mes] || h.mes;
+
           return `
-            <tr class="tr-contracheque" data-idx="${idx}" style="cursor: pointer;" title="Clique para ver detalhes do contracheque">
+            <tr class="tr-contracheque" data-idx="${idx}" style="cursor: pointer;" title="Clique para expandir o demonstrativo com todas as rubricas deste contracheque">
               <td>
                 <span class="badge" style="background: rgba(255,255,255,0.06); font-family: 'JetBrains Mono', monospace;">
                   ${String(h.mes).padStart(2, '0')}/${h.ano}
@@ -751,50 +785,105 @@ export async function renderFuncionariosView(container) {
               <td style="text-align: right; color: #f87171; font-weight: 700; font-family: 'JetBrains Mono', monospace;">${formatMoeda(h.total_descontos)}</td>
               <td style="text-align: right; color: #34d399; font-weight: 700; font-family: 'JetBrains Mono', monospace;">${formatMoeda(h.salario_liquido)}</td>
             </tr>
-            <tr class="tr-detalhes-rubricas" id="detalhe-h-${idx}" style="display: none; background: #0b1120;">
-              <td colspan="6" style="padding: 10px 14px;">
-                <div style="font-size: 11px; font-weight: 700; color: #60a5fa; margin-bottom: 6px; text-transform: uppercase;">
-                  📄 Detalhamento Oficial do Contracheque (${String(h.mes).padStart(2, '0')}/${h.ano} — Matrícula: ${h.matricula_padronizada || '—'})
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11.5px;">
-                  <div style="background: rgba(59, 130, 246, 0.05); padding: 8px; border-radius: 4px; border: 1px solid rgba(59, 130, 246, 0.2);">
-                    <div style="font-weight: 700; color: #93c5fd; margin-bottom: 4px;">Remunerações / Proventos:</div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                      <span>Salário Base:</span>
-                      <strong style="color: #60a5fa;">${formatMoeda(h.salario_base)}</strong>
+            <tr class="tr-detalhes-rubricas" id="detalhe-h-${idx}" style="display: none; background: #080d1a;">
+              <td colspan="6" style="padding: 16px 20px; border-left: 4px solid #3b82f6;">
+                
+                <!-- Cabeçalho Oficial do Contracheque -->
+                <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid #334155; border-radius: 6px; padding: 12px 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                  <div>
+                    <div style="font-size: 12px; font-weight: 800; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.5px;">
+                      📄 Demonstrativo Mensal de Pagamento • ${mesNome}/${h.ano}
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
-                      <span>Total Bruto:</span>
-                      <strong style="color: #60a5fa;">${formatMoeda(h.total_proventos)}</strong>
+                    <div style="font-size: 11.5px; color: #cbd5e1; margin-top: 4px;">
+                      <strong>Órgão:</strong> ${rubricas.funcionais.orgao || h.lotacao || 'Prefeitura Municipal de Arinos'}
+                      ${rubricas.funcionais.admissao ? ` • <strong>Admissão:</strong> ${rubricas.funcionais.admissao}` : ''}
+                      ${rubricas.funcionais.local ? ` • <strong>Local de Trabalho:</strong> ${rubricas.funcionais.local}` : ''}
                     </div>
                   </div>
-                  <div style="background: rgba(248, 113, 113, 0.05); padding: 8px; border-radius: 4px; border: 1px solid rgba(248, 113, 113, 0.2);">
-                    <div style="font-weight: 700; color: #fca5a5; margin-bottom: 4px;">Descontos / Retenções:</div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                      <span>Total de Descontos:</span>
-                      <strong style="color: #f87171;">${formatMoeda(h.total_descontos)}</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                      <span>Valor Líquido Recebido:</span>
-                      <strong style="color: #34d399;">${formatMoeda(h.salario_liquido)}</strong>
-                    </div>
+                  <div style="display: flex; gap: 8px; align-items: center;">
+                    <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); font-weight: 700; font-size: 11px;">
+                      Matrícula: (${matriculaExib})
+                    </span>
                   </div>
                 </div>
+
+                <!-- Detalhamento de Proventos e Descontos em Grade -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 14px;">
+                  
+                  <!-- Bloco de Proventos / Vencimentos (+) -->
+                  <div style="background: rgba(16, 185, 129, 0.04); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; padding: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(16, 185, 129, 0.2); padding-bottom: 6px; margin-bottom: 8px;">
+                      <strong style="font-size: 11.5px; color: #34d399; text-transform: uppercase;">Remunerações / Proventos (+)</strong>
+                      <span class="badge badge-green" style="font-size: 10px;">${rubricas.proventos.length} ${rubricas.proventos.length === 1 ? 'rubrica' : 'rubricas'}</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto;">
+                      ${rubricas.proventos.map(p => `
+                        <div style="display: flex; justify-content: space-between; font-size: 11.5px; padding: 4px 8px; background: rgba(15, 23, 42, 0.5); border-radius: 4px;">
+                          <span style="color: #e2e8f0;">${p.desc}</span>
+                          <strong style="color: #60a5fa; font-family: 'JetBrains Mono', monospace; margin-left: 8px;">R$ ${p.val}</strong>
+                        </div>
+                      `).join('')}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(16, 185, 129, 0.3); margin-top: 10px; padding-top: 6px; font-size: 12px;">
+                      <strong style="color: #34d399;">Total das Remunerações:</strong>
+                      <strong style="color: #60a5fa; font-size: 13px; font-family: 'JetBrains Mono', monospace;">${formatMoeda(h.total_proventos)}</strong>
+                    </div>
+                  </div>
+
+                  <!-- Bloco de Descontos / Retenções (-) -->
+                  <div style="background: rgba(248, 113, 113, 0.04); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 6px; padding: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(248, 113, 113, 0.2); padding-bottom: 6px; margin-bottom: 8px;">
+                      <strong style="font-size: 11.5px; color: #f87171; text-transform: uppercase;">Descontos / Retenções (-)</strong>
+                      <span class="badge" style="background: rgba(248, 113, 113, 0.2); color: #fca5a5; font-size: 10px;">${rubricas.descontos.length} ${rubricas.descontos.length === 1 ? 'desconto' : 'descontos'}</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto;">
+                      ${rubricas.descontos.length === 0 ? '<div style="color: var(--text-muted); font-size: 11px; padding: 8px; text-align: center;">Nenhum desconto legal incidente no mês</div>' : ''}
+                      ${rubricas.descontos.map(d => `
+                        <div style="display: flex; justify-content: space-between; font-size: 11.5px; padding: 4px 8px; background: rgba(15, 23, 42, 0.5); border-radius: 4px;">
+                          <span style="color: #cbd5e1;">${d.desc}</span>
+                          <strong style="color: #f87171; font-family: 'JetBrains Mono', monospace; margin-left: 8px;">R$ ${d.val}</strong>
+                        </div>
+                      `).join('')}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(248, 113, 113, 0.3); margin-top: 10px; padding-top: 6px; font-size: 12px;">
+                      <strong style="color: #f87171;">Total de Descontos:</strong>
+                      <strong style="color: #f87171; font-size: 13px; font-family: 'JetBrains Mono', monospace;">${formatMoeda(h.total_descontos)}</strong>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Barra do Salário Líquido Real -->
+                <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 6px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 20px;">💵</span>
+                    <div>
+                      <span style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; display: block;">Valor Líquido Recebido</span>
+                      <span style="font-size: 11.5px; color: #cbd5e1;">Bruto ${formatMoeda(h.total_proventos)} - Descontos ${formatMoeda(h.total_descontos)}</span>
+                    </div>
+                  </div>
+                  <div style="font-size: 18px; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace;">
+                    ${formatMoeda(h.salario_liquido)}
+                  </div>
+                </div>
+
+                <!-- Selo Criptográfico de Autenticidade SHA-256 -->
                 ${h.sha256 ? `
-                  <div style="margin-top: 8px; padding: 6px 10px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
+                  <div style="padding: 8px 12px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(52, 211, 153, 0.35); border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
                     <div style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #94a3b8; word-break: break-all;">
-                      <span style="color: #34d399; font-weight: 700;">🛡️ Selo SHA-256:</span> ${h.sha256}
+                      <span style="color: #34d399; font-weight: 700;">🛡️ Selo Pericial SHA-256:</span> ${h.sha256}
                     </div>
                     <div style="display: flex; gap: 6px;">
-                      <button class="btn btn-outline" style="padding: 2px 8px; font-size: 9.5px; cursor: pointer; color: #cbd5e1;" onclick="event.stopPropagation(); navigator.clipboard.writeText('${h.sha256}').then(() => alert('Hash SHA-256 copiado!'))">
+                      <button class="btn btn-outline" style="padding: 3px 8px; font-size: 10px; cursor: pointer; color: #cbd5e1;" onclick="event.stopPropagation(); navigator.clipboard.writeText('${h.sha256}').then(() => alert('Hash SHA-256 copiado para a área de transferência!'))">
                         📋 Copiar Hash
                       </button>
-                      <a href="#auditoria?termo=${encodeURIComponent(h.sha256)}" class="btn btn-outline" style="padding: 2px 8px; font-size: 9.5px; text-decoration: none; color: #34d399; border-color: rgba(52, 211, 153, 0.4);" onclick="event.stopPropagation();">
+                      <a href="#auditoria?termo=${encodeURIComponent(h.sha256)}" class="btn btn-outline" style="padding: 3px 8px; font-size: 10px; text-decoration: none; color: #34d399; border-color: rgba(52, 211, 153, 0.4);" onclick="event.stopPropagation();">
                         🔍 Auditar Custódia
                       </a>
                     </div>
                   </div>
                 ` : ''}
+
               </td>
             </tr>
           `;
