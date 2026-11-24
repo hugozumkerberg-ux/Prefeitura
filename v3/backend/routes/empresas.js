@@ -6,6 +6,7 @@
  */
 
 const { dbDespesas } = require('../db');
+const { parsePeriodoFilter } = require('../utils/filtro_periodo');
 
 function formatCurrency(val) {
   return 'R$ ' + Number(val || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -14,11 +15,12 @@ function formatCurrency(val) {
 function handleEmpresas(req, res) {
   try {
     const urlObj = new URL(req.url, 'http://localhost');
+    const queryObj = Object.fromEntries(urlObj.searchParams.entries());
     const page = Math.max(1, parseInt(urlObj.searchParams.get('page') || '1', 10));
     const limit = Math.min(100, Math.max(5, parseInt(urlObj.searchParams.get('limit') || '20', 10)));
     const offset = (page - 1) * limit;
     const busca = (urlObj.searchParams.get('busca') || '').trim();
-    const ano = urlObj.searchParams.get('ano') || '';
+    const { ano, mandato, anoInicio, anoFim, temFiltroAno } = parsePeriodoFilter(queryObj);
     const mes = urlObj.searchParams.get('mes') || '';
     const ordenar = urlObj.searchParams.get('ordenar') || 'valor_desc';
     const detalheCredor = urlObj.searchParams.get('credor');
@@ -76,9 +78,14 @@ function handleEmpresas(req, res) {
       params.push(term, term, term);
     }
 
-    if (ano) {
-      whereClauses.push("ano = ?");
-      params.push(parseInt(ano, 10));
+    if (temFiltroAno) {
+      if (anoInicio === anoFim) {
+        whereClauses.push("ano = ?");
+        params.push(anoInicio);
+      } else {
+        whereClauses.push("ano >= ? AND ano <= ?");
+        params.push(anoInicio, anoFim);
+      }
     }
 
     if (mes) {
@@ -150,8 +157,11 @@ function handleEmpresas(req, res) {
       paginacao: {
         page,
         limit,
+        total: totalRegistros,
         totalRegistros,
-        totalPages
+        totalPages,
+        mandato: mandato || null,
+        ano: ano || null
       },
       empresas
     }));

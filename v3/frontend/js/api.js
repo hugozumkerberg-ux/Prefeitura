@@ -13,7 +13,9 @@ export async function fetchFolha(params = {}) {
   const query = new URLSearchParams();
   if (params.page) query.set('page', params.page);
   if (params.limit) query.set('limit', params.limit);
+  if (params.mandato) query.set('mandato', params.mandato);
   if (params.ano) query.set('ano', params.ano);
+  if (params.periodo) query.set('periodo', params.periodo);
   if (params.mes) query.set('mes', params.mes);
   if (params.busca) query.set('busca', params.busca);
 
@@ -26,7 +28,9 @@ export async function fetchDespesas(params = {}) {
   const query = new URLSearchParams();
   if (params.page) query.set('page', params.page);
   if (params.limit) query.set('limit', params.limit);
+  if (params.mandato) query.set('mandato', params.mandato);
   if (params.ano) query.set('ano', params.ano);
+  if (params.periodo) query.set('periodo', params.periodo);
   if (params.mes) query.set('mes', params.mes);
   if (params.busca) query.set('busca', params.busca);
 
@@ -39,7 +43,9 @@ export async function fetchDiarias(params = {}) {
   const query = new URLSearchParams();
   if (params.page) query.set('page', params.page);
   if (params.limit) query.set('limit', params.limit);
+  if (params.mandato) query.set('mandato', params.mandato);
   if (params.ano) query.set('ano', params.ano);
+  if (params.periodo) query.set('periodo', params.periodo);
   if (params.mes) query.set('mes', params.mes);
   if (params.busca) query.set('busca', params.busca);
 
@@ -52,7 +58,9 @@ export async function fetchEmpresas(params = {}) {
   const query = new URLSearchParams();
   if (params.page) query.set('page', params.page);
   if (params.limit) query.set('limit', params.limit);
+  if (params.mandato) query.set('mandato', params.mandato);
   if (params.ano) query.set('ano', params.ano);
+  if (params.periodo) query.set('periodo', params.periodo);
   if (params.mes) query.set('mes', params.mes);
   if (params.busca) query.set('busca', params.busca);
   if (params.ordenar) query.set('ordenar', params.ordenar);
@@ -67,7 +75,9 @@ export async function fetchRankings(params = {}) {
   const query = new URLSearchParams();
   if (params.tipo) query.set('tipo', params.tipo);
   if (params.limit) query.set('limit', params.limit);
+  if (params.mandato) query.set('mandato', params.mandato);
   if (params.ano) query.set('ano', params.ano);
+  if (params.periodo) query.set('periodo', params.periodo);
   if (params.mes) query.set('mes', params.mes);
 
   const res = await fetch(`/api/rankings?${query.toString()}`);

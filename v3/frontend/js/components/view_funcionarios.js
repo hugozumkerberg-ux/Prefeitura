@@ -18,6 +18,8 @@ export async function renderFuncionariosView(container) {
     page: 1,
     limit: 20,
     busca: '',
+    periodo: '',
+    mandato: '',
     ano: '',
     mes: ''
   };
@@ -73,22 +75,30 @@ export async function renderFuncionariosView(container) {
           placeholder="🔍 Buscar por nome, cargo ou matrícula..." 
           style="flex: 1; min-width: 240px;"
         >
-        <select id="folha-select-ano" class="input-field" style="width: 140px; background: #1e293b; border: 1px solid #334155; color: #fff;">
-          <option value="">Todos os Anos</option>
-          <option value="2026">2026</option>
-          <option value="2025">2025</option>
-          <option value="2024">2024</option>
-          <option value="2023">2023</option>
-          <option value="2022">2022</option>
-          <option value="2021">2021</option>
-          <option value="2020">2020</option>
-          <option value="2019">2019</option>
-          <option value="2018">2018</option>
-          <option value="2017">2017</option>
-          <option value="2016">2016</option>
-          <option value="2015">2015</option>
-          <option value="2014">2014</option>
-          <option value="2013">2013</option>
+        <select id="folha-select-periodo" class="input-field" style="min-width: 175px; background: #1e293b; border: 1px solid #334155; color: #fff;">
+          <option value="">Todos os Mandatos / Anos</option>
+          <optgroup label="🏛️ Mandatos Executivos">
+            <option value="mandato:2025-2028">Mandato 2025–2028 (Atual)</option>
+            <option value="mandato:2021-2024">Mandato 2021–2024 (Marcilio)</option>
+            <option value="mandato:2017-2020">Mandato 2017–2020 (Carlos Alberto)</option>
+            <option value="mandato:2013-2016">Mandato 2013–2016 (Roberto Sales)</option>
+          </optgroup>
+          <optgroup label="📅 Anos Individuais">
+            <option value="ano:2026">Ano 2026</option>
+            <option value="ano:2025">Ano 2025</option>
+            <option value="ano:2024">Ano 2024</option>
+            <option value="ano:2023">Ano 2023</option>
+            <option value="ano:2022">Ano 2022</option>
+            <option value="ano:2021">Ano 2021</option>
+            <option value="ano:2020">Ano 2020</option>
+            <option value="ano:2019">Ano 2019</option>
+            <option value="ano:2018">Ano 2018</option>
+            <option value="ano:2017">Ano 2017</option>
+            <option value="ano:2016">Ano 2016</option>
+            <option value="ano:2015">Ano 2015</option>
+            <option value="ano:2014">Ano 2014</option>
+            <option value="ano:2013">Ano 2013</option>
+          </optgroup>
         </select>
         <select id="folha-select-mes" class="input-field" style="width: 150px; background: #1e293b; border: 1px solid #334155; color: #fff;">
           <option value="">Todos os Meses</option>
@@ -137,7 +147,7 @@ export async function renderFuncionariosView(container) {
   `;
 
   const inputBusca = container.querySelector('#folha-input-busca');
-  const selectAno = container.querySelector('#folha-select-ano');
+  const selectPeriodo = container.querySelector('#folha-select-periodo');
   const selectMes = container.querySelector('#folha-select-mes');
   const btnFiltrar = container.querySelector('#folha-btn-filtrar');
   const btnLimpar = container.querySelector('#folha-btn-limpar');
@@ -308,7 +318,9 @@ export async function renderFuncionariosView(container) {
         page: estado.page,
         limit: estado.limit,
         busca: estado.busca,
+        mandato: estado.mandato,
         ano: estado.ano,
+        periodo: estado.periodo,
         mes: estado.mes
       });
 
@@ -355,22 +367,35 @@ export async function renderFuncionariosView(container) {
 
   btnFiltrar.onclick = () => {
     estado.busca = inputBusca.value.trim();
-    estado.ano = selectAno.value;
+    const pVal = selectPeriodo.value;
+    estado.periodo = pVal;
+    if (pVal.startsWith('mandato:')) {
+      estado.mandato = pVal.replace('mandato:', '');
+      estado.ano = '';
+    } else if (pVal.startsWith('ano:')) {
+      estado.ano = pVal.replace('ano:', '');
+      estado.mandato = '';
+    } else {
+      estado.mandato = '';
+      estado.ano = '';
+    }
     estado.mes = selectMes.value;
     carregarPagina(1);
   };
 
   btnLimpar.onclick = () => {
     inputBusca.value = '';
-    selectAno.value = '';
+    selectPeriodo.value = '';
     selectMes.value = '';
     estado.busca = '';
+    estado.periodo = '';
+    estado.mandato = '';
     estado.ano = '';
     estado.mes = '';
     carregarPagina(1);
   };
 
-  selectAno.onchange = () => btnFiltrar.click();
+  selectPeriodo.onchange = () => btnFiltrar.click();
   selectMes.onchange = () => btnFiltrar.click();
 
   inputBusca.onkeyup = e => {

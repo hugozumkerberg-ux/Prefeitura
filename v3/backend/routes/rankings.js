@@ -6,6 +6,7 @@
  */
 
 const { dbContracheques, dbDespesas, dbDiarias } = require('../db');
+const { parsePeriodoFilter } = require('../utils/filtro_periodo');
 
 function formatCurrency(val) {
   return 'R$ ' + Number(val || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -14,9 +15,10 @@ function formatCurrency(val) {
 function handleRankings(req, res) {
   try {
     const urlObj = new URL(req.url, 'http://localhost');
+    const queryObj = Object.fromEntries(urlObj.searchParams.entries());
     const tipo = urlObj.searchParams.get('tipo') || 'salarios'; // 'salarios', 'diarias', 'credores'
     const limit = Math.min(100, Math.max(10, parseInt(urlObj.searchParams.get('limit') || '50', 10)));
-    const ano = urlObj.searchParams.get('ano');
+    const { ano, mandato, anoInicio, anoFim, temFiltroAno } = parsePeriodoFilter(queryObj);
     const mes = urlObj.searchParams.get('mes');
 
     let dados = [];
@@ -29,9 +31,14 @@ function handleRankings(req, res) {
       `;
       let where = [];
       let params = [];
-      if (ano) {
-        where.push('ano = ?');
-        params.push(parseInt(ano, 10));
+      if (temFiltroAno) {
+        if (anoInicio === anoFim) {
+          where.push('ano = ?');
+          params.push(anoInicio);
+        } else {
+          where.push('ano >= ? AND ano <= ?');
+          params.push(anoInicio, anoFim);
+        }
       }
       if (mes) {
         where.push('mes = ?');
@@ -65,9 +72,14 @@ function handleRankings(req, res) {
         WHERE nome IS NOT NULL AND valor > 0
       `;
       let params = [];
-      if (ano) {
-        sql += ` AND ano = ? `;
-        params.push(parseInt(ano, 10));
+      if (temFiltroAno) {
+        if (anoInicio === anoFim) {
+          sql += ` AND ano = ? `;
+          params.push(anoInicio);
+        } else {
+          sql += ` AND ano >= ? AND ano <= ? `;
+          params.push(anoInicio, anoFim);
+        }
       }
       if (mes) {
         sql += ` AND mes = ? `;
@@ -95,9 +107,14 @@ function handleRankings(req, res) {
         WHERE credor IS NOT NULL AND credor != ''
       `;
       let params = [];
-      if (ano) {
-        sql += ` AND ano = ? `;
-        params.push(parseInt(ano, 10));
+      if (temFiltroAno) {
+        if (anoInicio === anoFim) {
+          sql += ` AND ano = ? `;
+          params.push(anoInicio);
+        } else {
+          sql += ` AND ano >= ? AND ano <= ? `;
+          params.push(anoInicio, anoFim);
+        }
       }
       if (mes) {
         sql += ` AND mes = ? `;

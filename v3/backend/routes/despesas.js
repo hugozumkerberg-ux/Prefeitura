@@ -3,6 +3,7 @@
  * Traz credor, valor, data, histórico e hash
  */
 const { dbDespesas } = require('../db');
+const { parsePeriodoFilter } = require('../utils/filtro_periodo');
 
 function handleDespesas(req, res, query) {
   if (!dbDespesas) {
@@ -14,16 +15,22 @@ function handleDespesas(req, res, query) {
   const limit = Math.min(100, Math.max(1, parseInt(query.limit, 10) || 20));
   const offset = (page - 1) * limit;
 
-  const ano = query.ano ? parseInt(query.ano, 10) : null;
+  const { ano, mandato, anoInicio, anoFim, temFiltroAno } = parsePeriodoFilter(query);
   const mes = query.mes ? parseInt(query.mes, 10) : null;
   const busca = (query.busca || '').trim().toUpperCase();
 
   const whereClauses = ['1=1'];
   const params = {};
 
-  if (ano) {
-    whereClauses.push('ano = @ano');
-    params.ano = ano;
+  if (temFiltroAno) {
+    if (anoInicio === anoFim) {
+      whereClauses.push('ano = @ano');
+      params.ano = anoInicio;
+    } else {
+      whereClauses.push('ano >= @anoInicio AND ano <= @anoFim');
+      params.anoInicio = anoInicio;
+      params.anoFim = anoFim;
+    }
   }
   if (mes) {
     whereClauses.push('mes = @mes');
@@ -74,7 +81,9 @@ function handleDespesas(req, res, query) {
         limit,
         totalPages,
         temAnterior: page > 1,
-        temProxima: page < totalPages
+        temProxima: page < totalPages,
+        mandato: mandato || null,
+        ano: ano || null
       },
       dados: rows
     }));

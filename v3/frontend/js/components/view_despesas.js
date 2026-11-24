@@ -41,22 +41,30 @@ export async function renderDespesasView(container) {
       <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
         <input type="text" id="despesas-busca" placeholder="🔍 Buscar por credor, histórico, número de empenho..." 
                style="flex: 1; min-width: 240px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px;">
-        <select id="despesas-ano" style="width: 140px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
-          <option value="">Todos os Anos</option>
-          <option value="2026">2026</option>
-          <option value="2025">2025</option>
-          <option value="2024">2024</option>
-          <option value="2023">2023</option>
-          <option value="2022">2022</option>
-          <option value="2021">2021</option>
-          <option value="2020">2020</option>
-          <option value="2019">2019</option>
-          <option value="2018">2018</option>
-          <option value="2017">2017</option>
-          <option value="2016">2016</option>
-          <option value="2015">2015</option>
-          <option value="2014">2014</option>
-          <option value="2013">2013</option>
+        <select id="despesas-periodo" style="min-width: 175px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
+          <option value="">Todos os Mandatos / Anos</option>
+          <optgroup label="🏛️ Mandatos Executivos">
+            <option value="mandato:2025-2028">Mandato 2025–2028 (Atual)</option>
+            <option value="mandato:2021-2024">Mandato 2021–2024 (Marcilio)</option>
+            <option value="mandato:2017-2020">Mandato 2017–2020 (Carlos Alberto)</option>
+            <option value="mandato:2013-2016">Mandato 2013–2016 (Roberto Sales)</option>
+          </optgroup>
+          <optgroup label="📅 Anos Individuais">
+            <option value="ano:2026">Ano 2026</option>
+            <option value="ano:2025">Ano 2025</option>
+            <option value="ano:2024">Ano 2024</option>
+            <option value="ano:2023">Ano 2023</option>
+            <option value="ano:2022">Ano 2022</option>
+            <option value="ano:2021">Ano 2021</option>
+            <option value="ano:2020">Ano 2020</option>
+            <option value="ano:2019">Ano 2019</option>
+            <option value="ano:2018">Ano 2018</option>
+            <option value="ano:2017">Ano 2017</option>
+            <option value="ano:2016">Ano 2016</option>
+            <option value="ano:2015">Ano 2015</option>
+            <option value="ano:2014">Ano 2014</option>
+            <option value="ano:2013">Ano 2013</option>
+          </optgroup>
         </select>
         <select id="despesas-mes" style="width: 150px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
           <option value="">Todos os Meses</option>
@@ -86,7 +94,7 @@ export async function renderDespesasView(container) {
   `;
 
   const inputBusca = container.querySelector('#despesas-busca');
-  const selectAno = container.querySelector('#despesas-ano');
+  const selectPeriodo = container.querySelector('#despesas-periodo');
   const selectMes = container.querySelector('#despesas-mes');
   const btnFiltrar = container.querySelector('#despesas-btn-filtrar');
   const content = container.querySelector('#despesas-content');
@@ -94,11 +102,19 @@ export async function renderDespesasView(container) {
   async function carregar(page) {
     content.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-muted);">Consultando banco SQLite oficial...</div>';
     try {
+      const pVal = selectPeriodo.value;
+      let mandato = '';
+      let ano = '';
+      if (pVal.startsWith('mandato:')) mandato = pVal.replace('mandato:', '');
+      else if (pVal.startsWith('ano:')) ano = pVal.replace('ano:', '');
+
       const resp = await fetchDespesas({ 
         page, 
         limit: 20, 
         busca: inputBusca.value.trim(),
-        ano: selectAno.value,
+        mandato,
+        ano,
+        periodo: pVal,
         mes: selectMes.value
       });
       content.innerHTML = '';
@@ -132,7 +148,7 @@ export async function renderDespesasView(container) {
   }
 
   btnFiltrar.onclick = () => carregar(1);
-  selectAno.onchange = () => carregar(1);
+  selectPeriodo.onchange = () => carregar(1);
   selectMes.onchange = () => carregar(1);
   inputBusca.onkeyup = e => { if (e.key === 'Enter') carregar(1); };
   carregar(1);

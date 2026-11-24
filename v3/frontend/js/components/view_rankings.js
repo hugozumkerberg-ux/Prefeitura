@@ -6,6 +6,8 @@
  */
 
 let currentTab = 'salarios';
+let currentPeriodo = '';
+let currentMandato = '';
 let currentYear = '';
 let currentMonth = '';
 
@@ -39,22 +41,30 @@ export async function renderRankingView(container) {
       <button class="btn-primary rank-tab-btn" data-tab="credores" style="background: #1f2937;">🏢 Maiores Fornecedores (SIAP)</button>
 
       <div style="margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap;">
-        <select id="rank-ano-select" style="min-width: 130px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px;">
-          <option value="">Todos os Anos</option>
-          <option value="2026">2026</option>
-          <option value="2025">2025</option>
-          <option value="2024">2024</option>
-          <option value="2023">2023</option>
-          <option value="2022">2022</option>
-          <option value="2021">2021</option>
-          <option value="2020">2020</option>
-          <option value="2019">2019</option>
-          <option value="2018">2018</option>
-          <option value="2017">2017</option>
-          <option value="2016">2016</option>
-          <option value="2015">2015</option>
-          <option value="2014">2014</option>
-          <option value="2013">2013</option>
+        <select id="rank-periodo-select" style="min-width: 175px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px;">
+          <option value="">Todos os Mandatos / Anos</option>
+          <optgroup label="🏛️ Mandatos Executivos">
+            <option value="mandato:2025-2028">Mandato 2025–2028 (Atual)</option>
+            <option value="mandato:2021-2024">Mandato 2021–2024 (Marcilio)</option>
+            <option value="mandato:2017-2020">Mandato 2017–2020 (Carlos Alberto)</option>
+            <option value="mandato:2013-2016">Mandato 2013–2016 (Roberto Sales)</option>
+          </optgroup>
+          <optgroup label="📅 Anos Individuais">
+            <option value="ano:2026">Ano 2026</option>
+            <option value="ano:2025">Ano 2025</option>
+            <option value="ano:2024">Ano 2024</option>
+            <option value="ano:2023">Ano 2023</option>
+            <option value="ano:2022">Ano 2022</option>
+            <option value="ano:2021">Ano 2021</option>
+            <option value="ano:2020">Ano 2020</option>
+            <option value="ano:2019">Ano 2019</option>
+            <option value="ano:2018">Ano 2018</option>
+            <option value="ano:2017">Ano 2017</option>
+            <option value="ano:2016">Ano 2016</option>
+            <option value="ano:2015">Ano 2015</option>
+            <option value="ano:2014">Ano 2014</option>
+            <option value="ano:2013">Ano 2013</option>
+          </optgroup>
         </select>
         <select id="rank-mes-select" style="min-width: 140px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px;">
           <option value="">Todos os Meses</option>
@@ -93,7 +103,7 @@ export async function renderRankingView(container) {
 
   const thead = container.querySelector('#rank-table-head');
   const tbody = container.querySelector('#rank-table-body');
-  const anoSelect = container.querySelector('#rank-ano-select');
+  const periodoSelect = container.querySelector('#rank-periodo-select');
   const mesSelect = container.querySelector('#rank-mes-select');
   const tabs = container.querySelectorAll('.rank-tab-btn');
 
@@ -110,8 +120,18 @@ export async function renderRankingView(container) {
     });
   });
 
-  anoSelect.addEventListener('change', (e) => {
-    currentYear = e.target.value;
+  periodoSelect.addEventListener('change', (e) => {
+    currentPeriodo = e.target.value;
+    if (currentPeriodo.startsWith('mandato:')) {
+      currentMandato = currentPeriodo.replace('mandato:', '');
+      currentYear = '';
+    } else if (currentPeriodo.startsWith('ano:')) {
+      currentYear = currentPeriodo.replace('ano:', '');
+      currentMandato = '';
+    } else {
+      currentMandato = '';
+      currentYear = '';
+    }
     loadRankings();
   });
 
@@ -158,7 +178,9 @@ export async function renderRankingView(container) {
 
     try {
       const paramsObj = { tipo: currentTab, limit: 50 };
+      if (currentMandato) paramsObj.mandato = currentMandato;
       if (currentYear) paramsObj.ano = currentYear;
+      if (currentPeriodo) paramsObj.periodo = currentPeriodo;
       if (currentMonth) paramsObj.mes = currentMonth;
       const q = new URLSearchParams(paramsObj);
       const res = await fetch(`/api/rankings?${q.toString()}`);
