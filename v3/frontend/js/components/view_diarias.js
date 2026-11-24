@@ -38,11 +38,43 @@ export async function renderDiariasView(container) {
 
     <!-- Barra de Filtro -->
     <div class="card" style="margin-bottom: 20px; background: #0f172a;">
-      <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
         <input type="text" id="diarias-busca" placeholder="🔍 Buscar por servidor, motorista ou beneficiário..." 
-               style="flex: 1; min-width: 280px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px;">
-        <button id="diarias-btn-filtrar" class="btn-primary" style="padding: 10px 20px; font-size: 13px;">
-          Pesquisar
+               style="flex: 1; min-width: 240px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px;">
+        <select id="diarias-ano" style="width: 140px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
+          <option value="">Todos os Anos</option>
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+          <option value="2021">2021</option>
+          <option value="2020">2020</option>
+          <option value="2019">2019</option>
+          <option value="2018">2018</option>
+          <option value="2017">2017</option>
+          <option value="2016">2016</option>
+          <option value="2015">2015</option>
+          <option value="2014">2014</option>
+          <option value="2013">2013</option>
+        </select>
+        <select id="diarias-mes" style="width: 150px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
+          <option value="">Todos os Meses</option>
+          <option value="1">01 - Janeiro</option>
+          <option value="2">02 - Fevereiro</option>
+          <option value="3">03 - Março</option>
+          <option value="4">04 - Abril</option>
+          <option value="5">05 - Maio</option>
+          <option value="6">06 - Junho</option>
+          <option value="7">07 - Julho</option>
+          <option value="8">08 - Agosto</option>
+          <option value="9">09 - Setembro</option>
+          <option value="10">10 - Outubro</option>
+          <option value="11">11 - Novembro</option>
+          <option value="12">12 - Dezembro</option>
+        </select>
+        <button id="diarias-btn-filtrar" class="btn-primary" style="padding: 10px 18px; font-size: 13px;">
+          Filtrar
         </button>
       </div>
     </div>
@@ -54,13 +86,21 @@ export async function renderDiariasView(container) {
   `;
 
   const inputBusca = container.querySelector('#diarias-busca');
+  const selectAno = container.querySelector('#diarias-ano');
+  const selectMes = container.querySelector('#diarias-mes');
   const btnFiltrar = container.querySelector('#diarias-btn-filtrar');
   const content = container.querySelector('#diarias-content');
 
   async function carregar(page) {
     content.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-muted);">Consultando banco SQLite oficial...</div>';
     try {
-      const resp = await fetchDiarias({ page, limit: 20, busca: inputBusca.value.trim() });
+      const resp = await fetchDiarias({ 
+        page, 
+        limit: 20, 
+        busca: inputBusca.value.trim(),
+        ano: selectAno.value,
+        mes: selectMes.value
+      });
       content.innerHTML = '';
 
       if (!resp.dados || resp.dados.length === 0) {
@@ -92,6 +132,8 @@ export async function renderDiariasView(container) {
   }
 
   btnFiltrar.onclick = () => carregar(1);
+  selectAno.onchange = () => carregar(1);
+  selectMes.onchange = () => carregar(1);
   inputBusca.onkeyup = e => { if (e.key === 'Enter') carregar(1); };
   carregar(1);
 }

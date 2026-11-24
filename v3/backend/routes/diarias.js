@@ -15,6 +15,7 @@ function handleDiarias(req, res, query) {
   const offset = (page - 1) * limit;
 
   const ano = query.ano ? parseInt(query.ano, 10) : null;
+  const mes = query.mes ? parseInt(query.mes, 10) : null;
   const busca = (query.busca || '').trim().toUpperCase();
 
   const whereClauses = ['1=1'];
@@ -23,6 +24,10 @@ function handleDiarias(req, res, query) {
   if (ano) {
     whereClauses.push('ano = @ano');
     params.ano = ano;
+  }
+  if (mes) {
+    whereClauses.push('mes = @mes');
+    params.mes = mes;
   }
   if (busca) {
     whereClauses.push('(nome LIKE @busca OR fonte LIKE @busca)');

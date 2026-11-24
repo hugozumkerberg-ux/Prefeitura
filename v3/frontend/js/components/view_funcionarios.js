@@ -18,7 +18,8 @@ export async function renderFuncionariosView(container) {
     page: 1,
     limit: 20,
     busca: '',
-    ano: ''
+    ano: '',
+    mes: ''
   };
 
   container.innerHTML = `
@@ -64,27 +65,50 @@ export async function renderFuncionariosView(container) {
         <span class="badge badge-green">Base Oficial SQLite (2013–2026)</span>
       </div>
 
-      <div class="filter-bar">
+      <div class="filter-bar" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
         <input 
           type="text" 
           id="folha-input-busca" 
           class="input-field" 
-          placeholder="Buscar por nome, cargo ou matrícula..." 
-          style="flex: 1; min-width: 260px;"
+          placeholder="🔍 Buscar por nome, cargo ou matrícula..." 
+          style="flex: 1; min-width: 240px;"
         >
-        <input 
-          type="number" 
-          id="folha-input-ano" 
-          class="input-field" 
-          placeholder="Ano (ex: 2024)" 
-          style="width: 140px;"
-          min="2013"
-          max="2026"
-        >
-        <button id="folha-btn-filtrar" class="btn-primary">
+        <select id="folha-select-ano" class="input-field" style="width: 140px; background: #1e293b; border: 1px solid #334155; color: #fff;">
+          <option value="">Todos os Anos</option>
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+          <option value="2021">2021</option>
+          <option value="2020">2020</option>
+          <option value="2019">2019</option>
+          <option value="2018">2018</option>
+          <option value="2017">2017</option>
+          <option value="2016">2016</option>
+          <option value="2015">2015</option>
+          <option value="2014">2014</option>
+          <option value="2013">2013</option>
+        </select>
+        <select id="folha-select-mes" class="input-field" style="width: 150px; background: #1e293b; border: 1px solid #334155; color: #fff;">
+          <option value="">Todos os Meses</option>
+          <option value="1">01 - Janeiro</option>
+          <option value="2">02 - Fevereiro</option>
+          <option value="3">03 - Março</option>
+          <option value="4">04 - Abril</option>
+          <option value="5">05 - Maio</option>
+          <option value="6">06 - Junho</option>
+          <option value="7">07 - Julho</option>
+          <option value="8">08 - Agosto</option>
+          <option value="9">09 - Setembro</option>
+          <option value="10">10 - Outubro</option>
+          <option value="11">11 - Novembro</option>
+          <option value="12">12 - Dezembro</option>
+        </select>
+        <button id="folha-btn-filtrar" class="btn-primary" style="padding: 10px 18px;">
           <span>🔍</span> Filtrar
         </button>
-        <button id="folha-btn-limpar" class="btn-primary" style="background: #374151;">
+        <button id="folha-btn-limpar" class="btn-primary" style="background: #374151; padding: 10px 16px;">
           Limpar
         </button>
       </div>
@@ -113,7 +137,8 @@ export async function renderFuncionariosView(container) {
   `;
 
   const inputBusca = container.querySelector('#folha-input-busca');
-  const inputAno = container.querySelector('#folha-input-ano');
+  const selectAno = container.querySelector('#folha-select-ano');
+  const selectMes = container.querySelector('#folha-select-mes');
   const btnFiltrar = container.querySelector('#folha-btn-filtrar');
   const btnLimpar = container.querySelector('#folha-btn-limpar');
   const tabelaContainer = container.querySelector('#folha-conteudo-tabela');
@@ -206,7 +231,8 @@ export async function renderFuncionariosView(container) {
         page: estado.page,
         limit: estado.limit,
         busca: estado.busca,
-        ano: estado.ano
+        ano: estado.ano,
+        mes: estado.mes
       });
 
       tabelaContainer.innerHTML = '';
@@ -252,23 +278,25 @@ export async function renderFuncionariosView(container) {
 
   btnFiltrar.onclick = () => {
     estado.busca = inputBusca.value.trim();
-    estado.ano = inputAno.value.trim();
+    estado.ano = selectAno.value;
+    estado.mes = selectMes.value;
     carregarPagina(1);
   };
 
   btnLimpar.onclick = () => {
     inputBusca.value = '';
-    inputAno.value = '';
+    selectAno.value = '';
+    selectMes.value = '';
     estado.busca = '';
     estado.ano = '';
+    estado.mes = '';
     carregarPagina(1);
   };
 
-  inputBusca.onkeyup = e => {
-    if (e.key === 'Enter') btnFiltrar.click();
-  };
+  selectAno.onchange = () => btnFiltrar.click();
+  selectMes.onchange = () => btnFiltrar.click();
 
-  inputAno.onkeyup = e => {
+  inputBusca.onkeyup = e => {
     if (e.key === 'Enter') btnFiltrar.click();
   };
 

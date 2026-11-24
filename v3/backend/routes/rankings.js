@@ -17,6 +17,7 @@ function handleRankings(req, res) {
     const tipo = urlObj.searchParams.get('tipo') || 'salarios'; // 'salarios', 'diarias', 'credores'
     const limit = Math.min(100, Math.max(10, parseInt(urlObj.searchParams.get('limit') || '50', 10)));
     const ano = urlObj.searchParams.get('ano');
+    const mes = urlObj.searchParams.get('mes');
 
     let dados = [];
 
@@ -26,10 +27,18 @@ function handleRankings(req, res) {
         SELECT nome, cargo, lotacao, ano, mes, total_proventos, salario_liquido, total_descontos
         FROM contracheques
       `;
+      let where = [];
       let params = [];
       if (ano) {
-        sql += ` WHERE ano = ? `;
+        where.push('ano = ?');
         params.push(parseInt(ano, 10));
+      }
+      if (mes) {
+        where.push('mes = ?');
+        params.push(parseInt(mes, 10));
+      }
+      if (where.length > 0) {
+        sql += ` WHERE ` + where.join(' AND ');
       }
       sql += ` ORDER BY total_proventos DESC LIMIT ? `;
       params.push(limit);
@@ -60,6 +69,10 @@ function handleRankings(req, res) {
         sql += ` AND ano = ? `;
         params.push(parseInt(ano, 10));
       }
+      if (mes) {
+        sql += ` AND mes = ? `;
+        params.push(parseInt(mes, 10));
+      }
       sql += ` GROUP BY nome ORDER BY total DESC LIMIT ? `;
       params.push(limit);
 
@@ -85,6 +98,10 @@ function handleRankings(req, res) {
       if (ano) {
         sql += ` AND ano = ? `;
         params.push(parseInt(ano, 10));
+      }
+      if (mes) {
+        sql += ` AND mes = ? `;
+        params.push(parseInt(mes, 10));
       }
       sql += ` GROUP BY credor, cpf_cnpj ORDER BY total DESC LIMIT ? `;
       params.push(limit);

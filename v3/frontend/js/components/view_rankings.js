@@ -7,6 +7,7 @@
 
 let currentTab = 'salarios';
 let currentYear = '';
+let currentMonth = '';
 
 export async function renderRankingView(container) {
   container.innerHTML = `
@@ -37,8 +38,8 @@ export async function renderRankingView(container) {
       <button class="btn-primary rank-tab-btn" data-tab="diarias" style="background: #1f2937;">✈️ Maiores Diárias Acumuladas</button>
       <button class="btn-primary rank-tab-btn" data-tab="credores" style="background: #1f2937;">🏢 Maiores Fornecedores (SIAP)</button>
 
-      <div style="margin-left: auto; min-width: 130px;">
-        <select id="rank-ano-select" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px;">
+      <div style="margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap;">
+        <select id="rank-ano-select" style="min-width: 130px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px;">
           <option value="">Todos os Anos</option>
           <option value="2026">2026</option>
           <option value="2025">2025</option>
@@ -53,6 +54,22 @@ export async function renderRankingView(container) {
           <option value="2016">2016</option>
           <option value="2015">2015</option>
           <option value="2014">2014</option>
+          <option value="2013">2013</option>
+        </select>
+        <select id="rank-mes-select" style="min-width: 140px; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px;">
+          <option value="">Todos os Meses</option>
+          <option value="1">01 - Janeiro</option>
+          <option value="2">02 - Fevereiro</option>
+          <option value="3">03 - Março</option>
+          <option value="4">04 - Abril</option>
+          <option value="5">05 - Maio</option>
+          <option value="6">06 - Junho</option>
+          <option value="7">07 - Julho</option>
+          <option value="8">08 - Agosto</option>
+          <option value="9">09 - Setembro</option>
+          <option value="10">10 - Outubro</option>
+          <option value="11">11 - Novembro</option>
+          <option value="12">12 - Dezembro</option>
         </select>
       </div>
     </div>
@@ -77,6 +94,7 @@ export async function renderRankingView(container) {
   const thead = container.querySelector('#rank-table-head');
   const tbody = container.querySelector('#rank-table-body');
   const anoSelect = container.querySelector('#rank-ano-select');
+  const mesSelect = container.querySelector('#rank-mes-select');
   const tabs = container.querySelectorAll('.rank-tab-btn');
 
   tabs.forEach(btn => {
@@ -94,6 +112,11 @@ export async function renderRankingView(container) {
 
   anoSelect.addEventListener('change', (e) => {
     currentYear = e.target.value;
+    loadRankings();
+  });
+
+  mesSelect.addEventListener('change', (e) => {
+    currentMonth = e.target.value;
     loadRankings();
   });
 
@@ -134,7 +157,10 @@ export async function renderRankingView(container) {
     }
 
     try {
-      const q = new URLSearchParams({ tipo: currentTab, limit: 50, ano: currentYear });
+      const paramsObj = { tipo: currentTab, limit: 50 };
+      if (currentYear) paramsObj.ano = currentYear;
+      if (currentMonth) paramsObj.mes = currentMonth;
+      const q = new URLSearchParams(paramsObj);
       const res = await fetch(`/api/rankings?${q.toString()}`);
       const json = await res.json();
 

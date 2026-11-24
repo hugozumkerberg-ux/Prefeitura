@@ -28,6 +28,7 @@ export async function fetchDespesas(params = {}) {
   if (params.limit) query.set('limit', params.limit);
   if (params.ano) query.set('ano', params.ano);
   if (params.mes) query.set('mes', params.mes);
+  if (params.busca) query.set('busca', params.busca);
 
   const res = await fetch(`/api/despesas?${query.toString()}`);
   if (!res.ok) throw new Error('Falha ao consultar despesas.');
@@ -39,9 +40,37 @@ export async function fetchDiarias(params = {}) {
   if (params.page) query.set('page', params.page);
   if (params.limit) query.set('limit', params.limit);
   if (params.ano) query.set('ano', params.ano);
+  if (params.mes) query.set('mes', params.mes);
   if (params.busca) query.set('busca', params.busca);
 
   const res = await fetch(`/api/diarias?${query.toString()}`);
   if (!res.ok) throw new Error('Falha ao consultar diárias.');
+  return res.json();
+}
+
+export async function fetchEmpresas(params = {}) {
+  const query = new URLSearchParams();
+  if (params.page) query.set('page', params.page);
+  if (params.limit) query.set('limit', params.limit);
+  if (params.ano) query.set('ano', params.ano);
+  if (params.mes) query.set('mes', params.mes);
+  if (params.busca) query.set('busca', params.busca);
+  if (params.ordenar) query.set('ordenar', params.ordenar);
+  if (params.credor) query.set('credor', params.credor);
+
+  const res = await fetch(`/api/empresas?${query.toString()}`);
+  if (!res.ok) throw new Error('Falha ao consultar empresas.');
+  return res.json();
+}
+
+export async function fetchRankings(params = {}) {
+  const query = new URLSearchParams();
+  if (params.tipo) query.set('tipo', params.tipo);
+  if (params.limit) query.set('limit', params.limit);
+  if (params.ano) query.set('ano', params.ano);
+  if (params.mes) query.set('mes', params.mes);
+
+  const res = await fetch(`/api/rankings?${query.toString()}`);
+  if (!res.ok) throw new Error('Falha ao consultar rankings.');
   return res.json();
 }

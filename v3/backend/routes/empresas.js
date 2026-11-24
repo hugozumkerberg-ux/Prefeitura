@@ -19,6 +19,7 @@ function handleEmpresas(req, res) {
     const offset = (page - 1) * limit;
     const busca = (urlObj.searchParams.get('busca') || '').trim();
     const ano = urlObj.searchParams.get('ano') || '';
+    const mes = urlObj.searchParams.get('mes') || '';
     const ordenar = urlObj.searchParams.get('ordenar') || 'valor_desc';
     const detalheCredor = urlObj.searchParams.get('credor');
 
@@ -78,6 +79,11 @@ function handleEmpresas(req, res) {
     if (ano) {
       whereClauses.push("ano = ?");
       params.push(parseInt(ano, 10));
+    }
+
+    if (mes) {
+      whereClauses.push("mes = ?");
+      params.push(parseInt(mes, 10));
     }
 
     const whereSql = whereClauses.join(' AND ');
