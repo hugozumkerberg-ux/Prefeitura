@@ -8,7 +8,7 @@
 import { renderSidebar } from './components/sidebar.js?v=19';
 import { renderInicioView } from './components/view_inicio.js?v=17';
 import { renderMandatosView } from './components/view_mandatos.js?v=17';
-import { renderFuncionariosView } from './components/view_funcionarios.js?v=20';
+import { renderFuncionariosView } from './components/view_funcionarios.js?v=21';
 import { renderKanbanView } from './components/view_kanban.js?v=17';
 import { renderEmpresasView } from './components/view_empresas.js?v=17';
 import { renderRankingView } from './components/view_rankings.js?v=17';

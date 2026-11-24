@@ -198,58 +198,66 @@ export async function renderFuncionariosView(container) {
           type="text" 
           id="folha-input-busca" 
           class="input-field" 
-          placeholder="🔍 Buscar pessoa por nome, matrícula sem zeros (ex: 573 ou 1556-2) ou cargo..." 
+          placeholder="🔍 Buscar por nome da pessoa física, matrícula sem zeros (ex: 573 ou 1556-2)..." 
           style="flex: 1; min-width: 260px;"
         >
-        <select id="folha-select-periodo" class="input-field" style="min-width: 175px; background: #1e293b; border: 1px solid #334155; color: #fff;">
-          <option value="">Todos os Mandatos / Anos</option>
-          <optgroup label="🏛️ Mandatos Executivos">
-            <option value="mandato:2025-2028">Mandato 2025–2028 (Atual)</option>
-            <option value="mandato:2021-2024">Mandato 2021–2024 (Marcilio)</option>
-            <option value="mandato:2017-2020">Mandato 2017–2020 (Carlos Alberto)</option>
-            <option value="mandato:2013-2016">Mandato 2013–2016 (Roberto Sales)</option>
-          </optgroup>
-          <optgroup label="📅 Anos Individuais">
-            <option value="ano:2026">Ano 2026</option>
-            <option value="ano:2025">Ano 2025</option>
-            <option value="ano:2024">Ano 2024</option>
-            <option value="ano:2023">Ano 2023</option>
-            <option value="ano:2022">Ano 2022</option>
-            <option value="ano:2021">Ano 2021</option>
-            <option value="ano:2020">Ano 2020</option>
-            <option value="ano:2019">Ano 2019</option>
-            <option value="ano:2018">Ano 2018</option>
-            <option value="ano:2017">Ano 2017</option>
-            <option value="ano:2016">Ano 2016</option>
-            <option value="ano:2015">Ano 2015</option>
-            <option value="ano:2014">Ano 2014</option>
-            <option value="ano:2013">Ano 2013</option>
-          </optgroup>
-        </select>
-        <select id="folha-select-mes" class="input-field" style="width: 150px; background: #1e293b; border: 1px solid #334155; color: #fff;">
-          <option value="">Todos os Meses</option>
-          <option value="1">01 - Janeiro</option>
-          <option value="2">02 - Fevereiro</option>
-          <option value="3">03 - Março</option>
-          <option value="4">04 - Abril</option>
-          <option value="5">05 - Maio</option>
-          <option value="6">06 - Junho</option>
-          <option value="7">07 - Julho</option>
-          <option value="8">08 - Agosto</option>
-          <option value="9">09 - Setembro</option>
-          <option value="10">10 - Outubro</option>
-          <option value="11">11 - Novembro</option>
-          <option value="12">12 - Dezembro</option>
-        </select>
         <button id="folha-btn-filtrar" class="btn-primary" style="padding: 10px 18px;">
           <span>🔍</span> Filtrar
         </button>
-        <button id="folha-btn-toggle-avancada" class="btn" style="background: rgba(59, 130, 246, 0.15); border: 1px solid #3b82f6; color: #93c5fd; padding: 10px 14px; font-weight: 600; cursor: pointer;">
-          <span>⚙️</span> Busca Avançada
+        <button id="folha-btn-toggle-colapsavel" class="btn" style="background: rgba(59, 130, 246, 0.15); border: 1px solid #3b82f6; color: #93c5fd; padding: 10px 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+          <span>⚡</span> <span>Filtros (Cargo, Ano, Mês)</span> <span id="folha-seta-colapsavel">▾</span>
         </button>
         <button id="folha-btn-limpar" class="btn-primary" style="background: #374151; padding: 10px 16px;">
           Limpar
         </button>
+      </div>
+
+      <!-- Linha de Baixo: Campos Colapsáveis "Cargo", "Ano", "Mês" -->
+      <div id="folha-linha-colapsavel" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-top: 12px; padding: 12px 14px; background: rgba(15, 23, 42, 0.6); border: 1px solid #1e293b; border-radius: 8px;">
+        <div style="flex: 1; min-width: 220px;">
+          <label style="font-size: 11px; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 4px;">💼 Cargo / Função</label>
+          <select id="folha-select-cargo" class="input-field" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #fff;">
+            <option value="">Todos os Cargos</option>
+          </select>
+        </div>
+        <div style="width: 170px;">
+          <label style="font-size: 11px; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 4px;">📅 Ano</label>
+          <select id="folha-select-ano" class="input-field" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #fff;">
+            <option value="">Todos os Anos</option>
+            <option value="2026">Ano 2026</option>
+            <option value="2025">Ano 2025</option>
+            <option value="2024">Ano 2024</option>
+            <option value="2023">Ano 2023</option>
+            <option value="2022">Ano 2022</option>
+            <option value="2021">Ano 2021</option>
+            <option value="2020">Ano 2020</option>
+            <option value="2019">Ano 2019</option>
+            <option value="2018">Ano 2018</option>
+            <option value="2017">Ano 2017</option>
+            <option value="2016">Ano 2016</option>
+            <option value="2015">Ano 2015</option>
+            <option value="2014">Ano 2014</option>
+            <option value="2013">Ano 2013</option>
+          </select>
+        </div>
+        <div style="width: 170px;">
+          <label style="font-size: 11px; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 4px;">🗓️ Mês</label>
+          <select id="folha-select-mes" class="input-field" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #fff;">
+            <option value="">Todos os Meses</option>
+            <option value="1">01 - Janeiro</option>
+            <option value="2">02 - Fevereiro</option>
+            <option value="3">03 - Março</option>
+            <option value="4">04 - Abril</option>
+            <option value="5">05 - Maio</option>
+            <option value="6">06 - Junho</option>
+            <option value="7">07 - Julho</option>
+            <option value="8">08 - Agosto</option>
+            <option value="9">09 - Setembro</option>
+            <option value="10">10 - Outubro</option>
+            <option value="11">11 - Novembro</option>
+            <option value="12">12 - Dezembro</option>
+          </select>
+        </div>
       </div>
 
       <!-- Painel Expansível de Busca Avançada -->
@@ -333,37 +341,35 @@ export async function renderFuncionariosView(container) {
   `;
 
   const inputBusca = container.querySelector('#folha-input-busca');
-  const selectPeriodo = container.querySelector('#folha-select-periodo');
+  const selectCargo = container.querySelector('#folha-select-cargo');
+  const selectAno = container.querySelector('#folha-select-ano');
   const selectMes = container.querySelector('#folha-select-mes');
   const btnFiltrar = container.querySelector('#folha-btn-filtrar');
   const btnLimpar = container.querySelector('#folha-btn-limpar');
-  const btnToggleAvancada = container.querySelector('#folha-btn-toggle-avancada');
-  const painelAvancada = container.querySelector('#painel-busca-avancada');
+  const btnToggleColapsavel = container.querySelector('#folha-btn-toggle-colapsavel');
+  const linhaColapsavel = container.querySelector('#folha-linha-colapsavel');
+  const setaColapsavel = container.querySelector('#folha-seta-colapsavel');
   const filtrosAtivosContainer = container.querySelector('#folha-filtros-ativos');
   const tabelaContainer = container.querySelector('#folha-conteudo-tabela');
   const modalDossie = container.querySelector('#modalDossieServidor');
   const modalCloseBtn = container.querySelector('#dossie-close-btn');
 
-  // Campos avançados
-  const inputAvancadaNome = container.querySelector('#avancada-nome');
-  const inputAvancadaMat = container.querySelector('#avancada-matricula');
-  const inputAvancadaCargo = container.querySelector('#avancada-cargo');
-  const inputAvancadaLotacao = container.querySelector('#avancada-lotacao');
-  const inputAvancadaSalMin = container.querySelector('#avancada-salario-min');
-  const inputAvancadaSalMax = container.querySelector('#avancada-salario-max');
-  const btnAvancadaAplicar = container.querySelector('#avancada-btn-aplicar');
-  const btnAvancadaLimpar = container.querySelector('#avancada-btn-limpar');
+  let colapsavelAberto = true;
+  if (btnToggleColapsavel && linhaColapsavel) {
+    btnToggleColapsavel.onclick = () => {
+      colapsavelAberto = !colapsavelAberto;
+      linhaColapsavel.style.display = colapsavelAberto ? 'flex' : 'none';
+      if (setaColapsavel) setaColapsavel.textContent = colapsavelAberto ? '▾' : '▸';
+      btnToggleColapsavel.style.background = colapsavelAberto ? 'rgba(59, 130, 246, 0.25)' : 'rgba(59, 130, 246, 0.1)';
+    };
+  }
 
   async function carregarOpcoesAvancadas() {
     try {
       const data = await fetchFolhaFiltros();
-      const dlCargos = container.querySelector('#datalist-cargos');
-      const dlLotacoes = container.querySelector('#datalist-lotacoes');
-      if (dlCargos && data.cargos) {
-        dlCargos.innerHTML = data.cargos.map(c => `<option value="${c}"></option>`).join('');
-      }
-      if (dlLotacoes && data.lotacoes) {
-        dlLotacoes.innerHTML = data.lotacoes.map(l => `<option value="${l}"></option>`).join('');
+      if (selectCargo && data.cargos) {
+        selectCargo.innerHTML = '<option value="">Todos os Cargos</option>' + 
+          data.cargos.map(c => `<option value="${c}">${c}</option>`).join('');
       }
     } catch (e) {
       // Ignora erro
@@ -392,12 +398,9 @@ export async function renderFuncionariosView(container) {
     const ativos = [];
 
     if (estado.busca) ativos.push({ rotulo: `Busca: "${estado.busca}"`, limpar: () => { estado.busca = ''; inputBusca.value = ''; } });
-    if (estado.nome) ativos.push({ rotulo: `Pessoa: "${estado.nome}"`, limpar: () => { estado.nome = ''; inputAvancadaNome.value = ''; } });
-    if (estado.matricula) ativos.push({ rotulo: `Matrícula: "${estado.matricula}"`, limpar: () => { estado.matricula = ''; inputAvancadaMat.value = ''; } });
-    if (estado.cargo) ativos.push({ rotulo: `Cargo: "${estado.cargo}"`, limpar: () => { estado.cargo = ''; inputAvancadaCargo.value = ''; } });
-    if (estado.lotacao) ativos.push({ rotulo: `Lotação: "${estado.lotacao}"`, limpar: () => { estado.lotacao = ''; inputAvancadaLotacao.value = ''; } });
-    if (estado.salarioMin) ativos.push({ rotulo: `Min: R$ ${estado.salarioMin}`, limpar: () => { estado.salarioMin = ''; inputAvancadaSalMin.value = ''; } });
-    if (estado.salarioMax) ativos.push({ rotulo: `Max: R$ ${estado.salarioMax}`, limpar: () => { estado.salarioMax = ''; inputAvancadaSalMax.value = ''; } });
+    if (estado.cargo) ativos.push({ rotulo: `Cargo: ${estado.cargo}`, limpar: () => { estado.cargo = ''; if (selectCargo) selectCargo.value = ''; } });
+    if (estado.ano) ativos.push({ rotulo: `Ano: ${estado.ano}`, limpar: () => { estado.ano = ''; if (selectAno) selectAno.value = ''; } });
+    if (estado.mes) ativos.push({ rotulo: `Mês: ${MESES_EXTENSO[estado.mes] || estado.mes}`, limpar: () => { estado.mes = ''; if (selectMes) selectMes.value = ''; } });
 
     if (ativos.length === 0) return;
 
@@ -927,22 +930,12 @@ export async function renderFuncionariosView(container) {
     }
   }
 
-  // Ação de Filtrar Principal (Barra Rápida)
+  // Ação de Filtrar Principal (Barra Rápida e Linha Colapsável: Cargo, Ano e Mês)
   btnFiltrar.onclick = () => {
     estado.busca = inputBusca.value.trim();
-    const pVal = selectPeriodo.value;
-    estado.periodo = pVal;
-    if (pVal.startsWith('mandato:')) {
-      estado.mandato = pVal.replace('mandato:', '');
-      estado.ano = '';
-    } else if (pVal.startsWith('ano:')) {
-      estado.ano = pVal.replace('ano:', '');
-      estado.mandato = '';
-    } else {
-      estado.mandato = '';
-      estado.ano = '';
-    }
-    estado.mes = selectMes.value;
+    estado.cargo = selectCargo ? selectCargo.value : '';
+    estado.ano = selectAno ? selectAno.value : '';
+    estado.mes = selectMes ? selectMes.value : '';
     renderizarFiltrosAtivos();
     carregarPagina(1);
   };
@@ -950,70 +943,26 @@ export async function renderFuncionariosView(container) {
   // Ação de Limpar Filtros
   btnLimpar.onclick = () => {
     inputBusca.value = '';
-    selectPeriodo.value = '';
-    selectMes.value = '';
-    inputAvancadaNome.value = '';
-    inputAvancadaMat.value = '';
-    inputAvancadaCargo.value = '';
-    inputAvancadaLotacao.value = '';
-    inputAvancadaSalMin.value = '';
-    inputAvancadaSalMax.value = '';
+    if (selectCargo) selectCargo.value = '';
+    if (selectAno) selectAno.value = '';
+    if (selectMes) selectMes.value = '';
 
     estado.busca = '';
-    estado.periodo = '';
-    estado.mandato = '';
+    estado.cargo = '';
     estado.ano = '';
     estado.mes = '';
-    estado.nome = '';
-    estado.matricula = '';
-    estado.cargo = '';
-    estado.lotacao = '';
-    estado.salarioMin = '';
-    estado.salarioMax = '';
 
     renderizarFiltrosAtivos();
     carregarPagina(1);
   };
 
-  // Ação do Botão Aplicar na Busca Avançada
-  btnAvancadaAplicar.onclick = () => {
-    estado.nome = inputAvancadaNome.value.trim();
-    estado.matricula = inputAvancadaMat.value.trim();
-    estado.cargo = inputAvancadaCargo.value.trim();
-    estado.lotacao = inputAvancadaLotacao.value.trim();
-    estado.salarioMin = inputAvancadaSalMin.value.trim();
-    estado.salarioMax = inputAvancadaSalMax.value.trim();
-    renderizarFiltrosAtivos();
-    carregarPagina(1);
-  };
-
-  btnAvancadaLimpar.onclick = () => {
-    inputAvancadaNome.value = '';
-    inputAvancadaMat.value = '';
-    inputAvancadaCargo.value = '';
-    inputAvancadaLotacao.value = '';
-    inputAvancadaSalMin.value = '';
-    inputAvancadaSalMax.value = '';
-
-    estado.nome = '';
-    estado.matricula = '';
-    estado.cargo = '';
-    estado.lotacao = '';
-    estado.salarioMin = '';
-    estado.salarioMax = '';
-    renderizarFiltrosAtivos();
-    carregarPagina(1);
-  };
-
-  selectPeriodo.onchange = () => btnFiltrar.click();
-  selectMes.onchange = () => btnFiltrar.click();
+  if (selectCargo) selectCargo.onchange = () => btnFiltrar.click();
+  if (selectAno) selectAno.onchange = () => btnFiltrar.click();
+  if (selectMes) selectMes.onchange = () => btnFiltrar.click();
 
   inputBusca.onkeyup = e => {
     if (e.key === 'Enter') btnFiltrar.click();
   };
-
-  inputAvancadaNome.onkeyup = e => { if (e.key === 'Enter') btnAvancadaAplicar.click(); };
-  inputAvancadaMat.onkeyup = e => { if (e.key === 'Enter') btnAvancadaAplicar.click(); };
 
   carregarPagina(1);
 }
