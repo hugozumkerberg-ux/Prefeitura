@@ -5,10 +5,25 @@
  * Suporte a busca avançada, padronização de matrícula e identificação por pessoa
  * ==============================================================================
  */
-const { dbContracheques } = require('../db');
+const { dbContracheques, dbDiarias } = require('../db');
 const { parsePeriodoFilter } = require('../utils/filtro_periodo');
 const { normalizarNome, padronizarMatricula, formatarMatriculaExibicao } = require('../utils/padronizacao');
 const { obterDadosPoliticos } = require('../utils/politicos');
+
+// Prepared statement para consulta ágil de diárias do servidor na competência
+let stmtDiariaMes = null;
+if (dbDiarias) {
+  try {
+    stmtDiariaMes = dbDiarias.prepare(`
+      SELECT COALESCE(SUM(valor), 0) as total_diarias 
+      FROM registros 
+      WHERE (nome_normalizado = ? OR replace(lower(nome), ' ', '_') = ?) 
+        AND ano = ? AND mes = ? AND valor > 0
+    `);
+  } catch (e) {
+    stmtDiariaMes = null;
+  }
+}
 
 // Cache em memória para listas de filtros rápidos
 let cachedFiltros = null;
@@ -186,6 +201,17 @@ function handleFolha(req, res, query) {
 
     const dados = rows.map(r => {
       const infoPolitica = obterDadosPoliticos(r.nome || r.nome_normalizado);
+      let valorDiarias = 0;
+      if (stmtDiariaMes) {
+        try {
+          const normKey = (r.nome_normalizado || r.nome || '').toLowerCase().replace(/\s+/g, '_');
+          const dRes = stmtDiariaMes.get(normKey, normKey, r.ano, r.mes);
+          valorDiarias = dRes ? (dRes.total_diarias || 0) : 0;
+        } catch (e) {
+          valorDiarias = 0;
+        }
+      }
+
       return {
         matricula: r.matricula,
         matricula_padronizada: r.matricula_padronizada,
@@ -200,6 +226,7 @@ function handleFolha(req, res, query) {
         total_proventos: r.total_proventos,
         total_descontos: r.total_descontos,
         salario_liquido: r.salario_liquido,
+        valor_diarias: valorDiarias,
         sha256: r.sha256,
         pessoa_id: infoPolitica.pessoa_id,
         foto_url: infoPolitica.foto_url,

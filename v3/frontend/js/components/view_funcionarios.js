@@ -322,18 +322,14 @@ export async function renderFuncionariosView(container) {
       container.querySelector('#dossie-nome').textContent = `👤 ${s.nome}`;
       container.querySelector('#dossie-cargo').textContent = `${s.cargos.join(' • ')} • Matrículas Padronizadas: ${s.matriculas.join(', ')}`;
 
-      const fotoDossieHtml = s.foto_url ? `
+      const fotoDossieHtml = (temPol && s.foto_url) ? `
         <img 
           src="${s.foto_url}" 
           alt="${s.nome}" 
-          style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid ${venceu ? '#10b981' : (temPol ? '#f59e0b' : '#3b82f6')}; flex-shrink: 0;"
-          onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(s.nome)}&background=1e293b&color=93c5fd&size=140';"
+          style="width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 3px solid ${venceu ? '#10b981' : '#f59e0b'}; flex-shrink: 0;"
+          onerror="this.style.display='none';"
         >
-      ` : `
-        <div style="width: 72px; height: 72px; border-radius: 50%; background: #1e293b; border: 3px solid ${temPol ? (venceu ? '#10b981' : '#f59e0b') : '#334155'}; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #93c5fd; font-size: 24px; flex-shrink: 0;">
-          ${(s.nome || '?').slice(0, 2).toUpperCase()}
-        </div>
-      `;
+      ` : '';
 
       const cardPoliticoHtml = temPol ? `
         <!-- 🏛️ Passado Político & Registro Eleitoral TSE / Câmara -->
@@ -585,14 +581,11 @@ export async function renderFuncionariosView(container) {
 
       const colunas = [
         { chave: 'matricula', titulo: 'Matrícula' },
-        { chave: 'nome', titulo: 'Servidor / Pessoa Física' },
+        { chave: 'nome', titulo: 'Servidor' },
         { chave: 'cargo', titulo: 'Cargo / Função' },
-        { chave: 'lotacao', titulo: 'Lotação / Secretaria' },
         { chave: 'periodo', titulo: 'Período', align: 'center' },
-        { chave: 'salario_base', titulo: 'Sal. Base', align: 'right' },
-        { chave: 'total_proventos', titulo: 'Proventos', align: 'right' },
-        { chave: 'salario_liquido', titulo: 'Líquido', align: 'right' },
-        { chave: 'acoes', titulo: 'Ação', align: 'center' }
+        { chave: 'total_proventos', titulo: 'Salário Bruto', align: 'right' },
+        { chave: 'valor_diarias', titulo: 'Diárias', align: 'right' }
       ];
 
       const formatadores = {
@@ -606,24 +599,9 @@ export async function renderFuncionariosView(container) {
           const temPol = pol.tem_passado_politico;
           const venceu = pol.venceu;
           const tagTexto = pol.tag_texto;
-          const fotoUrl = item.foto_url;
-          const pessoaId = item.pessoa_id || '—';
-
-          const avatarHtml = fotoUrl ? `
-            <img 
-              src="${fotoUrl}" 
-              alt="${v}" 
-              style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid ${venceu ? '#10b981' : (temPol ? '#f59e0b' : '#3b82f6')}; flex-shrink: 0;"
-              onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(v)}&background=1e293b&color=93c5fd&size=80';"
-            >
-          ` : `
-            <div style="width: 38px; height: 38px; border-radius: 50%; background: #1e293b; border: 2px solid ${temPol ? (venceu ? '#10b981' : '#f59e0b') : '#334155'}; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #93c5fd; font-size: 12px; flex-shrink: 0;">
-              ${(v || '?').slice(0, 2).toUpperCase()}
-            </div>
-          `;
 
           const tagBadgeHtml = temPol ? `
-            <div style="margin-top: 4px;">
+            <div style="margin-top: 3px;">
               <span class="badge" style="background: ${venceu ? 'rgba(16, 185, 129, 0.18)' : 'rgba(245, 158, 11, 0.18)'}; color: ${venceu ? '#34d399' : '#fbbf24'}; border: 1px solid ${venceu ? '#10b981' : '#f59e0b'}; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px;">
                 ${tagTexto}
               </span>
@@ -631,29 +609,27 @@ export async function renderFuncionariosView(container) {
           ` : '';
 
           return `
-            <div style="display: flex; align-items: center; gap: 10px;">
-              ${avatarHtml}
-              <div>
-                <strong style="cursor: pointer; color: #93c5fd; font-size: 13px;" class="btn-ver-servidor" data-termo="${item.nome}">${v}</strong>
-                <div style="font-size: 10px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px; flex-wrap: wrap;">
-                  <span style="color: #c084fc; font-weight: 700;">ID #${pessoaId}</span> • 
-                  <span>Matrícula: ${item.matricula_exibicao || item.matricula_padronizada || (item.matricula ? item.matricula.replace(/^0+/, '') : '—')}</span>
-                </div>
-                ${tagBadgeHtml}
-              </div>
+            <div>
+              <strong style="color: #93c5fd; font-size: 13px;">${v}</strong>
+              ${tagBadgeHtml}
             </div>
           `;
         },
-        lotacao: v => `<span style="font-size: 11px; color: var(--text-muted);">${v ? v.replace(/^\d+\s*-\s*/, '') : '—'}</span>`,
+        cargo: (v, item) => `
+          <div>
+            <div style="font-size: 12px; color: #e2e8f0; font-weight: 600;">${v || '—'}</div>
+            ${item.lotacao ? `<div style="font-size: 10px; color: var(--text-muted); margin-top: 1px;">${item.lotacao.replace(/^\d+\s*-\s*/, '')}</div>` : ''}
+          </div>
+        `,
         periodo: (v, item) => `<span class="badge" style="background: rgba(255,255,255,0.06); font-family: 'JetBrains Mono', monospace;">${String(item.mes).padStart(2,'0')}/${item.ano}</span>`,
-        salario_base: v => formatMoeda(v),
         total_proventos: v => `<strong style="color: #60a5fa; font-family: 'JetBrains Mono', monospace;">${formatMoeda(v)}</strong>`,
-        salario_liquido: v => `<strong style="color: #34d399; font-family: 'JetBrains Mono', monospace;">${formatMoeda(v)}</strong>`,
-        acoes: (v, item) => `
-          <button class="btn-primary btn-ver-servidor" data-termo="${item.nome || item.matricula_padronizada || item.matricula}" style="padding: 4px 10px; font-size: 11px; cursor: pointer;">
-            👤 Dossiê
-          </button>
-        `
+        valor_diarias: (v, item) => {
+          const val = item.valor_diarias || 0;
+          if (val > 0) {
+            return `<strong style="color: #fbbf24; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${formatMoeda(val)}</strong>`;
+          }
+          return `<span style="color: var(--text-muted); font-size: 11px;">—</span>`;
+        }
       };
 
       const tabelaEl = renderTabela(colunas, resp.dados, formatadores);
@@ -662,8 +638,16 @@ export async function renderFuncionariosView(container) {
       tabelaContainer.appendChild(tabelaEl);
       tabelaContainer.appendChild(paginacaoEl);
 
-      tabelaContainer.querySelectorAll('.btn-ver-servidor').forEach(btn => {
-        btn.onclick = () => abrirDossie(btn.dataset.termo);
+      // Linha inteira da tabela clicável para abrir o Dossiê
+      tabelaContainer.querySelectorAll('tbody tr').forEach((tr, index) => {
+        const item = resp.dados[index];
+        if (item) {
+          tr.style.cursor = 'pointer';
+          tr.title = `Clique para abrir o Dossiê de ${item.nome}`;
+          tr.addEventListener('mouseenter', () => tr.style.background = 'rgba(59, 130, 246, 0.08)');
+          tr.addEventListener('mouseleave', () => tr.style.background = '');
+          tr.onclick = () => abrirDossie(item.nome || item.matricula_padronizada || item.matricula);
+        }
       });
     } catch (err) {
       tabelaContainer.innerHTML = `<div class="empty-state"><h3>Erro na consulta</h3><p>${err.message}</p></div>`;
