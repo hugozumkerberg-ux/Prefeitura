@@ -12,9 +12,10 @@ dados/
 database/*.sql
 !database/schema.sql
 
-# Ignorar todos os scripts em lote (.bat)
+# Ignorar todos os scripts em lote (.bat) e pasta de feitos
 *.bat
 **/*.bat
+feitos/
 
 # Backups compactados ZIP e áreas temporárias de staging
 backups_forenses/

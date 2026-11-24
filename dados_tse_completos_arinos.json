@@ -1,0 +1,1174 @@
+[
+  {
+    "anoEleicao": 2024,
+    "eleicaoNome": "Eleições Municipais 2024",
+    "idEleicaoTSE": 2045202024,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130002086969,
+    "nomeUrna": "CARLOS ALBERTO",
+    "nomeCompleto": "CARLOS ALBERTO RECCH FILHO",
+    "numero": 44,
+    "partido": "UNIÃO",
+    "partidoNome": "União Brasil",
+    "coligacao": "UNIDOS POR ARINOS",
+    "composicaoColigacao": "PP / PDT / AGIR / AVANTE / SOLIDARIEDADE / Federação PSDB CIDADANIA(45-PSDB/23-CIDADANIA) / UNIÃO",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 159850.76,
+    "totalBensDeclarados": 6272187.73,
+    "bensDetalhados": [
+      {
+        "ordem": 1,
+        "valor": 185000
+      },
+      {
+        "ordem": 5,
+        "valor": 162732.1
+      },
+      {
+        "ordem": 10,
+        "valor": 67875.08
+      },
+      {
+        "ordem": 12,
+        "valor": 24113.74
+      },
+      {
+        "ordem": 7,
+        "valor": 3133652.99
+      },
+      {
+        "ordem": 11,
+        "valor": 466844.5
+      },
+      {
+        "ordem": 4,
+        "valor": 22500
+      },
+      {
+        "ordem": 8,
+        "valor": 105000
+      },
+      {
+        "ordem": 9,
+        "valor": 33095.89
+      },
+      {
+        "ordem": 3,
+        "valor": 540384.46
+      },
+      {
+        "ordem": 15,
+        "valor": 56372
+      },
+      {
+        "ordem": 2,
+        "valor": 230000
+      },
+      {
+        "ordem": 14,
+        "valor": 55000
+      },
+      {
+        "ordem": 17,
+        "valor": 547000
+      },
+      {
+        "ordem": 6,
+        "valor": 48231.18
+      },
+      {
+        "ordem": 13,
+        "valor": 28941.79
+      },
+      {
+        "ordem": 16,
+        "valor": 565444
+      }
+    ],
+    "dataNascimento": "1963-09-09",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Empresária/Empresário"
+  },
+  {
+    "anoEleicao": 2024,
+    "eleicaoNome": "Eleições Municipais 2024",
+    "idEleicaoTSE": 2045202024,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130002070186,
+    "nomeUrna": "IDELBRANDO",
+    "nomeCompleto": "JOSE IDELBRANDO FERREIRA DE SOUZA",
+    "numero": 18,
+    "partido": "REDE",
+    "partidoNome": "Rede Sustentabilidade",
+    "coligacao": "UNIAO ARINOS DA ESPERANÇA",
+    "composicaoColigacao": "Federação BRASIL DA ESPERANÇA - FE BRASIL(13-PT/65-PC do B/43-PV) / Federação PSOL REDE(50-PSOL/18-REDE)",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 159850.76,
+    "totalBensDeclarados": 0,
+    "bensDetalhados": [],
+    "dataNascimento": "1957-05-27",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Outros"
+  },
+  {
+    "anoEleicao": 2024,
+    "eleicaoNome": "Eleições Municipais 2024",
+    "idEleicaoTSE": 2045202024,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130002236872,
+    "nomeUrna": "MARCILIO DE TONHAO",
+    "nomeCompleto": "MARCILIO ALISSON FONSECA DE ALMEIDA",
+    "numero": 20,
+    "partido": "PODE",
+    "partidoNome": "Podemos",
+    "coligacao": "ARINOS NO CAMINHO CERTO",
+    "composicaoColigacao": "REPUBLICANOS / MDB / PODE / PSB / PSD / PL",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Eleito",
+    "gastoCampanhaLimite": 159850.76,
+    "totalBensDeclarados": 1045839.75,
+    "bensDetalhados": [
+      {
+        "ordem": 2,
+        "valor": 16666
+      },
+      {
+        "ordem": 5,
+        "valor": 40922
+      },
+      {
+        "ordem": 6,
+        "valor": 44750
+      },
+      {
+        "ordem": 7,
+        "valor": 31375
+      },
+      {
+        "ordem": 8,
+        "valor": 77500
+      },
+      {
+        "ordem": 9,
+        "valor": 257644
+      },
+      {
+        "ordem": 3,
+        "valor": 200000
+      },
+      {
+        "ordem": 1,
+        "valor": 301450
+      },
+      {
+        "ordem": 4,
+        "valor": 75532.75
+      }
+    ],
+    "dataNascimento": "1985-03-27",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Prefeita/Prefeito"
+  },
+  {
+    "anoEleicao": 2024,
+    "eleicaoNome": "Eleições Municipais 2024",
+    "idEleicaoTSE": 2045202024,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130002236897,
+    "nomeUrna": "NENZÃO",
+    "nomeCompleto": "ANTONIO LUCAS GOMES DA MOTA",
+    "numero": 33,
+    "partido": "MOBILIZA",
+    "partidoNome": "Mobilização Nacional",
+    "coligacao": "MOBILIZA",
+    "composicaoColigacao": "**",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 159850.76,
+    "totalBensDeclarados": 186000,
+    "bensDetalhados": [
+      {
+        "ordem": 1,
+        "valor": 90000
+      },
+      {
+        "ordem": 2,
+        "valor": 84000
+      },
+      {
+        "ordem": 3,
+        "valor": 12000
+      }
+    ],
+    "dataNascimento": "1959-10-18",
+    "grauInstrucao": "Ensino Médio completo",
+    "ocupacao": "Música/Músico"
+  },
+  {
+    "anoEleicao": 2024,
+    "eleicaoNome": "Eleições Municipais 2024",
+    "idEleicaoTSE": 2045202024,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130002070187,
+    "nomeUrna": "JOÃO PEDRO",
+    "nomeCompleto": "JOAO PEDRO ROCHA DA SILVA",
+    "numero": 18,
+    "partido": "PT",
+    "partidoNome": "Partido dos Trabalhadores",
+    "coligacao": "UNIAO ARINOS DA ESPERANÇA",
+    "composicaoColigacao": "Federação BRASIL DA ESPERANÇA - FE BRASIL(13-PT/65-PC do B/43-PV) / Federação PSOL REDE(50-PSOL/18-REDE)",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 0,
+    "bensDetalhados": [],
+    "dataNascimento": "2002-12-31",
+    "grauInstrucao": "Superior incompleto",
+    "ocupacao": "Estudante, bolsista, estagiária/estagiário e assemelhados"
+  },
+  {
+    "anoEleicao": 2024,
+    "eleicaoNome": "Eleições Municipais 2024",
+    "idEleicaoTSE": 2045202024,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130002236898,
+    "nomeUrna": "WAGNER",
+    "nomeCompleto": "CARLOS WAGNER BARBOSA FERREIRA",
+    "numero": 33,
+    "partido": "MOBILIZA",
+    "partidoNome": "Mobilização Nacional",
+    "coligacao": "MOBILIZA",
+    "composicaoColigacao": "**",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 709000,
+    "bensDetalhados": [
+      {
+        "ordem": 1,
+        "valor": 500000
+      },
+      {
+        "ordem": 3,
+        "valor": 100000
+      },
+      {
+        "ordem": 5,
+        "valor": 6000
+      },
+      {
+        "ordem": 2,
+        "valor": 100000
+      },
+      {
+        "ordem": 4,
+        "valor": 3000
+      }
+    ],
+    "dataNascimento": "1966-09-25",
+    "grauInstrucao": "Ensino Fundamental incompleto",
+    "ocupacao": "Comerciante"
+  },
+  {
+    "anoEleicao": 2024,
+    "eleicaoNome": "Eleições Municipais 2024",
+    "idEleicaoTSE": 2045202024,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130002383222,
+    "nomeUrna": "WILLIAM PROFESSOR",
+    "nomeCompleto": "WILLIAM BATISTA DE OLIVEIRA",
+    "numero": 44,
+    "partido": "PP",
+    "partidoNome": "PROGRESSISTAS",
+    "coligacao": "UNIDOS POR ARINOS",
+    "composicaoColigacao": "PP / PDT / AGIR / AVANTE / SOLIDARIEDADE / Federação PSDB CIDADANIA(45-PSDB/23-CIDADANIA) / UNIÃO",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 0,
+    "bensDetalhados": [],
+    "dataNascimento": "1982-02-21",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Vereadora/Vereador"
+  },
+  {
+    "anoEleicao": 2024,
+    "eleicaoNome": "Eleições Municipais 2024",
+    "idEleicaoTSE": 2045202024,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130002236871,
+    "nomeUrna": "WILLIAN DO CAFE",
+    "nomeCompleto": "WILLIAN FURTADO VALADARES",
+    "numero": 20,
+    "partido": "PSD",
+    "partidoNome": "Partido Social Democrático",
+    "coligacao": "ARINOS NO CAMINHO CERTO",
+    "composicaoColigacao": "REPUBLICANOS / MDB / PODE / PSB / PSD / PL",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 740000,
+    "bensDetalhados": [
+      {
+        "ordem": 5,
+        "valor": 35000
+      },
+      {
+        "ordem": 1,
+        "valor": 200000
+      },
+      {
+        "ordem": 3,
+        "valor": 90000
+      },
+      {
+        "ordem": 4,
+        "valor": 115000
+      },
+      {
+        "ordem": 2,
+        "valor": 300000
+      }
+    ],
+    "dataNascimento": "1974-01-08",
+    "grauInstrucao": "Ensino Médio completo",
+    "ocupacao": "Produtora/Produtor agropecuário"
+  },
+  {
+    "anoEleicao": 2020,
+    "eleicaoNome": "Eleições Municipais 2020",
+    "idEleicaoTSE": 2030402020,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130001005323,
+    "nomeUrna": "CARLOS ALBERTO",
+    "nomeCompleto": "CARLOS ALBERTO RECCH FILHO",
+    "numero": 55,
+    "partido": "PSD",
+    "partidoNome": "Partido Social Democrático",
+    "coligacao": "ARINOS SEM PERDER",
+    "composicaoColigacao": "PSOL / PSD / PSC / PSB / SOLIDARIEDADE / PTB / PL",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 123077.42,
+    "totalBensDeclarados": 3847912.92,
+    "bensDetalhados": [
+      {
+        "ordem": 11,
+        "valor": 230000
+      },
+      {
+        "ordem": 4,
+        "valor": 19131.46
+      },
+      {
+        "ordem": 2,
+        "valor": 547000
+      },
+      {
+        "ordem": 15,
+        "valor": 38013.59
+      },
+      {
+        "ordem": 16,
+        "valor": 12.56
+      },
+      {
+        "ordem": 19,
+        "valor": 0
+      },
+      {
+        "ordem": 18,
+        "valor": 26068.34
+      },
+      {
+        "ordem": 10,
+        "valor": 185000
+      },
+      {
+        "ordem": 7,
+        "valor": 540384.46
+      },
+      {
+        "ordem": 1,
+        "valor": 565444
+      },
+      {
+        "ordem": 5,
+        "valor": 22961.97
+      },
+      {
+        "ordem": 14,
+        "valor": 153000
+      },
+      {
+        "ordem": 3,
+        "valor": 1200000
+      },
+      {
+        "ordem": 20,
+        "valor": 28311.6
+      },
+      {
+        "ordem": 21,
+        "valor": 66000
+      },
+      {
+        "ordem": 6,
+        "valor": 150000
+      },
+      {
+        "ordem": 12,
+        "valor": 22500
+      },
+      {
+        "ordem": 17,
+        "valor": 0.78
+      },
+      {
+        "ordem": 8,
+        "valor": 3084.16
+      },
+      {
+        "ordem": 13,
+        "valor": 51000
+      },
+      {
+        "ordem": 9,
+        "valor": 0
+      },
+      {
+        "ordem": 22,
+        "valor": 0
+      }
+    ],
+    "dataNascimento": "1963-09-09",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Empresária/Empresário"
+  },
+  {
+    "anoEleicao": 2020,
+    "eleicaoNome": "Eleições Municipais 2020",
+    "idEleicaoTSE": 2030402020,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130001210084,
+    "nomeUrna": "MARCÍLIO DE TONHÃO",
+    "nomeCompleto": "MARCÍLIO ÁLISSON FONSECA DE ALMEIDA",
+    "numero": 19,
+    "partido": "PODE",
+    "partidoNome": "Podemos",
+    "coligacao": "JUNTOS NÓS PODEMOS",
+    "composicaoColigacao": "PSDB / PP / PT / PODE / DEM / AVANTE",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Eleito",
+    "gastoCampanhaLimite": 123077.42,
+    "totalBensDeclarados": 510832.98,
+    "bensDetalhados": [
+      {
+        "ordem": 3,
+        "valor": 45000
+      },
+      {
+        "ordem": 6,
+        "valor": 1308.42
+      },
+      {
+        "ordem": 10,
+        "valor": 27312.23
+      },
+      {
+        "ordem": 4,
+        "valor": 96813.55
+      },
+      {
+        "ordem": 1,
+        "valor": 210000
+      },
+      {
+        "ordem": 8,
+        "valor": 8000
+      },
+      {
+        "ordem": 11,
+        "valor": 2923.89
+      },
+      {
+        "ordem": 2,
+        "valor": 100000
+      },
+      {
+        "ordem": 9,
+        "valor": 2717.2
+      },
+      {
+        "ordem": 7,
+        "valor": 91.69
+      },
+      {
+        "ordem": 5,
+        "valor": 16666
+      }
+    ],
+    "dataNascimento": "1985-03-27",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Empresária/Empresário"
+  },
+  {
+    "anoEleicao": 2020,
+    "eleicaoNome": "Eleições Municipais 2020",
+    "idEleicaoTSE": 2030402020,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130001005322,
+    "nomeUrna": "MATOS ALEM",
+    "nomeCompleto": "MATOS ALEM ALVES DA COSTA",
+    "numero": 55,
+    "partido": "PL",
+    "partidoNome": "Partido Liberal",
+    "coligacao": "ARINOS SEM PERDER",
+    "composicaoColigacao": "PSOL / PSD / PSC / PSB / SOLIDARIEDADE / PTB / PL",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 504993.36,
+    "bensDetalhados": [
+      {
+        "ordem": 1,
+        "valor": 1078.52
+      },
+      {
+        "ordem": 2,
+        "valor": 50007.98
+      },
+      {
+        "ordem": 3,
+        "valor": 15000
+      },
+      {
+        "ordem": 4,
+        "valor": 11307.5
+      },
+      {
+        "ordem": 5,
+        "valor": 1764.59
+      },
+      {
+        "ordem": 6,
+        "valor": 6519.97
+      },
+      {
+        "ordem": 8,
+        "valor": 14201.14
+      },
+      {
+        "ordem": 10,
+        "valor": 10000
+      },
+      {
+        "ordem": 15,
+        "valor": 140095.93
+      },
+      {
+        "ordem": 9,
+        "valor": 31180.1
+      },
+      {
+        "ordem": 12,
+        "valor": 48474.93
+      },
+      {
+        "ordem": 13,
+        "valor": 6145.49
+      },
+      {
+        "ordem": 14,
+        "valor": 139217.21
+      },
+      {
+        "ordem": 7,
+        "valor": 30000
+      },
+      {
+        "ordem": 11,
+        "valor": 0
+      }
+    ],
+    "dataNascimento": "1955-05-13",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Empresária/Empresário"
+  },
+  {
+    "anoEleicao": 2020,
+    "eleicaoNome": "Eleições Municipais 2020",
+    "idEleicaoTSE": 2030402020,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130001210083,
+    "nomeUrna": "WILLIAN DO CAFÉ",
+    "nomeCompleto": "WILLIAN FURTADO VALADARES",
+    "numero": 19,
+    "partido": "PSDB",
+    "partidoNome": "Partido da Social Democracia Brasileira",
+    "coligacao": "JUNTOS NÓS PODEMOS",
+    "composicaoColigacao": "PSDB / PP / PT / PODE / DEM / AVANTE",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 43636.86,
+    "bensDetalhados": [
+      {
+        "ordem": 1,
+        "valor": 17199.36
+      },
+      {
+        "ordem": 2,
+        "valor": 26437.5
+      }
+    ],
+    "dataNascimento": "1974-01-08",
+    "grauInstrucao": "Ensino Médio completo",
+    "ocupacao": "Empresária/Empresário"
+  },
+  {
+    "anoEleicao": 2016,
+    "eleicaoNome": "Eleições Municipais 2016",
+    "idEleicaoTSE": 2,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130000024451,
+    "nomeUrna": "CARLOS ALBERTO",
+    "nomeCompleto": "CARLOS ALBERTO RECCH FILHO",
+    "numero": 55,
+    "partido": "PSD",
+    "partidoNome": "Partido Social Democrático",
+    "coligacao": "ARINOS QUE VOCÊ QUER",
+    "composicaoColigacao": "PSD / PR / DEM / REDE / PHS / PRTB / PSDB / PPL / PT do B / SD / PDT",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Eleito",
+    "gastoCampanhaLimite": 108039.06,
+    "totalBensDeclarados": 2262587.01,
+    "bensDetalhados": [
+      {
+        "ordem": 2,
+        "valor": 443428
+      },
+      {
+        "ordem": 3,
+        "valor": 42000
+      },
+      {
+        "ordem": 6,
+        "valor": 22500
+      },
+      {
+        "ordem": 9,
+        "valor": 92.39
+      },
+      {
+        "ordem": 8,
+        "valor": 1746.71
+      },
+      {
+        "ordem": 14,
+        "valor": 51000
+      },
+      {
+        "ordem": 5,
+        "valor": 725000
+      },
+      {
+        "ordem": 11,
+        "valor": 5.51
+      },
+      {
+        "ordem": 4,
+        "valor": 29947.91
+      },
+      {
+        "ordem": 15,
+        "valor": 155000
+      },
+      {
+        "ordem": 12,
+        "valor": 0.78
+      },
+      {
+        "ordem": 1,
+        "valor": 540384.46
+      },
+      {
+        "ordem": 10,
+        "valor": 481.25
+      },
+      {
+        "ordem": 13,
+        "valor": 66000
+      },
+      {
+        "ordem": 7,
+        "valor": 185000
+      }
+    ],
+    "dataNascimento": "1963-09-09",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Empresária/Empresário"
+  },
+  {
+    "anoEleicao": 2016,
+    "eleicaoNome": "Eleições Municipais 2016",
+    "idEleicaoTSE": 2,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130000061594,
+    "nomeUrna": "NENZAO",
+    "nomeCompleto": "ANTONIO LUCAS GOMES DA MOTA",
+    "numero": 50,
+    "partido": "PSOL",
+    "partidoNome": "Partido Socialismo e Liberdade",
+    "coligacao": "PSOL",
+    "composicaoColigacao": "**",
+    "situacaoCandidatura": "Indeferido",
+    "resultadoEleicao": "Concorrendo",
+    "gastoCampanhaLimite": 108039.06,
+    "totalBensDeclarados": 143000,
+    "bensDetalhados": [
+      {
+        "ordem": 1,
+        "valor": 143000
+      }
+    ],
+    "dataNascimento": "1959-10-18",
+    "grauInstrucao": "Ensino Médio completo",
+    "ocupacao": "Música/Músico"
+  },
+  {
+    "anoEleicao": 2016,
+    "eleicaoNome": "Eleições Municipais 2016",
+    "idEleicaoTSE": 2,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130000054729,
+    "nomeUrna": "ROBERTO SALES",
+    "nomeCompleto": "ROBERTO SALES",
+    "numero": 15,
+    "partido": "PMDB",
+    "partidoNome": "Partido do Movimento Democrático Brasileiro",
+    "coligacao": "GOVERNO DO POVO",
+    "composicaoColigacao": "PRB / PP / PT / PMDB / PSL / PTN / PSC / PPS / PMN / PSB / PC do B",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 108039.06,
+    "totalBensDeclarados": 2860000,
+    "bensDetalhados": [
+      {
+        "ordem": 7,
+        "valor": 100000
+      },
+      {
+        "ordem": 8,
+        "valor": 140000
+      },
+      {
+        "ordem": 3,
+        "valor": 240000
+      },
+      {
+        "ordem": 9,
+        "valor": 30000
+      },
+      {
+        "ordem": 4,
+        "valor": 800000
+      },
+      {
+        "ordem": 1,
+        "valor": 700000
+      },
+      {
+        "ordem": 2,
+        "valor": 470000
+      },
+      {
+        "ordem": 10,
+        "valor": 150000
+      },
+      {
+        "ordem": 5,
+        "valor": 200000
+      },
+      {
+        "ordem": 6,
+        "valor": 30000
+      }
+    ],
+    "dataNascimento": "1957-11-25",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Prefeita/Prefeito"
+  },
+  {
+    "anoEleicao": 2016,
+    "eleicaoNome": "Eleições Municipais 2016",
+    "idEleicaoTSE": 2,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130000016436,
+    "nomeUrna": "WILLIAN DO CAFÉ",
+    "nomeCompleto": "WILLIAN FURTADO VALADARES",
+    "numero": 14,
+    "partido": "PTB",
+    "partidoNome": "Partido Trabalhista Brasileiro",
+    "coligacao": "RENOVAÇÃO E TRABALHO PELO POVO",
+    "composicaoColigacao": "PTB / PV / PTC",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 108039.06,
+    "totalBensDeclarados": 233636.86,
+    "bensDetalhados": [
+      {
+        "ordem": 2,
+        "valor": 17199.36
+      },
+      {
+        "ordem": 4,
+        "valor": 100000
+      },
+      {
+        "ordem": 3,
+        "valor": 30000
+      },
+      {
+        "ordem": 1,
+        "valor": 60000
+      },
+      {
+        "ordem": 5,
+        "valor": 26437.5
+      }
+    ],
+    "dataNascimento": "1974-01-08",
+    "grauInstrucao": "Ensino Médio completo",
+    "ocupacao": "Produtora/Produtor agropecuário"
+  },
+  {
+    "anoEleicao": 2016,
+    "eleicaoNome": "Eleições Municipais 2016",
+    "idEleicaoTSE": 2,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130000061595,
+    "nomeUrna": "AMERICO",
+    "nomeCompleto": "AMERICO FERREIRA DA SILVA",
+    "numero": 50,
+    "partido": "PSOL",
+    "partidoNome": "Partido Socialismo e Liberdade",
+    "coligacao": "PSOL",
+    "composicaoColigacao": "**",
+    "situacaoCandidatura": "Renúncia",
+    "resultadoEleicao": "Concorrendo",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 78000,
+    "bensDetalhados": [
+      {
+        "ordem": 1,
+        "valor": 30000
+      },
+      {
+        "ordem": 2,
+        "valor": 48000
+      }
+    ],
+    "dataNascimento": "1969-12-01",
+    "grauInstrucao": "Ensino Fundamental incompleto",
+    "ocupacao": "Trabalhadora/Trabalhador rural"
+  },
+  {
+    "anoEleicao": 2016,
+    "eleicaoNome": "Eleições Municipais 2016",
+    "idEleicaoTSE": 2,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130000016437,
+    "nomeUrna": "AURORA",
+    "nomeCompleto": "AURORA PIRES DE CARVALHO",
+    "numero": 14,
+    "partido": "PV",
+    "partidoNome": "Partido Verde",
+    "coligacao": "RENOVAÇÃO E TRABALHO PELO POVO",
+    "composicaoColigacao": "PTB / PV / PTC",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 60500,
+    "bensDetalhados": [
+      {
+        "ordem": 1,
+        "valor": 500
+      },
+      {
+        "ordem": 2,
+        "valor": 45000
+      },
+      {
+        "ordem": 3,
+        "valor": 15000
+      }
+    ],
+    "dataNascimento": "1965-10-11",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Professora/Professor de ensino fundamental"
+  },
+  {
+    "anoEleicao": 2016,
+    "eleicaoNome": "Eleições Municipais 2016",
+    "idEleicaoTSE": 2,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130000024452,
+    "nomeUrna": "MATOS",
+    "nomeCompleto": "MATOS ALEM ALVES DA COSTA",
+    "numero": 55,
+    "partido": "PR",
+    "partidoNome": "Partido da República",
+    "coligacao": "ARINOS QUE VOCÊ QUER",
+    "composicaoColigacao": "PSD / PR / DEM / REDE / PHS / PRTB / PSDB / PPL / PT do B / SD / PDT",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 66980.64,
+    "bensDetalhados": [
+      {
+        "ordem": 5,
+        "valor": 20000
+      },
+      {
+        "ordem": 4,
+        "valor": 1078.52
+      },
+      {
+        "ordem": 6,
+        "valor": 7035.17
+      },
+      {
+        "ordem": 3,
+        "valor": 6519.97
+      },
+      {
+        "ordem": 7,
+        "valor": 15000
+      },
+      {
+        "ordem": 9,
+        "valor": 4269.91
+      },
+      {
+        "ordem": 1,
+        "valor": 11307.5
+      },
+      {
+        "ordem": 2,
+        "valor": 1764.59
+      },
+      {
+        "ordem": 8,
+        "valor": 4.98
+      }
+    ],
+    "dataNascimento": "1955-05-13",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Comerciante"
+  },
+  {
+    "anoEleicao": 2016,
+    "eleicaoNome": "Eleições Municipais 2016",
+    "idEleicaoTSE": 2,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130000054730,
+    "nomeUrna": "VÍ SANTANA",
+    "nomeCompleto": "VIMERSON SANTANA OLIVEIRA",
+    "numero": 15,
+    "partido": "PSC",
+    "partidoNome": "Partido Social Cristão",
+    "coligacao": "GOVERNO DO POVO",
+    "composicaoColigacao": "PRB / PP / PT / PMDB / PSL / PTN / PSC / PPS / PMN / PSB / PC do B",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 0,
+    "bensDetalhados": [],
+    "dataNascimento": "1977-03-23",
+    "grauInstrucao": "Ensino Médio completo",
+    "ocupacao": "Vereadora/Vereador"
+  },
+  {
+    "anoEleicao": 2012,
+    "eleicaoNome": "Eleições Municipais 2012",
+    "idEleicaoTSE": 1699,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130000054454,
+    "nomeUrna": "ROBERTO SALES",
+    "nomeCompleto": "ROBERTO SALES",
+    "numero": 15,
+    "partido": "PMDB",
+    "partidoNome": "Partido do Movimento Democrático Brasileiro",
+    "coligacao": "Bompratodos",
+    "composicaoColigacao": "PRB / PP / PT / PMDB / PSC / PMN / PV / PPL / PC do B",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 2368000,
+    "bensDetalhados": [
+      {
+        "ordem": 1,
+        "valor": 600000
+      },
+      {
+        "ordem": 5,
+        "valor": 200000
+      },
+      {
+        "ordem": 8,
+        "valor": 73000
+      },
+      {
+        "ordem": 7,
+        "valor": 30000
+      },
+      {
+        "ordem": 9,
+        "valor": 95000
+      },
+      {
+        "ordem": 2,
+        "valor": 400000
+      },
+      {
+        "ordem": 3,
+        "valor": 180000
+      },
+      {
+        "ordem": 4,
+        "valor": 700000
+      },
+      {
+        "ordem": 6,
+        "valor": 90000
+      }
+    ],
+    "dataNascimento": "1957-11-25",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Advogada/Advogado"
+  },
+  {
+    "anoEleicao": 2012,
+    "eleicaoNome": "Eleições Municipais 2012",
+    "idEleicaoTSE": 1699,
+    "cargo": "Prefeito",
+    "idCandidatoTSE": 130000056553,
+    "nomeUrna": "RONAN",
+    "nomeCompleto": "RONAN APARECIDO VALADARES SANTANA",
+    "numero": 55,
+    "partido": "PSD",
+    "partidoNome": "Partido Social Democrático",
+    "coligacao": "O CRESCIMENTO CONTINUA",
+    "composicaoColigacao": "PTB / PSD / PSDB / PPS / PSL / PDT / PSB / DEM / PR",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 141183.41,
+    "bensDetalhados": [
+      {
+        "ordem": 2,
+        "valor": 6000
+      },
+      {
+        "ordem": 1,
+        "valor": 33500
+      },
+      {
+        "ordem": 4,
+        "valor": 2500
+      },
+      {
+        "ordem": 5,
+        "valor": 41512
+      },
+      {
+        "ordem": 3,
+        "valor": 18500
+      },
+      {
+        "ordem": 6,
+        "valor": 39171.41
+      }
+    ],
+    "dataNascimento": "1979-06-07",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Professora/Professor de ensino superior"
+  },
+  {
+    "anoEleicao": 2012,
+    "eleicaoNome": "Eleições Municipais 2012",
+    "idEleicaoTSE": 1699,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130000056554,
+    "nomeUrna": "ALCIDES",
+    "nomeCompleto": "ALCIDES RODRIGUES DE SOUZA",
+    "numero": 55,
+    "partido": "PTB",
+    "partidoNome": "Partido Trabalhista Brasileiro",
+    "coligacao": "O CRESCIMENTO CONTINUA",
+    "composicaoColigacao": "PTB / PSD / PSDB / PPS / PSL / PDT / PSB / DEM / PR",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Não eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 276285.74,
+    "bensDetalhados": [
+      {
+        "ordem": 2,
+        "valor": 250000
+      },
+      {
+        "ordem": 1,
+        "valor": 1285.74
+      },
+      {
+        "ordem": 3,
+        "valor": 25000
+      }
+    ],
+    "dataNascimento": "1962-09-28",
+    "grauInstrucao": "Superior completo",
+    "ocupacao": "Servidor Público Estadual"
+  },
+  {
+    "anoEleicao": 2012,
+    "eleicaoNome": "Eleições Municipais 2012",
+    "idEleicaoTSE": 1699,
+    "cargo": "Vice-Prefeito",
+    "idCandidatoTSE": 130000054455,
+    "nomeUrna": "WILLIAN DO CAFÉ",
+    "nomeCompleto": "WILLIAN FURTADO VALADARES",
+    "numero": 15,
+    "partido": "PPL",
+    "partidoNome": "Partido Pátria Livre",
+    "coligacao": "Bompratodos",
+    "composicaoColigacao": "PRB / PP / PT / PMDB / PSC / PMN / PV / PPL / PC do B",
+    "situacaoCandidatura": "Deferido",
+    "resultadoEleicao": "Eleito",
+    "gastoCampanhaLimite": 0,
+    "totalBensDeclarados": 122199.36,
+    "bensDetalhados": [
+      {
+        "ordem": 2,
+        "valor": 45000
+      },
+      {
+        "ordem": 4,
+        "valor": 50000
+      },
+      {
+        "ordem": 1,
+        "valor": 17199.36
+      },
+      {
+        "ordem": 3,
+        "valor": 10000
+      }
+    ],
+    "dataNascimento": "1974-01-08",
+    "grauInstrucao": "Ensino Médio completo",
+    "ocupacao": "Empresária/Empresário"
+  }
+]

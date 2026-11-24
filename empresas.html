@@ -151,7 +151,7 @@
     </div>
 
     <!-- Estatísticas Principais (Cards) -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
       <div class="glass-card rounded-xl p-4 border-slate-800">
         <span class="text-xs text-slate-400 font-medium">Empresas Analisadas</span>
         <div id="stat-empresas" class="text-xl sm:text-2xl font-extrabold text-white font-mono mt-1">120</div>
@@ -162,12 +162,6 @@
         <span class="text-xs text-slate-400 font-medium">Sócios Identificados</span>
         <div id="stat-socios" class="text-xl sm:text-2xl font-extrabold text-indigo-400 font-mono mt-1">215</div>
         <span class="text-[11px] text-slate-400">Quadro societário</span>
-      </div>
-
-      <div class="glass-card rounded-xl p-4 border-amber-500/30 bg-amber-950/10">
-        <span class="text-xs text-amber-300 font-medium">Alertas de Vínculo</span>
-        <div id="stat-alertas" class="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono mt-1">11</div>
-        <span class="text-[11px] text-amber-400/80">Sócios c/ agentes públicos</span>
       </div>
 
       <div class="glass-card rounded-xl p-4 border-slate-800">
@@ -194,10 +188,6 @@
       <button id="tab-btn-empresas" onclick="switchTab('empresas')" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-blue-500 text-blue-400 flex items-center space-x-2 transition">
         <span>🏢 Empresas & Sócios (QSA)</span>
         <span id="tab-count-empresas" class="px-2 py-0.5 rounded-full text-xs bg-blue-500/20 text-blue-300">120</span>
-      </button>
-      <button id="tab-btn-alertas" onclick="switchTab('alertas')" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition">
-        <span>⚠️ Alertas de Vínculos</span>
-        <span class="px-2 py-0.5 rounded-full text-xs bg-amber-500/20 text-amber-300">11</span>
       </button>
       <button id="tab-btn-viagens" onclick="switchTab('viagens')" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition">
         <span>✈️ Viagens & Diárias (29k)</span>
@@ -229,9 +219,6 @@
           <button onclick="setEmpresaFilter('todos')" id="filter-btn-todos" class="emp-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-600 text-white shadow-sm transition">
             Todas (120)
           </button>
-          <button onclick="setEmpresaFilter('alertas')" id="filter-btn-alertas" class="emp-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
-            ⚠️ Com Alertas (11)
-          </button>
           <button onclick="setEmpresaFilter('arinos')" id="filter-btn-arinos" class="emp-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
             📍 Sede em Arinos
           </button>
@@ -262,24 +249,7 @@
       </div>
     </section>
 
-    <!-- ==================== ABA 2: ALERTAS DE VÍNCULOS ==================== -->
-    <section id="section-alertas" class="space-y-6 hidden">
-      <div class="p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 text-amber-200 text-sm flex items-start gap-3">
-        <span class="text-2xl">⚠️</span>
-        <div class="space-y-1">
-          <h3 class="font-bold text-amber-300">Cruzamento de Dados de Sócios x Agentes Públicos e Candidatos</h3>
-          <p class="text-xs text-amber-200/90 leading-relaxed">
-            As empresas abaixo possuem sócios ou administradores cujos nomes coincidem exatamente com servidores municipais (incluindo secretários municipais, diretores clínicos e chefes de setor), candidatos a cargos eletivos ou membros do legislativo de Arinos / MG. A identificação é forense e baseada nos dados públicos da Receita Federal e do Portal da Transparência de Arinos.
-          </p>
-        </div>
-      </div>
-
-      <div id="lista-alertas-detalhados" class="space-y-4">
-        <!-- Renderizado via JS -->
-      </div>
-    </section>
-
-    <!-- ==================== ABA 3: VIAGENS & DIÁRIAS (29.746 REGISTROS) ==================== -->
+    <!-- ==================== ABA 2: VIAGENS & DIÁRIAS (29.746 REGISTROS) ==================== -->
     <section id="section-viagens" class="space-y-8 hidden">
       
       <!-- Resumo Analítico de Diárias -->
@@ -486,14 +456,6 @@
       <!-- Conteúdo do Modal (Scroll) -->
       <div class="p-6 overflow-y-auto space-y-6 flex-1 text-xs text-slate-300">
         
-        <!-- Alerta de Vínculo se Existir -->
-        <div id="modal-alerta-box" class="hidden p-4 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200">
-          <div class="font-bold flex items-center gap-2 text-sm text-amber-300">
-            <span>⚠️ ALERTA DE VÍNCULO SOCIETÁRIO COM O SETOR PÚBLICO</span>
-          </div>
-          <p id="modal-alerta-texto" class="mt-1 text-xs text-amber-100 font-sans whitespace-pre-line"></p>
-        </div>
-
         <!-- Resumo Financeiro & Cadastral -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div class="p-3 rounded-xl bg-slate-950/50 border border-slate-800">
@@ -658,10 +620,8 @@
           if (dataEmp.resumo) {
             document.getElementById('stat-empresas').textContent = dataEmp.resumo.total_empresas_catalogadas;
             document.getElementById('stat-socios').textContent = dataEmp.resumo.total_socios_mapeados;
-            document.getElementById('stat-alertas').textContent = dataEmp.resumo.empresas_com_alerta_vinculo;
             document.getElementById('hero-volume-total').textContent = 'R$ ' + (dataEmp.resumo.volume_financeiro_total / 1000000).toFixed(1).replace('.', ',') + ' Mi';
           }
-          renderizarAlertas();
         }
 
         // Carrega Viagens
@@ -678,7 +638,7 @@
 
     // Alternar Abas
     function switchTab(tabId) {
-      const tabs = ['empresas', 'alertas', 'viagens'];
+      const tabs = ['empresas', 'viagens'];
       tabs.forEach(t => {
         const sec = document.getElementById(`section-${t}`);
         const btn = document.getElementById(`tab-btn-${t}`);
@@ -714,8 +674,7 @@
       const sort = document.getElementById('sort-empresa').value;
 
       empresasFiltradas = empresasMaster.filter(e => {
-        // Filtro de aba/categoria
-        if (filtroAtual === 'alertas' && e.possui_alerta_vinculo !== 1) return false;
+        // Filtro de categoria
         if (filtroAtual === 'arinos' && (e.municipio || '').toUpperCase() !== 'ARINOS') return false;
         if (filtroAtual === 'ativas' && e.situacao_cadastral !== 'ATIVA') return false;
 
@@ -764,18 +723,11 @@
 
       grid.innerHTML = empresasFiltradas.map((emp, idx) => {
         const isAtiva = emp.situacao_cadastral === 'ATIVA';
-        const temAlerta = emp.possui_alerta_vinculo === 1;
         const socios = emp.socios || [];
 
         return `
           <div onclick="abrirDadosEmpresa('${emp.cnpj}')" class="glass-card rounded-2xl p-5 flex flex-col justify-between border-slate-800 hover:border-blue-500/50 cursor-pointer group transition select-none relative">
             
-            ${temAlerta ? `
-              <div class="absolute -top-2.5 right-4 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-slate-950 shadow-md flex items-center gap-1">
-                <span>⚠️ VÍNCULO DETECTADO</span>
-              </div>
-            ` : ''}
-
             <!-- Topo do Card -->
             <div>
               <div class="flex items-start justify-between gap-2 mb-2">
@@ -815,8 +767,8 @@
                 
                 <div class="flex flex-wrap gap-1 max-h-16 overflow-hidden">
                   ${socios.length > 0 ? socios.slice(0, 3).map(s => `
-                    <span class="px-2 py-0.5 rounded text-[10px] font-medium ${s.vinculo_politico_alerta ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold' : 'bg-slate-800/90 text-slate-300 border border-slate-700/60'}" title="${s.qualificacao_socio || 'Sócio'}">
-                      ${s.vinculo_politico_alerta ? '⚠️ ' : ''}${s.nome_socio ? s.nome_socio.split(' ')[0] + ' ' + (s.nome_socio.split(' ')[1] || '') : 'Sócio'}
+                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800/90 text-slate-300 border border-slate-700/60" title="${s.qualificacao_socio || 'Sócio'}">
+                      ${s.nome_socio ? s.nome_socio.split(' ')[0] + ' ' + (s.nome_socio.split(' ')[1] || '') : 'Sócio'}
                     </span>
                   `).join('') : '<span class="text-[11px] text-slate-600 italic">EIRELI / Individual / Sem sócios adicionais</span>'}
                   ${socios.length > 3 ? `<span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400">+${socios.length - 3}</span>` : ''}
@@ -824,61 +776,6 @@
               </div>
             </div>
 
-          </div>
-        `;
-      }).join('');
-    }
-
-    // Renderizar Seção de Alertas
-    function renderizarAlertas() {
-      const listaDiv = document.getElementById('lista-alertas-detalhados');
-      const comAlerta = empresasMaster.filter(e => e.possui_alerta_vinculo === 1);
-
-      listaDiv.innerHTML = comAlerta.map((emp, i) => {
-        const sociosAlerta = (emp.socios || []).filter(s => s.vinculo_politico_alerta);
-
-        return `
-          <div onclick="abrirDadosEmpresa('${emp.cnpj}')" class="glass-card rounded-2xl p-5 border-amber-500/30 bg-gradient-to-r from-amber-950/20 to-slate-900/60 space-y-4 cursor-pointer hover:border-amber-400/80 group transition select-none">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
-              <div>
-                <div class="flex items-center gap-2">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-slate-950">ALERTA #${i+1}</span>
-                  <span class="text-xs font-mono text-slate-400">${formatCNPJ(emp.cnpj)}</span>
-                </div>
-                <h3 class="text-lg font-extrabold text-white mt-1 group-hover:text-amber-300 transition">${emp.razao_social}</h3>
-              </div>
-              <div class="text-right">
-                <span class="text-xs text-slate-400 block">Volume Total Auditado</span>
-                <span class="text-base font-extrabold text-amber-400 font-mono">${formatMoney(emp.total_geral)}</span>
-              </div>
-            </div>
-
-            <!-- Sócios Envolvidos -->
-            <div class="space-y-2">
-              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Sócios e Vínculos Identificados:</h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                ${sociosAlerta.map(s => `
-                  <div class="p-3 rounded-xl bg-slate-950/60 border border-amber-500/30 space-y-1">
-                    <div class="flex items-center justify-between">
-                      <span class="font-bold text-white text-xs">${s.nome_socio}</span>
-                      <span class="text-[10px] font-mono text-slate-400">${s.qualificacao_socio || 'Sócio'}</span>
-                    </div>
-                    <p class="text-xs text-amber-300 font-mono bg-amber-950/40 p-1.5 rounded border border-amber-500/20">
-                      ${s.vinculo_politico_alerta}
-                    </p>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-
-            <!-- Rodapé do Card de Alerta (Sem botão solto) -->
-            <div class="flex items-center justify-between pt-2 text-xs text-slate-400 group-hover:text-amber-300 font-mono transition">
-              <span class="text-[11px] text-slate-500">Hash Forense: <span class="font-mono">${(emp.hash_forense || '').slice(0, 16)}...</span></span>
-              <div class="flex items-center gap-1 text-amber-400 font-bold">
-                <span>Examinar detalhes & contratos</span>
-                <span class="group-hover:translate-x-1 transition">›</span>
-              </div>
-            </div>
           </div>
         `;
       }).join('');
@@ -1014,15 +911,6 @@
 
         document.getElementById('modal-porte-badge').textContent = emp.porte || 'EMPRESA';
 
-        // Alerta
-        const alertaBox = document.getElementById('modal-alerta-box');
-        if (emp.possui_alerta_vinculo === 1) {
-          alertaBox.classList.remove('hidden');
-          document.getElementById('modal-alerta-texto').textContent = emp.alerta_detalhe || 'Vínculo societário com agente público identificado.';
-        } else {
-          alertaBox.classList.add('hidden');
-        }
-
         // Lista de Sócios
         document.getElementById('modal-socios-count').textContent = socios.length;
         const sociosDiv = document.getElementById('modal-socios-lista');
@@ -1030,13 +918,12 @@
           sociosDiv.innerHTML = `<p class="col-span-full text-slate-500 italic">Nenhum sócio adicional registrado (Empresário Individual ou Titular Único).</p>`;
         } else {
           sociosDiv.innerHTML = socios.map(s => `
-            <div class="p-3 rounded-xl bg-slate-950/70 border ${s.vinculo_politico_alerta ? 'border-amber-500/50 bg-amber-950/20' : 'border-slate-800'} space-y-1">
+            <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800 space-y-1">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-white text-xs">${s.nome_socio}</span>
                 <span class="text-[10px] font-mono text-slate-400">${s.faixa_etaria || ''}</span>
               </div>
               <p class="text-[11px] text-slate-400">${s.qualificacao_socio || 'Sócio'}</p>
-              ${s.vinculo_politico_alerta ? `<p class="text-[10px] text-amber-300 font-mono bg-amber-950/40 p-1 rounded border border-amber-500/30">⚠️ ${s.vinculo_politico_alerta}</p>` : ''}
             </div>
           `).join('');
         }

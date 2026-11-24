@@ -187,6 +187,10 @@
         </a>
       </div>
       <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="display: flex; gap: 3px; background: rgba(15,23,42,0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 9999px; padding: 2px;">
+          <a href="/" style="text-decoration: none; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 9999px; background: #2563eb; color: #fff;">v2</a>
+          <a href="/v3/" style="text-decoration: none; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 9999px; background: transparent; color: #cbd5e1;">v3</a>
+        </div>
         <span class="v2-pulse-dot"></span>
         <span style="font-size: 11px; font-family: monospace; color: #34d399; font-weight: 700;">AO VIVO</span>
       </div>
@@ -245,6 +249,15 @@
         <button class="v2-toggle-btn" id="v2-sidebar-toggle" title="Recolher/Expandir Menu (Alt+M)">
           ${isCollapsedSaved ? '▶' : '◀'}
         </button>
+      </div>
+
+      <!-- Seletor Booleano de Versão V2 / V3 -->
+      <div style="padding: 10px 14px; margin: 4px 8px 10px 8px; background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
+        <span style="font-size: 11px; font-weight: 800; color: #94a3b8; letter-spacing: 0.05em;">VERSÃO:</span>
+        <div style="display: flex; gap: 4px;">
+          <a href="/" style="text-decoration: none; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 9999px; background: #2563eb; color: #fff; box-shadow: 0 0 8px rgba(37,99,235,0.4);">v2</a>
+          <a href="/v3/" style="text-decoration: none; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 9999px; background: transparent; color: #cbd5e1; border: 1px solid rgba(255,255,255,0.15);">v3</a>
+        </div>
       </div>
 
       <nav class="v2-sidebar-nav">
