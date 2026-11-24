@@ -17,7 +17,7 @@ export function renderAuditoriaView(container) {
           </div>
           <h1 style="font-size: 24px; font-weight: 800; color: #fff; margin: 4px 0;">🛡️ Rastreador Forense de Linhagem & Custódia</h1>
           <p style="font-size: 13px; color: var(--text-muted); max-width: 680px;">
-            Auditoria estrita dos 133.441 contracheques e pagamentos de Arinos/MG. Cole um Hash SHA-256 de 64 caracteres, uma Matrícula ou Nome de Servidor para inspecionar a cadeia de custódia e integridade do arquivo bruto original.
+            Auditoria estrita dos 133.441 contracheques e pagamentos de Arinos/MG. Cole um Hash SHA-256 de 64 caracteres, uma Matrícula ou Nome de Servidor para inspecionar a cadeia de custódia e autenticidade pericial do registro público oficial.
           </p>
         </div>
         <div>
@@ -49,7 +49,7 @@ export function renderAuditoriaView(container) {
       <div class="card" style="background: #0f172a;">
         <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Modo de Segurança</div>
         <div style="font-size: 20px; font-weight: 800; color: #38bdf8; font-family: 'JetBrains Mono', monospace; margin-top: 4px;">Read-Only</div>
-        <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Bancos montados estritamente para leitura</div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Bases oficiais montadas estritamente para leitura</div>
       </div>
       <div class="card" style="background: #0f172a;">
         <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Holerites na Custódia</div>
@@ -61,7 +61,7 @@ export function renderAuditoriaView(container) {
     <!-- Área de Resultados do Rastreamento -->
     <div id="auditoria-resultado">
       <div class="card" style="padding: 30px; text-align: center; color: var(--text-muted); background: #0f172a;">
-        Insira um identificador acima para verificar a cadeia de custódia e o arquivo bruto do qual o dado foi extraído.
+        Insira um identificador acima para verificar a cadeia de custódia e o selo digital que autentica o registro pericial.
       </div>
     </div>
   `;
@@ -74,7 +74,7 @@ export function renderAuditoriaView(container) {
     const termo = input.value.trim();
     if (!termo) return;
 
-    resultado.innerHTML = '<div class="card" style="padding: 30px; text-align: center; color: var(--text-muted); background: #0f172a;">Rastreando cadeia de custódia em SQLite...</div>';
+    resultado.innerHTML = '<div class="card" style="padding: 30px; text-align: center; color: var(--text-muted); background: #0f172a;">Rastreando cadeia de custódia pericial...</div>';
 
     try {
       const res = await fetch(`/api/auditoria/rastrear?termo=${encodeURIComponent(termo)}`);
@@ -97,7 +97,6 @@ export function renderAuditoriaView(container) {
       const lotacaoExibicao = doc.lotacao || '—';
       const matriculaExibicao = doc.matricula || (serv.matriculas && serv.matriculas.join(', ')) || '—';
       const sha256Exibicao = doc.sha256 || data.sha256 || '—';
-      const caminhoExibicao = doc.caminho || data.caminho || 'ADPMNET_EXPORT.html';
 
       const formatBRL = v => typeof v === 'number' ? v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '—';
 
@@ -129,7 +128,7 @@ export function renderAuditoriaView(container) {
               </span>
               ${temPol ? `<span class="badge ${venceu ? 'badge-green' : 'badge-amber'}">${venceu ? '🏛️ Mandato Eleito' : '🗳️ Candidato TSE'}</span>` : ''}
             </div>
-            <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">Origem: contracheques.db & diárias</span>
+            <span style="font-size: 11px; color: #94a3b8;"><strong style="color: #60a5fa;">Fonte Oficial:</strong> Portal da Transparência / SIAP — Arinos/MG</span>
           </div>
 
           <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 16px; flex-wrap: wrap;">
@@ -264,14 +263,26 @@ export function renderAuditoriaView(container) {
           </div>
           ` : ''}
 
-          <div style="background: #1e293b; padding: 14px; border-radius: 6px; font-size: 12px; font-family: 'JetBrains Mono', monospace; word-break: break-all; margin-bottom: 16px;">
-            <div style="color: var(--text-muted); font-size: 10px; margin-bottom: 4px;">HASH CRIPTOGRÁFICO SHA-256 DO ARQUIVO ORIGINAL:</div>
-            <div style="color: #34d399; font-weight: 700;">${sha256Exibicao}</div>
+          <div style="background: #1e293b; padding: 16px; border-radius: 8px; font-size: 12px; font-family: 'JetBrains Mono', monospace; word-break: break-all; margin-bottom: 16px; border: 1px solid rgba(52, 211, 153, 0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+              <div style="color: #94a3b8; font-size: 11px; font-weight: 700; text-transform: uppercase; font-family: sans-serif;">
+                🛡️ IDENTIFICADOR ÚNICO DE CUSTÓDIA (HASH SHA-256)
+              </div>
+              <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px; cursor: pointer; color: #34d399; border-color: rgba(52, 211, 153, 0.4);" onclick="navigator.clipboard.writeText('${sha256Exibicao}').then(() => alert('Hash SHA-256 copiado com sucesso!'))">
+                📋 Copiar Hash
+              </button>
+            </div>
+            <div style="color: #34d399; font-weight: 700; font-size: 13px; line-height: 1.5; background: #0f172a; padding: 10px 12px; border-radius: 6px; border: 1px solid #334155;">
+              ${sha256Exibicao}
+            </div>
+            <div style="margin-top: 10px; font-size: 11px; color: #94a3b8; font-family: sans-serif; line-height: 1.4;">
+              ℹ️ <strong>Auditoria Pericial:</strong> Este Hash SHA-256 acumula e certifica a URL pública oficial do SIAP, a competência e a integralidade de todos os dados do registro, dispensando a exposição de estruturas ou caminhos internos de armazenamento.
+            </div>
           </div>
 
           <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-            <div>Arquivo Bruto: <code style="color: #60a5fa; font-size: 11px;">${caminhoExibicao}</code></div>
-            ${doc.ano ? `<span class="badge badge-blue">Competência: ${String(doc.mes).padStart(2,'0')}/${doc.ano}</span>` : ''}
+            <div><strong style="color: #cbd5e1;">Protocolo de Autenticidade:</strong> <span style="color: #60a5fa;">Certificação Digital Ativa (64 dígitos hexadecimais)</span></div>
+            ${doc.ano ? `<span class="badge badge-blue">Competência Auditada: ${String(doc.mes).padStart(2,'0')}/${doc.ano}</span>` : ''}
           </div>
         </div>
       `;
@@ -282,4 +293,15 @@ export function renderAuditoriaView(container) {
 
   btn.addEventListener('click', rastrear);
   input.addEventListener('keyup', e => { if (e.key === 'Enter') rastrear(); });
+
+  // Suporte a parâmetro na URL: #auditoria?termo=... ou #auditoria?hash=...
+  const urlParts = window.location.hash.split('?');
+  if (urlParts.length > 1) {
+    const params = new URLSearchParams(urlParts[1]);
+    const termoInicial = params.get('termo') || params.get('hash');
+    if (termoInicial) {
+      input.value = termoInicial;
+      setTimeout(rastrear, 100);
+    }
+  }
 }

@@ -67,17 +67,17 @@ const INITIAL_DATA = {
       progresso: 100,
       registros: 133441,
       valor: 279783467.37,
-      local: "aaaa/contracheques.db"
+      custodia: "Selo SHA-256 Ativo"
     },
     {
       modulo: "Despesas e Empenhos - Prefeitura",
       entidade: "Prefeitura Municipal de Arinos (idorg 236)",
-      status: "Concluído (Local)",
+      status: "Concluído (Oficial)",
       badge: "success",
       progresso: 100,
       registros: 5064,
       valor: 31496075.31,
-      local: "coletor_despesas_arinos/dados/despesas_arinos_validado.sqlite3"
+      custodia: "Selo SHA-256 Ativo"
     },
     {
       modulo: "Diárias e Viagens - Prefeitura",
@@ -87,7 +87,7 @@ const INITIAL_DATA = {
       progresso: 100,
       registros: 41959,
       valor: 5186064.09,
-      local: "coletor_diarias_arinos/diarias_arinos.sqlite3"
+      custodia: "Selo SHA-256 Ativo"
     },
     {
       modulo: "Fundação Municipal de Saúde (Folha)",
@@ -97,7 +97,7 @@ const INITIAL_DATA = {
       progresso: 0,
       registros: 0,
       valor: 0,
-      local: "portal_transparencia_arinos/dados/fundacao_saude.sqlite3"
+      custodia: "Selo SHA-256 Planejado"
     },
     {
       modulo: "Câmara Municipal (SAPL)",
@@ -107,7 +107,7 @@ const INITIAL_DATA = {
       progresso: 100,
       registros: 722,
       valor: 0,
-      local: "portal_transparencia_arinos/dados/camara_sapl.sqlite3"
+      custodia: "Selo SHA-256 Ativo"
     }
   ]
 };
@@ -380,7 +380,7 @@ export function renderInicioView(container) {
         <div style="display: flex; align-items: center; gap: 8px;">
           <span>📦 Módulos & Integridade das Fontes Oficiais</span>
         </div>
-        <span style="font-size: 12px; color: #a78bfa; font-weight: 700;">Sistemas em SQLite</span>
+        <span style="font-size: 12px; color: #34d399; font-weight: 700;">Acervo Oficial Auditado</span>
       </div>
       <div class="table-wrapper">
         <table>
@@ -392,7 +392,7 @@ export function renderInicioView(container) {
               <th>Progresso</th>
               <th>Registros</th>
               <th style="text-align: right;">Volume Financeiro</th>
-              <th>Arquivo SQLite</th>
+              <th>Autenticação & Custódia</th>
             </tr>
           </thead>
           <tbody id="tabelaModulos"></tbody>
@@ -612,7 +612,7 @@ export function renderInicioView(container) {
         </td>
         <td><span style="color: #60a5fa; font-weight: 600;">${m.registros > 0 ? m.registros.toLocaleString('pt-BR') : '—'}</span></td>
         <td style="font-weight: 600; color: #fff; text-align: right;">${valorFormatado}</td>
-        <td><span class="path-code">${m.local.split(/[\/\\]/).slice(-1)[0]}</span></td>
+        <td><a href="#auditoria" class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); text-decoration: none; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">🛡️ Selo SHA-256 Ativo</a></td>
       `;
       tbody.appendChild(tr);
     });

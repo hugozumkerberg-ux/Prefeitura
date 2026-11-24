@@ -2,7 +2,7 @@
  * ==============================================================================
  * PORTAL DA TRANSPARÊNCIA DE ARINOS / MG — V3 PAINEL KANBAN DE MIGRAÇÃO
  * Painel interativo com cards clicáveis, modal de detalhes e double-check oficial
- * Cruzamento direto: TSE (Código 40894) + SQLite (contracheques.db / diárias)
+ * Cruzamento direto: TSE (Código 40894) + Acervo Oficial Municipal (Selo SHA-256)
  * ==============================================================================
  */
 
@@ -29,7 +29,7 @@ export const KANBAN_TASKS = [
         statusTSE: 'Deferido / Homologado'
       },
       sqlite: {
-        banco: 'contracheques.db + diarias_arinos.sqlite3',
+        banco: 'Acervo Oficial Certificado • Selo SHA-256',
         prefeitoFolha: 'Marcilio Alisson Fonseca De Almeida (Matrícula 003044.5)',
         viceFolha: 'Willian Furtado Valadares (Matrícula 002456.3)',
         folhaPaga: 'R$ 62.288.752,90 (18.928 pagamentos analisados)',
@@ -60,7 +60,7 @@ export const KANBAN_TASKS = [
         statusTSE: 'Deferido / Homologado'
       },
       sqlite: {
-        banco: 'contracheques.db + diarias_arinos.sqlite3',
+        banco: 'Acervo Oficial Certificado • Selo SHA-256',
         prefeitoFolha: 'Marcilio Alisson Fonseca De Almeida (Matrícula 003044.5)',
         viceFolha: 'Willian Furtado Valadares (Matrícula 002456.3)',
         folhaPaga: 'R$ 104.170.835,39 (41.533 pagamentos analisados)',
@@ -91,7 +91,7 @@ export const KANBAN_TASKS = [
         statusTSE: 'Deferido / Homologado (Valter da Farmácia foi eleito Vereador com 480 votos)'
       },
       sqlite: {
-        banco: 'contracheques.db + diarias_arinos.sqlite3',
+        banco: 'Acervo Oficial Certificado • Selo SHA-256',
         prefeitoFolha: 'Carlos Alberto Recch Filho (Matrícula 001572.8)',
         viceFolha: 'Matos Alem Alves Da Costa (Matrícula 001573.6, Gabinete do Vice-Prefeito)',
         folhaPaga: 'R$ 64.404.918,85 (37.868 pagamentos analisados)',
@@ -121,7 +121,7 @@ export const KANBAN_TASKS = [
         statusTSE: 'Deferido / Homologado'
       },
       sqlite: {
-        banco: 'contracheques.db + diarias_arinos.sqlite3',
+        banco: 'Acervo Oficial Certificado • Selo SHA-256',
         prefeitoFolha: 'Roberto Sales (Matrícula 002483.6)',
         viceFolha: 'Willian Furtado Valadares (Matrícula 002456.3)',
         folhaPaga: 'R$ 48.932.145,12 (35.112 pagamentos analisados)',
@@ -137,7 +137,7 @@ export const KANBAN_TASKS = [
     id: 'view-empresas',
     coluna: 'concluido',
     titulo: '🏢 Empresas & Credores (SIAP)',
-    resumo: '542 credores, 5.064 empenhos, paginação e dossiê individual em SQLite.',
+    resumo: '542 credores, 5.064 empenhos, paginação e dossiê individual pericial.',
     prioridade: 'P0',
     tag: '✔ Entregue',
     tagClass: 'badge-green',
@@ -228,7 +228,7 @@ export const KANBAN_TASKS = [
     id: 'refactor-admin',
     coluna: 'concluido',
     titulo: '⚡ Painel do Administrador & Telemetria',
-    resumo: 'Latência SQLite < 4ms, status dos 3 bancos e auditoria de rotas REST.',
+    resumo: 'Latência < 4ms, status dos 3 módulos oficiais e auditoria de custódia SHA-256.',
     prioridade: 'P1',
     tag: '✔ Entregue',
     tagClass: 'badge-green',
@@ -267,7 +267,7 @@ export const KANBAN_TASKS = [
     id: 'view-funcionarios',
     coluna: 'concluido',
     titulo: '👥 Funcionários & Folha (133k)',
-    resumo: 'Tabela paginada nativa em SQLite, busca por cargo/servidor/ano e dossiê.',
+    resumo: 'Tabela paginada nativa, busca por cargo/servidor/ano e dossiê.',
     prioridade: 'P0',
     tag: '✔ Entregue',
     tagClass: 'badge-green',
@@ -334,6 +334,34 @@ export const KANBAN_TASKS = [
       resumo: 'Tabela e gráfico comparativo permitindo inspecionar o crescimento ou variação dos bens declarados pelos agentes políticos a cada 4 anos.'
     }
   },
+  {
+    id: 'melhoria-arvore-dossie-360',
+    coluna: 'em_andamento',
+    titulo: '🌳 Árvore de Dados & Dossiê 360º de Pessoas',
+    resumo: 'Agrupamento hierárquico nos 3 pilares (Saúde, Prefeitura, Câmara) com histórico funcional e patrimonial.',
+    prioridade: 'P0',
+    tag: 'Falta Melhorar',
+    tagClass: 'badge-blue',
+    detalhes: {
+      tipo: 'Estruturação da Árvore de Dados Cívicos',
+      origem: 'Solicitação direta do usuário para organização em ramos e dossiê',
+      resumo: 'Agrupar as pessoas físicas pelos vínculos canônicos (Saúde idorg 241, Prefeitura idorg 236 e Câmara Legislativa), apresentando matrícula sem zeros à esquerda, nome proeminente, cargos exercidos com datas por extenso, duração e média salarial regular (excluindo 13º e férias), diárias e bens declarados ao TSE.'
+    }
+  },
+  {
+    id: 'melhoria-mapa-destinos-diarias',
+    coluna: 'em_andamento',
+    titulo: '🗺️ Mapa de Deslocamentos & Cidades de Destino de Diárias',
+    resumo: 'Identificação e agrupamento geográfico das viagens de servidores para BH, Brasília, Unaí e Paracatu.',
+    prioridade: 'P2',
+    tag: 'Falta Melhorar',
+    tagClass: 'badge-blue',
+    detalhes: {
+      tipo: 'Georreferenciamento de Diárias',
+      origem: 'Aperfeiçoamento do acervo de 41 mil diárias existente',
+      resumo: 'Classificação por município de destino e cálculo do custo médio por quilômetro e por missão oficial.'
+    }
+  },
 
   // --- A FAZER (O QUE FALTA FAZER — COLETAS OBSERVADAS NO OBSERVA ARINOS) ---
   {
@@ -393,30 +421,16 @@ export const KANBAN_TASKS = [
     }
   },
   {
-    id: 'melhoria-mapa-destinos-diarias',
-    coluna: 'a_fazer',
-    titulo: '🗺️ Mapa de Deslocamentos & Cidades de Destino de Diárias',
-    resumo: 'Identificação e agrupamento geográfico das viagens de servidores para BH, Brasília, Unaí e Paracatu.',
-    prioridade: 'P2',
-    tag: 'Falta Melhorar',
-    tagClass: 'badge-amber',
-    detalhes: {
-      tipo: 'Georreferenciamento de Diárias',
-      origem: 'Aperfeiçoamento do banco de 125 mil diárias existente',
-      resumo: 'Classificação por município de destino e cálculo do custo médio por quilômetro e por missão oficial.'
-    }
-  },
-  {
     id: 'export-csv-xlsx',
     coluna: 'a_fazer',
-    titulo: '📥 Exportação de Relatórios (CSV/XLSX)',
-    resumo: 'Download sob demanda dos dados abertos em formatos abertos auditáveis.',
+    titulo: '📥 Pacotes de Dados Abertos & Relatórios Periciais',
+    resumo: 'Download sob demanda dos dados públicos estruturados e certificados via Hash SHA-256.',
     prioridade: 'P2',
-    tag: 'A Fazer',
+    tag: 'Falta Fazer',
     tagClass: 'badge-amber',
     detalhes: {
-      tipo: 'Funcionalidade de Dados Abertos',
-      resumo: 'Geração de relatórios consolidados em conformidade com as diretrizes do LAI e TCE-MG.'
+      tipo: 'Funcionalidade de Dados Abertos & Auditoria',
+      resumo: 'Geração de pacotes de dados abertos consolidados em conformidade com as diretrizes da LAI, TCE-MG e identificação por Hash SHA-256 canônico.'
     }
   }
 ];
@@ -455,13 +469,13 @@ export function renderKanbanView(container) {
           <span class="badge badge-purple" style="margin-bottom: 8px;">AUDITORIA, ENTREGAS & REFACTORING</span>
           <h1 style="font-size: 24px; font-weight: 800; color: #fff; margin: 4px 0;">📋 Painel Kanban da Migração V2 ➔ V3</h1>
           <p style="font-size: 13px; color: var(--text-muted); max-width: 720px;">
-            Acompanhe o status de migração e a validação de cada mandato. <strong>Clique em qualquer card para inspecionar os detalhes e o Double Check TSE & SQLite.</strong>
+            Acompanhe o status de migração e a validação de cada mandato. <strong>Clique em qualquer card para inspecionar os detalhes e o Double Check TSE & Folha Oficial.</strong>
           </p>
         </div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
           <span class="badge badge-green" style="font-size: 13px; padding: 6px 12px;">${concluidos.length} Concluídos (4 Mandatos Double Check)</span>
-          <span class="badge badge-blue" style="font-size: 13px; padding: 6px 12px;">${andamento.length} Em Andamento</span>
-          <span class="badge badge-amber" style="font-size: 13px; padding: 6px 12px;">${aFazer.length} A Fazer</span>
+          <span class="badge badge-blue" style="font-size: 13px; padding: 6px 12px;">${andamento.length} Falta Melhorar</span>
+          <span class="badge badge-amber" style="font-size: 13px; padding: 6px 12px;">${aFazer.length} Falta Fazer</span>
         </div>
       </div>
     </div>
@@ -469,11 +483,11 @@ export function renderKanbanView(container) {
     <!-- Colunas do Kanban -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; align-items: flex-start;">
       
-      <!-- Coluna 1: A Fazer (Backlog) -->
+      <!-- Coluna 1: O Que Falta Fazer (Backlog Observa Arinos) -->
       <div class="card" style="background: rgba(17, 24, 39, 0.6); border-top: 4px solid #f59e0b;">
         <div class="section-title" style="margin-bottom: 16px;">
           <span style="display: flex; align-items: center; gap: 8px;">
-            <span>⏳</span> <strong>A Fazer (Backlog)</strong>
+            <span>⏳</span> <strong>O Que Falta Fazer (Observa Arinos)</strong>
           </span>
           <span class="badge badge-amber">${aFazer.length}</span>
         </div>
@@ -482,11 +496,11 @@ export function renderKanbanView(container) {
         </div>
       </div>
 
-      <!-- Coluna 2: Em Andamento (Doing) -->
+      <!-- Coluna 2: O Que Falta Melhorar (Aperfeiçoamentos V3) -->
       <div class="card" style="background: rgba(17, 24, 39, 0.6); border-top: 4px solid #3b82f6;">
         <div class="section-title" style="margin-bottom: 16px;">
           <span style="display: flex; align-items: center; gap: 8px;">
-            <span>⚡</span> <strong>Em Andamento</strong>
+            <span>⚡</span> <strong>O Que Falta Melhorar</strong>
           </span>
           <span class="badge badge-blue">${andamento.length}</span>
         </div>
@@ -495,11 +509,11 @@ export function renderKanbanView(container) {
         </div>
       </div>
 
-      <!-- Coluna 3: Concluído (Done com Double Check) -->
+      <!-- Coluna 3: Concluído & Entregue (Auditado SHA-256) -->
       <div class="card" style="background: rgba(17, 24, 39, 0.6); border-top: 4px solid #10b981;">
         <div class="section-title" style="margin-bottom: 16px;">
           <span style="display: flex; align-items: center; gap: 8px;">
-            <span>✅</span> <strong>Concluído (Auditado)</strong>
+            <span>✅</span> <strong>Concluído & Entregue</strong>
           </span>
           <span class="badge badge-green">${concluidos.length}</span>
         </div>
@@ -564,10 +578,10 @@ export function renderKanbanView(container) {
             </div>
           </div>
 
-          <!-- Double Check SQLite -->
+          <!-- Double Check Folha Oficial & Custódia -->
           <div style="background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; border-radius: 8px; padding: 14px; margin-bottom: 14px;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-              <strong style="color: #34d399; font-size: 13px;">💾 2. Registros da Folha de Pagamento & Diárias (SQLite)</strong>
+              <strong style="color: #34d399; font-size: 13px;">🛡️ 2. Registros da Folha de Pagamento & Diárias (Selo SHA-256)</strong>
               <span class="badge badge-green">Folha Oficial</span>
             </div>
             <div style="display: grid; grid-template-columns: 1fr; gap: 8px; font-size: 12px;">

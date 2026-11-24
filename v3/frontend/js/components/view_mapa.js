@@ -50,7 +50,7 @@ export function renderMapaView(container) {
       links: [
         { nome: 'Auditoria Forense SHA-256', hash: '#auditoria', desc: 'Cadeia de custódia e rastreamento de integridade criptográfica.' },
         { nome: 'Painel Kanban de Migração V3', hash: '#kanban', desc: 'Acompanhamento do status de entrega e double-checks executados.' },
-        { nome: 'Painel do Administrador (Hugo)', hash: '#admin', desc: 'Métricas de telemetria, latência de queries SQLite e logs de acesso.' }
+        { nome: 'Painel do Administrador (Hugo)', hash: '#admin', desc: 'Métricas de telemetria, latência de respostas, hashes e logs.' }
       ]
     }
   ];

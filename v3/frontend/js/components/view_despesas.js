@@ -89,7 +89,7 @@ export async function renderDespesasView(container) {
 
     <!-- Conteúdo da Tabela -->
     <div id="despesas-content" style="padding: 20px; text-align: center; color: var(--text-muted);">
-      Consultando despesas oficiais no SQLite...
+      Consultando despesas públicas oficiais...
     </div>
   `;
 
@@ -100,7 +100,7 @@ export async function renderDespesasView(container) {
   const content = container.querySelector('#despesas-content');
 
   async function carregar(page) {
-    content.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-muted);">Consultando banco SQLite oficial...</div>';
+    content.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-muted);">Consultando acervo contábil oficial...</div>';
     try {
       const pVal = selectPeriodo.value;
       let mandato = '';

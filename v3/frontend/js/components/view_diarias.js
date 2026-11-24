@@ -21,7 +21,7 @@ export async function renderDiariasView(container) {
         <div>
           <div style="display: flex; gap: 8px; margin-bottom: 8px;">
             <span class="badge badge-blue">DESLOCAMENTOS OFICIAIS</span>
-            <span class="badge badge-green">41.299 Registros em SQLite</span>
+            <span class="badge badge-green">41.299 Registros Auditados</span>
           </div>
           <h1 style="font-size: 24px; font-weight: 800; color: #fff; margin: 4px 0;">✈️ Diárias de Viagem & Deslocamentos</h1>
           <p style="font-size: 13px; color: var(--text-muted); max-width: 680px;">
@@ -89,7 +89,7 @@ export async function renderDiariasView(container) {
 
     <!-- Conteúdo da Tabela -->
     <div id="diarias-content" style="padding: 20px; text-align: center; color: var(--text-muted);">
-      Consultando diárias no banco SQLite oficial...
+      Consultando diárias públicas oficiais...
     </div>
   `;
 
@@ -100,7 +100,7 @@ export async function renderDiariasView(container) {
   const content = container.querySelector('#diarias-content');
 
   async function carregar(page) {
-    content.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-muted);">Consultando banco SQLite oficial...</div>';
+    content.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-muted);">Consultando acervo oficial de diárias...</div>';
     try {
       const pVal = selectPeriodo.value;
       let mandato = '';

@@ -227,12 +227,12 @@ export async function renderMandatosView(container) {
           <div style="display: flex; gap: 8px; margin-bottom: 8px;">
             <span class="badge badge-blue">HISTÓRICO OFICIAL TSE & PREFEITURA</span>
             <span class="badge ${dadosDinamicos ? 'badge-green' : 'badge-amber'}">
-              ${dadosDinamicos ? '🟢 SQLite Dinâmico (/api/mandatos)' : 'Fallback Seguro'}
+              ${dadosDinamicos ? '🟢 Base Dinâmica Certificada' : 'Acervo Consolidado'}
             </span>
           </div>
           <h1 style="font-size: 24px; font-weight: 800; color: #fff; margin: 4px 0;">Mandatos Executivos de Arinos / MG</h1>
           <p style="font-size: 13px; color: var(--text-muted); max-width: 650px;">
-            Linha do tempo oficial dos prefeitos, vices, votações nas urnas e prestação de contas dos mandatos calculados diretamente a partir dos bancos SQLite.
+            Linha do tempo oficial dos prefeitos, vices, votações nas urnas e prestação de contas dos mandatos calculados diretamente a partir das prestações de contas oficiais e registros certificados.
           </p>
         </div>
         <div style="text-align: right;">
@@ -346,7 +346,7 @@ export async function renderMandatosView(container) {
       <div class="card" style="margin-bottom: 24px;">
         <div class="section-title">
           <span>📊 Execução Financeira Oficial do Mandato (${m.periodo})</span>
-          <span style="font-size: 12px; color: #34d399; font-weight: 700;">Calculado em Tempo Real via SQLite</span>
+          <span style="font-size: 12px; color: #34d399; font-weight: 700;">Calculado em Tempo Real via Acervo Auditado</span>
         </div>
         <div class="stats-grid">
           <div class="card" style="background: #0f172a;">

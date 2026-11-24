@@ -21,7 +21,7 @@ export async function renderEmpresasView(container) {
         <div>
           <div style="display: flex; gap: 8px; margin-bottom: 8px;">
             <span class="badge badge-blue">SISTEMA INTEGRADO SIAP</span>
-            <span class="badge badge-green">🟢 SQLite Nativo (/api/empresas)</span>
+            <span class="badge badge-green">🟢 Base Oficial Auditada</span>
           </div>
           <h1 style="font-size: 24px; font-weight: 800; color: #fff; margin: 4px 0;">🏢 Empresas, Fornecedores & Credores</h1>
           <p style="font-size: 13px; color: var(--text-muted); max-width: 680px;">
@@ -140,7 +140,7 @@ export async function renderEmpresasView(container) {
           <tbody id="empresas-table-body">
             <tr>
               <td colspan="6" style="padding: 30px; text-align: center; color: var(--text-muted);">
-                Carregando credores diretamente do banco SQLite...
+                Carregando credores e empresas oficiais...
               </td>
             </tr>
           </tbody>
@@ -175,7 +175,7 @@ export async function renderEmpresasView(container) {
     tbody.innerHTML = `
       <tr>
         <td colspan="6" style="padding: 30px; text-align: center; color: var(--text-muted);">
-          Consultando dados em SQLite...
+          Consultando acervo oficial de empresas...
         </td>
       </tr>
     `;

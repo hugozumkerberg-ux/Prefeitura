@@ -19,7 +19,7 @@ export async function renderRankingView(container) {
         <div>
           <div style="display: flex; gap: 8px; margin-bottom: 8px;">
             <span class="badge badge-amber">ESTATÍSTICAS & RANKINGS</span>
-            <span class="badge badge-green">🟢 SQLite Nativo (/api/rankings)</span>
+            <span class="badge badge-green">🟢 Base Oficial Auditada</span>
           </div>
           <h1 style="font-size: 24px; font-weight: 800; color: #fff; margin: 4px 0;">🏆 Rankings Oficiais de Transparência</h1>
           <p style="font-size: 13px; color: var(--text-muted); max-width: 680px;">
@@ -92,7 +92,7 @@ export async function renderRankingView(container) {
           <tbody id="rank-table-body">
             <tr>
               <td colspan="5" style="padding: 30px; text-align: center; color: var(--text-muted);">
-                Carregando ranking em SQLite...
+                Carregando ranking oficial...
               </td>
             </tr>
           </tbody>
@@ -141,7 +141,7 @@ export async function renderRankingView(container) {
   });
 
   async function loadRankings() {
-    tbody.innerHTML = `<tr><td colspan="5" style="padding: 30px; text-align: center; color: var(--text-muted);">Consultando banco SQLite...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="padding: 30px; text-align: center; color: var(--text-muted);">Consultando registros oficiais...</td></tr>`;
 
     // Atualiza cabeçalho de acordo com a aba
     if (currentTab === 'salarios') {

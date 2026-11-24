@@ -5,22 +5,22 @@
  * ==============================================================================
  */
 
-import { renderSidebar } from './components/sidebar.js?v=19';
-import { renderInicioView } from './components/view_inicio.js?v=17';
-import { renderMandatosView } from './components/view_mandatos.js?v=17';
-import { renderFuncionariosView } from './components/view_funcionarios.js?v=21';
-import { renderKanbanView } from './components/view_kanban.js?v=17';
-import { renderEmpresasView } from './components/view_empresas.js?v=17';
-import { renderRankingView } from './components/view_rankings.js?v=17';
-import { renderEleicoesView } from './components/view_eleicoes.js?v=17';
-import { renderVereadoresView } from './components/view_vereadores.js?v=17';
-import { renderAdministrativoView } from './components/view_administrativo.js?v=17';
-import { renderCidadesView } from './components/view_cidade.js?v=17';
-import { renderMapaView } from './components/view_mapa.js?v=17';
-import { renderAdminView } from './components/view_admin.js?v=17';
-import { renderDespesasView } from './components/view_despesas.js?v=17';
-import { renderDiariasView } from './components/view_diarias.js?v=17';
-import { renderAuditoriaView } from './components/view_auditoria.js?v=17';
+import { renderSidebar } from './components/sidebar.js?v=23';
+import { renderInicioView } from './components/view_inicio.js?v=23';
+import { renderMandatosView } from './components/view_mandatos.js?v=23';
+import { renderFuncionariosView } from './components/view_funcionarios.js?v=23';
+import { renderKanbanView } from './components/view_kanban.js?v=23';
+import { renderEmpresasView } from './components/view_empresas.js?v=23';
+import { renderRankingView } from './components/view_rankings.js?v=23';
+import { renderEleicoesView } from './components/view_eleicoes.js?v=23';
+import { renderVereadoresView } from './components/view_vereadores.js?v=23';
+import { renderAdministrativoView } from './components/view_administrativo.js?v=23';
+import { renderCidadesView } from './components/view_cidade.js?v=23';
+import { renderMapaView } from './components/view_mapa.js?v=23';
+import { renderAdminView } from './components/view_admin.js?v=23';
+import { renderDespesasView } from './components/view_despesas.js?v=23';
+import { renderDiariasView } from './components/view_diarias.js?v=23';
+import { renderAuditoriaView } from './components/view_auditoria.js?v=23';
 
 const VIEWS = {
   inicio: renderInicioView,

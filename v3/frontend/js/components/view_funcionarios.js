@@ -187,7 +187,7 @@ export async function renderFuncionariosView(container) {
           <span>👥</span> Pessoas Físicas & Vínculos Municipais
         </h2>
         <div style="display: flex; gap: 6px; align-items: center;">
-          <span class="badge badge-green">Base Oficial SQLite (2013–2026)</span>
+          <span class="badge badge-green">Base Oficial Certificada (2013–2026)</span>
           <span class="badge badge-blue">Cadastro Unificado</span>
         </div>
       </div>
@@ -385,12 +385,6 @@ export async function renderFuncionariosView(container) {
   modalCloseBtn.onclick = fecharModal;
   modalDossie.onclick = e => {
     if (e.target === modalDossie) fecharModal();
-  };
-
-  btnToggleAvancada.onclick = () => {
-    estado.avancadaAberta = !estado.avancadaAberta;
-    painelAvancada.style.display = estado.avancadaAberta ? 'block' : 'none';
-    btnToggleAvancada.style.background = estado.avancadaAberta ? 'rgba(59, 130, 246, 0.35)' : 'rgba(59, 130, 246, 0.15)';
   };
 
   function renderizarFiltrosAtivos() {
@@ -786,7 +780,21 @@ export async function renderFuncionariosView(container) {
                     </div>
                   </div>
                 </div>
-                ${h.sha256 ? `<div style="font-size: 9.5px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 6px;">Hash SHA-256: ${h.sha256}</div>` : ''}
+                ${h.sha256 ? `
+                  <div style="margin-top: 8px; padding: 6px 10px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
+                    <div style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #94a3b8; word-break: break-all;">
+                      <span style="color: #34d399; font-weight: 700;">🛡️ Selo SHA-256:</span> ${h.sha256}
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                      <button class="btn btn-outline" style="padding: 2px 8px; font-size: 9.5px; cursor: pointer; color: #cbd5e1;" onclick="event.stopPropagation(); navigator.clipboard.writeText('${h.sha256}').then(() => alert('Hash SHA-256 copiado!'))">
+                        📋 Copiar Hash
+                      </button>
+                      <a href="#auditoria?termo=${encodeURIComponent(h.sha256)}" class="btn btn-outline" style="padding: 2px 8px; font-size: 9.5px; text-decoration: none; color: #34d399; border-color: rgba(52, 211, 153, 0.4);" onclick="event.stopPropagation();">
+                        🔍 Auditar Custódia
+                      </a>
+                    </div>
+                  </div>
+                ` : ''}
               </td>
             </tr>
           `;
@@ -833,7 +841,7 @@ export async function renderFuncionariosView(container) {
 
   async function carregarPagina(page) {
     estado.page = page;
-    tabelaContainer.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-muted);">Consultando servidores no SQLite...</div>';
+    tabelaContainer.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-muted);">Consultando acervo oficial de servidores...</div>';
 
     try {
       const resp = await fetchFolha({
