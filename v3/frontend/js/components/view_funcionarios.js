@@ -70,11 +70,11 @@ export async function renderFuncionariosView(container) {
     <div class="card" style="margin-bottom: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
         <h2 style="font-size: 16px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
-          <span>👥</span> Servidores Públicos Municipais & Folha de Pagamento
+          <span>👥</span> Pessoas Físicas & Vínculos Municipais
         </h2>
         <div style="display: flex; gap: 6px; align-items: center;">
           <span class="badge badge-green">Base Oficial SQLite (2013–2026)</span>
-          <span class="badge badge-blue">Matrícula Padronizada</span>
+          <span class="badge badge-blue">Cadastro Unificado</span>
         </div>
       </div>
 
@@ -84,7 +84,7 @@ export async function renderFuncionariosView(container) {
           type="text" 
           id="folha-input-busca" 
           class="input-field" 
-          placeholder="🔍 Buscar por nome, matrícula sem zeros (ex: 573 ou 1556-2) ou cargo..." 
+          placeholder="🔍 Buscar pessoa por nome, matrícula sem zeros (ex: 573 ou 1556-2) ou cargo..." 
           style="flex: 1; min-width: 260px;"
         >
         <select id="folha-select-periodo" class="input-field" style="min-width: 175px; background: #1e293b; border: 1px solid #334155; color: #fff;">

@@ -25,8 +25,8 @@ export const MENU_SECTIONS = [
       },
       {
         id: 'pessoas',
-        label: 'Funcionários',
-        sub: 'Servidores & Folha',
+        label: 'Pessoas',
+        sub: 'Servidores & Vínculos',
         icon: '👥',
         href: '#pessoas',
         badge: '133k',
