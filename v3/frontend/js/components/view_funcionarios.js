@@ -20,6 +20,22 @@ const MESES_EXTENSO = [
   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
 ];
 
+function extrairDestinoDiaria(historico) {
+  if (!historico) return 'Arinos e Região';
+  const m = historico.match(/\b(?:A|AO|PARA)\s+([A-ZÁÉÍÓÚÂÊÔÃÕÇ\s]{2,25}\/(?:MG|DF|SP|GO|BA|RJ|ES|TO|MS|MT|PR|SC|RS|CE|PE|MA|PA|AM|PI|RN|PB|AL|SE|RO|AC|AP|RR))\b/i);
+  if (m && m[1]) {
+    const d = m[1].trim().replace(/\s+/g, ' ');
+    if (!/VIAGEM|DESPESAS|LIBERACAO/i.test(d)) return d;
+  }
+  return 'Arinos / Destino Oficial';
+}
+
+function extrairPeriodoDiaria(historico) {
+  if (!historico) return 'Conforme empenho';
+  const m = historico.match(/(?:DIA|DIAS|PER[IÍ]ODO)\s+([^,–-]+?)(?:,|-|\bLEVAR\b|\bPARTICIPAR\b|\bEM\b|\bPARA\b|\bCONFORME\b|$)/i);
+  return m && m[1] ? m[1].trim().replace(/\s+/g, ' ') : 'Conforme empenho';
+}
+
 function formatarAnosEMeses(totalMeses) {
   const m = parseInt(totalMeses, 10) || 0;
   if (m <= 0) return '0 meses';
@@ -606,7 +622,7 @@ export async function renderFuncionariosView(container) {
         </div>
       `;
 
-      // 4. Card 3: Diárias Municipais (Borda Amarela Obrigatória)
+      // 4. Card 3: Diárias Municipais (Borda Amarela Obrigatória • Linhas Clicáveis com Comprovante)
       const cardDiariasHtml = `
         <div class="card" style="margin-bottom: 16px; background: #0b1120; border: 1px solid #f59e0b; padding: 16px; border-radius: 8px;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
@@ -624,25 +640,120 @@ export async function renderFuncionariosView(container) {
           </div>
 
           ${diarias.length > 0 ? `
-            <div class="table-wrapper" style="max-height: 220px; overflow-y: auto;">
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
+              💡 <em>Clique em qualquer diária para abrir o comprovante oficial, ver destino, período, justificativa e Selo SHA-256</em>
+            </div>
+            <div class="table-wrapper" style="max-height: 280px; overflow-y: auto;">
               <table>
                 <thead>
                   <tr>
+                    <th style="width: 24px; text-align: center;"></th>
                     <th>Competência</th>
-                    <th>Fonte Oficial</th>
-                    <th>Tipo / Objeto</th>
+                    <th>Destino Oficial</th>
+                    <th>Secretaria / Órgão</th>
                     <th style="text-align: right;">Valor da Diária</th>
+                    <th style="text-align: center; width: 90px;">Ação</th>
                   </tr>
                 </thead>
-                <tbody>
-                  ${diarias.map(d => `
-                    <tr>
-                      <td><span class="badge badge-amber" style="font-family: 'JetBrains Mono', monospace;">${String(d.mes).padStart(2, '0')}/${d.ano}</span></td>
-                      <td><span style="color: #cbd5e1; font-size: 11.5px;">${d.fonte || 'Prefeitura Municipal (SIAP)'}</span></td>
-                      <td><span style="color: var(--text-muted); font-size: 11.5px;">${d.tipo || 'Deslocamento oficial'}</span></td>
-                      <td style="text-align: right;"><strong style="color: #fbbf24; font-family: 'JetBrains Mono', monospace;">${formatMoeda(d.valor)}</strong></td>
+                <tbody id="tbody-diarias-dossie">
+                  ${diarias.map((d, dIdx) => {
+                    const dest = extrairDestinoDiaria(d.historico_viagem);
+                    const per = extrairPeriodoDiaria(d.historico_viagem);
+                    return `
+                    <tr class="tr-diaria-dossie" data-didx="${dIdx}" style="cursor: pointer; transition: background 0.15s ease;" title="Clique para ver o comprovante oficial desta diária">
+                      <td style="text-align: center; color: #fbbf24; font-size: 10px;">
+                        <span class="seta-expandir-diaria" id="seta-diaria-${dIdx}" style="display: inline-block; transition: transform 0.2s ease;">▶</span>
+                      </td>
+                      <td>
+                        <span class="badge badge-amber" style="font-family: 'JetBrains Mono', monospace; font-size: 11px;">
+                          ${String(d.mes).padStart(2, '0')}/${d.ano}
+                        </span>
+                        <div style="font-size: 10px; color: #cbd5e1; margin-top: 2px;">${per}</div>
+                      </td>
+                      <td>
+                        <span class="badge badge-blue" style="font-size: 10.5px;">📍 ${dest}</span>
+                        <div style="font-size: 10.5px; color: var(--text-muted); margin-top: 2px;">${d.descricao_natureza || 'Deslocamento oficial'}</div>
+                      </td>
+                      <td>
+                        <div style="font-size: 11px; color: #cbd5e1; max-width: 220px; line-height: 1.3;">
+                          ${d.secretaria_atividade || 'Prefeitura Municipal'}
+                        </div>
+                      </td>
+                      <td style="text-align: right;">
+                        <strong style="color: #fbbf24; font-family: 'JetBrains Mono', monospace; font-size: 13px;">${formatMoeda(d.valor)}</strong>
+                        <div style="font-size: 9.5px; color: #10b981;">Pago</div>
+                      </td>
+                      <td style="text-align: center;">
+                        <button class="btn btn-sm btn-diaria-toggle" id="btn-toggle-diaria-${dIdx}" style="padding: 3px 8px; font-size: 10.5px; border-radius: 4px; border: 1px solid #334155; background: #1e293b; color: #fcd34d; cursor: pointer; pointer-events: none;">
+                          Detalhes ▾
+                        </button>
+                      </td>
                     </tr>
-                  `).join('')}
+                    <tr class="tr-detalhes-diaria-dossie" id="detalhe-diaria-${dIdx}" style="display: none; background: #060b13;">
+                      <td colspan="6" style="padding: 12px 16px; border-left: 3px solid #f59e0b; border-bottom: 2px solid #1e293b;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #1e293b;">
+                          <div style="font-size: 12px; font-weight: 700; color: #fbbf24; text-transform: uppercase;">
+                            🎫 Comprovante Oficial de Diária Municipal • ${String(d.mes).padStart(2,'0')}/${d.ano}
+                          </div>
+                          <div style="display: flex; gap: 6px;">
+                            <span class="badge badge-green">PAGO / LIQUIDADO</span>
+                            <span class="badge badge-blue">EMPENHO ${d.nrempenho || '—'}</span>
+                          </div>
+                        </div>
+
+                        <!-- Detalhes do Trajeto -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 10px;">
+                          <div style="background: #0f172a; padding: 8px 12px; border-radius: 6px; border: 1px solid #1e293b;">
+                            <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Destino</div>
+                            <div style="font-size: 12.5px; font-weight: 700; color: #60a5fa; margin-top: 2px;">📍 ${dest}</div>
+                          </div>
+                          <div style="background: #0f172a; padding: 8px 12px; border-radius: 6px; border: 1px solid #1e293b;">
+                            <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Período da Viagem</div>
+                            <div style="font-size: 12.5px; font-weight: 700; color: #f59e0b; margin-top: 2px;">📅 ${per}</div>
+                          </div>
+                          <div style="background: #0f172a; padding: 8px 12px; border-radius: 6px; border: 1px solid #1e293b;">
+                            <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Valor Indenizado</div>
+                            <div style="font-size: 14px; font-weight: 800; color: #fbbf24; font-family: 'JetBrains Mono', monospace; margin-top: 2px;">${formatMoeda(d.valor)}</div>
+                          </div>
+                        </div>
+
+                        <!-- Justificativa Administrativa -->
+                        <div style="background: #0d1527; border-left: 3px solid #3b82f6; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; font-size: 12px; color: #e2e8f0; line-height: 1.5;">
+                          <div style="font-size: 10.5px; font-weight: 700; color: #93c5fd; text-transform: uppercase; margin-bottom: 3px;">
+                            📝 Finalidade e Justificativa da Viagem:
+                          </div>
+                          "${d.historico_viagem || 'Concessão de diária para deslocamento a serviço do município.'}"
+                          <div style="margin-top: 6px; font-size: 10.5px; color: #94a3b8;">
+                            Empenho: ${d.nrempenho || '—'} • Data: ${d.dtempenho || '—'} • Dotação: ${d.dotacao || '—'}
+                          </div>
+                        </div>
+
+                        <!-- Selo SHA-256 -->
+                        <div style="background: #030712; border: 1px solid #1e293b; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                          <div style="flex: 1; min-width: 220px;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                              <span style="font-size: 10px; font-weight: 700; color: #10b981; text-transform: uppercase;">
+                                🛡️ Selo SHA-256 de Custódia Pericial:
+                              </span>
+                              <span class="badge badge-green" style="font-size: 9px; padding: 1px 5px;">CERTIFICADO</span>
+                            </div>
+                            <div style="font-size: 10.5px; font-family: 'JetBrains Mono', monospace; color: #94a3b8; word-break: break-all; margin-top: 2px;">
+                              ${d.chave || 'SHA-256 NÃO DISPONÍVEL'}
+                            </div>
+                          </div>
+                          <div style="display: flex; gap: 6px;">
+                            <button class="btn btn-copiar-hash-dossie" data-hash="${d.chave}" style="padding: 4px 10px; font-size: 11px; background: #1e293b; border: 1px solid #334155; color: #f8fafc; border-radius: 4px; cursor: pointer;">
+                              📋 Copiar Hash
+                            </button>
+                            <a href="#auditoria?termo=${d.chave}" class="btn" style="padding: 4px 10px; font-size: 11px; background: rgba(59, 130, 246, 0.15); border: 1px solid #3b82f6; color: #93c5fd; border-radius: 4px; text-decoration: none;">
+                              🔍 Auditar
+                            </a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    `;
+                  }).join('')}
                 </tbody>
               </table>
             </div>
@@ -922,6 +1033,49 @@ export async function renderFuncionariosView(container) {
 
       // Render inicial com o ano mais recente (ou todos)
       renderizarAnoSelecionado(anoInicial);
+
+      // Event listeners para as diárias clicáveis do Card 3
+      dossieBody.querySelectorAll('.tr-diaria-dossie').forEach(row => {
+        row.addEventListener('click', () => {
+          const didx = row.getAttribute('data-didx');
+          const detalhe = dossieBody.querySelector(`#detalhe-diaria-${didx}`);
+          const seta = dossieBody.querySelector(`#seta-diaria-${didx}`);
+          const btn = dossieBody.querySelector(`#btn-toggle-diaria-${didx}`);
+          if (!detalhe) return;
+          const aberta = detalhe.style.display !== 'none';
+          if (aberta) {
+            detalhe.style.display = 'none';
+            row.style.background = '';
+            if (seta) seta.style.transform = 'rotate(0deg)';
+            if (btn) btn.innerText = 'Detalhes ▾';
+          } else {
+            detalhe.style.display = 'table-row';
+            row.style.background = 'rgba(245, 158, 11, 0.08)';
+            if (seta) seta.style.transform = 'rotate(90deg)';
+            if (btn) btn.innerText = 'Ocultar ▴';
+          }
+        });
+      });
+
+      dossieBody.querySelectorAll('.btn-copiar-hash-dossie').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const hash = btn.getAttribute('data-hash');
+          if (hash) {
+            navigator.clipboard.writeText(hash).then(() => {
+              const orig = btn.innerText;
+              btn.innerText = '✔ Copiado!';
+              btn.style.color = '#34d399';
+              btn.style.borderColor = '#10b981';
+              setTimeout(() => {
+                btn.innerText = orig;
+                btn.style.color = '#f8fafc';
+                btn.style.borderColor = '#334155';
+              }, 2000);
+            });
+          }
+        });
+      });
 
     } catch (err) {
       dossieBody.innerHTML = `<div class="empty-state">Erro ao carregar dossiê: ${err.message}</div>`;

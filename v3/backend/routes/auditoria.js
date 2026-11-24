@@ -38,6 +38,7 @@ function handleRastrear(req, res, query) {
 
   try {
     let documentoAlvo = null;
+    let diariaAlvo = null;
     let nomeNormalizadoAlvo = null;
 
     // 1. Busca se for hash exato (64 caracteres)
@@ -52,6 +53,18 @@ function handleRastrear(req, res, query) {
 
       if (documentoAlvo) {
         nomeNormalizadoAlvo = documentoAlvo.nome_normalizado;
+      } else if (dbDiarias) {
+        const docDiaria = dbDiarias.prepare(`
+          SELECT chave, ano, mes, tipo, nrempenho, dtempenho, nome, cpf, valor, dotacao,
+                 secretaria_atividade, natureza, descricao_natureza, historico_viagem, coletado_em
+          FROM diarias_consolidadas
+          WHERE chave = ?
+          LIMIT 1
+        `).get(termo.toLowerCase());
+        if (docDiaria) {
+          diariaAlvo = docDiaria;
+          nomeNormalizadoAlvo = normalizarNome(docDiaria.nome);
+        }
       }
     }
 
@@ -109,14 +122,15 @@ function handleRastrear(req, res, query) {
 
     // 5. Busca histórico completo de diárias da pessoa
     let historicoDiarias = [];
-    if (dbDiarias) {
-      const diariaKey = nomeNormalizadoAlvo.toLowerCase().replace(/\s+/g, '_');
+    if (dbDiarias && nomeNormalizadoAlvo) {
+      const nomeLimpo = nomeNormalizadoAlvo.toUpperCase();
       historicoDiarias = dbDiarias.prepare(`
-        SELECT ano, mes, tipo, valor, fonte, coletado_em
-        FROM registros
-        WHERE (nome_normalizado = ? OR replace(lower(nome), ' ', '_') = ?) AND valor > 0
-        ORDER BY ano DESC, mes DESC
-      `).all(diariaKey, diariaKey);
+        SELECT chave, ano, mes, tipo, nrempenho, dtempenho, nome, cpf, valor, dotacao,
+               secretaria_atividade, natureza, descricao_natureza, historico_viagem, coletado_em
+        FROM diarias_consolidadas
+        WHERE (upper(nome) = ? OR upper(nome) LIKE ?) AND (valor > 0 AND valor IS NOT NULL)
+        ORDER BY ano DESC, mes DESC, valor DESC
+      `).all(nomeLimpo, `%${nomeLimpo}%`);
     }
 
     // 6. Agregações e métricas do servidor
@@ -139,7 +153,7 @@ function handleRastrear(req, res, query) {
       sucesso: true,
       servidor: {
         pessoa_id: infoPolitica.pessoa_id,
-        nome: documentoAlvo ? documentoAlvo.nome : termo,
+        nome: documentoAlvo ? documentoAlvo.nome : (diariaAlvo ? diariaAlvo.nome : (nomeNormalizadoAlvo || termo)),
         nomeNormalizado: nomeNormalizadoAlvo,
         foto_url: infoPolitica.foto_url,
         passado_politico: infoPolitica,
@@ -165,6 +179,7 @@ function handleRastrear(req, res, query) {
         periodosTimeline: periodosInfo.timeline
       },
       documentoConsultado: documentoAlvo,
+      diariaConsultada: diariaAlvo,
       historicoFolha,
       historicoDiarias
     }));

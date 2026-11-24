@@ -290,6 +290,20 @@ export const KANBAN_TASKS = [
       resumo: 'Validação cruzada de integridade de hashes SHA-256, tempo de resposta < 5ms e homologação completa de todas as páginas no navegador.'
     }
   },
+  {
+    id: 'diarias-comprovante-sha256',
+    coluna: 'concluido',
+    titulo: '✈️ Linhas Clicáveis em Diárias & Comprovante com Selo SHA-256',
+    resumo: 'Comprovante pericial oficial colapsável em 1 clique na tabela de diárias e no Card 3 do Dossiê.',
+    prioridade: 'P0',
+    tag: '✔ Entregue',
+    tagClass: 'badge-green',
+    detalhes: {
+      tipo: 'Interatividade & Auditoria de Viagens',
+      origem: 'Solicitação direta do cidadão e comparação com Observa Arinos',
+      resumo: 'Linhas com cursor pointer, hover suave e chevron indicador. Ao clicar, expande o comprovante de viagem completo com destino (cidade/UF), período, justificativa administrativa integral, empenho, dotação e Selo Criptográfico SHA-256 com cópia rápida e link pericial de auditoria.'
+    }
+  },
 
   // --- EM ANDAMENTO (O QUE FALTA MELHORAR) ---
   {
@@ -309,15 +323,15 @@ export const KANBAN_TASKS = [
   {
     id: 'melhoria-graficos-barras',
     coluna: 'em_andamento',
-    titulo: '📈 Gráficos Visuais de Linhas & Barras Salariais no Dossiê',
-    resumo: 'Visualização interativa da curva salarial anual e histórico comparativo de diárias por exercício.',
-    prioridade: 'P1',
+    titulo: '📊 Gráficos de Barras & Indicadores Visuais de Gastos',
+    resumo: 'Visualização interativa em barras e colunas para evolução salarial, despesas por órgão e diárias.',
+    prioridade: 'P0',
     tag: 'Falta Melhorar',
     tagClass: 'badge-blue',
     detalhes: {
-      tipo: 'Visualização Gráfica de Dados',
+      tipo: 'Visualização Gráfica Interativa',
       origem: 'Demanda de enriquecimento visual e análise gráfica',
-      resumo: 'Adição de componentes gráficos em barras/linhas para visualização rápida da progressão dos vencimentos e identificação de picos remuneratórios ao longo dos anos.'
+      resumo: 'Adição de componentes visuais em barras para comparação direta de gastos por secretaria, evolução mensal dos proventos regulares (isolando 13º e férias) e distribuição de diárias por ano de exercício.'
     }
   },
   {
@@ -374,7 +388,7 @@ export const KANBAN_TASKS = [
     tagClass: 'badge-amber',
     detalhes: {
       tipo: 'Novo Pilar de Dados: Obras e Infraestrutura',
-      origem: 'Módulo de destaque no Observa Arinos',
+      origem: 'Módulo de destaque no Observa Arinos (observearinos.com.br)',
       resumo: 'Coleta automatizada de dados do SICOM/TCE-MG e PNCP cobrindo pavimentação, reformas, saneamento básico e postos de saúde, com fotos, cronograma e medições pagas.'
     }
   },
@@ -404,6 +418,34 @@ export const KANBAN_TASKS = [
       tipo: 'Novo Pilar de Dados: Receitas Públicas',
       origem: 'Relatórios de execução orçamentária do TCE-MG e Siconfi',
       resumo: 'Mapeamento mensal das receitas correntes, repasses do FPM (Fundo de Participação dos Municípios), ICMS e FUNDEB para contrapor diretamente com as despesas municipais.'
+    }
+  },
+  {
+    id: 'lai-esic-cidadao',
+    coluna: 'a_fazer',
+    titulo: '📬 Módulo LAI Cidadão (e-SIC Arinos): Gerador & Rastreador de Pedidos',
+    resumo: 'Ferramenta de apoio ao cidadão para gerar pedidos oficiais com base na Lei 12.527/2011 e acompanhar prazos.',
+    prioridade: 'P1',
+    tag: 'Falta Fazer',
+    tagClass: 'badge-amber',
+    detalhes: {
+      tipo: 'Controle Social & Participação Cidadã',
+      origem: 'Recurso de suporte e geração de pedidos LAI presente no Observe Arinos',
+      resumo: 'Modelos parametrizados para pedidos de esclarecimentos à Prefeitura, Câmara e Fundação Hospitalar de Arinos, com contagem de prazos legais e repositório público de respostas obtidas.'
+    }
+  },
+  {
+    id: 'manifestacoes-institucionais',
+    coluna: 'a_fazer',
+    titulo: '🏛️ Canal de Manifestações & Esclarecimentos Institucionais',
+    resumo: 'Espaço para órgãos públicos responderem com histórico e agentes responsáveis identificados.',
+    prioridade: 'P2',
+    tag: 'Falta Fazer',
+    tagClass: 'badge-amber',
+    detalhes: {
+      tipo: 'Transparência Dialógica & Contraditório',
+      origem: 'Canal de manifestações do Observe Arinos',
+      resumo: 'Canal estruturado para anexar notas oficiais, retificações e esclarecimentos emitidos pelos gestores públicos sobre os gastos e contratos auditados.'
     }
   },
   {
