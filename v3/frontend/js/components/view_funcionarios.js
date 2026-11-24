@@ -1,18 +1,132 @@
 /**
  * ==============================================================================
- * PORTAL DA TRANSPARÊNCIA DE ARINOS / MG — V3 FUNCIONÁRIOS & FOLHA
- * Suporte a padronização de matrícula (sem zeros à esquerda),
- * identificação consolidada de pessoa física e busca avançada completa.
+ * PORTAL DA TRANSPARÊNCIA DE ARINOS / MG — V3 PESSOAS & AUDITORIA INTEGRADA
+ * Módulo com identificação consolidada de pessoa física, trajetória funcional,
+ * cruzamento eleitoral TSE/Câmara, detalhamento de diárias e histórico financeiro
+ * interativo com seleção anual reativa e contracheques explicados.
  * ==============================================================================
  */
 
-import { fetchFolha, fetchFolhaFiltros, fetchStats } from '../api.js';
+import { fetchFolha, fetchFolhaFiltros } from '../api.js';
 import { renderTabela } from './tabela.js';
 import { renderPaginacao } from './paginacao.js';
 
 const formatMoeda = val => typeof val === 'number' 
   ? val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
   : 'R$ 0,00';
+
+const MESES_EXTENSO = [
+  '', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+];
+
+function formatarAnosEMeses(totalMeses) {
+  const m = parseInt(totalMeses, 10) || 0;
+  if (m <= 0) return '0 meses';
+  const anos = Math.floor(m / 12);
+  const meses = m % 12;
+  const partes = [];
+  if (anos > 0) partes.push(`${anos} ${anos === 1 ? 'ano' : 'anos'}`);
+  if (meses > 0) partes.push(`${meses} ${meses === 1 ? 'mês' : 'meses'}`);
+  return partes.join(' e ') || '0 meses';
+}
+
+function detectarTagsContracheque(h) {
+  const str = `${h.tabelas_json || ''} ${h.campos_json || ''}`;
+  const tem13 = /13\s*Sal[áa]rio|Inss\s*13|Decimo|D[ée]cimo|0132\.\d+|0403\.02|0404\.02/i.test(str) || (h.mes === 12 && h.total_proventos > 1.4 * (h.salario_base || 1));
+  const temFerias = /f[ée]rias|0121\.\d+|0122\.\d+|0163\.\d+/i.test(str);
+  return { tem13, temFerias };
+}
+
+function agruparCargosETrajetoria(historico) {
+  if (!historico || historico.length === 0) return [];
+  const cargosMap = new Map();
+
+  historico.forEach(h => {
+    const nomeCargo = (h.cargo || 'Servidor Municipal').trim();
+    if (!cargosMap.has(nomeCargo)) {
+      cargosMap.set(nomeCargo, []);
+    }
+    cargosMap.get(nomeCargo).push(h);
+  });
+
+  const lista = [];
+  cargosMap.forEach((itens, cargoNome) => {
+    itens.sort((a, b) => (a.ano * 100 + a.mes) - (b.ano * 100 + b.mes));
+    const primeiro = itens[0];
+    const ultimo = itens[itens.length - 1];
+
+    const mesesChaves = new Set(itens.map(x => `${x.ano}-${x.mes}`));
+    const totalMeses = mesesChaves.size;
+
+    const inicioStr = `${MESES_EXTENSO[primeiro.mes] || primeiro.mes}/${primeiro.ano}`;
+    const fimStr = `${MESES_EXTENSO[ultimo.mes] || ultimo.mes}/${ultimo.ano}`;
+    const duracaoStr = formatarAnosEMeses(totalMeses);
+
+    // Média salarial regular (excluindo 13º e férias para apurar a remuneração normal)
+    const normais = itens.filter(item => {
+      const { tem13, temFerias } = detectarTagsContracheque(item);
+      return !tem13 && !temFerias;
+    });
+
+    const itensParaMedia = normais.length > 0 ? normais : itens;
+    const somaProventos = itensParaMedia.reduce((acc, c) => acc + (c.total_proventos || c.salario_base || 0), 0);
+    const mediaRegular = somaProventos / (itensParaMedia.length || 1);
+
+    lista.push({
+      cargo: cargoNome,
+      inicioStr,
+      fimStr,
+      totalMeses,
+      duracaoStr,
+      mediaRegular,
+      primeiroAno: primeiro.ano,
+      ultimoAno: ultimo.ano,
+      ultimoMes: ultimo.mes,
+      qtdContracheques: itens.length
+    });
+  });
+
+  // Ordenar pelo cargo mais recente
+  lista.sort((a, b) => (b.ultimoAno * 100 + b.ultimoMes) - (a.ultimoAno * 100 + a.ultimoMes));
+  return lista;
+}
+
+function extrairRubricasContracheque(h) {
+  const proventos = [];
+  const descontos = [];
+
+  try {
+    let raw = null;
+    if (h.tabelas_json) {
+      raw = typeof h.tabelas_json === 'string' ? JSON.parse(h.tabelas_json) : h.tabelas_json;
+    } else if (h.campos_json) {
+      raw = typeof h.campos_json === 'string' ? JSON.parse(h.campos_json) : h.campos_json;
+    }
+
+    if (raw && Array.isArray(raw)) {
+      const flattened = raw.flat(3);
+      for (let i = 0; i < flattened.length; i++) {
+        const item = flattened[i];
+        if (Array.isArray(item) && item.length >= 2) {
+          const desc = String(item[0]).trim();
+          const val = String(item[1]).trim();
+          if (desc && val && !desc.includes('Dados do') && !desc.includes('Matrícula/Nome') && !desc.includes('Orgão') && !desc.includes('Local de')) {
+            if (/inss|irrf|previd|desconto|falta|pensao|consign|sindic/i.test(desc)) {
+              descontos.push({ desc, val });
+            } else if (!desc.includes('Total') && !desc.includes('Líquido')) {
+              proventos.push({ desc, val });
+            }
+          }
+        }
+      }
+    }
+  } catch (e) {
+    // Ignora erro em parse
+  }
+
+  return { proventos, descontos };
+}
 
 export async function renderFuncionariosView(container) {
   let estado = {
@@ -66,7 +180,7 @@ export async function renderFuncionariosView(container) {
       </div>
     </div>
 
-    <!-- Barra de Filtros e Busca de Servidores -->
+    <!-- Barra de Filtros e Busca de Pessoas -->
     <div class="card" style="margin-bottom: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
         <h2 style="font-size: 16px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
@@ -138,7 +252,7 @@ export async function renderFuncionariosView(container) {
         </button>
       </div>
 
-      <!-- ⚙️ Painel Expansível de Busca Avançada -->
+      <!-- Painel Expansível de Busca Avançada -->
       <div id="painel-busca-avancada" style="display: none; background: #0b1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; margin-top: 14px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
           <div style="font-size: 13px; font-weight: 700; color: #60a5fa; display: flex; align-items: center; gap: 6px;">
@@ -199,15 +313,19 @@ export async function renderFuncionariosView(container) {
 
     <!-- Modal Dossiê da Pessoa Física & Servidor -->
     <div id="modalDossieServidor" class="voter-modal-overlay">
-      <div class="voter-modal-box">
-        <div class="voter-modal-header">
-          <div>
-            <h3 style="font-size: 18px; font-weight: 800; color: #fff;" id="dossie-nome">Cadastro Único da Pessoa Física</h3>
-            <p style="font-size: 12px; color: var(--text-muted);" id="dossie-cargo">Histórico funcional unificado</p>
+      <div class="voter-modal-box" style="max-width: 920px; width: 95%; max-height: 92vh; display: flex; flex-direction: column; background: #0f172a; border: 1px solid #334155;">
+        <div class="voter-modal-header" style="align-items: center; gap: 14px; border-bottom: 1px solid #1e293b; padding: 14px 20px;">
+          <div id="dossie-foto-container"></div>
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <h3 style="font-size: 18px; font-weight: 800; color: #fff; margin: 0;" id="dossie-nome">Pessoa Física</h3>
+              <span id="dossie-tag-status"></span>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 3px 0 0 0;" id="dossie-cargo">Matrículas e vínculos municipais</p>
           </div>
-          <button class="modal-close-btn" id="dossie-close-btn">✕</button>
+          <button class="modal-close-btn" id="dossie-close-btn" style="font-size: 20px; cursor: pointer; color: #94a3b8; background: none; border: none;">✕</button>
         </div>
-        <div class="voter-modal-body" id="dossie-body">
+        <div class="voter-modal-body" id="dossie-body" style="overflow-y: auto; padding: 16px 20px;">
           <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Carregando dados da pessoa física...</div>
         </div>
       </div>
@@ -236,7 +354,6 @@ export async function renderFuncionariosView(container) {
   const btnAvancadaAplicar = container.querySelector('#avancada-btn-aplicar');
   const btnAvancadaLimpar = container.querySelector('#avancada-btn-limpar');
 
-  // Carrega opções de autocomplete para a busca avançada
   async function carregarOpcoesAvancadas() {
     try {
       const data = await fetchFolhaFiltros();
@@ -249,7 +366,7 @@ export async function renderFuncionariosView(container) {
         dlLotacoes.innerHTML = data.lotacoes.map(l => `<option value="${l}"></option>`).join('');
       }
     } catch (e) {
-      // Ignora erro em autocomplete silenciosamente
+      // Ignora erro
     }
   }
   carregarOpcoesAvancadas();
@@ -303,67 +420,82 @@ export async function renderFuncionariosView(container) {
     document.body.style.overflow = 'hidden';
 
     const dossieBody = container.querySelector('#dossie-body');
-    dossieBody.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">Consultando cadastro consolidado da pessoa física...</div>';
+    const fotoContainer = container.querySelector('#dossie-foto-container');
+    const tagStatusContainer = container.querySelector('#dossie-tag-status');
+    fotoContainer.innerHTML = '';
+    tagStatusContainer.innerHTML = '';
+    dossieBody.innerHTML = '<div style="text-align: center; padding: 2.5rem; color: var(--text-muted);">Consultando cadastro consolidado da pessoa física...</div>';
 
     try {
       const res = await fetch(`/api/auditoria/rastrear?termo=${encodeURIComponent(nomeOuMatricula)}`);
       const data = await res.json();
 
       if (!data.sucesso) {
-        dossieBody.innerHTML = `<div class="empty-state"><h4>Registro não localizado</h4></div>`;
+        dossieBody.innerHTML = `<div class="empty-state"><h4>Registro não localizado para "${nomeOuMatricula}"</h4></div>`;
         return;
       }
 
       const s = data.servidor;
+      const folha = data.historicoFolha || [];
+      const diarias = data.historicoDiarias || [];
       const pol = s.passado_politico || {};
-      const temPol = pol.tem_passado_politico;
-      const venceu = pol.venceu;
+      const temPol = Boolean(pol.tem_passado_politico);
+      const venceu = Boolean(pol.venceu);
 
-      container.querySelector('#dossie-nome').textContent = `👤 ${s.nome}`;
-      container.querySelector('#dossie-cargo').textContent = `${s.cargos.join(' • ')} • Matrículas Padronizadas: ${s.matriculas.join(', ')}`;
+      // 1. Cabeçalho Enxuto e Limpo
+      container.querySelector('#dossie-nome').textContent = s.nome;
+      container.querySelector('#dossie-cargo').textContent = `Matrícula(s): ${s.matriculas.length ? s.matriculas.join(', ') : '—'} • ${s.cargos.join(' • ')}`;
 
-      const fotoDossieHtml = (temPol && s.foto_url) ? `
-        <img 
-          src="${s.foto_url}" 
-          alt="${s.nome}" 
-          style="width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 3px solid ${venceu ? '#10b981' : '#f59e0b'}; flex-shrink: 0;"
-          onerror="this.style.display='none';"
-        >
-      ` : '';
+      if (temPol && s.foto_url) {
+        fotoContainer.innerHTML = `
+          <img 
+            src="${s.foto_url}" 
+            alt="${s.nome}" 
+            style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid ${venceu ? '#10b981' : '#f59e0b'}; flex-shrink: 0;"
+            onerror="this.style.display='none';"
+          >
+        `;
+      }
 
+      tagStatusContainer.innerHTML = temPol 
+        ? `<span class="badge" style="background: ${venceu ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)'}; color: ${venceu ? '#34d399' : '#fbbf24'}; border: 1px solid ${venceu ? '#10b981' : '#f59e0b'}; font-size: 11px; font-weight: 700; padding: 3px 8px;">
+            ${venceu ? '🏛️ Mandato Eleito' : '🗳️ Candidato TSE'}
+           </span>`
+        : `<span class="badge badge-blue" style="font-size: 11px; font-weight: 700;">Servidor Civil</span>`;
+
+      // 2. Card 1: Histórico Político (no Topo para agentes políticos ou candidatos)
       const cardPoliticoHtml = temPol ? `
-        <!-- 🏛️ Passado Político & Registro Eleitoral TSE / Câmara -->
-        <div class="card" style="margin-bottom: 16px; background: #0b1120; border: 1px solid ${venceu ? '#10b981' : '#f59e0b'}; padding: 16px;">
+        <div class="card" style="margin-bottom: 16px; background: #0b1120; border: 1px solid ${venceu ? '#10b981' : '#f59e0b'}; padding: 16px; border-radius: 8px;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 20px;">${venceu ? '🏛️' : '🗳️'}</span>
+              <span style="font-size: 18px;">${venceu ? '🏛️' : '🗳️'}</span>
               <div>
                 <h4 style="font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; margin: 0;">Histórico Político & Registro Eleitoral</h4>
-                <div style="font-size: 11px; color: var(--text-muted);">Dados Oficiais cruzados com TSE (Eleições) e Câmara Municipal de Arinos</div>
+                <div style="font-size: 11px; color: var(--text-muted);">Fontes Oficiais: Tribunal Superior Eleitoral (TSE) e Câmara Municipal de Arinos</div>
               </div>
             </div>
             <div>
-              <span class="badge" style="background: ${venceu ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)'}; color: ${venceu ? '#34d399' : '#fbbf24'}; border: 1px solid ${venceu ? '#10b981' : '#f59e0b'}; font-size: 11px; font-weight: 700; padding: 4px 10px;">
-                ${pol.tag_texto || (venceu ? 'Mandato Político Eleito' : 'Candidato TSE')}
+              <span class="badge" style="background: ${venceu ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)'}; color: ${venceu ? '#34d399' : '#fbbf24'}; border: 1px solid ${venceu ? '#10b981' : '#f59e0b'}; font-size: 11px; font-weight: 700; padding: 3px 8px;">
+                ${pol.tag_texto || (venceu ? 'Mandato Político' : 'Registro TSE')}
               </span>
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 12px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 10px;">
             <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
               <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Status Eleitoral</div>
               <div style="font-size: 13px; font-weight: 700; color: ${venceu ? '#34d399' : '#fbbf24'}; margin-top: 2px;">
-                ${venceu ? '✔ Eleito (Venceu)' : `Não Eleito (${pol.status_eleicao || 'Suplente'})`}
+                ${venceu ? '✔ Eleito' : `Não Eleito (${pol.status_eleicao || 'Suplente'})`}
               </div>
             </div>
             <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
-              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Cargo Disputado / Exercido</div>
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Cargo Disputado</div>
               <div style="font-size: 13px; font-weight: 700; color: #60a5fa; margin-top: 2px;">
                 ${pol.cargo_politico || '—'}
               </div>
             </div>
             <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
-              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Partido / Filiação</div>
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Partido / Coligação</div>
               <div style="font-size: 13px; font-weight: 700; color: #cbd5e1; margin-top: 2px;">
                 ${pol.partido_politico || '—'}
               </div>
@@ -379,13 +511,16 @@ export async function renderFuncionariosView(container) {
           ${(pol.historico_disputas && pol.historico_disputas.length > 0) ? `
             <div style="background: #1e293b; border-radius: 6px; padding: 10px 12px; margin-top: 8px;">
               <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px;">
-                📋 Eleições Concorridas pelo Candidato:
+                📋 Eleições Disputadas (TSE):
               </div>
               <div style="display: flex; flex-direction: column; gap: 4px;">
                 ${pol.historico_disputas.map(d => `
-                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; border-radius: 4px; font-size: 11px; background: rgba(255,255,255,0.03);">
-                    <span><strong>${d.ano}</strong> — ${d.cargo} (${d.partido || '—'}${d.numero ? ` Nº ${d.numero}` : ''})</span>
-                    <span class="badge ${d.eleito ? 'badge-green' : 'badge-amber'}">${d.resultado || (d.eleito ? 'Eleito' : 'Não Eleito')}${d.votos ? ` • ${d.votos.toLocaleString('pt-BR')} votos` : ''}</span>
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 8px; border-radius: 4px; font-size: 11.5px; background: rgba(255,255,255,0.03);">
+                    <span><strong>Eleição ${d.ano}</strong> — ${d.cargo} (${d.partido || '—'}${d.numero ? ` Nº ${d.numero}` : ''})</span>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                      ${d.bens ? `<span style="color: #34d399; font-size: 11px; font-family: monospace;">Bens: ${formatMoeda(d.bens)}</span>` : ''}
+                      <span class="badge ${d.eleito ? 'badge-green' : 'badge-amber'}">${d.resultado || (d.eleito ? 'Eleito' : 'Não Eleito')}${d.votos ? ` • ${d.votos.toLocaleString('pt-BR')} votos` : ''}</span>
+                    </div>
                   </div>
                 `).join('')}
               </div>
@@ -394,163 +529,300 @@ export async function renderFuncionariosView(container) {
         </div>
       ` : '';
 
-      dossieBody.innerHTML = `
-        <!-- Identificação Consolidada da Pessoa Física -->
-        <div class="card" style="margin-bottom: 16px; border-left: 4px solid #3b82f6; background: #0f172a;">
-          <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
-            ${fotoDossieHtml}
-            <div style="flex: 1; min-width: 240px;">
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                <span class="badge" style="background: rgba(192, 132, 252, 0.2); color: #c084fc; border: 1px solid #a855f7; font-weight: 700; font-size: 11px;">
-                  ID ÚNICO CANÔNICO #${s.pessoa_id || '—'}
-                </span>
-                ${temPol ? `<span class="badge ${venceu ? 'badge-green' : 'badge-amber'}">${venceu ? '🏛️ Mandato Eleito' : '🗳️ Candidato TSE'}</span>` : '<span class="badge badge-blue">Servidor Público Civil</span>'}
-              </div>
-              <h3 style="font-size: 18px; font-weight: 800; color: #fff; margin: 4px 0;">${s.nome}</h3>
-              <div style="font-size: 11px; color: var(--text-muted);">
-                ${s.cargos.join(' • ')}
-              </div>
-            </div>
-          </div>
+      // 3. Card 2: Trajetória Funcional & Cargos Exercidos (Agrupamento Dinâmico e Salário Médio)
+      const cargosCalculados = agruparCargosETrajetoria(folha);
 
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #1e293b;">
-            <div>
-              <div style="font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Acumulado em Proventos</div>
-              <div style="font-size: 20px; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace;">
-                ${formatMoeda(s.totalSalarios)}
-              </div>
-            </div>
-            <div style="text-align: right;">
-              <span class="badge badge-blue">${s.totalContracheques} contracheques</span>
-              <span class="badge badge-amber">${s.totalDiarias} diárias (${formatMoeda(s.totalDiariasValor)})</span>
-            </div>
-          </div>
-          <div style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; font-size: 11px;">
-            <span style="color: var(--text-muted);">Matrícula(s) Padronizada(s):</span>
-            ${s.matriculas.map(m => `<span class="badge badge-blue" style="font-family: 'JetBrains Mono', monospace;">${m}</span>`).join(' ')}
-          </div>
-        </div>
-
-        ${cardPoliticoHtml}
-
-        <!-- ⏱️ Linha do Tempo de Períodos Reais, Férias e 13º Salário -->
-        <div class="card" style="margin-bottom: 16px; background: #0b1120; border: 1px solid #1e293b; padding: 16px;">
+      const cardFuncionalHtml = `
+        <div class="card" style="margin-bottom: 16px; background: #0f172a; border: 1px solid #334155; padding: 16px; border-radius: 8px;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 18px;">⏱️</span>
+              <span style="font-size: 18px;">💼</span>
               <div>
-                <h4 style="font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; margin: 0;">Histórico Funcional & Auditoria Pericial</h4>
-                <div style="font-size: 11px; color: var(--text-muted);">Tempo de serviço ininterrupto, férias regulamentares e afastamentos reais</div>
+                <h4 style="font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; margin: 0;">Trajetória Funcional & Cargos Exercidos</h4>
+                <div style="font-size: 11px; color: var(--text-muted);">Períodos oficiais de exercício e média salarial regular por cargo</div>
               </div>
             </div>
-            <div style="text-align: right;">
-              <span class="badge badge-green" style="font-size: 12px; font-weight: 700;">${s.tempoEfetivo || '—'} (${s.totalMesesEfetivos || 0} meses ativos)</span>
+            <div>
+              <span class="badge badge-green" style="font-size: 11px; font-weight: 700;">Tempo Efetivo: ${s.tempoEfetivo || '—'}</span>
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 12px;">
-            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
-              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Data Inicial</div>
-              <div style="font-size: 14px; font-weight: 700; color: #60a5fa; margin-top: 2px;">${s.dataInicio || '—'}</div>
-            </div>
-            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
-              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Data Final</div>
-              <div style="font-size: 14px; font-weight: 700; color: #60a5fa; margin-top: 2px;">${s.dataFim || '—'}</div>
-            </div>
-            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
-              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Tempo Bruto Total</div>
-              <div style="font-size: 14px; font-weight: 700; color: #cbd5e1; margin-top: 2px;">${s.tempoBruto || '—'}</div>
-            </div>
-            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
-              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Tempo Efetivo Real</div>
-              <div style="font-size: 14px; font-weight: 700; color: #34d399; margin-top: 2px;">${s.tempoEfetivo || '—'}</div>
-            </div>
-          </div>
-
-          <!-- Card de Proteção Legal de Férias e 13º -->
-          <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; font-size: 11px; line-height: 1.5;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-              <div style="color: #93c5fd; font-weight: 700; display: flex; align-items: center; gap: 6px;">
-                <span>⚖️</span> Proteção Legal de Férias & 13º Salário (Art. 102 da Lei 8.112/90)
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            ${cargosCalculados.map(c => `
+              <div style="padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid #1e293b; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div style="flex: 1; min-width: 220px;">
+                  <div style="font-size: 13px; font-weight: 700; color: #fff;">${c.cargo}</div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-top: 3px;">
+                    Período: <strong style="color: #cbd5e1;">${c.inicioStr} — ${c.fimStr}</strong> 
+                    <span class="badge badge-blue" style="margin-left: 6px; font-size: 10px;">${c.duracaoStr}</span>
+                  </div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Salário Médio Regular</div>
+                  <div style="font-size: 14px; font-weight: 700; color: #34d399; font-family: 'JetBrains Mono', monospace;">
+                    ${formatMoeda(c.mediaRegular)} <span style="font-size: 10px; color: #94a3b8; font-weight: normal;">/mês</span>
+                  </div>
+                </div>
               </div>
-              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                ${s.totalMesesFeriasRecesso ? `<span class="badge badge-green">🏖️ ${s.totalMesesFeriasRecesso} meses de Férias/Recesso computados</span>` : ''}
-                ${s.total13Salarios ? `<span class="badge badge-blue">🎁 ${s.total13Salarios} 13º salários vinculados</span>` : ''}
-              </div>
-            </div>
-            <p style="margin: 4px 0 0 0; color: #cbd5e1;">
-              Férias anuais regulamentares, recessos escolares/administrativos de Janeiro e gratificações de 13º salário <strong>são preservados por lei como efetivo exercício</strong> e não são confundidos com afastamento ou quebra de vínculo.
-            </p>
+            `).join('')}
           </div>
 
           ${s.temIntervalos ? `
-            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px;">
-              <div style="font-size: 12px; font-weight: 700; color: #fbbf24; display: flex; align-items: center; gap: 6px;">
-                <span>⚠️</span> Ruptura Real de Vínculo: ${s.totalIntervalos} intervalo(s) de afastamento detectado(s) entre ${s.dataInicio} e ${s.dataFim}
-              </div>
-              <p style="font-size: 11px; color: #cbd5e1; margin-top: 4px; line-height: 1.4;">
-                Auditoria pericial: períodos prolongados de afastamento sem remuneração somam <strong>${s.totalMesesIntervalos} meses</strong>. Férias legais e 13º salário já foram protegidos e computados no tempo efetivo de serviço.
-              </p>
+            <div style="margin-top: 10px; padding: 8px 12px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 6px; font-size: 11px; color: #fbbf24; display: flex; align-items: center; gap: 8px;">
+              <span>⚠️</span> <span>Ruptura de Vínculo: ${s.totalIntervalos} intervalo(s) de afastamento detectado(s) (${s.tempoIntervalos}).</span>
             </div>
           ` : `
-            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-size: 11px; color: #34d399;">
-              ✔ Vínculo Contínuo: Exercício ininterrupto no período (${s.tempoEfetivo}). Férias, recessos e 13º salário preservados como efetivo exercício.
+            <div style="margin-top: 10px; padding: 8px 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; font-size: 11px; color: #34d399;">
+              ✔ Vínculo Contínuo: Exercício ininterrupto no município (${s.tempoEfetivo}).
             </div>
           `}
-
-          <div style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto;">
-            ${(s.periodosTimeline || []).map(item => {
-              if (item.tipo === 'periodo_ativo') {
-                return `
-                  <div style="padding: 8px 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
-                      <span style="font-size: 12px; font-weight: 700; color: #fff; font-family: 'JetBrains Mono', monospace;">${item.descricao}</span>
-                    </div>
-                    <span class="badge" style="background: #1e293b; color: #94a3b8; font-size: 11px;">${item.cargos}</span>
-                  </div>
-                `;
-              } else {
-                return `
-                  <div style="padding: 8px 12px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; color: #fbbf24;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
-                      <span style="font-size: 12px; font-weight: 600;">⏸️ ${item.descricao}</span>
-                    </div>
-                    <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fcd34d; font-size: 10px; font-weight: 700; text-transform: uppercase;">Afastamento / Ruptura</span>
-                  </div>
-                `;
-              }
-            }).join('')}
-          </div>
-        </div>
-
-        <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #fff;">Histórico Consolidado de Contracheques</h4>
-        <div class="table-wrapper" style="max-height: 280px; overflow-y: auto;">
-          <table>
-            <thead>
-              <tr>
-                <th>Período</th>
-                <th>Cargo</th>
-                <th style="text-align: right;">Base</th>
-                <th style="text-align: right;">Proventos</th>
-                <th style="text-align: right;">Líquido</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${data.historicoFolha.map(h => `
-                <tr>
-                  <td><span class="badge" style="background: rgba(255,255,255,0.06);">${String(h.mes).padStart(2,'0')}/${h.ano}</span></td>
-                  <td>${h.cargo}</td>
-                  <td style="text-align: right;">${formatMoeda(h.salario_base)}</td>
-                  <td style="text-align: right; color: #60a5fa; font-weight: 700;">${formatMoeda(h.total_proventos)}</td>
-                  <td style="text-align: right; color: #34d399; font-weight: 700;">${formatMoeda(h.salario_liquido)}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
         </div>
       `;
+
+      // 4. Card 3: Diárias Municipais (Borda Amarela Obrigatória)
+      const cardDiariasHtml = `
+        <div class="card" style="margin-bottom: 16px; background: #0b1120; border: 1px solid #f59e0b; padding: 16px; border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 18px;">✈️</span>
+              <div>
+                <h4 style="font-size: 13px; font-weight: 800; color: #fbbf24; text-transform: uppercase; margin: 0;">Diárias & Deslocamentos Municipais</h4>
+                <div style="font-size: 11px; color: var(--text-muted);">Valores de indenização de viagens e representação institucional (SIAP / Prefeitura)</div>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 11px; color: var(--text-muted); margin-right: 8px;">${diarias.length} concessões</span>
+              <strong style="color: #fbbf24; font-size: 16px; font-family: 'JetBrains Mono', monospace;">${formatMoeda(s.totalDiariasValor)}</strong>
+            </div>
+          </div>
+
+          ${diarias.length > 0 ? `
+            <div class="table-wrapper" style="max-height: 220px; overflow-y: auto;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Competência</th>
+                    <th>Fonte Oficial</th>
+                    <th>Tipo / Objeto</th>
+                    <th style="text-align: right;">Valor da Diária</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${diarias.map(d => `
+                    <tr>
+                      <td><span class="badge badge-amber" style="font-family: 'JetBrains Mono', monospace;">${String(d.mes).padStart(2, '0')}/${d.ano}</span></td>
+                      <td><span style="color: #cbd5e1; font-size: 11.5px;">${d.fonte || 'Prefeitura Municipal (SIAP)'}</span></td>
+                      <td><span style="color: var(--text-muted); font-size: 11.5px;">${d.tipo || 'Deslocamento oficial'}</span></td>
+                      <td style="text-align: right;"><strong style="color: #fbbf24; font-family: 'JetBrains Mono', monospace;">${formatMoeda(d.valor)}</strong></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          ` : `
+            <div style="padding: 12px; text-align: center; color: var(--text-muted); font-size: 12px; background: rgba(255,255,255,0.02); border-radius: 6px;">
+              Nenhuma concessão de diária localizada na base de registros para este servidor.
+            </div>
+          `}
+        </div>
+      `;
+
+      // 5. Card 4: Histórico Financeiro & Contracheques (Borda Azul com Seletor Reativo de Anos)
+      const anosDisponiveis = Array.from(new Set(folha.map(h => h.ano))).sort((a, b) => b - a);
+      const anoInicial = anosDisponiveis[0] || 'todos';
+
+      const cardFinanceiroHtml = `
+        <div class="card" style="background: #0f172a; border: 1px solid #3b82f6; padding: 16px; border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 18px;">💰</span>
+              <div>
+                <h4 style="font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; margin: 0;">Histórico Financeiro & Contracheques</h4>
+                <div style="font-size: 11px; color: var(--text-muted);">Holerites oficiais discriminados com proventos, descontos e tags de férias/13º</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Barra de Botões com os Anos da Pessoa (Pré-carregado no mais recente) -->
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #1e293b;">
+            <span style="font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-right: 4px;">Filtrar Ano:</span>
+            <button 
+              class="btn-ano-dossie" 
+              data-ano="todos" 
+              style="padding: 4px 10px; font-size: 11px; border-radius: 4px; border: 1px solid #334155; background: #1e293b; color: #cbd5e1; cursor: pointer;"
+            >
+              Todos (${folha.length})
+            </button>
+            ${anosDisponiveis.map(ano => `
+              <button 
+                class="btn-ano-dossie ${ano === anoInicial ? 'ativo' : ''}" 
+                data-ano="${ano}" 
+                style="padding: 4px 10px; font-size: 11px; border-radius: 4px; border: 1px solid ${ano === anoInicial ? '#3b82f6' : '#334155'}; background: ${ano === anoInicial ? '#2563eb' : '#1e293b'}; color: #fff; cursor: pointer; font-weight: ${ano === anoInicial ? '700' : '500'};"
+              >
+                ${ano}
+              </button>
+            `).join('')}
+          </div>
+
+          <!-- Cards Dinâmicos de Totais do Ano Selecionado -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 14px;" id="dossie-kpis-ano">
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Salário Bruto</div>
+              <div style="font-size: 15px; font-weight: 800; color: #60a5fa; font-family: 'JetBrains Mono', monospace;" id="kpi-ano-bruto">R$ 0,00</div>
+            </div>
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Total Descontos</div>
+              <div style="font-size: 15px; font-weight: 800; color: #f87171; font-family: 'JetBrains Mono', monospace;" id="kpi-ano-descontos">R$ 0,00</div>
+            </div>
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Salário Líquido</div>
+              <div style="font-size: 15px; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace;" id="kpi-ano-liquido">R$ 0,00</div>
+            </div>
+            <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
+              <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Período / Meses</div>
+              <div style="font-size: 13px; font-weight: 700; color: #cbd5e1;" id="kpi-ano-meses">0 meses</div>
+            </div>
+          </div>
+
+          <!-- Tabela de Holerites do Ano -->
+          <div class="table-wrapper" style="max-height: 280px; overflow-y: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mês / Período</th>
+                  <th>Cargo</th>
+                  <th style="text-align: right;">Base</th>
+                  <th style="text-align: right;">Bruto</th>
+                  <th style="text-align: right;">Descontos</th>
+                  <th style="text-align: right;">Líquido</th>
+                </tr>
+              </thead>
+              <tbody id="dossie-tbody-contracheques"></tbody>
+            </table>
+          </div>
+          <div style="font-size: 10.5px; color: var(--text-muted); margin-top: 8px; text-align: right;">
+            💡 Dica: Clique em qualquer linha do contracheque para expandir e ver os proventos e descontos discriminados.
+          </div>
+        </div>
+      `;
+
+      // Monta os 4 cards no DOM do Modal
+      dossieBody.innerHTML = `
+        ${cardPoliticoHtml}
+        ${cardFuncionalHtml}
+        ${cardDiariasHtml}
+        ${cardFinanceiroHtml}
+      `;
+
+      // Função Reativa de Filtrar por Ano
+      function renderizarAnoSelecionado(anoFiltro) {
+        const filtrados = (anoFiltro === 'todos')
+          ? folha
+          : folha.filter(h => h.ano === Number(anoFiltro));
+
+        const somaBruto = filtrados.reduce((a, b) => a + (b.total_proventos || 0), 0);
+        const somaDescontos = filtrados.reduce((a, b) => a + (b.total_descontos || 0), 0);
+        const somaLiquido = filtrados.reduce((a, b) => a + (b.salario_liquido || 0), 0);
+        const mesesContados = new Set(filtrados.map(h => `${h.ano}-${h.mes}`)).size;
+
+        dossieBody.querySelector('#kpi-ano-bruto').textContent = formatMoeda(somaBruto);
+        dossieBody.querySelector('#kpi-ano-descontos').textContent = formatMoeda(somaDescontos);
+        dossieBody.querySelector('#kpi-ano-liquido').textContent = formatMoeda(somaLiquido);
+        dossieBody.querySelector('#kpi-ano-meses').textContent = anoFiltro === 'todos' 
+          ? `${mesesContados} meses (${s.tempoEfetivo || '—'})`
+          : `${mesesContados} ${mesesContados === 1 ? 'mês' : 'meses'} (${anoFiltro})`;
+
+        const tbody = dossieBody.querySelector('#dossie-tbody-contracheques');
+        tbody.innerHTML = filtrados.map((h, idx) => {
+          const { tem13, temFerias } = detectarTagsContracheque(h);
+          const tagsHtml = `
+            ${tem13 ? '<span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid #a855f7; font-size: 10px; margin-left: 4px;">🎁 13º</span>' : ''}
+            ${temFerias ? '<span class="badge badge-amber" style="font-size: 10px; margin-left: 4px;">🏖️ Férias</span>' : ''}
+          `;
+
+          return `
+            <tr class="tr-contracheque" data-idx="${idx}" style="cursor: pointer;" title="Clique para ver detalhes do contracheque">
+              <td>
+                <span class="badge" style="background: rgba(255,255,255,0.06); font-family: 'JetBrains Mono', monospace;">
+                  ${String(h.mes).padStart(2, '0')}/${h.ano}
+                </span>
+                ${tagsHtml}
+              </td>
+              <td style="font-size: 12px;">${h.cargo}</td>
+              <td style="text-align: right; color: var(--text-muted); font-size: 11.5px;">${formatMoeda(h.salario_base)}</td>
+              <td style="text-align: right; color: #60a5fa; font-weight: 700; font-family: 'JetBrains Mono', monospace;">${formatMoeda(h.total_proventos)}</td>
+              <td style="text-align: right; color: #f87171; font-weight: 700; font-family: 'JetBrains Mono', monospace;">${formatMoeda(h.total_descontos)}</td>
+              <td style="text-align: right; color: #34d399; font-weight: 700; font-family: 'JetBrains Mono', monospace;">${formatMoeda(h.salario_liquido)}</td>
+            </tr>
+            <tr class="tr-detalhes-rubricas" id="detalhe-h-${idx}" style="display: none; background: #0b1120;">
+              <td colspan="6" style="padding: 10px 14px;">
+                <div style="font-size: 11px; font-weight: 700; color: #60a5fa; margin-bottom: 6px; text-transform: uppercase;">
+                  📄 Detalhamento Oficial do Contracheque (${String(h.mes).padStart(2, '0')}/${h.ano} — Matrícula: ${h.matricula_padronizada || '—'})
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11.5px;">
+                  <div style="background: rgba(59, 130, 246, 0.05); padding: 8px; border-radius: 4px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                    <div style="font-weight: 700; color: #93c5fd; margin-bottom: 4px;">Remunerações / Proventos:</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                      <span>Salário Base:</span>
+                      <strong style="color: #60a5fa;">${formatMoeda(h.salario_base)}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span>Total Bruto:</span>
+                      <strong style="color: #60a5fa;">${formatMoeda(h.total_proventos)}</strong>
+                    </div>
+                  </div>
+                  <div style="background: rgba(248, 113, 113, 0.05); padding: 8px; border-radius: 4px; border: 1px solid rgba(248, 113, 113, 0.2);">
+                    <div style="font-weight: 700; color: #fca5a5; margin-bottom: 4px;">Descontos / Retenções:</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                      <span>Total de Descontos:</span>
+                      <strong style="color: #f87171;">${formatMoeda(h.total_descontos)}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span>Valor Líquido Recebido:</span>
+                      <strong style="color: #34d399;">${formatMoeda(h.salario_liquido)}</strong>
+                    </div>
+                  </div>
+                </div>
+                ${h.sha256 ? `<div style="font-size: 9.5px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 6px;">Hash SHA-256: ${h.sha256}</div>` : ''}
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Event listener de clique nas linhas para expandir
+        tbody.querySelectorAll('.tr-contracheque').forEach(tr => {
+          tr.onclick = () => {
+            const idx = tr.dataset.idx;
+            const detRow = tbody.querySelector(`#detalhe-h-${idx}`);
+            if (detRow) {
+              const aberto = detRow.style.display !== 'none';
+              detRow.style.display = aberto ? 'none' : 'table-row';
+              tr.style.background = aberto ? '' : 'rgba(59, 130, 246, 0.12)';
+            }
+          };
+        });
+      }
+
+      // Event listeners para os botões de anos
+      dossieBody.querySelectorAll('.btn-ano-dossie').forEach(btn => {
+        btn.onclick = () => {
+          dossieBody.querySelectorAll('.btn-ano-dossie').forEach(b => {
+            b.style.border = '1px solid #334155';
+            b.style.background = '#1e293b';
+            b.style.fontWeight = '500';
+          });
+          btn.style.border = '1px solid #3b82f6';
+          btn.style.background = '#2563eb';
+          btn.style.fontWeight = '700';
+
+          const ano = btn.dataset.ano;
+          renderizarAnoSelecionado(ano);
+        };
+      });
+
+      // Render inicial com o ano mais recente (ou todos)
+      renderizarAnoSelecionado(anoInicial);
+
     } catch (err) {
       dossieBody.innerHTML = `<div class="empty-state">Erro ao carregar dossiê: ${err.message}</div>`;
     }
@@ -579,25 +851,22 @@ export async function renderFuncionariosView(container) {
 
       tabelaContainer.innerHTML = '';
 
+      // Tabela de Pessoas unificada conforme especificado pelo usuário
       const colunas = [
-        { chave: 'matricula', titulo: 'Matrícula' },
-        { chave: 'nome', titulo: 'Servidor' },
-        { chave: 'cargo', titulo: 'Cargo / Função' },
-        { chave: 'periodo', titulo: 'Período', align: 'center' },
-        { chave: 'total_proventos', titulo: 'Salário Bruto', align: 'right' },
+        { chave: 'nome', titulo: 'Pessoa / Servidor' },
+        { chave: 'cargo', titulo: 'Último Cargo / Função' },
+        { chave: 'periodo', titulo: 'Último Período', align: 'center' },
+        { chave: 'total_proventos', titulo: 'Último Salário Bruto', align: 'right' },
         { chave: 'valor_diarias', titulo: 'Diárias', align: 'right' }
       ];
 
       const formatadores = {
-        matricula: (v, item) => `
-          <span class="badge badge-blue" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;">
-            ${item.matricula_exibicao || item.matricula_padronizada || (v ? v.replace(/^0+/, '') : '—')}
-          </span>
-        `,
         nome: (v, item) => {
+          const mat = item.matricula_exibicao || item.matricula_padronizada || (item.matricula ? item.matricula.replace(/^0+/, '') : '');
+          const matTexto = mat ? `<span style="color: #94a3b8; font-family: 'JetBrains Mono', monospace; font-size: 12px; margin-right: 6px;">(${mat})</span>` : '';
           const pol = item.passado_politico || {};
-          const temPol = pol.tem_passado_politico;
-          const venceu = pol.venceu;
+          const temPol = Boolean(pol.tem_passado_politico);
+          const venceu = Boolean(pol.venceu);
           const tagTexto = pol.tag_texto;
 
           const tagBadgeHtml = temPol ? `
@@ -610,19 +879,23 @@ export async function renderFuncionariosView(container) {
 
           return `
             <div>
-              <strong style="color: #93c5fd; font-size: 13px;">${v}</strong>
+              <div>${matTexto}<strong style="color: #fff; font-size: 13.5px;">${v}</strong></div>
               ${tagBadgeHtml}
             </div>
           `;
         },
         cargo: (v, item) => `
           <div>
-            <div style="font-size: 12px; color: #e2e8f0; font-weight: 600;">${v || '—'}</div>
-            ${item.lotacao ? `<div style="font-size: 10px; color: var(--text-muted); margin-top: 1px;">${item.lotacao.replace(/^\d+\s*-\s*/, '')}</div>` : ''}
+            <div style="font-size: 12.5px; color: #e2e8f0; font-weight: 600;">${v || '—'}</div>
+            ${item.lotacao ? `<div style="font-size: 10.5px; color: var(--text-muted); margin-top: 1px;">${item.lotacao.replace(/^\d+\s*-\s*/, '')}</div>` : ''}
           </div>
         `,
-        periodo: (v, item) => `<span class="badge" style="background: rgba(255,255,255,0.06); font-family: 'JetBrains Mono', monospace;">${String(item.mes).padStart(2,'0')}/${item.ano}</span>`,
-        total_proventos: v => `<strong style="color: #60a5fa; font-family: 'JetBrains Mono', monospace;">${formatMoeda(v)}</strong>`,
+        periodo: (v, item) => `
+          <span class="badge" style="background: rgba(255,255,255,0.06); font-family: 'JetBrains Mono', monospace; font-size: 11px;">
+            ${MESES_EXTENSO[item.mes] || item.mes}/${item.ano}
+          </span>
+        `,
+        total_proventos: v => `<strong style="color: #60a5fa; font-family: 'JetBrains Mono', monospace; font-size: 13px;">${formatMoeda(v)}</strong>`,
         valor_diarias: (v, item) => {
           const val = item.valor_diarias || 0;
           if (val > 0) {

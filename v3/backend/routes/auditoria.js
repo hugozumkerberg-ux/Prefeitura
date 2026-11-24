@@ -62,10 +62,10 @@ function handleRastrear(req, res, query) {
         SELECT caminho, ano, mes, matricula, matricula_padronizada, nome, nome_normalizado, cargo, lotacao, 
                salario_base, total_proventos, total_descontos, salario_liquido, sha256, importado_em 
         FROM contracheques 
-        WHERE matricula_padronizada = ? 
+        WHERE matricula_padronizada = ? OR matricula_padronizada LIKE ?
         ORDER BY ano DESC, mes DESC 
         LIMIT 1
-      `).get(matPad);
+      `).get(matPad, `${matPad}-%`);
 
       if (docMat) {
         documentoAlvo = docMat;
