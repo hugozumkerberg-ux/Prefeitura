@@ -236,18 +236,33 @@ export async function renderFuncionariosView(container) {
             </div>
           </div>
 
+          <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; font-size: 11px; line-height: 1.5;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+              <div style="color: #93c5fd; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                <span>⚖️</span> Proteção Legal de Férias & 13º Salário (Art. 102 da Lei 8.112/90)
+              </div>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                ${s.totalMesesFeriasRecesso ? `<span class="badge badge-green">🏖️ ${s.totalMesesFeriasRecesso} meses de Férias/Recesso computados</span>` : ''}
+                ${s.total13Salarios ? `<span class="badge badge-blue">🎁 ${s.total13Salarios} 13º salários</span>` : ''}
+              </div>
+            </div>
+            <p style="margin: 4px 0 0 0; color: #cbd5e1;">
+              Férias regulamentares, recessos anuais de início de ano (Janeiro) e gratificações de 13º salário <strong>são preservados por lei como efetivo exercício</strong> e não são confundidos com afastamento ou quebra de vínculo.
+            </p>
+          </div>
+
           ${s.temIntervalos ? `
             <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px;">
               <div style="font-size: 12px; font-weight: 700; color: #fbbf24; display: flex; align-items: center; gap: 6px;">
-                <span>⚠️</span> Vínculo Descontínuo: ${s.totalIntervalos} intervalo(s) sem vínculo detectado(s) entre ${s.dataInicio} e ${s.dataFim}
+                <span>⚠️</span> Ruptura Real de Vínculo: ${s.totalIntervalos} intervalo(s) de afastamento detectado(s) entre ${s.dataInicio} e ${s.dataFim}
               </div>
               <p style="font-size: 11px; color: #cbd5e1; margin-top: 4px; line-height: 1.4;">
-                Auditoria pericial de vínculo: intervalos sem recebimento ou exoneração somam <strong>${s.totalMesesIntervalos} meses</strong> de afastamento. Eles são destacados separadamente e <strong>não são somados</strong> como tempo de serviço contínuo.
+                Auditoria pericial: períodos prolongados de afastamento sem vencimento somam <strong>${s.totalMesesIntervalos} meses</strong>. Férias legais e 13º salário foram protegidos e computados no tempo efetivo de serviço.
               </p>
             </div>
           ` : `
             <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-size: 11px; color: #34d399;">
-              ✔ Vínculo Contínuo: Todos os contracheques foram emitidos consecutivamente sem interrupções de vínculo no período.
+              ✔ Vínculo Contínuo: Exercício ininterrupto no período (${s.tempoEfetivo}). Férias, recessos e 13º salário preservados como efetivo exercício.
             </div>
           `}
 

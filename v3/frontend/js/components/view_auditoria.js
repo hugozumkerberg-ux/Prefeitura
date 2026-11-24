@@ -156,13 +156,26 @@ export function renderAuditoriaView(container) {
               </div>
             </div>
 
+            <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 4px; padding: 8px 10px; margin-bottom: 8px; font-size: 11px; line-height: 1.4;">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
+                <span style="color: #93c5fd; font-weight: 700;">⚖️ Férias e 13º Salário (Art. 102 da Lei 8.112/90)</span>
+                <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                  ${serv.totalMesesFeriasRecesso ? `<span class="badge badge-green" style="font-size: 10px;">🏖️ ${serv.totalMesesFeriasRecesso}m Férias/Recesso computados</span>` : ''}
+                  ${serv.total13Salarios ? `<span class="badge badge-blue" style="font-size: 10px;">🎁 ${serv.total13Salarios} 13º salários</span>` : ''}
+                </div>
+              </div>
+              <div style="color: #cbd5e1; font-size: 10px; margin-top: 2px;">
+                Férias anuais regulamentares, recessos de Janeiro e 13º salário são considerados <strong>efetivo exercício</strong> e não configuram quebra de vínculo.
+              </div>
+            </div>
+
             ${serv.temIntervalos ? `
               <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 4px; padding: 8px 10px; font-size: 11px; color: #fbbf24; margin-bottom: 8px;">
-                ⚠️ <strong>Atenção Pericial:</strong> Foram detectados <strong>${serv.totalIntervalos} intervalo(s) sem vínculo</strong> entre ${serv.dataInicio} e ${serv.dataFim} (totalizando ${serv.totalMesesIntervalos} meses de afastamento). O tempo de serviço não é contínuo.
+                ⚠️ <strong>Afastamento Real Detectado:</strong> ${serv.totalIntervalos} intervalo(s) de ruptura de vínculo entre ${serv.dataInicio} e ${serv.dataFim} (totalizando ${serv.totalMesesIntervalos} meses). Férias legais e 13º salário foram preservados e computados no tempo efetivo.
               </div>
             ` : `
               <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 4px; padding: 6px 10px; font-size: 11px; color: #34d399; margin-bottom: 8px;">
-                ✔ Vínculo Contínuo: Sem interrupções ou intervalos no período.
+                ✔ Vínculo Contínuo: Sem interrupções de vínculo no período (${serv.tempoEfetivo}). Férias e 13º preservados integralmente.
               </div>
             `}
 

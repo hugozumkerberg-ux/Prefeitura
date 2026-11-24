@@ -100,7 +100,7 @@ function handleRastrear(req, res, query) {
 
     // 4. Busca histórico completo de contracheques da pessoa
     const historicoFolha = dbContracheques.prepare(`
-      SELECT ano, mes, matricula_padronizada, cargo, lotacao, total_proventos, salario_liquido, sha256, importado_em
+      SELECT ano, mes, matricula_padronizada, cargo, lotacao, salario_base, total_proventos, total_descontos, salario_liquido, tabelas_json, campos_json, sha256, importado_em
       FROM contracheques
       WHERE nome_normalizado = ?
       ORDER BY ano DESC, mes DESC
@@ -148,8 +148,12 @@ function handleRastrear(req, res, query) {
         totalMesesBruto: periodosInfo.totalMesesBruto,
         tempoEfetivo: periodosInfo.tempoTotalExtenso,
         totalMesesEfetivos: periodosInfo.totalMesesEfetivos,
+        totalMesesFeriasRecesso: periodosInfo.totalMesesFeriasRecesso,
+        tempoFeriasRecesso: periodosInfo.tempoFeriasRecessoExtenso,
+        total13Salarios: periodosInfo.total13Salarios,
         totalIntervalos: periodosInfo.totalIntervalos,
         totalMesesIntervalos: periodosInfo.totalMesesIntervalos,
+        tempoIntervalos: periodosInfo.tempoIntervalosExtenso,
         temIntervalos: periodosInfo.temIntervalos,
         periodosTimeline: periodosInfo.timeline
       },
