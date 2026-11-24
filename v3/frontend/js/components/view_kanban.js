@@ -291,9 +291,121 @@ export const KANBAN_TASKS = [
     }
   },
 
-  // --- EM ANDAMENTO ---
+  // --- EM ANDAMENTO (O QUE FALTA MELHORAR) ---
+  {
+    id: 'melhoria-painel-sincronizacao',
+    coluna: 'em_andamento',
+    titulo: '⏱️ Painel de Sincronização & Metadados dos 4 Pilares',
+    resumo: 'Exibição pública da data/hora exata da última carga: Folha (09/2026), Diárias (10/2026), TSE e Despesas.',
+    prioridade: 'P0',
+    tag: 'Falta Melhorar',
+    tagClass: 'badge-blue',
+    detalhes: {
+      tipo: 'Transparência Ativa & Auditoria de Base',
+      origem: 'Inspirado na demanda de rastreabilidade do Observa Arinos',
+      resumo: 'Garantir que o cidadão veja com precisão pericial a competência e o momento em que cada banco foi atualizado: Contracheques até 09/2026, Diárias até 10/2026, TSE (2016-2024) e Despesas SIAP (08/2026).'
+    }
+  },
+  {
+    id: 'melhoria-graficos-barras',
+    coluna: 'em_andamento',
+    titulo: '📈 Gráficos Visuais de Linhas & Barras Salariais no Dossiê',
+    resumo: 'Visualização interativa da curva salarial anual e histórico comparativo de diárias por exercício.',
+    prioridade: 'P1',
+    tag: 'Falta Melhorar',
+    tagClass: 'badge-blue',
+    detalhes: {
+      tipo: 'Visualização Gráfica de Dados',
+      origem: 'Demanda de enriquecimento visual e análise gráfica',
+      resumo: 'Adição de componentes gráficos em barras/linhas para visualização rápida da progressão dos vencimentos e identificação de picos remuneratórios ao longo dos anos.'
+    }
+  },
+  {
+    id: 'melhoria-evolucao-bens-tse',
+    coluna: 'em_andamento',
+    titulo: '🏛️ Comparativo de Evolução Patrimonial TSE (2016 vs 2020 vs 2024)',
+    resumo: 'Cruzamento da variação patrimonial declarada de prefeitos, vices e vereadores entre as eleições.',
+    prioridade: 'P1',
+    tag: 'Falta Melhorar',
+    tagClass: 'badge-blue',
+    detalhes: {
+      tipo: 'Inteligência e Auditoria Eleitoral',
+      origem: 'Cruzamento oficial TSE',
+      resumo: 'Tabela e gráfico comparativo permitindo inspecionar o crescimento ou variação dos bens declarados pelos agentes políticos a cada 4 anos.'
+    }
+  },
 
-  // --- A FAZER (BACKLOG) ---
+  // --- A FAZER (O QUE FALTA FAZER — COLETAS OBSERVADAS NO OBSERVA ARINOS) ---
+  {
+    id: 'coleta-obras-sicom',
+    coluna: 'a_fazer',
+    titulo: '🏗️ Obras Públicas & Serviços Urbanos (SICOM/TCE-MG & PNCP)',
+    resumo: 'Monitoramento de obras municipais com valores contratados vs medidos/pagos, localização e status.',
+    prioridade: 'P0',
+    tag: 'Falta Fazer',
+    tagClass: 'badge-amber',
+    detalhes: {
+      tipo: 'Novo Pilar de Dados: Obras e Infraestrutura',
+      origem: 'Módulo de destaque no Observa Arinos',
+      resumo: 'Coleta automatizada de dados do SICOM/TCE-MG e PNCP cobrindo pavimentação, reformas, saneamento básico e postos de saúde, com fotos, cronograma e medições pagas.'
+    }
+  },
+  {
+    id: 'coleta-licitacoes-pncp',
+    coluna: 'a_fazer',
+    titulo: '📜 Licitações Ativas, Pregões & Contratos (PNCP / BNC)',
+    resumo: 'Conexão direta com o Portal Nacional de Contratações Públicas para editais em andamento e termos aditivos.',
+    prioridade: 'P0',
+    tag: 'Falta Fazer',
+    tagClass: 'badge-amber',
+    detalhes: {
+      tipo: 'Novo Pilar de Dados: Contratações Públicas',
+      origem: 'Coleta de editais do PNCP e BNC Compras identificada no Observa Arinos',
+      resumo: 'Indexação em tempo real de pregões eletrônicos, dispensas de licitação, atas de registro de preços e termos aditivos da Prefeitura de Arinos.'
+    }
+  },
+  {
+    id: 'coleta-receitas-fpm',
+    coluna: 'a_fazer',
+    titulo: '📊 Arrecadação Municipal, FPM & FUNDEB (Tesouro & TCE-MG)',
+    resumo: 'Acompanhamento das entradas de recursos, transferências constitucionais e arrecadação tributária (IPTU/ISS).',
+    prioridade: 'P1',
+    tag: 'Falta Fazer',
+    tagClass: 'badge-amber',
+    detalhes: {
+      tipo: 'Novo Pilar de Dados: Receitas Públicas',
+      origem: 'Relatórios de execução orçamentária do TCE-MG e Siconfi',
+      resumo: 'Mapeamento mensal das receitas correntes, repasses do FPM (Fundo de Participação dos Municípios), ICMS e FUNDEB para contrapor diretamente com as despesas municipais.'
+    }
+  },
+  {
+    id: 'coleta-atos-diario',
+    coluna: 'a_fazer',
+    titulo: '📚 Biblioteca de Atos Oficiais, Leis e Decretos',
+    resumo: 'Acervo digital de decretos, portarias de nomeação/exoneração e leis municipais em formato pesquisável.',
+    prioridade: 'P2',
+    tag: 'Falta Fazer',
+    tagClass: 'badge-amber',
+    detalhes: {
+      tipo: 'Novo Pilar de Dados: Legislação & Atos Oficiais',
+      origem: 'Biblioteca de documentos cívicos identificada no Observa Arinos',
+      resumo: 'Indexador com busca por texto completo de portarias de nomeação para cruzar automaticamente com as admissões da folha salarial.'
+    }
+  },
+  {
+    id: 'melhoria-mapa-destinos-diarias',
+    coluna: 'a_fazer',
+    titulo: '🗺️ Mapa de Deslocamentos & Cidades de Destino de Diárias',
+    resumo: 'Identificação e agrupamento geográfico das viagens de servidores para BH, Brasília, Unaí e Paracatu.',
+    prioridade: 'P2',
+    tag: 'Falta Melhorar',
+    tagClass: 'badge-amber',
+    detalhes: {
+      tipo: 'Georreferenciamento de Diárias',
+      origem: 'Aperfeiçoamento do banco de 125 mil diárias existente',
+      resumo: 'Classificação por município de destino e cálculo do custo médio por quilômetro e por missão oficial.'
+    }
+  },
   {
     id: 'export-csv-xlsx',
     coluna: 'a_fazer',
