@@ -274,7 +274,7 @@ export async function renderDiariasView(container) {
                   🔍 Auditar Custódia
                 </a>
                 <a href="#funcionarios?busca=${encodeURIComponent(item.nome || '')}" class="btn" style="padding: 6px 12px; font-size: 11.5px; background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fcd34d; border-radius: 4px; text-decoration: none;">
-                  👤 Ver Dossiê do Servidor
+                  👤 Ver Ficha Funcional
                 </a>
               </div>
             </div>

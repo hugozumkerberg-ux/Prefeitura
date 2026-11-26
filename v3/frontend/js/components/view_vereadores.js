@@ -57,7 +57,7 @@ export async function renderVereadoresView(container) {
       </div>
     </div>
 
-    <!-- Modal de Dossiê do Vereador -->
+    <!-- Modal de Perfil Parlamentar do Vereador -->
     <div id="vereador-modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center; padding: 20px;">
       <div id="vereador-modal-content" class="card" style="max-width: 780px; width: 100%; max-height: 90vh; overflow-y: auto; background: #0f172a; border: 1px solid #374151; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 24px; position: relative;">
       </div>
@@ -158,10 +158,10 @@ export async function renderVereadoresView(container) {
         `;
       }).join('');
 
-      // Eventos de clique para abrir dossiê
+      // Eventos de clique para abrir perfil
       grid.querySelectorAll('.btn-ver-vereador').forEach(btn => {
         btn.addEventListener('click', () => {
-          abrirDossieVereador(btn.dataset.id);
+          abrirPerfilVereador(btn.dataset.id);
         });
       });
     } catch (err) {
@@ -169,7 +169,7 @@ export async function renderVereadoresView(container) {
     }
   }
 
-  async function abrirDossieVereador(id) {
+  async function abrirPerfilVereador(id) {
     overlay.style.display = 'flex';
     modalContent.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-muted);">Carregando histórico do parlamentar...</div>`;
 
@@ -188,7 +188,7 @@ export async function renderVereadoresView(container) {
       modalContent.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
           <div>
-            <span class="badge badge-purple" style="margin-bottom: 6px;">DOSSIÊ PARLAMENTAR (SAPL)</span>
+            <span class="badge badge-purple" style="margin-bottom: 6px;">PERFIL PARLAMENTAR (SAPL)</span>
             <h2 style="font-size: 20px; font-weight: 800; color: #fff; margin: 4px 0;">${p.nome_parlamentar}</h2>
             <p style="font-size: 12px; color: var(--text-muted);">${p.nome_completo} • ${p.locais_atuacao || 'Câmara de Arinos'}</p>
           </div>
@@ -254,7 +254,7 @@ export async function renderVereadoresView(container) {
         overlay.style.display = 'none';
       });
     } catch (err) {
-      modalContent.innerHTML = `<p style="color: #f87171;">Falha ao carregar dossiê: ${err.message}</p>`;
+      modalContent.innerHTML = `<p style="color: #f87171;">Falha ao carregar perfil: ${err.message}</p>`;
     }
   }
 

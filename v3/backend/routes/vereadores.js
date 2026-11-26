@@ -25,7 +25,7 @@ function handleVereadores(req, res) {
     const raw = fs.readFileSync(FILE_PATH, 'utf-8');
     const todos = JSON.parse(raw);
 
-    // Dossiê de um parlamentar específico
+    // Perfil de um parlamentar específico
     if (id) {
       const p = todos.find(item => String(item.id) === String(id));
       if (!p) {

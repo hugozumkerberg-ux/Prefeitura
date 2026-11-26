@@ -90,7 +90,7 @@ export async function renderAdminView(container) {
         </div>
         <div style="background: #1e293b; padding: 10px 14px; border-radius: 6px;">
           <strong style="color: #34d399; font-family: 'JetBrains Mono', monospace;">GET /api/empresas</strong>
-          <p style="color: var(--text-muted); margin-top: 2px;">Credores e dossiês de despesas</p>
+          <p style="color: var(--text-muted); margin-top: 2px;">Credores e fichas de despesas</p>
         </div>
         <div style="background: #1e293b; padding: 10px 14px; border-radius: 6px;">
           <strong style="color: #34d399; font-family: 'JetBrains Mono', monospace;">GET /api/rankings</strong>

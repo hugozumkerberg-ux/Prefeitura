@@ -30,7 +30,7 @@ function handleEmpresas(req, res) {
       return res.end(JSON.stringify({ erro: 'Banco de despesas não disponível' }));
     }
 
-    // Dossiê individual de um credor
+    // Ficha individual de um credor
     if (detalheCredor) {
       const empenhos = dbDespesas.prepare(`
         SELECT id, hash, ano, mes, data, valor, nr_empenho, tipo_titulo, credor, cpf_cnpj, 

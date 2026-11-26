@@ -15,7 +15,7 @@ export function renderMapaView(container) {
       links: [
         { nome: 'Página Inicial (Painel do Cidadão)', hash: '#inicio', desc: 'Buscador sem acento, 4 cards de acesso rápido e destaques.' },
         { nome: 'Mandatos Executivos por Eleição', hash: '#mandatos', desc: 'Histórico de Prefeitos, Vices, bens declarados e folha por pleito.' },
-        { nome: 'Servidores & Folha Salarial (133k)', hash: '#funcionarios', desc: 'Holerites desde 2013, busca por cargo, servidor e dossiê.' },
+        { nome: 'Servidores & Folha Salarial (133k)', hash: '#funcionarios', desc: 'Holerites desde 2013, busca por cargo, servidor e ficha funcional.' },
         { nome: 'Empresas, Fornecedores & Credores', hash: '#empresas', desc: '542 credores, 5.064 empenhos e contratos do sistema SIAP.' }
       ]
     },

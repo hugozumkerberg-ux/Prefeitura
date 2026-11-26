@@ -1,7 +1,7 @@
 /**
  * ==============================================================================
  * PORTAL DA TRANSPARÊNCIA DE ARINOS / MG — V3 EMPRESAS & CREDORES
- * Conectado diretamente ao SQLite de Despesas (/api/empresas) com paginação e dossiê
+ * Conectado diretamente ao SQLite de Despesas (/api/empresas) com paginação e ficha detalhada
  * ==============================================================================
  */
 
@@ -154,9 +154,9 @@ export async function renderEmpresasView(container) {
       <div style="display: flex; gap: 6px;" id="empresas-pag-botoes"></div>
     </div>
 
-    <!-- Modal de Dossiê da Empresa -->
-    <div id="empresa-dossie-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center; padding: 20px;">
-      <div id="empresa-dossie-content" class="card" style="max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; background: #0f172a; border: 1px solid #374151; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 24px; position: relative;">
+    <!-- Modal de Ficha do Credor -->
+    <div id="empresa-ficha-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center; padding: 20px;">
+      <div id="empresa-ficha-content" class="card" style="max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; background: #0f172a; border: 1px solid #374151; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 24px; position: relative;">
       </div>
     </div>
   `;
@@ -168,8 +168,8 @@ export async function renderEmpresasView(container) {
   const periodoSelect = container.querySelector('#empresas-periodo-select');
   const mesSelect = container.querySelector('#empresas-mes-select');
   const orderSelect = container.querySelector('#empresas-order-select');
-  const overlay = container.querySelector('#empresa-dossie-overlay');
-  const dossieContent = container.querySelector('#empresa-dossie-content');
+  const overlay = container.querySelector('#empresa-ficha-overlay');
+  const fichaContent = container.querySelector('#empresa-ficha-content');
 
   async function loadData() {
     tbody.innerHTML = `
@@ -234,17 +234,17 @@ export async function renderEmpresasView(container) {
             ${e.totalFormatado}
           </td>
           <td style="padding: 12px 16px; text-align: center;">
-            <button class="btn btn-dossie" data-credor="${encodeURIComponent(e.credor)}" style="background: #1e293b; border: 1px solid #334155; color: #60a5fa; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">
-              📄 Dossiê
+            <button class="btn btn-ficha" data-credor="${encodeURIComponent(e.credor)}" style="background: #1e293b; border: 1px solid #334155; color: #60a5fa; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">
+              📄 Ficha Completa
             </button>
           </td>
         </tr>
       `).join('');
 
-      // Eventos dos botões de Dossiê
-      tbody.querySelectorAll('.btn-dossie').forEach(btn => {
+      // Eventos dos botões de Ficha do Credor
+      tbody.querySelectorAll('.btn-ficha').forEach(btn => {
         btn.addEventListener('click', () => {
-          abrirDossie(decodeURIComponent(btn.dataset.credor));
+          abrirFichaCredor(decodeURIComponent(btn.dataset.credor));
         });
       });
 
@@ -278,27 +278,27 @@ export async function renderEmpresasView(container) {
     }
   }
 
-  async function abrirDossie(credor) {
+  async function abrirFichaCredor(credor) {
     overlay.style.display = 'flex';
-    dossieContent.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-muted);">Carregando dossiê de ${credor}...</div>`;
+    fichaContent.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-muted);">Carregando dados de ${credor}...</div>`;
 
     try {
       const res = await fetch(`/api/empresas?credor=${encodeURIComponent(credor)}`);
       const data = await res.json();
 
       if (!data.sucesso) {
-        dossieContent.innerHTML = `<p style="color: #f87171;">Erro ao obter dossiê: ${data.erro}</p>`;
+        fichaContent.innerHTML = `<p style="color: #f87171;">Erro ao obter dados: ${data.erro}</p>`;
         return;
       }
 
-      dossieContent.innerHTML = `
+      fichaContent.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
           <div>
-            <span class="badge badge-blue" style="margin-bottom: 6px;">DOSSIÊ DO CREDOR</span>
+            <span class="badge badge-blue" style="margin-bottom: 6px;">FICHA DO CREDOR</span>
             <h2 style="font-size: 18px; font-weight: 800; color: #fff; margin: 4px 0;">${data.credor}</h2>
             <p style="font-size: 12px; color: var(--text-muted);">Período de Atuação: ${data.resumo.periodo}</p>
           </div>
-          <button id="btn-close-dossie" style="background: none; border: none; font-size: 22px; color: var(--text-muted); cursor: pointer; padding: 4px 8px;">✕</button>
+          <button id="btn-close-ficha" style="background: none; border: none; font-size: 22px; color: var(--text-muted); cursor: pointer; padding: 4px 8px;">✕</button>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
@@ -342,11 +342,11 @@ export async function renderEmpresasView(container) {
         </div>
       `;
 
-      dossieContent.querySelector('#btn-close-dossie')?.addEventListener('click', () => {
+      fichaContent.querySelector('#btn-close-ficha')?.addEventListener('click', () => {
         overlay.style.display = 'none';
       });
     } catch (err) {
-      dossieContent.innerHTML = `<p style="color: #f87171;">Falha ao carregar dossiê: ${err.message}</p>`;
+      fichaContent.innerHTML = `<p style="color: #f87171;">Falha ao carregar dados: ${err.message}</p>`;
     }
   }
 

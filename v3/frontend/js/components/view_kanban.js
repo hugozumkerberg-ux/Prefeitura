@@ -137,13 +137,13 @@ export const KANBAN_TASKS = [
     id: 'view-empresas',
     coluna: 'concluido',
     titulo: '🏢 Empresas & Credores (SIAP)',
-    resumo: '542 credores, 5.064 empenhos, paginação e dossiê individual pericial.',
+    resumo: '542 credores, 5.064 empenhos, paginação e ficha detalhada do credor.',
     prioridade: 'P0',
     tag: '✔ Entregue',
     tagClass: 'badge-green',
     detalhes: {
       tipo: 'Página de Fornecedores & Credores',
-      resumo: 'Conectada à rota /api/empresas com paginação de 20 por página, filtro por ano, ordenação por valor e modal de dossiê completo de empenhos.'
+      resumo: 'Conectada à rota /api/empresas com paginação de 20 por página, filtro por ano, ordenação por valor e modal com ficha completa de empenhos.'
     }
   },
   {
@@ -182,7 +182,7 @@ export const KANBAN_TASKS = [
     tagClass: 'badge-green',
     detalhes: {
       tipo: 'Página do Legislativo Municipal',
-      resumo: 'Conectada à rota /api/vereadores com 111 matérias legislativas indexadas e dossiê parlamentar.'
+      resumo: 'Conectada à rota /api/vereadores com 111 matérias legislativas indexadas e perfil parlamentar completo.'
     }
   },
   {
@@ -267,13 +267,13 @@ export const KANBAN_TASKS = [
     id: 'view-funcionarios',
     coluna: 'concluido',
     titulo: '👥 Funcionários & Folha (133k)',
-    resumo: 'Tabela paginada nativa, busca por cargo/servidor/ano e dossiê.',
+    resumo: 'Tabela paginada nativa, busca por cargo/servidor/ano e ficha funcional.',
     prioridade: 'P0',
     tag: '✔ Entregue',
     tagClass: 'badge-green',
     detalhes: {
       tipo: 'Página de Pessoal e Folha',
-      resumo: 'Página com mais de 133 mil holerites indexados, busca instantânea (< 5ms) e dossiê individual do servidor.'
+      resumo: 'Página com mais de 133 mil holerites indexados, busca instantânea (< 5ms) e ficha funcional detalhada do servidor.'
     }
   },
 
@@ -294,7 +294,7 @@ export const KANBAN_TASKS = [
     id: 'diarias-comprovante-sha256',
     coluna: 'concluido',
     titulo: '✈️ Linhas Clicáveis em Diárias & Comprovante com Selo SHA-256',
-    resumo: 'Comprovante pericial oficial colapsável em 1 clique na tabela de diárias e no Card 3 do Dossiê.',
+    resumo: 'Comprovante pericial oficial colapsável em 1 clique na tabela de diárias e no Card 3 da Ficha Funcional.',
     prioridade: 'P0',
     tag: '✔ Entregue',
     tagClass: 'badge-green',
@@ -349,16 +349,16 @@ export const KANBAN_TASKS = [
     }
   },
   {
-    id: 'melhoria-arvore-dossie-360',
+    id: 'melhoria-arvore-perfil-360',
     coluna: 'em_andamento',
-    titulo: '🌳 Árvore de Dados & Dossiê 360º de Pessoas',
+    titulo: '🌳 Árvore de Dados & Ficha Funcional 360º de Pessoas',
     resumo: 'Agrupamento hierárquico nos 3 pilares (Saúde, Prefeitura, Câmara) com histórico funcional e patrimonial.',
     prioridade: 'P0',
     tag: 'Falta Melhorar',
     tagClass: 'badge-blue',
     detalhes: {
       tipo: 'Estruturação da Árvore de Dados Cívicos',
-      origem: 'Solicitação direta do usuário para organização em ramos e dossiê',
+      origem: 'Solicitação direta do usuário para organização em ramos e ficha consolidada',
       resumo: 'Agrupar as pessoas físicas pelos vínculos canônicos (Saúde idorg 241, Prefeitura idorg 236 e Câmara Legislativa), apresentando matrícula sem zeros à esquerda, nome proeminente, cargos exercidos com datas por extenso, duração e média salarial regular (excluindo 13º e férias), diárias e bens declarados ao TSE.'
     }
   },

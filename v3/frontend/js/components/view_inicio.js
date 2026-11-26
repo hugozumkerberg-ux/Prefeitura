@@ -220,7 +220,7 @@ export function renderInicioView(container) {
         <span class="has-tooltip">
           <span class="tooltip-icon">?</span>
           <div class="tooltip-box">
-            Resumo dos pilares de dinheiro público e poder político municipal. Clique em "Ver Detalhes" para abrir o dossiê.
+            Resumo dos pilares de dinheiro público e poder político municipal. Clique em "Ver Detalhes" para abrir a ficha completa.
           </div>
         </span>
       </h2>

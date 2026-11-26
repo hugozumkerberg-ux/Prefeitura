@@ -365,21 +365,21 @@ export async function renderFuncionariosView(container) {
       <div style="padding: 2rem; text-align: center; color: var(--text-muted);">Consultando banco oficial...</div>
     </div>
 
-    <!-- Modal Dossiê da Pessoa Física & Servidor -->
-    <div id="modalDossieServidor" class="voter-modal-overlay">
+    <!-- Modal Ficha Funcional da Pessoa Física & Servidor -->
+    <div id="modalFichaServidor" class="voter-modal-overlay">
       <div class="voter-modal-box" style="max-width: 920px; width: 95%; max-height: 92vh; display: flex; flex-direction: column; background: #0f172a; border: 1px solid #334155;">
         <div class="voter-modal-header" style="align-items: center; gap: 14px; border-bottom: 1px solid #1e293b; padding: 14px 20px;">
-          <div id="dossie-foto-container"></div>
+          <div id="ficha-foto-container"></div>
           <div style="flex: 1;">
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-              <h3 style="font-size: 18px; font-weight: 800; color: #fff; margin: 0;" id="dossie-nome">Pessoa Física</h3>
-              <span id="dossie-tag-status"></span>
+              <h3 style="font-size: 18px; font-weight: 800; color: #fff; margin: 0;" id="ficha-nome">Pessoa Física</h3>
+              <span id="ficha-tag-status"></span>
             </div>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 3px 0 0 0;" id="dossie-cargo">Matrículas e vínculos municipais</p>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 3px 0 0 0;" id="ficha-cargo">Matrículas e vínculos municipais</p>
           </div>
-          <button class="modal-close-btn" id="dossie-close-btn" style="font-size: 20px; cursor: pointer; color: #94a3b8; background: none; border: none;">✕</button>
+          <button class="modal-close-btn" id="ficha-close-btn" style="font-size: 20px; cursor: pointer; color: #94a3b8; background: none; border: none;">✕</button>
         </div>
-        <div class="voter-modal-body" id="dossie-body" style="overflow-y: auto; padding: 16px 20px;">
+        <div class="voter-modal-body" id="ficha-body" style="overflow-y: auto; padding: 16px 20px;">
           <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Carregando dados da pessoa física...</div>
         </div>
       </div>
@@ -397,8 +397,8 @@ export async function renderFuncionariosView(container) {
   const setaColapsavel = container.querySelector('#folha-seta-colapsavel');
   const filtrosAtivosContainer = container.querySelector('#folha-filtros-ativos');
   const tabelaContainer = container.querySelector('#folha-conteudo-tabela');
-  const modalDossie = container.querySelector('#modalDossieServidor');
-  const modalCloseBtn = container.querySelector('#dossie-close-btn');
+  const modalFicha = container.querySelector('#modalFichaServidor');
+  const modalCloseBtn = container.querySelector('#ficha-close-btn');
 
   let colapsavelAberto = true;
   if (btnToggleColapsavel && linhaColapsavel) {
@@ -424,13 +424,13 @@ export async function renderFuncionariosView(container) {
   carregarOpcoesAvancadas();
 
   function fecharModal() {
-    modalDossie.classList.remove('active');
+    modalFicha.classList.remove('active');
     document.body.style.overflow = '';
   }
 
   modalCloseBtn.onclick = fecharModal;
-  modalDossie.onclick = e => {
-    if (e.target === modalDossie) fecharModal();
+  modalFicha.onclick = e => {
+    if (e.target === modalFicha) fecharModal();
   };
 
   function renderizarFiltrosAtivos() {
@@ -458,23 +458,23 @@ export async function renderFuncionariosView(container) {
     });
   }
 
-  async function abrirDossie(nomeOuMatricula) {
-    modalDossie.classList.add('active');
+  async function abrirFichaServidor(nomeOuMatricula) {
+    modalFicha.classList.add('active');
     document.body.style.overflow = 'hidden';
 
-    const dossieBody = container.querySelector('#dossie-body');
-    const fotoContainer = container.querySelector('#dossie-foto-container');
-    const tagStatusContainer = container.querySelector('#dossie-tag-status');
+    const fichaBody = container.querySelector('#ficha-body');
+    const fotoContainer = container.querySelector('#ficha-foto-container');
+    const tagStatusContainer = container.querySelector('#ficha-tag-status');
     fotoContainer.innerHTML = '';
     tagStatusContainer.innerHTML = '';
-    dossieBody.innerHTML = '<div style="text-align: center; padding: 2.5rem; color: var(--text-muted);">Consultando cadastro consolidado da pessoa física...</div>';
+    fichaBody.innerHTML = '<div style="text-align: center; padding: 2.5rem; color: var(--text-muted);">Consultando cadastro consolidado da pessoa física...</div>';
 
     try {
       const res = await fetch(`/api/auditoria/rastrear?termo=${encodeURIComponent(nomeOuMatricula)}`);
       const data = await res.json();
 
       if (!data.sucesso) {
-        dossieBody.innerHTML = `<div class="empty-state"><h4>Registro não localizado para "${nomeOuMatricula}"</h4></div>`;
+        fichaBody.innerHTML = `<div class="empty-state"><h4>Registro não localizado para "${nomeOuMatricula}"</h4></div>`;
         return;
       }
 
@@ -486,8 +486,8 @@ export async function renderFuncionariosView(container) {
       const venceu = Boolean(pol.venceu);
 
       // 1. Cabeçalho Enxuto e Limpo
-      container.querySelector('#dossie-nome').textContent = s.nome;
-      container.querySelector('#dossie-cargo').textContent = `Matrícula(s): ${s.matriculas.length ? s.matriculas.join(', ') : '—'} • ${s.cargos.join(' • ')}`;
+      container.querySelector('#ficha-nome').textContent = s.nome;
+      container.querySelector('#ficha-cargo').textContent = `Matrícula(s): ${s.matriculas.length ? s.matriculas.join(', ') : '—'} • ${s.cargos.join(' • ')}`;
 
       if (temPol && s.foto_url) {
         fotoContainer.innerHTML = `
@@ -655,12 +655,12 @@ export async function renderFuncionariosView(container) {
                     <th style="text-align: center; width: 90px;">Ação</th>
                   </tr>
                 </thead>
-                <tbody id="tbody-diarias-dossie">
+                <tbody id="tbody-diarias-ficha">
                   ${diarias.map((d, dIdx) => {
                     const dest = extrairDestinoDiaria(d.historico_viagem);
                     const per = extrairPeriodoDiaria(d.historico_viagem);
                     return `
-                    <tr class="tr-diaria-dossie" data-didx="${dIdx}" style="cursor: pointer; transition: background 0.15s ease;" title="Clique para ver o comprovante oficial desta diária">
+                    <tr class="tr-diaria-ficha" data-didx="${dIdx}" style="cursor: pointer; transition: background 0.15s ease;" title="Clique para ver o comprovante oficial desta diária">
                       <td style="text-align: center; color: #fbbf24; font-size: 10px;">
                         <span class="seta-expandir-diaria" id="seta-diaria-${dIdx}" style="display: inline-block; transition: transform 0.2s ease;">▶</span>
                       </td>
@@ -689,7 +689,7 @@ export async function renderFuncionariosView(container) {
                         </button>
                       </td>
                     </tr>
-                    <tr class="tr-detalhes-diaria-dossie" id="detalhe-diaria-${dIdx}" style="display: none; background: #060b13;">
+                    <tr class="tr-detalhes-diaria-ficha" id="detalhe-diaria-${dIdx}" style="display: none; background: #060b13;">
                       <td colspan="6" style="padding: 12px 16px; border-left: 3px solid #f59e0b; border-bottom: 2px solid #1e293b;">
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #1e293b;">
                           <div style="font-size: 12px; font-weight: 700; color: #fbbf24; text-transform: uppercase;">
@@ -742,7 +742,7 @@ export async function renderFuncionariosView(container) {
                             </div>
                           </div>
                           <div style="display: flex; gap: 6px;">
-                            <button class="btn btn-copiar-hash-dossie" data-hash="${d.chave}" style="padding: 4px 10px; font-size: 11px; background: #1e293b; border: 1px solid #334155; color: #f8fafc; border-radius: 4px; cursor: pointer;">
+                            <button class="btn btn-copiar-hash-ficha" data-hash="${d.chave}" style="padding: 4px 10px; font-size: 11px; background: #1e293b; border: 1px solid #334155; color: #f8fafc; border-radius: 4px; cursor: pointer;">
                               📋 Copiar Hash
                             </button>
                             <a href="#auditoria?termo=${d.chave}" class="btn" style="padding: 4px 10px; font-size: 11px; background: rgba(59, 130, 246, 0.15); border: 1px solid #3b82f6; color: #93c5fd; border-radius: 4px; text-decoration: none;">
@@ -785,7 +785,7 @@ export async function renderFuncionariosView(container) {
           <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #1e293b;">
             <span style="font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-right: 4px;">Filtrar Ano:</span>
             <button 
-              class="btn-ano-dossie" 
+              class="btn-ano-ficha" 
               data-ano="todos" 
               style="padding: 4px 10px; font-size: 11px; border-radius: 4px; border: 1px solid #334155; background: #1e293b; color: #cbd5e1; cursor: pointer;"
             >
@@ -793,7 +793,7 @@ export async function renderFuncionariosView(container) {
             </button>
             ${anosDisponiveis.map(ano => `
               <button 
-                class="btn-ano-dossie ${ano === anoInicial ? 'ativo' : ''}" 
+                class="btn-ano-ficha ${ano === anoInicial ? 'ativo' : ''}" 
                 data-ano="${ano}" 
                 style="padding: 4px 10px; font-size: 11px; border-radius: 4px; border: 1px solid ${ano === anoInicial ? '#3b82f6' : '#334155'}; background: ${ano === anoInicial ? '#2563eb' : '#1e293b'}; color: #fff; cursor: pointer; font-weight: ${ano === anoInicial ? '700' : '500'};"
               >
@@ -803,7 +803,7 @@ export async function renderFuncionariosView(container) {
           </div>
 
           <!-- Cards Dinâmicos de Totais do Ano Selecionado -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 14px;" id="dossie-kpis-ano">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 14px;" id="ficha-kpis-ano">
             <div style="background: #1e293b; padding: 8px 12px; border-radius: 6px;">
               <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Salário Bruto</div>
               <div style="font-size: 15px; font-weight: 800; color: #60a5fa; font-family: 'JetBrains Mono', monospace;" id="kpi-ano-bruto">R$ 0,00</div>
@@ -835,7 +835,7 @@ export async function renderFuncionariosView(container) {
                   <th style="text-align: right;">Líquido</th>
                 </tr>
               </thead>
-              <tbody id="dossie-tbody-contracheques"></tbody>
+              <tbody id="ficha-tbody-contracheques"></tbody>
             </table>
           </div>
           <div style="font-size: 10.5px; color: var(--text-muted); margin-top: 8px; text-align: right;">
@@ -845,7 +845,7 @@ export async function renderFuncionariosView(container) {
       `;
 
       // Monta os 4 cards no DOM do Modal
-      dossieBody.innerHTML = `
+      fichaBody.innerHTML = `
         ${cardPoliticoHtml}
         ${cardFuncionalHtml}
         ${cardDiariasHtml}
@@ -863,14 +863,14 @@ export async function renderFuncionariosView(container) {
         const somaLiquido = filtrados.reduce((a, b) => a + (b.salario_liquido || 0), 0);
         const mesesContados = new Set(filtrados.map(h => `${h.ano}-${h.mes}`)).size;
 
-        dossieBody.querySelector('#kpi-ano-bruto').textContent = formatMoeda(somaBruto);
-        dossieBody.querySelector('#kpi-ano-descontos').textContent = formatMoeda(somaDescontos);
-        dossieBody.querySelector('#kpi-ano-liquido').textContent = formatMoeda(somaLiquido);
-        dossieBody.querySelector('#kpi-ano-meses').textContent = anoFiltro === 'todos' 
+        fichaBody.querySelector('#kpi-ano-bruto').textContent = formatMoeda(somaBruto);
+        fichaBody.querySelector('#kpi-ano-descontos').textContent = formatMoeda(somaDescontos);
+        fichaBody.querySelector('#kpi-ano-liquido').textContent = formatMoeda(somaLiquido);
+        fichaBody.querySelector('#kpi-ano-meses').textContent = anoFiltro === 'todos' 
           ? `${mesesContados} meses (${s.tempoEfetivo || '—'})`
           : `${mesesContados} ${mesesContados === 1 ? 'mês' : 'meses'} (${anoFiltro})`;
 
-        const tbody = dossieBody.querySelector('#dossie-tbody-contracheques');
+        const tbody = fichaBody.querySelector('#ficha-tbody-contracheques');
         tbody.innerHTML = filtrados.map((h, idx) => {
           const { tem13, temFerias } = detectarTagsContracheque(h);
           const tagsHtml = `
@@ -1015,9 +1015,9 @@ export async function renderFuncionariosView(container) {
       }
 
       // Event listeners para os botões de anos
-      dossieBody.querySelectorAll('.btn-ano-dossie').forEach(btn => {
+      fichaBody.querySelectorAll('.btn-ano-ficha').forEach(btn => {
         btn.onclick = () => {
-          dossieBody.querySelectorAll('.btn-ano-dossie').forEach(b => {
+          fichaBody.querySelectorAll('.btn-ano-ficha').forEach(b => {
             b.style.border = '1px solid #334155';
             b.style.background = '#1e293b';
             b.style.fontWeight = '500';
@@ -1035,12 +1035,12 @@ export async function renderFuncionariosView(container) {
       renderizarAnoSelecionado(anoInicial);
 
       // Event listeners para as diárias clicáveis do Card 3
-      dossieBody.querySelectorAll('.tr-diaria-dossie').forEach(row => {
+      fichaBody.querySelectorAll('.tr-diaria-ficha').forEach(row => {
         row.addEventListener('click', () => {
           const didx = row.getAttribute('data-didx');
-          const detalhe = dossieBody.querySelector(`#detalhe-diaria-${didx}`);
-          const seta = dossieBody.querySelector(`#seta-diaria-${didx}`);
-          const btn = dossieBody.querySelector(`#btn-toggle-diaria-${didx}`);
+          const detalhe = fichaBody.querySelector(`#detalhe-diaria-${didx}`);
+          const seta = fichaBody.querySelector(`#seta-diaria-${didx}`);
+          const btn = fichaBody.querySelector(`#btn-toggle-diaria-${didx}`);
           if (!detalhe) return;
           const aberta = detalhe.style.display !== 'none';
           if (aberta) {
@@ -1057,7 +1057,7 @@ export async function renderFuncionariosView(container) {
         });
       });
 
-      dossieBody.querySelectorAll('.btn-copiar-hash-dossie').forEach(btn => {
+      fichaBody.querySelectorAll('.btn-copiar-hash-ficha').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           const hash = btn.getAttribute('data-hash');
@@ -1078,7 +1078,7 @@ export async function renderFuncionariosView(container) {
       });
 
     } catch (err) {
-      dossieBody.innerHTML = `<div class="empty-state">Erro ao carregar dossiê: ${err.message}</div>`;
+      fichaBody.innerHTML = `<div class="empty-state">Erro ao carregar ficha funcional: ${err.message}</div>`;
     }
   }
 
@@ -1165,15 +1165,15 @@ export async function renderFuncionariosView(container) {
       tabelaContainer.appendChild(tabelaEl);
       tabelaContainer.appendChild(paginacaoEl);
 
-      // Linha inteira da tabela clicável para abrir o Dossiê
+      // Linha inteira da tabela clicável para abrir a Ficha Funcional
       tabelaContainer.querySelectorAll('tbody tr').forEach((tr, index) => {
         const item = resp.dados[index];
         if (item) {
           tr.style.cursor = 'pointer';
-          tr.title = `Clique para abrir o Dossiê de ${item.nome}`;
+          tr.title = `Clique para abrir a Ficha Funcional de ${item.nome}`;
           tr.addEventListener('mouseenter', () => tr.style.background = 'rgba(59, 130, 246, 0.08)');
           tr.addEventListener('mouseleave', () => tr.style.background = '');
-          tr.onclick = () => abrirDossie(item.nome || item.matricula_padronizada || item.matricula);
+          tr.onclick = () => abrirFichaServidor(item.nome || item.matricula_padronizada || item.matricula);
         }
       });
     } catch (err) {
